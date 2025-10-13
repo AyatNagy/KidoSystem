@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/home_page.dart';
-import 'package:kido/controllers/unboarding_data.dart';
+import '../Pages/home_page.dart';
+import '../controllers/unboarding_data.dart';
 import '../Widgets/CustomCanditor.dart'; 
 import '../Widgets/GradientButton.dart';
 import '../Widgets/onBoard.dart';

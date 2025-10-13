@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'responsive.dart';
+import 'package:kido/Pages/parent_login_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -87,7 +87,7 @@ class HomePage extends StatelessWidget {
                     width: buttonWidth,
                     height: buttonHeight,
                     onPressed: () {
-                      // TODO: Navigate to Teacher page
+                    
                     },
                   ),
                   _buildRoleButton(
@@ -99,7 +99,8 @@ class HomePage extends StatelessWidget {
                     width: buttonWidth,
                     height: buttonHeight,
                     onPressed: () {
-                      // TODO: Navigate to Parent page
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                     const ParentLogin()), );
                     },
                   ),
                   _buildRoleButton(
@@ -111,7 +112,7 @@ class HomePage extends StatelessWidget {
                     width: buttonWidth,
                     height: buttonHeight,
                     onPressed: () {
-                      // TODO: Navigate to Student page
+                    
                     },
                   ),
                 ],
@@ -185,3 +186,16 @@ class HomePage extends StatelessWidget {
   }
 }
 
+enum DeviceType { Mobile, Tablet, Desktop }
+
+DeviceType getDeviceType(MediaQueryData mediaQuery) {
+  double width = mediaQuery.size.width;
+
+  if (width >= 950) {
+    return DeviceType.Desktop;
+  } else if (width >= 600) {
+    return DeviceType.Tablet;
+  } else {
+    return DeviceType.Mobile;
+  }
+}
