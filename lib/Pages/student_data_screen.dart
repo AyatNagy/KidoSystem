@@ -1,41 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
-import 'parent_login_screen.dart';
 
-
-
-
-class ParentSignup extends StatefulWidget {
-  const ParentSignup({super.key});
+class StudentData extends StatefulWidget {
+  const StudentData({super.key});
 
   @override
-  State<ParentSignup> createState() => _ParentSignupState();
+  State<StudentData> createState() => _StudentDataState();
 }
 
-class _ParentSignupState extends State<ParentSignup> {
+class _StudentDataState extends State<StudentData> {
 
-  final TextEditingController emailController = TextEditingController();
-   final TextEditingController passwordController = TextEditingController();
    final TextEditingController nameController = TextEditingController();
-   final TextEditingController phoneController = TextEditingController();
-   final phoneRegex=RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$');
-
+   final TextEditingController usernameController = TextEditingController();
+   final TextEditingController passwordController = TextEditingController();
+   final TextEditingController ageController = TextEditingController();
+   //final TextEditingController phoneController = TextEditingController();
+   //final phoneRegex=RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$');
+    
    bool isPasswordVisible=false;
    final _formKey = GlobalKey<FormState>();
-   
+
     void handle(){
     if(_formKey.currentState!.validate()){
       print("success");
     }
     }
 
-
   @override
   Widget build(BuildContext context) {
-    return
-      
-       Scaffold(
+    return Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -57,7 +52,7 @@ class _ParentSignupState extends State<ParentSignup> {
                 const SizedBox(height: 20,),
             
                 Text(
-                     "Hi,Parent!", 
+                     "Bring kid onboard", 
                     style:TextStyle(
                       fontSize: 42,
                       fontWeight: FontWeight.bold,
@@ -69,12 +64,16 @@ class _ParentSignupState extends State<ParentSignup> {
                     )
                   ],
             
-                )),
+                ),
+                maxLines: 1,
+                //overflow: TextOverflow.ellipsis,
+                //textAlign: TextAlign.center,
+                ),
 
                 const SizedBox(height:10,),
             
                 Image.asset(
-                  'assets/images/parent_sign up.png',
+                  'assets/images/student_data.png',
                    height: 336,width: 339,),
             
             
@@ -85,65 +84,58 @@ class _ParentSignupState extends State<ParentSignup> {
                  child: Column(
                   children: [
 
+
                      CustomTextField(
                     fieldController: nameController ,
-                    fieldIcon: Icon(Icons.person),
-                    fieldLabel: "Full Name",
+                    fieldIcon: Icon(Icons.face),
+                    fieldLabel: "Child's name",
                     fieldObscure: false,
-                    validator:Validators.validateName,
-                 
-                  ),
-
-                   const SizedBox(height: 16,),
-
-                   CustomTextField(
-                    fieldController: phoneController ,
-                    fieldIcon: Icon(Icons.phone),
-                    fieldLabel: "Phone Number",
-                    fieldObscure: false,
-                    keyboardType: TextInputType.number,
-                    validator: (value){
-                      if(value == null || value.isEmpty){
-                        return "Please enter your phone!";
-                      }
-            
-                       if(!phoneRegex.hasMatch(value)){
-                        return "Please enter a valid phone number";
-                      }
-            
-                      return null;
-                    },
-                 
-                  ),
-
-                   const SizedBox(height: 16,),
-
-
-                     CustomTextField(
-                    fieldController: emailController ,
-                    fieldIcon: Icon(Icons.email),
-                    fieldLabel: "Email",
-                    fieldObscure: false,
-                    validator: Validators.validateEmail,
+                    
+                    //validator: Validators.validateEmail
                  
                   ),
                  
                   const SizedBox(height: 16,),
+
+
+                     CustomTextField(
+                    fieldController: usernameController ,
+                    fieldIcon: Icon(Icons.people),
+                    fieldLabel: "Child's Username",
+                    fieldObscure: false,
+                    //validator: Validators.validateEmail
+                 
+                  ),
+                 
+                  const SizedBox(height: 16,),
+
+                   CustomTextField(
+                    fieldController: ageController ,
+                    fieldIcon: Icon(Icons.date_range),
+                    fieldLabel: "Child's Age",
+                    fieldObscure: false,
+                    keyboardType:TextInputType.numberWithOptions(),
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    //validator: Validators.validateEmail
+                 
+                  ),
+                 
+                  const SizedBox(height: 16,),
+
+                 
                  
                   CustomTextField(
                     fieldController: passwordController ,
                     fieldIcon: Icon(Icons.lock),
-                    fieldLabel: "Password",
+                    fieldLabel: "Child's Password",
                     fieldObscure: !isPasswordVisible,
                     suffixIcon: IconButton(
-                      onPressed: 
-                      (){
-                        setState(() {
-                           isPasswordVisible=!isPasswordVisible;
-                        });
-                      }, 
-                      icon: Icon(
-                         isPasswordVisible ? Icons.visibility : Icons.visibility_off , color: Color(0xff837F7F)
+                      onPressed: (){
+                      setState(() {
+                        isPasswordVisible=!isPasswordVisible;
+                      });
+                      }, icon: Icon(
+                        isPasswordVisible ? Icons.visibility : Icons.visibility_off , color: Color(0xff837F7F)
                       )),
                     validator: Validators.validatePassword,
                  
@@ -154,7 +146,7 @@ class _ParentSignupState extends State<ParentSignup> {
                   Container(
                     width: 200,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [Color(0xffF8AA3B),Color(0xffFF7A78),Color(0xffEE3187)],
+                      gradient: LinearGradient(colors: [Color(0xffffB74D),Color(0xffff8A65),Color(0xfff06292)],
                                                begin: Alignment.centerLeft,
                                                end:Alignment.centerRight),
                       borderRadius: BorderRadius.circular(25),
@@ -170,32 +162,17 @@ class _ParentSignupState extends State<ParentSignup> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                       ),
-                      child: Text("Create Account",
+                      child: Text("Add My Little Star",
                       style: TextStyle(fontSize: 22,color: Colors.white,fontWeight: FontWeight.bold),)),
 
                      
                   ),
 
-                   const SizedBox(height: 16,),
-
                    
 
                    // const SizedBox(height: 8,),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Have an account?",
-                        style: TextStyle(color: Color(0xff837F7F))),
-
-                        TextButton(onPressed: (){
-                          Navigator.push(context,MaterialPageRoute(builder: (context)=>ParentLogin()));
-                        },
-                         child: Text("Log In",
-                         style: TextStyle(color: Color(0xffEE3187),fontWeight: FontWeight.bold)))
-
-                      ],
-                    )
+                    
                   ],
                  ),
                )
@@ -210,6 +187,5 @@ class _ParentSignupState extends State<ParentSignup> {
           ),
         ),
       );
-    
   }
-    }
+}
