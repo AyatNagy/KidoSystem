@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../Pages/home_page.dart';
 import '../controllers/unboarding_data.dart';
-import '../Widgets/CustomCanditor.dart'; 
+import '../Widgets/CustomCanditor.dart';
 import '../Widgets/GradientButton.dart';
 import '../Widgets/onBoard.dart';
-class OnboardScreen extends StatefulWidget { 
+
+class OnboardScreen extends StatefulWidget {
   const OnboardScreen({super.key});
 
   @override
@@ -15,8 +16,6 @@ class _OnboardScreenState extends State<OnboardScreen> {
   final PageController _controller = PageController();
   int _index = 0;
 
- 
-    
   void _goToNext() {
     if (_index < onboardData.length - 1) {
       _controller.nextPage(
@@ -53,9 +52,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                     _index = value;
                   });
                 },
-                itemBuilder: (context, i) => OnboardPage(
-                  data: onboardData[i],
-                ),
+                itemBuilder: (context, i) => OnboardPage(data: onboardData[i]),
               ),
             ),
 
@@ -74,10 +71,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  GradientButton(
-                    title: "Continue",
-                    onPressed: _goToNext,
-                  ),
+                  GradientButton(title: "Continue", onPressed: _goToNext),
                   const SizedBox(height: 10),
                   Align(
                     alignment: Alignment.centerRight,
@@ -85,10 +79,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                       onPressed: _skip,
                       child: const Text(
                         "Skip",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     ),
                   ),

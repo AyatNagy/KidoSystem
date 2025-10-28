@@ -10,29 +10,33 @@ class HomePage extends StatelessWidget {
     final bool isTablet = deviceType == DeviceType.Tablet;
     final bool isDesktop = deviceType == DeviceType.Desktop;
 
-    double imageWidth = isDesktop
-        ? 600
-        : isTablet
-        ? 500
-        : 350;
+    double imageWidth =
+        isDesktop
+            ? 600
+            : isTablet
+            ? 500
+            : 350;
 
-    double fontSize = isDesktop
-        ? 60
-        : isTablet
-        ? 50
-        : 36;
+    double fontSize =
+        isDesktop
+            ? 60
+            : isTablet
+            ? 50
+            : 36;
 
-    double buttonWidth = isDesktop
-        ? 180
-        : isTablet
-        ? 140
-        : 100;
+    double buttonWidth =
+        isDesktop
+            ? 180
+            : isTablet
+            ? 140
+            : 100;
 
-    double buttonHeight = isDesktop
-        ? 120
-        : isTablet
-        ? 100
-        : 80;
+    double buttonHeight =
+        isDesktop
+            ? 120
+            : isTablet
+            ? 100
+            : 80;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -86,9 +90,7 @@ class HomePage extends StatelessWidget {
                     ),
                     width: buttonWidth,
                     height: buttonHeight,
-                    onPressed: () {
-                    
-                    },
+                    onPressed: () {},
                   ),
                   _buildRoleButton(
                     title: 'Parent',
@@ -99,8 +101,12 @@ class HomePage extends StatelessWidget {
                     width: buttonWidth,
                     height: buttonHeight,
                     onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                     const ParentLogin()), );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ParentLogin(),
+                        ),
+                      );
                     },
                   ),
                   _buildRoleButton(
@@ -111,9 +117,7 @@ class HomePage extends StatelessWidget {
                     ),
                     width: buttonWidth,
                     height: buttonHeight,
-                    onPressed: () {
-                    
-                    },
+                    onPressed: () {},
                   ),
                 ],
               ),
@@ -125,6 +129,7 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildRoleButton({
     required String title,
     IconData? icon,
@@ -164,12 +169,7 @@ class HomePage extends StatelessWidget {
             if (icon != null)
               Icon(icon, color: Colors.white, size: 35)
             else if (image != null)
-              Image.asset(
-                  image,
-                  width: 40,
-                  height: 35,
-                  fit: BoxFit.contain
-              ),
+              Image.asset(image, width: 40, height: 35, fit: BoxFit.contain),
             const SizedBox(height: 8),
             Text(
               title,
@@ -178,7 +178,7 @@ class HomePage extends StatelessWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
-            )
+            ),
           ],
         ),
       ),
