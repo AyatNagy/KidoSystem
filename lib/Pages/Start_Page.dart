@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/home_page.dart';
-import 'unboarding_page.dart';
+import 'onboard_page.dart';
 
 class Start extends StatelessWidget {
   const Start({super.key});
