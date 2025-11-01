@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../Pages/home_page.dart';
-import '../controllers/unboarding_data.dart';
-import '../Widgets/CustomCanditor.dart'; 
+import 'package:kido/Pages/home_page.dart';
+import 'package:kido/controllers/unboarding_data.dart';
+import '../Widgets/CustomCanditor.dart';
 import '../Widgets/GradientButton.dart';
 import '../Widgets/onBoard.dart';
-class OnboardScreen extends StatefulWidget { 
+
+class OnboardScreen extends StatefulWidget {
   const OnboardScreen({super.key});
 
   @override
@@ -15,8 +16,6 @@ class _OnboardScreenState extends State<OnboardScreen> {
   final PageController _controller = PageController();
   int _index = 0;
 
- 
-    
   void _goToNext() {
     if (_index < onboardData.length - 1) {
       _controller.nextPage(
@@ -26,7 +25,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => HomePage()),
+        MaterialPageRoute(builder: (_) => const HomePage()),
       );
     }
   }
@@ -34,13 +33,14 @@ class _OnboardScreenState extends State<OnboardScreen> {
   void _skip() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => HomePage()),
+      MaterialPageRoute(builder: (_) => const HomePage()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -67,18 +67,20 @@ class _OnboardScreenState extends State<OnboardScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       onboardData.length,
-                      (i) => Padding(
+                          (i) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: CustomIndicator(active: _index == i),
+                        child: CustomIndicator(active: _index == i, color: onboardData[i].color,),
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
+
                   GradientButton(
                     title: "Continue",
                     onPressed: _goToNext,
                   ),
                   const SizedBox(height: 10),
+
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
