@@ -180,7 +180,7 @@ class _ParentLoginState extends State<ParentLogin> {
                         onPressed: handleGoogleLogin,
                         icon: Image.asset(
                           'assets/images/google.png',
-                          height: 14,
+                          height: 50,
                         ),
                         label: const Text(
                           "Sign in with Google",
@@ -207,7 +207,7 @@ class _ParentLoginState extends State<ParentLogin> {
                         onPressed: handleFacebookLogin,
                         icon: Image.asset(
                           'assets/images/facebook.png',
-                          height: 14,
+                          height: 50,
                         ),
                         label: const Text(
                           "Sign in with Facebook",
