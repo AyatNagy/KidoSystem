@@ -13,35 +13,35 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.inputFormatters,});
 
-   final TextEditingController fieldController;
-   final String fieldLabel;
-   final bool fieldObscure;
-   final Icon fieldIcon;
-   final String? Function(String?)? validator;
-   final Widget? suffixIcon;
-   final TextInputType? keyboardType;
-   final List<TextInputFormatter>? inputFormatters;
+  final TextEditingController fieldController;
+  final String fieldLabel;
+  final bool fieldObscure;
+  final Icon fieldIcon;
+  final String? Function(String?)? validator;
+  final Widget? suffixIcon;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
 
   @override
   Widget build(BuildContext context) {
     return  TextFormField(
-               controller: fieldController,
-               obscureText:fieldObscure,
-               validator:validator,
-               keyboardType: keyboardType,
-               inputFormatters: inputFormatters,
-               decoration: InputDecoration(
-               labelText: fieldLabel,
-               
-               
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(50)
-                ),
-                
-                prefixIcon: fieldIcon,
-                suffixIcon: suffixIcon,
-              ),
-            );
+      controller: fieldController,
+      obscureText:fieldObscure,
+      validator:validator,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      decoration: InputDecoration(
+        labelText: fieldLabel,
+
+
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(50)
+        ),
+
+        prefixIcon: fieldIcon,
+        suffixIcon: suffixIcon,
+      ),
+    );
   }
 }

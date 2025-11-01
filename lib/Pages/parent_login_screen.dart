@@ -34,6 +34,7 @@ class _ParentLoginState extends State<ParentLogin> {
     return 
       
        Scaffold(
+         backgroundColor: Colors.white,
         body: SafeArea(
           child: SingleChildScrollView(
              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -48,7 +49,7 @@ class _ParentLoginState extends State<ParentLogin> {
                   children: [
                     Image.asset('assets/images/log.png',height: 40,),
                     const SizedBox(height: 6,),
-                    Image.asset('assets/images/Kido.png',height: 40,)
+                    Image.asset('assets/images/kido.png',height: 40,)
                   ],
                 ),
 
@@ -161,12 +162,6 @@ class _ParentLoginState extends State<ParentLogin> {
                   ],
                  ),
                )
-            
-            
-            
-               
-            
-            
               ],
             ),
           ),

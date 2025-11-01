@@ -26,12 +26,19 @@ class OnboardPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Image.asset('assets/images/log.png',
-                  height: height * 0.06, width: width * 0.12),
+              Image.asset(
+                'assets/images/log.png',
+                height: height * 0.06,
+                width: width * 0.12,
+              ),
               SizedBox(width: width * 0.02),
-              Image.asset('assets/images/Kido.png', height: height * 0.05),
+              Image.asset(
+                'assets/images/kido.png',
+                height: height * 0.05,
+              ),
             ],
           ),
+
           SizedBox(height: height * 0.02),
 
           Expanded(
@@ -45,45 +52,43 @@ class OnboardPage extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
                 SizedBox(height: height * 0.04),
-
-             
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                   child: Text(
                     data.title,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: width * 0.07, 
+                      fontSize: width * 0.07,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF8869B3),
+                      color: data.color,
                     ),
                   ),
                 ),
+
                 SizedBox(height: height * 0.02),
 
                 Flexible(
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: SingleChildScrollView( 
+                    child: SingleChildScrollView(
                       child: Text(
                         data.desc,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-
-                    fontSize: 20,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(3, 3),
-                        blurRadius: 3,
-                        color: Colors.grey,
-                      ),
-                    ],
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                    height: 1.3,
-                  ), 
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                          height: 1.3,
+                          shadows: [
+                            Shadow(
+                              offset: Offset(3, 3),
+                              blurRadius: 3,
+                              color: Colors.grey,
+                            ),
+                          ],
+                        ),
                         maxLines: 3,
-                        overflow: TextOverflow.ellipsis, 
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),

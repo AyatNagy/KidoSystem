@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kido/home_page.dart';
 import 'onboard_page.dart';
 
 class Start extends StatelessWidget {
@@ -19,12 +18,12 @@ class Start extends StatelessWidget {
                 child: Row(
                   children: [
                     Image.asset(
-                      'images/log.png',
+                      'assets/images/log.png',
                       height: 50,
                       width: 60,
                     ),
                     Image.asset(
-                      'images/kido.png',
+                      'assets/images/kido.png',
                       height: 60,
                       width: 60,
                     ),
@@ -34,7 +33,7 @@ class Start extends StatelessWidget {
             Center(
               child:Expanded(
                   child:Image.asset(
-                    'images/Start.png',
+                    'assets/images/Start.png',
                     height: 400,
                     width: 400,
                     fit: BoxFit.contain,

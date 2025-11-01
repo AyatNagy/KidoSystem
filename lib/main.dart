@@ -5,7 +5,7 @@ import 'package:kido/Pages/Logo_Page.dart';
 void main() {
   runApp(
     DevicePreview(
-      enabled: true, // خليه false لما تخلصي testing
+      enabled: true,
       builder: (context) => const MyApp(),
     ),
   );
