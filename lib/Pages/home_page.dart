@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   children: [
                     Image.asset(
-                      'assets/images/kido.png',
+                      'assets/images/Kido.png',
                       width: imageWidth,
                       fit: BoxFit.contain,
                     ),

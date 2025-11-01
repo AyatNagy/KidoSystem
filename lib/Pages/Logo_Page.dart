@@ -28,7 +28,7 @@ class _SplashScreen extends State<Logo> {
         color: Colors.white,
         child: Center(
           child: Image.asset(
-            'images/Logo.jpeg',
+            'assets/images/Logo.jpeg',
             fit: BoxFit.contain,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
