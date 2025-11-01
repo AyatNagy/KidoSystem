@@ -50,14 +50,14 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   children: [
                     Image.asset(
-                      'images/kido.png',
+                      'assets/images/kido.png',
                       width: imageWidth,
                       fit: BoxFit.contain,
                     ),
                     Transform.translate(
-                      offset: const Offset(0, -70),
+                      offset: const Offset(0, -50),
                       child: Image.asset(
-                        'images/home.png',
+                        'assets/images/home.png',
                         width: imageWidth,
                         fit: BoxFit.contain,
                       ),
@@ -92,7 +92,7 @@ class HomePage extends StatelessWidget {
                   ),
                   _buildRoleButton(
                     title: 'Parent',
-                    image: 'images/pa (2).png',
+                    image: 'assets/images/pa (2).png',
                     gradient: const LinearGradient(
                       colors: [Color(0xFFE68A5C), Color(0xFFF6C16D)],
                     ),
