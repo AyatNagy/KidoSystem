@@ -1,42 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/student_data_screen.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
-import 'parent_login_screen.dart';
 
-
-
-
-class ParentSignup extends StatefulWidget {
-  const ParentSignup({super.key});
+class TeacherLogin extends StatefulWidget {
+  const TeacherLogin({super.key});
 
   @override
-  State<ParentSignup> createState() => _ParentSignupState();
+  State<TeacherLogin> createState() => _TeacherLoginState();
 }
 
-class _ParentSignupState extends State<ParentSignup> {
+class _TeacherLoginState extends State<TeacherLogin> {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final phoneRegex=RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$');
-
   bool isPasswordVisible=false;
   final _formKey = GlobalKey<FormState>();
+  final emailRegex=RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  final passwordRegex=RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$');
 
   void handle(){
     if(_formKey.currentState!.validate()){
       print("success");
     }
+
   }
-
-
   @override
   Widget build(BuildContext context) {
     return
 
       Scaffold(
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -51,14 +44,14 @@ class _ParentSignupState extends State<ParentSignup> {
                   children: [
                     Image.asset('assets/images/log.png',height: 40,),
                     const SizedBox(height: 6,),
-                    //Image.asset('assets/images/Kido.png',height: 40,)
+                    Image.asset('assets/images/kido.png',height: 40,)
                   ],
                 ),
 
                 const SizedBox(height: 20,),
 
                 Text(
-                    "Hi,Parent!",
+                    "Hi,Teacher!",
                     style:TextStyle(
                       fontSize: 42,
                       fontWeight: FontWeight.bold,
@@ -75,7 +68,7 @@ class _ParentSignupState extends State<ParentSignup> {
                 const SizedBox(height:10,),
 
                 Image.asset(
-                  'assets/images/parent_sign up.png',
+                  'assets/images/te.png',
                   height: 336,width: 339,),
 
 
@@ -85,47 +78,12 @@ class _ParentSignupState extends State<ParentSignup> {
                   key: _formKey,
                   child: Column(
                     children: [
-
                       CustomTextField(
-                        fieldController: nameController ,
-                        fieldIcon: Icon(Icons.person),
-                        fieldLabel: "Full Name",
-                        fieldObscure: false,
-                        validator:Validators.validateName,
-
-                      ),
-
-                      const SizedBox(height: 16,),
-
-                      CustomTextField(
-                        fieldController: phoneController ,
-                        fieldIcon: Icon(Icons.phone),
-                        fieldLabel: "Phone Number",
-                        fieldObscure: false,
-                        keyboardType: TextInputType.number,
-                        validator: (value){
-                          if(value == null || value.isEmpty){
-                            return "Please enter your phone!";
-                          }
-
-                          if(!phoneRegex.hasMatch(value)){
-                            return "Please enter a valid phone number";
-                          }
-
-                          return null;
-                        },
-
-                      ),
-
-                      const SizedBox(height: 16,),
-
-
-                      CustomTextField(
-                        fieldController: emailController ,
-                        fieldIcon: Icon(Icons.email),
-                        fieldLabel: "Email",
-                        fieldObscure: false,
-                        validator: Validators.validateEmail,
+                          fieldController: emailController ,
+                          fieldIcon: Icon(Icons.email),
+                          fieldLabel: "Email",
+                          fieldObscure: false,
+                          validator: Validators.validateEmail
 
                       ),
 
@@ -137,15 +95,13 @@ class _ParentSignupState extends State<ParentSignup> {
                         fieldLabel: "Password",
                         fieldObscure: !isPasswordVisible,
                         suffixIcon: IconButton(
-                            onPressed:
-                                (){
+                            onPressed: (){
                               setState(() {
                                 isPasswordVisible=!isPasswordVisible;
                               });
-                            },
-                            icon: Icon(
-                                isPasswordVisible ? Icons.visibility : Icons.visibility_off , color: Color(0xff837F7F)
-                            )),
+                            }, icon: Icon(
+                            isPasswordVisible ? Icons.visibility : Icons.visibility_off , color: Color(0xff837F7F)
+                        )),
                         validator: Validators.validatePassword,
 
                       ),
@@ -155,19 +111,14 @@ class _ParentSignupState extends State<ParentSignup> {
                       Container(
                         width: 200,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: [Color(0xffF8AA3B),Color(0xffFF7A78),Color(0xffEE3187)],
+                          gradient: LinearGradient(colors: [Color(0xff3DF0C4),Color(0xff3BDBE7),Color(0xff2C8FF9)],
                               begin: Alignment.centerLeft,
                               end:Alignment.centerRight),
                           borderRadius: BorderRadius.circular(25),
 
                         ),
                         child: ElevatedButton(
-                            onPressed:(){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => StudentData()),
-                              );
-                            },
+                            onPressed: handle,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.transparent,
                               shadowColor: Colors.transparent,
@@ -176,7 +127,7 @@ class _ParentSignupState extends State<ParentSignup> {
                                 borderRadius: BorderRadius.circular(25),
                               ),
                             ),
-                            child: Text("Create Account",
+                            child: Text("Sign In",
                               style: TextStyle(fontSize: 22,color: Colors.white,fontWeight: FontWeight.bold),)),
 
 
@@ -184,38 +135,17 @@ class _ParentSignupState extends State<ParentSignup> {
 
                       const SizedBox(height: 16,),
 
-
+                      TextButton(onPressed: (){print("Forget preesed");},
+                        child: Text("Forget Password?",style: TextStyle(color: Color(0xff837F7F))),),
 
                       // const SizedBox(height: 8,),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Have an account?",
-                              style: TextStyle(color: Color(0xff837F7F))),
-
-                          TextButton(onPressed: (){
-                            Navigator.push(context,MaterialPageRoute(builder: (context)=>ParentLogin()));
-                          },
-                              child: Text("Log In",
-                                  style: TextStyle(color: Color(0xffEE3187),fontWeight: FontWeight.bold)))
-
-                        ],
-                      )
                     ],
                   ),
                 )
-
-
-
-
-
-
               ],
             ),
           ),
         ),
       );
-
   }
 }
