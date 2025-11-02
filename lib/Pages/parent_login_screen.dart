@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
 import 'parent_signup_screen.dart';
+import '../api_service/api_services.dart';
+import 'student_data_screen.dart';
 
 class ParentLogin extends StatefulWidget {
   const ParentLogin({super.key});
@@ -14,22 +16,57 @@ class _ParentLoginState extends State<ParentLogin> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordVisible = false;
+  bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
 
-  void handle() {
+  Future<void> handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      print("Login success");
+      setState(() {
+        _isLoading = true;
+      });
+
+      final email = emailController.text.trim();
+      final password = passwordController.text.trim();
+
+      final response = await ApiService.loginUser(email, password);
+
+      if (!mounted) return;
+
+      setState(() {
+        _isLoading = false; // Stop loading
+      });
+
+      if (response != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Login successful! Redirecting..."),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const StudentData()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Login failed. Please check your credentials."),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
   void handleGoogleLogin() {
     print("Google login pressed");
-    // TODO: connect to your own server API
+    // connect to your server API
   }
 
   void handleFacebookLogin() {
     print("Facebook login pressed");
-    // TODO: connect to your own server API
+    // connect to your server API
   }
 
   @override
@@ -60,7 +97,7 @@ class _ParentLoginState extends State<ParentLogin> {
                       blurRadius: 2,
                       offset: Offset(0.5, 0.5),
                       color: Colors.black26,
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -111,7 +148,7 @@ class _ParentLoginState extends State<ParentLogin> {
                           colors: [
                             Color(0xff3DF0C4),
                             Color(0xff3BDBE7),
-                            Color(0xff2C8FF9)
+                            Color(0xff2C8FF9),
                           ],
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
@@ -119,7 +156,10 @@ class _ParentLoginState extends State<ParentLogin> {
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: ElevatedButton(
-                        onPressed: handle,
+                        onPressed:
+                            _isLoading
+                                ? null
+                                : handleLogin, // Call handleLogin and disable when loading
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
@@ -128,14 +168,24 @@ class _ParentLoginState extends State<ParentLogin> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
-                        child: const Text(
-                          "Sign In",
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        child:
+                            _isLoading
+                                ? const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 3,
+                                  ),
+                                )
+                                : const Text(
+                                  "Sign In",
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -240,7 +290,8 @@ class _ParentLoginState extends State<ParentLogin> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const ParentSignup()),
+                                builder: (context) => const ParentSignup(),
+                              ),
                             );
                           },
                           child: const Text(
@@ -255,7 +306,7 @@ class _ParentLoginState extends State<ParentLogin> {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
