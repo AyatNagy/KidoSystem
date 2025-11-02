@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:kido/Models/user.dart';
 
 class ApiService {
-  static const String baseUrl = "http://localhost:3000/api";
+  static const String baseUrl = "https://kidosystem.duckdns.org/api";
 
   static Future<bool> registerUser(User user) async {
     final url = Uri.parse('$baseUrl/auth/register');
