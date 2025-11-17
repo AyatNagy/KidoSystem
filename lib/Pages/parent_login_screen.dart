@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Pages/Auth/forgot_by_email_page.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
 import 'parent_signup_screen.dart';
@@ -191,7 +192,12 @@ class _ParentLoginState extends State<ParentLogin> {
                     const SizedBox(height: 16),
                     TextButton(
                       onPressed: () {
-                        print("Forget pressed");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ForgotByEmail(),
+                          ),
+                        );
                       },
                       child: const Text(
                         "Forget Password?",

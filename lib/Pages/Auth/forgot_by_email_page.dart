@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/Auth/choose_recovery_method_page.dart';
+
 import 'package:kido/Pages/Auth/verify_code_page.dart';
+import 'package:kido/Pages/parent_login_screen.dart';
 import 'package:kido/Widgets/custom_app_button.dart';
 import 'package:kido/Widgets/text_field_item.dart';
 import 'package:kido/utils/validators.dart';
@@ -18,7 +19,9 @@ class _ForgotByEmailState extends State<ForgotByEmail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         elevation: 0,
         leadingWidth: 120,
         leading: Row(
@@ -49,12 +52,17 @@ class _ForgotByEmailState extends State<ForgotByEmail> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Image.asset(
+                'assets/images/forgotpass.png',
+                height: 250,
+                width: 339,
+              ),
               const SizedBox(height: 10),
               Text(
-                "Enter your registered email to receive a verification code.",
+                "Forgot password ?",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 42,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
                   shadows: [
                     Shadow(
@@ -63,6 +71,16 @@ class _ForgotByEmailState extends State<ForgotByEmail> {
                       color: Colors.black26,
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "Donot worry! Enter your email below to receive a code",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
 
@@ -75,7 +93,7 @@ class _ForgotByEmailState extends State<ForgotByEmail> {
                 validator: Validators.validateEmail,
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 15),
 
               CustomGradientButton(
                 title: "Send verification code",
@@ -95,14 +113,12 @@ class _ForgotByEmailState extends State<ForgotByEmail> {
                 width: double.infinity,
                 borderRadius: 30,
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => ChooseRecoveryMethod(),
-                    ),
+                    MaterialPageRoute(builder: (context) => ParentLogin()),
                   );
                 },
                 child: Text(

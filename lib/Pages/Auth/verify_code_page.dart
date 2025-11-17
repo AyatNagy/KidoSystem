@@ -16,6 +16,7 @@ class _VerifyCodeState extends State<VerifyCode> {
     (index) => TextEditingController(),
   );
   final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
+  bool _hasError = false;
 
   @override
   void dispose() {
@@ -35,24 +36,30 @@ class _VerifyCodeState extends State<VerifyCode> {
   void handleVerify() {
     final otp = GetOtp();
     if (otp.length == 4) {
+      setState(() {
+        _hasError = false;
+      });
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ResetPassword()),
       );
     } else {
+      setState(() {
+        _hasError = true;
+      });
       for (var c in _controllers) {
         c.clear();
       }
       FocusScope.of(context).requestFocus(_focusNodes[0]);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter all 4 digits!')),
-      );
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         elevation: 0,
         leadingWidth: 120,
         leading: Row(
@@ -80,7 +87,12 @@ class _VerifyCodeState extends State<VerifyCode> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset('assets/images/Kido.png'),
+            const SizedBox(height: 30),
+            Image.asset(
+              'assets/images/verifycode.png',
+              height: 200,
+              width: 339,
+            ),
             const SizedBox(height: 10),
             Text(
               "Enter code",
@@ -107,7 +119,13 @@ class _VerifyCodeState extends State<VerifyCode> {
                   child: OtpField(
                     controller: _controllers[index],
                     focusNode: _focusNodes[index],
+                    isError: _hasError,
                     onChanged: (value) {
+                      if (_hasError) {
+                        setState(() {
+                          _hasError = false;
+                        });
+                      }
                       if (value.isNotEmpty && index < 3) {
                         FocusScope.of(
                           context,
@@ -124,7 +142,7 @@ class _VerifyCodeState extends State<VerifyCode> {
             ),
             const SizedBox(height: 20),
             const Text(
-              "We have sent the verification code to you",
+              "We have sent the verification code to you.",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16),
             ),
@@ -135,7 +153,7 @@ class _VerifyCodeState extends State<VerifyCode> {
               },
               child: Text("Resend", style: TextStyle(color: Colors.red)),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
 
             CustomGradientButton(
               title: "Verify",
