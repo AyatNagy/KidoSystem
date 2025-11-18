@@ -1,160 +1,144 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/parent_login_screen.dart';
+import '../Widgets/ResponsiveProvider.dart';
+import '../config/ResponsiveConfig.dart';
 import 'Kid_Login.dart';
 import 'Login_Teacher.dart';
-import 'responsive.dart';
+import 'parent_login_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final deviceType = getDeviceType(MediaQuery.of(context));
-    final bool isTablet = deviceType == DeviceType.Tablet;
-    final bool isDesktop = deviceType == DeviceType.Desktop;
-
-    double imageWidth = isDesktop
-        ? 600
-        : isTablet
-        ? 500
-        : 300;
-
-    double fontSize = isDesktop
-        ? 60
-        : isTablet
-        ? 50
-        : 36;
-
-    double buttonWidth = isDesktop
-        ? 180
-        : isTablet
-        ? 140
-        : 100;
-
-    double buttonHeight = isDesktop
-        ? 120
-        : isTablet
-        ? 100
-        : 80;
+    final config = ResponsiveProvider.of(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: isDesktop ? 200 : 30,
-            vertical: 20,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(height: 50),
-              Expanded(
-                child: Column(
-                  children: [
-                    Image.asset(
-                      'assets/images/kido.png',
-                      width: imageWidth,
-                      fit: BoxFit.contain,
-                    ),
-                    Transform.translate(
-                      offset: const Offset(0, -70),
-                      child: Image.asset(
-                        'assets/images/home.png',
-                        width: imageWidth,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: config.pagePadding,
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).padding.vertical,
+            ),
+            child: IntrinsicHeight(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: config.localHeight * 0.05),
+
+                  Column(
+                    children: [
+                      Image.asset(
+                        'assets/images/kido.png',
+                        width: config.imageWidth(0.5),
                         fit: BoxFit.contain,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                'I am a...',
-                style: TextStyle(
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF333333),
-                ),
-              ),
 
-              const SizedBox(height: 50),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildRoleButton(
-                    title: 'Teacher',
-                    icon: Icons.school_outlined,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF8869B3), Color(0xFF4C99A8)],
-                    ),
-                    width: buttonWidth,
-                    height: buttonHeight,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => TeacherLogin()),
-                      );
-                    },
+                      SizedBox(height: config.localHeight * 0.01),
+
+                      Image.asset(
+                        'assets/images/home.png',
+                        width: config.localWidth * 0.8,
+                        fit: BoxFit.contain,
+                      ),
+                    ],
                   ),
-                  _buildRoleButton(
-                    title: 'Parent',
-                    image: 'assets/images/pa (2).png',
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFE68A5C), Color(0xFFF6C16D)],
+
+                  SizedBox(height: config.localHeight * 0.03),
+
+                  Text(
+                    'I am a...',
+                    style: TextStyle(
+                      fontSize: config.headline,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF333333),
                     ),
-                    width: buttonWidth,
-                    height: buttonHeight,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ParentLogin()),
-                      );
-                    },
                   ),
-                  _buildRoleButton(
-                    title: 'Student',
-                    icon: Icons.face,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF4C99A8), Color(0xFF8AC6D1)],
-                    ),
-                    width: buttonWidth,
-                    height: buttonHeight,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => KidoLogin()),
-                      );
-                    },
+
+                  SizedBox(height: config.localHeight * 0.05),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildRoleButton(
+                        config: config,
+                        title: 'Teacher',
+                        icon: Icons.school_outlined,
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF8869B3), Color(0xFF4C99A8)],
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => TeacherLogin()),
+                          );
+                        },
+                      ),
+                      _buildRoleButton(
+                        config: config,
+                        title: 'Parent',
+                        image: 'assets/images/pa (2).png',
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFE68A5C), Color(0xFFF6C16D)],
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => ParentLogin()),
+                          );
+                        },
+                      ),
+                      _buildRoleButton(
+                        config: config,
+                        title: 'Student',
+                        icon: Icons.face,
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF4C99A8), Color(0xFF8AC6D1)],
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => KidoLogin()),
+                          );
+                        },
+                      ),
+                    ],
                   ),
+
+                  SizedBox(height: config.localHeight * 0.1),
                 ],
               ),
-              const SizedBox(height: 100),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
+
   Widget _buildRoleButton({
+    required ResponsiveConfig config,
     required String title,
     IconData? icon,
     String? image,
     required Gradient gradient,
-    required double width,
-    required double height,
     required VoidCallback onPressed,
   }) {
     return Container(
-      width: width,
-      height: height,
+      width: config.localWidth * 0.25,
+      height: config.buttonHeight,
       decoration: BoxDecoration(
         gradient: gradient,
         borderRadius: BorderRadius.circular(30),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black26,
             blurRadius: 6,
-            offset: const Offset(2, 4),
+            offset: Offset(2, 4),
           ),
         ],
       ),
@@ -172,27 +156,26 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null)
-              Icon(icon, color: Colors.white, size: 35)
+              Icon(icon, color: Colors.white, size: config.buttonFont)
             else if (image != null)
               Image.asset(
-                  image,
-                  width: 40,
-                  height: 35,
-                  fit: BoxFit.contain
+                image,
+                width: config.buttonFont,
+                height: config.buttonFont,
+                fit: BoxFit.contain,
               ),
-            const SizedBox(height: 8),
+            SizedBox(height: config.localHeight * 0.01),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: config.body,
                 fontWeight: FontWeight.bold,
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 }
-

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:kido/Pages/Logo_Page.dart';
+import 'Pages/Logo_Page.dart';
+import 'Widgets/info_widget.dart';
+import 'Widgets/ResponsiveProvider.dart';
+import 'config/ResponsiveConfig.dart';
 
 void main() {
   runApp(
@@ -16,12 +19,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-    
-      builder: DevicePreview.appBuilder,
-      locale: DevicePreview.locale(context),
-      debugShowCheckedModeBanner: false,
-      home: Logo(),
+
+    return InfoWidget(
+      builder: (context, deviceInfo) {
+        return ResponsiveProvider(
+          config: ResponsiveConfig(deviceInfo),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            builder: DevicePreview.appBuilder,
+            locale: DevicePreview.locale(context),
+            home:  Logo(),
+          ),
+        );
+      },
     );
   }
 }

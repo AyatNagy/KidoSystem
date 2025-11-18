@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../Widgets/text_field_item.dart';
-import '../utils/validators.dart';
+import '../Widgets/ResponsiveProvider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StudentData extends StatefulWidget {
   const StudentData({super.key});
@@ -11,177 +12,123 @@ class StudentData extends StatefulWidget {
 }
 
 class _StudentDataState extends State<StudentData> {
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
-  //final TextEditingController phoneController = TextEditingController();
-  //final phoneRegex=RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$');
-
-  bool isPasswordVisible=false;
+  bool isPasswordVisible = false;
   final _formKey = GlobalKey<FormState>();
 
-  void handle(){
-    if(_formKey.currentState!.validate()){
-      print("success");
+  Future<void> handleAdd() async {
+    if (_formKey.currentState!.validate()) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('child_name', nameController.text.trim());
+      await prefs.setString('child_username', usernameController.text.trim());
+      await prefs.setString('child_age', ageController.text.trim());
+      Navigator.pop(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final config = ResponsiveProvider.of(context);
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          padding: config.pagePadding,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            //crossAxisAlignment: CrossAxisAlignment.center,
-
             children: [
-              //const SizedBox(height: 20,),
+              SizedBox(height: config.localHeight * 0.02),
               Row(
-
                 children: [
-                  Image.asset('assets/images/log.png',height: 40,),
-                  const SizedBox(height: 6,),
-                  //Image.asset('assets/images/Kido.png',height: 40,)
+                  Image.asset('assets/images/log.png', height: config.imageHeight(0.07)),
+                  SizedBox(width: config.localWidth * 0.02),
                 ],
               ),
-
-              const SizedBox(height: 20,),
-
+              SizedBox(height: config.localHeight * 0.03),
               Text(
                 "Bring kid onboard",
-                style:TextStyle(
-                  fontSize: 42,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 2,
-                      offset: Offset(0.5, 0.5),
-                      color: Colors.black26,
-                    )
-                  ],
-
-                ),
-                maxLines: 1,
-                //overflow: TextOverflow.ellipsis,
-                //textAlign: TextAlign.center,
+                style: TextStyle(fontSize: config.headline, fontWeight: FontWeight.bold),
               ),
-
-              const SizedBox(height:10,),
-
+              SizedBox(height: config.localHeight * 0.02),
               Image.asset(
                 'assets/images/student_data.png',
-                height: 336,width: 339,),
-
-
-              SizedBox(height: 20,),
-
+                height: config.imageHeight(0.33),
+                width: config.imageWidth(0.8),
+                fit: BoxFit.contain,
+              ),
+              SizedBox(height: config.localHeight * 0.03),
               Form(
                 key: _formKey,
                 child: Column(
                   children: [
-
-
                     CustomTextField(
-                      fieldController: nameController ,
-                      fieldIcon: Icon(Icons.face),
+                      fieldController: nameController,
+                      fieldIcon: const Icon(Icons.face),
                       fieldLabel: "Child's name",
                       fieldObscure: false,
-
-                      //validator: Validators.validateEmail
-
                     ),
-
-                    const SizedBox(height: 16,),
-
-
+                    SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
-                      fieldController: usernameController ,
-                      fieldIcon: Icon(Icons.people),
+                      fieldController: usernameController,
+                      fieldIcon: const Icon(Icons.people),
                       fieldLabel: "Child's Username",
                       fieldObscure: false,
-                      //validator: Validators.validateEmail
-
                     ),
-
-                    const SizedBox(height: 16,),
-
+                    SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
-                      fieldController: ageController ,
-                      fieldIcon: Icon(Icons.date_range),
+                      fieldController: ageController,
+                      fieldIcon: const Icon(Icons.date_range),
                       fieldLabel: "Child's Age",
                       fieldObscure: false,
-                      keyboardType:TextInputType.numberWithOptions(),
+                      keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      //validator: Validators.validateEmail
-
                     ),
-
-                    const SizedBox(height: 16,),
-
-
-
+                    SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
-                      fieldController: passwordController ,
-                      fieldIcon: Icon(Icons.lock),
+                      fieldController: passwordController,
+                      fieldIcon: const Icon(Icons.lock),
                       fieldLabel: "Child's Password",
                       fieldObscure: !isPasswordVisible,
                       suffixIcon: IconButton(
-                          onPressed: (){
-                            setState(() {
-                              isPasswordVisible=!isPasswordVisible;
-                            });
-                          }, icon: Icon(
-                          isPasswordVisible ? Icons.visibility : Icons.visibility_off , color: Color(0xff837F7F)
-                      )),
-                      validator: Validators.validatePassword,
-
+                        onPressed: () {
+                          setState(() => isPasswordVisible = !isPasswordVisible);
+                        },
+                        icon: Icon(
+                          isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          color: const Color(0xff837F7F),
+                        ),
+                      ),
                     ),
-
-                    const SizedBox(height: 30,),
-
+                    SizedBox(height: config.localHeight * 0.04),
                     Container(
-                      width: 200,
+                      width: config.localWidth * 0.5,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [Color(0xffffB74D),Color(0xffff8A65),Color(0xfff06292)],
-                            begin: Alignment.centerLeft,
-                            end:Alignment.centerRight),
+                        gradient: const LinearGradient(
+                          colors: [Color(0xffffB74D), Color(0xffff8A65), Color(0xfff06292)],
+                        ),
                         borderRadius: BorderRadius.circular(25),
-
                       ),
                       child: ElevatedButton(
-                          onPressed: handle,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
+                        onPressed: handleAdd,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          padding: EdgeInsets.symmetric(vertical: config.localHeight * 0.02),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
                           ),
-                          child: Text("Add My Little Star",
-                            style: TextStyle(fontSize: 22,color: Colors.white,fontWeight: FontWeight.bold),)),
-
-
+                        ),
+                        child: Text(
+                          "Add My Little Star",
+                          style: TextStyle(fontSize: config.title, color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
-
-
-
-                    // const SizedBox(height: 8,),
-
-
                   ],
                 ),
-              )
-
-
-
-
-
-
+              ),
             ],
           ),
         ),

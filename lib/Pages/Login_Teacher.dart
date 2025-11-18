@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
+import '../Widgets/ResponsiveProvider.dart';
+import '../config/ResponsiveConfig.dart';
 
 class TeacherLogin extends StatefulWidget {
   const TeacherLogin({super.key});
@@ -10,142 +12,174 @@ class TeacherLogin extends StatefulWidget {
 }
 
 class _TeacherLoginState extends State<TeacherLogin> {
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  bool isPasswordVisible=false;
-  final _formKey = GlobalKey<FormState>();
-  final emailRegex=RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-  final passwordRegex=RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$');
+  bool isPasswordVisible = false;
 
-  void handle(){
-    if(_formKey.currentState!.validate()){
+  final _formKey = GlobalKey<FormState>();
+
+  void handle() {
+    if (_formKey.currentState!.validate()) {
       print("success");
     }
-
   }
+
   @override
   Widget build(BuildContext context) {
-    return
+    final config = ResponsiveProvider.of(context);
 
-      Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              //crossAxisAlignment: CrossAxisAlignment.center,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: config.pagePadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: config.localHeight * 0.02),
 
-              children: [
-                //const SizedBox(height: 20,),
-                Row(
+              // LOGO
+              Row(
+                children: [
+                  Image.asset(
+                    'assets/images/log.png',
+                    height: config.imageHeight(0.07),
+                  ),
+                  SizedBox(width: config.localWidth * 0.02),
+                  Image.asset(
+                    'assets/images/kido.png',
+                    height: config.imageHeight(0.07),
+                  ),
+                ],
+              ),
 
-                  children: [
-                    Image.asset('assets/images/log.png',height: 40,),
-                    const SizedBox(height: 6,),
-                    Image.asset('assets/images/kido.png',height: 40,)
+              SizedBox(height: config.localHeight * 0.03),
+
+              // TITLE
+              Text(
+                "Hi, Teacher!",
+                style: TextStyle(
+                  fontSize: config.headline,
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 2,
+                      offset: const Offset(0.5, 0.5),
+                      color: Colors.black26,
+                    )
                   ],
                 ),
+              ),
 
-                const SizedBox(height: 20,),
+              SizedBox(height: config.localHeight * 0.02),
 
-                Text(
-                    "Hi,Teacher!",
-                    style:TextStyle(
-                      fontSize: 42,
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 2,
-                          offset: Offset(0.5, 0.5),
-                          color: Colors.black26,
-                        )
-                      ],
+              // IMAGE
+              Image.asset(
+                'assets/images/te.png',
+                height: config.imageHeight(0.32),
+                width: config.imageWidth(0.8),
+                fit: BoxFit.contain,
+              ),
 
-                    )),
+              SizedBox(height: config.localHeight * 0.03),
 
-                const SizedBox(height:10,),
+              // FORM
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    // EMAIL
+                    CustomTextField(
+                      fieldController: emailController,
+                      fieldIcon: const Icon(Icons.email),
+                      fieldLabel: "Email",
+                      fieldObscure: false,
+                      validator: Validators.validateEmail,
+                    ),
 
-                Image.asset(
-                  'assets/images/te.png',
-                  height: 336,width: 339,),
+                    SizedBox(height: config.localHeight * 0.02),
 
-
-                SizedBox(height: 20,),
-
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      CustomTextField(
-                          fieldController: emailController ,
-                          fieldIcon: Icon(Icons.email),
-                          fieldLabel: "Email",
-                          fieldObscure: false,
-                          validator: Validators.validateEmail
-
-                      ),
-
-                      const SizedBox(height: 16,),
-
-                      CustomTextField(
-                        fieldController: passwordController ,
-                        fieldIcon: Icon(Icons.lock),
-                        fieldLabel: "Password",
-                        fieldObscure: !isPasswordVisible,
-                        suffixIcon: IconButton(
-                            onPressed: (){
-                              setState(() {
-                                isPasswordVisible=!isPasswordVisible;
-                              });
-                            }, icon: Icon(
-                            isPasswordVisible ? Icons.visibility : Icons.visibility_off , color: Color(0xff837F7F)
-                        )),
-                        validator: Validators.validatePassword,
-
-                      ),
-
-                      const SizedBox(height: 30,),
-
-                      Container(
-                        width: 200,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: [Color(0xff3DF0C4),Color(0xff3BDBE7),Color(0xff2C8FF9)],
-                              begin: Alignment.centerLeft,
-                              end:Alignment.centerRight),
-                          borderRadius: BorderRadius.circular(25),
-
+                    // PASSWORD
+                    CustomTextField(
+                      fieldController: passwordController,
+                      fieldIcon: const Icon(Icons.lock),
+                      fieldLabel: "Password",
+                      fieldObscure: !isPasswordVisible,
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isPasswordVisible = !isPasswordVisible;
+                          });
+                        },
+                        icon: Icon(
+                          isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: const Color(0xff837F7F),
                         ),
-                        child: ElevatedButton(
-                            onPressed: handle,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                            ),
-                            child: Text("Sign In",
-                              style: TextStyle(fontSize: 22,color: Colors.white,fontWeight: FontWeight.bold),)),
-
-
                       ),
+                      validator: Validators.validatePassword,
+                    ),
 
-                      const SizedBox(height: 16,),
+                    SizedBox(height: config.localHeight * 0.04),
 
-                      TextButton(onPressed: (){print("Forget preesed");},
-                        child: Text("Forget Password?",style: TextStyle(color: Color(0xff837F7F))),),
+                    // SIGN IN BUTTON
+                    Container(
+                      width: config.localWidth * 0.45,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xff3DF0C4),
+                            Color(0xff3BDBE7),
+                            Color(0xff2C8FF9)
+                          ],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: ElevatedButton(
+                        onPressed: handle,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          padding: EdgeInsets.symmetric(
+                              vertical: config.localHeight * 0.02),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                        ),
+                        child: Text(
+                          "Sign In",
+                          style: TextStyle(
+                            fontSize: config.title,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
 
-                      // const SizedBox(height: 8,),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                    SizedBox(height: config.localHeight * 0.02),
+
+                    // FORGET PASSWORD
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Forget Password?",
+                        style: TextStyle(
+                          color: const Color(0xff837F7F),
+                          fontSize: config.body,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 }

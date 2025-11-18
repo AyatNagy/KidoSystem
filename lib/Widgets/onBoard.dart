@@ -6,7 +6,7 @@ class OnboardPage extends StatelessWidget {
 
   const OnboardPage({
     super.key,
-    required this.data,
+    required this.data, required double width, required double height,
   });
 
   @override

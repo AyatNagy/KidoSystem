@@ -4,6 +4,8 @@ import 'package:kido/controllers/unboarding_data.dart';
 import '../Widgets/CustomCanditor.dart';
 import '../Widgets/GradientButton.dart';
 import '../Widgets/onBoard.dart';
+import '../Widgets/ResponsiveProvider.dart';
+import '../config/ResponsiveConfig.dart';
 
 class OnboardScreen extends StatefulWidget {
   const OnboardScreen({super.key});
@@ -16,7 +18,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
   final PageController _controller = PageController();
   int _index = 0;
 
-  void _goToNext() {
+  void _goToNext(ResponsiveConfig config) {
     if (_index < onboardData.length - 1) {
       _controller.nextPage(
         duration: const Duration(milliseconds: 300),
@@ -39,66 +41,77 @@ class _OnboardScreenState extends State<OnboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final config = ResponsiveProvider.of(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _controller,
-                itemCount: onboardData.length,
-                onPageChanged: (value) {
-                  setState(() {
-                    _index = value;
-                  });
-                },
-                itemBuilder: (context, i) => OnboardPage(
-                  data: onboardData[i],
+        child: Padding(
+          padding: config.pagePadding,
+          child: Column(
+            children: [
+              // PageView
+              Expanded(
+                child: PageView.builder(
+                  controller: _controller,
+                  itemCount: onboardData.length,
+                  onPageChanged: (value) {
+                    setState(() {
+                      _index = value;
+                    });
+                  },
+                  itemBuilder: (context, i) => OnboardPage(
+                    data: onboardData[i],
+                    width: config.imageWidth(0.6), // image width
+                    height: config.imageHeight(0.4), // image height
+                  ),
                 ),
               ),
-            ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Column(
+              // Page indicators and buttons
+              Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       onboardData.length,
                           (i) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: CustomIndicator(active: _index == i, color: onboardData[i].color,),
+                        padding: EdgeInsets.symmetric(horizontal: config.localWidth * 0.01),
+                        child: CustomIndicator(
+                          active: _index == i,
+                          color: onboardData[i].color,
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: config.localHeight * 0.02),
 
                   GradientButton(
                     title: "Continue",
-                    onPressed: _goToNext,
+                    height: config.buttonHeight,
+                    fontSize: config.buttonFont,
+                    onPressed: () => _goToNext(config),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: config.localHeight * 0.01),
 
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: _skip,
-                      child: const Text(
+                      child: Text(
                         "Skip",
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: config.body,
                           color: Colors.grey,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: config.localHeight * 0.02),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

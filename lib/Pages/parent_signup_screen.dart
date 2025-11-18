@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Models/user.dart';
-import 'package:kido/Pages/student_data_screen.dart';
-import 'package:kido/api_service/api_services.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
-import 'parent_login_screen.dart';
+import 'student_data_screen.dart';
+import '../Widgets/ResponsiveProvider.dart';
 
 class ParentSignup extends StatefulWidget {
   const ParentSignup({super.key});
@@ -19,6 +17,7 @@ class _ParentSignupState extends State<ParentSignup> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+
   final phoneRegex = RegExp(
     r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
   );
@@ -26,201 +25,135 @@ class _ParentSignupState extends State<ParentSignup> {
   bool isPasswordVisible = false;
   final _formKey = GlobalKey<FormState>();
 
-  void handle() {
+  void handleSignup() async {
     if (_formKey.currentState!.validate()) {
-      print("success");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const StudentData()),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final config = ResponsiveProvider.of(context);
+
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          padding: config.pagePadding,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-
-            //crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //const SizedBox(height: 20,),
+              SizedBox(height: config.localHeight * 0.02),
               Row(
                 children: [
-                  Image.asset('assets/images/log.png', height: 40),
-                  const SizedBox(height: 6),
-                  //Image.asset('assets/images/Kido.png',height: 40,)
+                  Image.asset('assets/images/log.png', height: config.imageHeight(0.07)),
+                  SizedBox(width: config.localWidth * 0.02),
                 ],
               ),
-
-              const SizedBox(height: 20),
-
+              SizedBox(height: config.localHeight * 0.03),
               Text(
-                "Hi,Parent!",
+                "Hi, Parent!",
                 style: TextStyle(
-                  fontSize: 42,
+                  fontSize: config.headline,
                   fontWeight: FontWeight.bold,
-                  shadows: [
+                  shadows: const [
                     Shadow(
                       blurRadius: 2,
                       offset: Offset(0.5, 0.5),
                       color: Colors.black26,
-                    ),
+                    )
                   ],
                 ),
               ),
-
-              const SizedBox(height: 10),
-
+              SizedBox(height: config.localHeight * 0.02),
               Image.asset(
                 'assets/images/parent_sign up.png',
-                height: 336,
-                width: 339,
+                height: config.imageHeight(0.33),
+                width: config.imageWidth(0.8),
+                fit: BoxFit.contain,
               ),
-
-              SizedBox(height: 20),
-
+              SizedBox(height: config.localHeight * 0.03),
               Form(
                 key: _formKey,
                 child: Column(
                   children: [
                     CustomTextField(
                       fieldController: usernameController,
-                      fieldIcon: Icon(Icons.account_circle),
+                      fieldIcon: const Icon(Icons.account_circle),
                       fieldLabel: "Username",
                       fieldObscure: false,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter your username!";
-                        }
-                        if (value.length < 3) {
-                          return "Username must be at least 3 characters long";
-                        }
+                        if (value == null || value.isEmpty) return "Please enter your username!";
+                        if (value.length < 3) return "Username must be at least 3 characters long";
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
                       fieldController: nameController,
-                      fieldIcon: Icon(Icons.person),
+                      fieldIcon: const Icon(Icons.person),
                       fieldLabel: "Full Name",
                       fieldObscure: false,
                       validator: Validators.validateName,
                     ),
-
-                    const SizedBox(height: 16),
-
+                    SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
                       fieldController: phoneController,
-                      fieldIcon: Icon(Icons.phone),
+                      fieldIcon: const Icon(Icons.phone),
                       fieldLabel: "Phone Number",
                       fieldObscure: false,
                       keyboardType: TextInputType.number,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter your phone!";
-                        }
-
-                        if (!phoneRegex.hasMatch(value)) {
-                          return "Please enter a valid phone number";
-                        }
-
+                        if (value == null || value.isEmpty) return "Please enter your phone!";
+                        if (!phoneRegex.hasMatch(value)) return "Please enter a valid phone number";
                         return null;
                       },
                     ),
-
-                    const SizedBox(height: 16),
-
+                    SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
                       fieldController: emailController,
-                      fieldIcon: Icon(Icons.email),
+                      fieldIcon: const Icon(Icons.email),
                       fieldLabel: "Email",
                       fieldObscure: false,
                       validator: Validators.validateEmail,
                     ),
-
-                    const SizedBox(height: 16),
-
+                    SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
                       fieldController: passwordController,
-                      fieldIcon: Icon(Icons.lock),
+                      fieldIcon: const Icon(Icons.lock),
                       fieldLabel: "Password",
                       fieldObscure: !isPasswordVisible,
                       suffixIcon: IconButton(
                         onPressed: () {
-                          setState(() {
-                            isPasswordVisible = !isPasswordVisible;
-                          });
+                          setState(() => isPasswordVisible = !isPasswordVisible);
                         },
                         icon: Icon(
-                          isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Color(0xff837F7F),
+                          isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          color: const Color(0xff837F7F),
                         ),
                       ),
                       validator: Validators.validatePassword,
                     ),
-
-                    const SizedBox(height: 30),
-
+                    SizedBox(height: config.localHeight * 0.04),
                     Container(
-                      width: 200,
+                      width: config.localWidth * 0.5,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xffF8AA3B),
-                            Color(0xffFF7A78),
-                            Color(0xffEE3187),
-                          ],
+                        gradient: const LinearGradient(
+                          colors: [Color(0xffF8AA3B), Color(0xffFF7A78), Color(0xffEE3187)],
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                         ),
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            final user = User(
-                              username: usernameController.text.trim(),
-                              password: passwordController.text.trim(),
-                              name: nameController.text.trim(),
-                              email: emailController.text.trim(),
-                              phone: phoneController.text.trim(),
-                            );
-
-                            final success = await ApiService.registerUser(user);
-
-                            if (success) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    " Account created successfully!",
-                                  ),
-                                ),
-                              );
-
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StudentData(),
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Registration failed. Try again!",
-                                  ),
-                                ),
-                              );
-                            }
-                          }
-                        },
-
+                        onPressed: handleSignup,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          padding: EdgeInsets.symmetric(vertical: config.localHeight * 0.02),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
@@ -228,44 +161,37 @@ class _ParentSignupState extends State<ParentSignup> {
                         child: Text(
                           "Create Account",
                           style: TextStyle(
-                            fontSize: 22,
+                            fontSize: config.title,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
-
-                    const SizedBox(height: 16),
-
-                    // const SizedBox(height: 8,),
+                    SizedBox(height: config.localHeight * 0.03),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           "Have an account?",
-                          style: TextStyle(color: Color(0xff837F7F)),
+                          style: TextStyle(color: const Color(0xff837F7F), fontSize: config.body),
                         ),
-
                         TextButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ParentLogin(),
-                              ),
-                            );
+                            Navigator.pop(context);
                           },
                           child: Text(
                             "Log In",
                             style: TextStyle(
-                              color: Color(0xffEE3187),
+                              color: const Color(0xffEE3187),
                               fontWeight: FontWeight.bold,
+                              fontSize: config.body,
                             ),
                           ),
                         ),
                       ],
                     ),
+                    SizedBox(height: config.localHeight * 0.03),
                   ],
                 ),
               ),

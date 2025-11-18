@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../Widgets/ResponsiveProvider.dart';
 import 'onboard_page.dart';
 
 class Start extends StatelessWidget {
@@ -6,106 +7,110 @@ class Start extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final config = ResponsiveProvider.of(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: config.pagePadding,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Align(
-                alignment: Alignment.topLeft,
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/images/log.png',
-                      height: 50,
-                      width: 60,
-                    ),
-                    Image.asset(
-                      'assets/images/kido.png',
-                      height: 60,
-                      width: 60,
-                    ),
-                  ],
-                )
-            ),
-            Center(
-              child:Expanded(
-                  child:Image.asset(
-                    'assets/images/Start.png',
-                    height: 400,
-                    width: 400,
-                    fit: BoxFit.contain,
-                  )
-              )
-            ),
-              Column(
+              alignment: Alignment.topLeft,
+              child: Row(
                 children: [
-                  const SizedBox(height: 1),
-                  const Text(
-                    "Every Child’s\nJourney to Their Star!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize:30,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(2, 2),
-                          blurRadius: 3,
-                          color: Colors.grey,
-                        ),
-                      ],
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                      height: 1.3,
-                    ),
+                  Image.asset(
+                    'assets/images/log.png',
+                    height: config.imageHeight(0.06),
+                    width: config.imageWidth(0.08),
                   ),
-                  const SizedBox(height: 50),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => OnboardScreen()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        padding: EdgeInsets.zero,
-                        elevation: 3,
-                        backgroundColor: Colors.transparent,
-                      ),
-                      child: Ink(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(0xFFE68A5C),
-                              Color(0xFF8869B3),
-                              Color(0xFF4C99A8),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                        ),
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: const Text(
-                            "Start Exploring!",
-                            style: TextStyle(
-                              fontSize: 30,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                  SizedBox(width: config.localWidth * 0.01),
+                  Image.asset(
+                    'assets/images/kido.png',
+                    height: config.imageHeight(0.07),
+                    width: config.imageWidth(0.08),
                   ),
-                  const SizedBox(height: 50,),
                 ],
               ),
+            ),
+
+            Expanded(
+              child: Center(
+                child: Image.asset(
+                  'assets/images/Start.png',
+                  height: config.imageHeight(1),
+                  width: config.imageWidth(1),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+
+            Column(
+              children: [
+                Text(
+                  "Every Child’s\nJourney to Their Star!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: config.headline,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                    height: 1.3,
+                    shadows: const [
+                      Shadow(
+                        offset: Offset(2, 2),
+                        blurRadius: 3,
+                        color: Colors.grey,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: config.localHeight * 0.05),
+                SizedBox(
+                  width: double.infinity,
+                  height: config.buttonHeight,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const OnboardScreen()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: EdgeInsets.zero,
+                      elevation: 3,
+                      backgroundColor: Colors.transparent,
+                    ),
+                    child: Ink(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xFFE68A5C),
+                            Color(0xFF8869B3),
+                            Color(0xFF4C99A8),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                      ),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Start Exploring!",
+                          style: TextStyle(
+                            fontSize: config.buttonFont,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: config.localHeight * 0.05),
+              ],
+            ),
           ],
         ),
       ),
