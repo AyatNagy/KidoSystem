@@ -4,6 +4,8 @@ import '../Widgets/text_field_item.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'exams_page.dart';
+
 class StudentData extends StatefulWidget {
   const StudentData({super.key});
 
@@ -25,7 +27,10 @@ class _StudentDataState extends State<StudentData> {
       await prefs.setString('child_name', nameController.text.trim());
       await prefs.setString('child_username', usernameController.text.trim());
       await prefs.setString('child_age', ageController.text.trim());
-      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ExamScreen()),
+      );
     }
   }
 

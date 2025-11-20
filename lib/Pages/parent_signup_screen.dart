@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Models/user.dart';
+import 'package:kido/Pages/student_data_screen.dart';
+import 'package:kido/api_service/api_services.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
-import 'student_data_screen.dart';
 import '../Widgets/ResponsiveProvider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ParentSignup extends StatefulWidget {
   const ParentSignup({super.key});
@@ -17,19 +20,46 @@ class _ParentSignupState extends State<ParentSignup> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-
   final phoneRegex = RegExp(
     r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
   );
 
   bool isPasswordVisible = false;
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
-  void handleSignup() async {
-    if (_formKey.currentState!.validate()) {
+  Future<void> handleSignup() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    final user = User(
+      username: usernameController.text.trim(),
+      name: nameController.text.trim(),
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+      phone: phoneController.text.trim(),
+    );
+
+    final success = await ApiService.registerUser(user);
+
+    setState(() => _isLoading = false);
+
+    if (success) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('username', user.username);
+      await prefs.setString('email', user.email);
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const StudentData()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Registration failed. Try again!"),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
@@ -127,9 +157,7 @@ class _ParentSignupState extends State<ParentSignup> {
                       fieldLabel: "Password",
                       fieldObscure: !isPasswordVisible,
                       suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() => isPasswordVisible = !isPasswordVisible);
-                        },
+                        onPressed: () => setState(() => isPasswordVisible = !isPasswordVisible),
                         icon: Icon(
                           isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                           color: const Color(0xff837F7F),
@@ -149,7 +177,7 @@ class _ParentSignupState extends State<ParentSignup> {
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: ElevatedButton(
-                        onPressed: handleSignup,
+                        onPressed: _isLoading ? null : handleSignup,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
@@ -158,13 +186,15 @@ class _ParentSignupState extends State<ParentSignup> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
-                        child: Text(
+                        child: _isLoading
+                            ? SizedBox(
+                          height: config.localHeight * 0.03,
+                          width: config.localHeight * 0.03,
+                          child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                        )
+                            : Text(
                           "Create Account",
-                          style: TextStyle(
-                            fontSize: config.title,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(fontSize: config.title, color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -177,9 +207,7 @@ class _ParentSignupState extends State<ParentSignup> {
                           style: TextStyle(color: const Color(0xff837F7F), fontSize: config.body),
                         ),
                         TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                          onPressed: () => Navigator.pop(context),
                           child: Text(
                             "Log In",
                             style: TextStyle(
