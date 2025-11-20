@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Pages/Auth/forgot_by_email_pagel.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
 import 'parent_signup_screen.dart';
@@ -101,7 +102,7 @@ class _ParentLoginState extends State<ParentLogin> {
                       blurRadius: 2,
                       offset: Offset(0.5, 0.5),
                       color: Colors.black26,
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -142,7 +143,9 @@ class _ParentLoginState extends State<ParentLogin> {
                       fieldObscure: !isPasswordVisible,
                       suffixIcon: IconButton(
                         onPressed: () {
-                          setState(() => isPasswordVisible = !isPasswordVisible);
+                          setState(
+                            () => isPasswordVisible = !isPasswordVisible,
+                          );
                         },
                         icon: Icon(
                           isPasswordVisible
@@ -175,28 +178,30 @@ class _ParentLoginState extends State<ParentLogin> {
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
                           padding: EdgeInsets.symmetric(
-                              vertical: config.localHeight * 0.02),
+                            vertical: config.localHeight * 0.02,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
-                        child: _isLoading
-                            ? SizedBox(
-                          height: config.localHeight * 0.03,
-                          width: config.localHeight * 0.03,
-                          child: const CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 3,
-                          ),
-                        )
-                            : Text(
-                          "Sign In",
-                          style: TextStyle(
-                            fontSize: config.title,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        child:
+                            _isLoading
+                                ? SizedBox(
+                                  height: config.localHeight * 0.03,
+                                  width: config.localHeight * 0.03,
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 3,
+                                  ),
+                                )
+                                : Text(
+                                  "Sign In",
+                                  style: TextStyle(
+                                    fontSize: config.title,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                       ),
                     ),
 
@@ -204,7 +209,14 @@ class _ParentLoginState extends State<ParentLogin> {
 
                     // FORGET PASSWORD
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ForgotByEmail(),
+                          ),
+                        );
+                      },
                       child: Text(
                         "Forget Password?",
                         style: TextStyle(
@@ -255,7 +267,8 @@ class _ParentLoginState extends State<ParentLogin> {
                         ),
                         style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.symmetric(
-                              vertical: config.localHeight * 0.02),
+                            vertical: config.localHeight * 0.02,
+                          ),
                           side: const BorderSide(color: Colors.grey),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
@@ -285,7 +298,8 @@ class _ParentLoginState extends State<ParentLogin> {
                         ),
                         style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.symmetric(
-                              vertical: config.localHeight * 0.02),
+                            vertical: config.localHeight * 0.02,
+                          ),
                           side: const BorderSide(color: Colors.grey),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
@@ -312,7 +326,8 @@ class _ParentLoginState extends State<ParentLogin> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => const ParentSignup()),
+                                builder: (_) => const ParentSignup(),
+                              ),
                             );
                           },
                           child: Text(
