@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kido/Pages/Questions/tall_short_question_page.dart';
 import '../Widgets/text_field_item.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,10 +23,15 @@ class _StudentDataState extends State<StudentData> {
   Future<void> handleAdd() async {
     if (_formKey.currentState!.validate()) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
+
       await prefs.setString('child_name', nameController.text.trim());
       await prefs.setString('child_username', usernameController.text.trim());
       await prefs.setString('child_age', ageController.text.trim());
-      Navigator.pop(context);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => TallShortQuestionPage()),
+      );
     }
   }
 
@@ -42,14 +48,20 @@ class _StudentDataState extends State<StudentData> {
               SizedBox(height: config.localHeight * 0.02),
               Row(
                 children: [
-                  Image.asset('assets/images/log.png', height: config.imageHeight(0.07)),
+                  Image.asset(
+                    'assets/images/log.png',
+                    height: config.imageHeight(0.07),
+                  ),
                   SizedBox(width: config.localWidth * 0.02),
                 ],
               ),
               SizedBox(height: config.localHeight * 0.03),
               Text(
                 "Bring kid onboard",
-                style: TextStyle(fontSize: config.headline, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: config.headline,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(height: config.localHeight * 0.02),
               Image.asset(
@@ -93,10 +105,14 @@ class _StudentDataState extends State<StudentData> {
                       fieldObscure: !isPasswordVisible,
                       suffixIcon: IconButton(
                         onPressed: () {
-                          setState(() => isPasswordVisible = !isPasswordVisible);
+                          setState(
+                            () => isPasswordVisible = !isPasswordVisible,
+                          );
                         },
                         icon: Icon(
-                          isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           color: const Color(0xff837F7F),
                         ),
                       ),
@@ -106,7 +122,11 @@ class _StudentDataState extends State<StudentData> {
                       width: config.localWidth * 0.5,
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Color(0xffffB74D), Color(0xffff8A65), Color(0xfff06292)],
+                          colors: [
+                            Color(0xffffB74D),
+                            Color(0xffff8A65),
+                            Color(0xfff06292),
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(25),
                       ),
@@ -115,14 +135,20 @@ class _StudentDataState extends State<StudentData> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
-                          padding: EdgeInsets.symmetric(vertical: config.localHeight * 0.02),
+                          padding: EdgeInsets.symmetric(
+                            vertical: config.localHeight * 0.02,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
                         child: Text(
                           "Add My Little Star",
-                          style: TextStyle(fontSize: config.title, color: Colors.white, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: config.title,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
