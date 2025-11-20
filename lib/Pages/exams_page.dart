@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Pages/Questions/tall_short_question_page.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import '../Models/question_model.dart';
 import '../controllers/question_data.dart';
@@ -77,17 +78,24 @@ class _ExamScreenState extends State<ExamScreen> {
                         duration: const Duration(milliseconds: 300),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          gradient: isSelected
-                              ? const LinearGradient(
-                            colors: [Color(0xfff06292), Color(0xffff8a65)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          )
-                              : const LinearGradient(
-                            colors: [Color(0xffe0e0e0), Color(0xfff5f5f5)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
+                          gradient:
+                              isSelected
+                                  ? const LinearGradient(
+                                    colors: [
+                                      Color(0xfff06292),
+                                      Color(0xffff8a65),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  )
+                                  : const LinearGradient(
+                                    colors: [
+                                      Color(0xffe0e0e0),
+                                      Color(0xfff5f5f5),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black12,
@@ -116,7 +124,9 @@ class _ExamScreenState extends State<ExamScreen> {
                 child: ElevatedButton(
                   onPressed: selectedOption != null ? nextQuestion : null,
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: config.localHeight * 0.025),
+                    padding: EdgeInsets.symmetric(
+                      vertical: config.localHeight * 0.025,
+                    ),
                     backgroundColor: Colors.deepPurpleAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -147,6 +157,11 @@ class _ExamScreenState extends State<ExamScreen> {
         currentIndex++;
         selectedOption = null;
       });
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const TallShortQuestionPage()),
+      );
     }
   }
 }
