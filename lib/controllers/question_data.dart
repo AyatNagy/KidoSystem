@@ -43,7 +43,7 @@ final List<Question> questions = [
     },
   ),
   Question(
-    id: 2,
+    id: 3,
     type: QuestionType.choosing,
     title: 'Which one is a GIRL?',
     data: {
@@ -61,5 +61,21 @@ final List<Question> questions = [
       ],
       'correctKey': 'girl',
     },
+  ),
+  Question(
+      id: 4,
+      type: QuestionType.sorting,
+      title: 'KITCHENN or ROOM',
+      data: {
+        'targets' : [
+          'assets/images/kitchen.png',
+          'assets/images/room.png'
+        ],
+        'items' : {
+          'assets/images/fork.png' : 'assets/images/kitchen.png',
+          'assets/images/pot.png' : 'assets/images/kitchen.png',
+          'assets/images/bed.png' : 'assets/images/room.png',
+        },
+      }
   ),
 ];

@@ -87,7 +87,7 @@ class _BaseDragDropQuestionPageState extends State<BaseDragDropQuestionPage> {
                     }).toList(),
               ),
               const SizedBox(height: 40),
-              // العناصر المتاحة
+              
               Expanded(
                 child: SingleChildScrollView(
                   child: Wrap(

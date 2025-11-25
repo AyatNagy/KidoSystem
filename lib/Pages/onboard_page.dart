@@ -50,7 +50,6 @@ class _OnboardScreenState extends State<OnboardScreen> {
           padding: config.pagePadding,
           child: Column(
             children: [
-              // PageView
               Expanded(
                 child: PageView.builder(
                   controller: _controller,
@@ -62,13 +61,12 @@ class _OnboardScreenState extends State<OnboardScreen> {
                   },
                   itemBuilder: (context, i) => OnboardPage(
                     data: onboardData[i],
-                    width: config.imageWidth(0.6), // image width
-                    height: config.imageHeight(0.4), // image height
+                    width: config.imageWidth(0.6),
+                    height: config.imageHeight(0.4),
                   ),
                 ),
               ),
 
-              // Page indicators and buttons
               Column(
                 children: [
                   Row(

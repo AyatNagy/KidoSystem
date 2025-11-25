@@ -6,6 +6,7 @@ import 'parent_signup_screen.dart';
 import '../api_service/api_services.dart';
 import 'student_data_screen.dart';
 import '../Widgets/ResponsiveProvider.dart';
+import '../api_service/auth_services.dart';
 
 class ParentLogin extends StatefulWidget {
   const ParentLogin({super.key});
@@ -19,10 +20,12 @@ class _ParentLoginState extends State<ParentLogin> {
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordVisible = false;
   bool _isLoading = false;
+  final GoogleAuthServices googleSignIn = GoogleAuthServices();
 
   final _formKey = GlobalKey<FormState>();
 
   Future<void> handleLogin() async {
+
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
 
@@ -57,7 +60,25 @@ class _ParentLoginState extends State<ParentLogin> {
     }
   }
 
-  void handleGoogle() => print("Google Login");
+  Future<void> handleGoogle() async{
+    final result = await googleSignIn.signinWithGoogle();
+
+    if(!mounted) return;
+
+    if(result!=null){
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Google Login Successful"),
+            backgroundColor: Colors.green,)
+      );
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(_) => const StudentData()));
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Google Login Failed"),
+            backgroundColor: Colors.red,)
+      );
+    }
+  }
+
   void handleFacebook() => print("Facebook Login");
 
   @override
@@ -74,7 +95,6 @@ class _ParentLoginState extends State<ParentLogin> {
             children: [
               SizedBox(height: config.localHeight * 0.02),
 
-              // LOGO
               Row(
                 children: [
                   Image.asset(
@@ -91,7 +111,6 @@ class _ParentLoginState extends State<ParentLogin> {
 
               SizedBox(height: config.localHeight * 0.03),
 
-              // TITLE
               Text(
                 "Hi, Parent!",
                 style: TextStyle(
@@ -109,7 +128,6 @@ class _ParentLoginState extends State<ParentLogin> {
 
               SizedBox(height: config.localHeight * 0.02),
 
-              // IMAGE
               Image.asset(
                 'assets/images/parent_sign in.png',
                 height: config.imageHeight(0.33),
@@ -119,12 +137,10 @@ class _ParentLoginState extends State<ParentLogin> {
 
               SizedBox(height: config.localHeight * 0.03),
 
-              // FORM
               Form(
                 key: _formKey,
                 child: Column(
                   children: [
-                    // EMAIL
                     CustomTextField(
                       fieldController: emailController,
                       fieldIcon: const Icon(Icons.email),
@@ -135,7 +151,6 @@ class _ParentLoginState extends State<ParentLogin> {
 
                     SizedBox(height: config.localHeight * 0.02),
 
-                    // PASSWORD
                     CustomTextField(
                       fieldController: passwordController,
                       fieldIcon: const Icon(Icons.lock),
@@ -144,7 +159,7 @@ class _ParentLoginState extends State<ParentLogin> {
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(
-                            () => isPasswordVisible = !isPasswordVisible,
+                                () => isPasswordVisible = !isPasswordVisible,
                           );
                         },
                         icon: Icon(
@@ -159,7 +174,6 @@ class _ParentLoginState extends State<ParentLogin> {
 
                     SizedBox(height: config.localHeight * 0.04),
 
-                    // SIGN-IN BUTTON
                     Container(
                       width: config.localWidth * 0.50,
                       decoration: BoxDecoration(
@@ -185,29 +199,28 @@ class _ParentLoginState extends State<ParentLogin> {
                           ),
                         ),
                         child:
-                            _isLoading
-                                ? SizedBox(
-                                  height: config.localHeight * 0.03,
-                                  width: config.localHeight * 0.03,
-                                  child: const CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 3,
-                                  ),
-                                )
-                                : Text(
-                                  "Sign In",
-                                  style: TextStyle(
-                                    fontSize: config.title,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                        _isLoading
+                            ? SizedBox(
+                          height: config.localHeight * 0.03,
+                          width: config.localHeight * 0.03,
+                          child: const CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 3,
+                          ),
+                        )
+                            : Text(
+                          "Sign In",
+                          style: TextStyle(
+                            fontSize: config.title,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
 
                     SizedBox(height: config.localHeight * 0.02),
 
-                    // FORGET PASSWORD
                     TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -228,7 +241,6 @@ class _ParentLoginState extends State<ParentLogin> {
 
                     SizedBox(height: config.localHeight * 0.02),
 
-                    // DIVIDER
                     Row(
                       children: [
                         const Expanded(child: Divider(thickness: 1)),
@@ -248,7 +260,6 @@ class _ParentLoginState extends State<ParentLogin> {
 
                     SizedBox(height: config.localHeight * 0.03),
 
-                    // GOOGLE BUTTON
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
@@ -279,7 +290,6 @@ class _ParentLoginState extends State<ParentLogin> {
 
                     SizedBox(height: config.localHeight * 0.02),
 
-                    // FACEBOOK BUTTON
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
@@ -310,7 +320,6 @@ class _ParentLoginState extends State<ParentLogin> {
 
                     SizedBox(height: config.localHeight * 0.03),
 
-                    // CREATE ACCOUNT
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
