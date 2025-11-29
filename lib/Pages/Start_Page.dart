@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../Widgets/ResponsiveProvider.dart';
+import '../Widgets/appBar.dart';
 import 'onboard_page.dart';
 
 class Start extends StatelessWidget {
@@ -11,30 +12,12 @@ class Start extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: KidoAppBar(),
       body: Padding(
         padding: config.pagePadding,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Row(
-                children: [
-                  Image.asset(
-                    'assets/images/log.png',
-                    height: config.imageHeight(0.06),
-                    width: config.imageWidth(0.08),
-                  ),
-                  SizedBox(width: config.localWidth * 0.01),
-                  Image.asset(
-                    'assets/images/kido.png',
-                    height: config.imageHeight(0.07),
-                    width: config.imageWidth(0.08),
-                  ),
-                ],
-              ),
-            ),
-
             Expanded(
               child: Center(
                 child: Image.asset(

@@ -16,10 +16,10 @@ class GoogleAuthServices{
   void  _intitGoogleSignIn(){
     const String andriodId='686443808938-jpmtgejjocnjv4r4kqenra6bl81idofq.apps.googleusercontent.com';
     const String iosId='686443808938-vfnub1ra1u9hb2oama1kn8j2ijnkaafj.apps.googleusercontent.com';
-
+    const String webId='686443808938-7odsj4cb51r1pse92ecrrt81vbsssj6m.apps.googleusercontent.com';
     _googleSignIn.initialize(
         clientId: andriodId,
-        serverClientId: andriodId
+        serverClientId: webId,
     );
 
     _googleSignIn.attemptLightweightAuthentication();

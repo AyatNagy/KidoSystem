@@ -65,16 +65,49 @@ final List<Question> questions = [
   Question(
       id: 4,
       type: QuestionType.sorting,
-      title: 'KITCHENN or ROOM',
+      title: 'KITCHEN or ROOM?',
       data: {
         'targets' : [
           'assets/images/kitchen.png',
           'assets/images/room.png'
         ],
         'items' : {
-          'assets/images/fork.png' : 'assets/images/kitchen.png',
-          'assets/images/pot.png' : 'assets/images/kitchen.png',
-          'assets/images/bed.png' : 'assets/images/room.png',
+          'assets/images/spoon.png' : 'assets/images/kitchen.png',
+          'assets/images/pot2.png' : 'assets/images/kitchen.png',
+          'assets/images/duck.png' : 'assets/images/room.png',
+          'assets/images/car.png' : 'assets/images/room.png',
+        },
+      }
+  ),
+  Question(
+      id: 5,
+      type: QuestionType.sorting,
+      title: 'TALL or SHORT?',
+      data: {
+        'targets' : [
+          'assets/images/tallbox.png',
+          'assets/images/shortbox.png'
+        ],
+        'items' : {
+          'assets/images/turtle.png' : 'assets/images/shortbox.png',
+          'assets/images/tree.png' : 'assets/images/tallbox.png',
+          'assets/images/giraffe.png' : 'assets/images/tallbox.png',
+          'assets/images/mushroom.png' : 'assets/images/shortbox.png',
+        },
+      }
+  ),
+  Question(
+      id: 6,
+      type: QuestionType.sorting,
+      title: 'BUILD THE BRIDGE!',
+      data: {
+        'targets' : [
+          'assets/images/bridge_gap.png',
+        ],
+        'items' : {
+          'assets/images/birdge_box.png' : 'assets/images/bridge_gap.png',
+          'assets/images/birdge_box.png' : 'assets/images/bridge_gap.png',
+          'assets/images/birdge_box.png' : 'assets/images/bridge_gap.png',
         },
       }
   ),

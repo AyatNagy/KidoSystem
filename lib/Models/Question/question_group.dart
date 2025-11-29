@@ -5,8 +5,8 @@ class QuestionGroup {
   final String title;
   final Color color;
   final String imagePath;
-  final double width; // حجم البوكس
-  final double height; // حجم البوكس
+  final double width;
+  final double height;
 
   const QuestionGroup({
     required this.id,

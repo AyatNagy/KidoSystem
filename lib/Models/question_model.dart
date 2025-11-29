@@ -12,4 +12,6 @@ class Question {
     required this.title,
     required this.data,
   });
+
+
 }

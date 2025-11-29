@@ -27,7 +27,10 @@ class ResponsiveConfig {
 
   // Standard paddings
   EdgeInsets get pagePadding =>
-      EdgeInsets.symmetric(horizontal: deviceInfo.localWidth * 0.05, vertical: deviceInfo.localHeight * 0.02);
+      EdgeInsets.symmetric(
+          horizontal: deviceInfo.localWidth * 0.05,
+          vertical: deviceInfo.localHeight * 0.02
+      );
 
   // Expose localWidth and localHeight
   double get localWidth => deviceInfo.localWidth;

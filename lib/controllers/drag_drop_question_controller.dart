@@ -8,6 +8,7 @@ class DragDropQuestionController extends ChangeNotifier {
   final Question question;
   late List<ItemPlacement> _placements;
 
+
   DragDropQuestionController({required this.question}) {
     _placements = question.items.map((e) => ItemPlacement(item: e)).toList();
   }
