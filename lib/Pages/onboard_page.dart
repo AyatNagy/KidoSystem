@@ -45,6 +45,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+
       body: SafeArea(
         child: Padding(
           padding: config.pagePadding,
@@ -55,26 +56,22 @@ class _OnboardScreenState extends State<OnboardScreen> {
                   controller: _controller,
                   itemCount: onboardData.length,
                   onPageChanged: (value) {
-                    setState(() {
-                      _index = value;
-                    });
+                    setState(() => _index = value);
                   },
                   itemBuilder: (context, i) => OnboardPage(
                     data: onboardData[i],
-                    width: config.imageWidth(0.6),
-                    height: config.imageHeight(0.4),
                   ),
                 ),
-              ),
-
-              Column(
+              ), Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       onboardData.length,
                           (i) => Padding(
-                        padding: EdgeInsets.symmetric(horizontal: config.localWidth * 0.01),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: config.localWidth * 0.01,
+                        ),
                         child: CustomIndicator(
                           active: _index == i,
                           color: onboardData[i].color,
@@ -83,7 +80,6 @@ class _OnboardScreenState extends State<OnboardScreen> {
                     ),
                   ),
                   SizedBox(height: config.localHeight * 0.02),
-
                   GradientButton(
                     title: "Continue",
                     height: config.buttonHeight,
@@ -91,7 +87,6 @@ class _OnboardScreenState extends State<OnboardScreen> {
                     onPressed: () => _goToNext(config),
                   ),
                   SizedBox(height: config.localHeight * 0.01),
-
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(

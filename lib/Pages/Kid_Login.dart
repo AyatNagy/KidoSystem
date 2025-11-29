@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../Widgets/appBar.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
 import '../Widgets/ResponsiveProvider.dart';
@@ -30,6 +31,7 @@ class _KidoLoginState extends State<KidoLogin> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: KidoAppBar(),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -43,24 +45,6 @@ class _KidoLoginState extends State<KidoLogin> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: config.localHeight * 0.02),
-
-                    Row(
-                      children: [
-                        Image.asset(
-                          'assets/images/log.png',
-                          height: config.imageHeight(0.07),
-                        ),
-                        SizedBox(width: config.localWidth * 0.02),
-                        Image.asset(
-                          'assets/images/kido.png',
-                          height: config.imageHeight(0.07),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(height: config.localHeight * 0.03),
-
                     Text(
                       "Hi, Kido!",
                       style: TextStyle(

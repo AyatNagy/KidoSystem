@@ -10,7 +10,7 @@ final List<OnboardModel> onboardData = [
     desc: 'Discover fun lessons with letters, numbers, shapes, and more!',
   ),
   OnboardModel(
-    image: 'assets/images/play.jpeg',
+    image: 'assets/images/play.png',
     title: 'Play',
     color: Color(0xFF277D8D),
     desc: 'Enjoy interactive games and quizzes that make learning exciting.',

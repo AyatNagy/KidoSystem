@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/Auth/forgot_by_email_pagel.dart';
+import '../Widgets/appBar.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
 import 'parent_signup_screen.dart';
@@ -86,26 +87,12 @@ class _ParentLoginState extends State<ParentLogin> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: KidoAppBar(),
       body: SafeArea(
         child: Padding(
           padding: config.pagePadding,
           child: Column(
             children: [
-              SizedBox(height: config.localHeight * 0.02),
-              Row(
-                children: [
-                  Image.asset(
-                      'assets/images/log.png',
-                      height: config.imageHeight(0.05)
-                  ),
-                  SizedBox(width: config.localWidth * 0.02),
-                  Image.asset(
-                      'assets/images/kido.png',
-                      height: config.imageHeight(0.06)
-                  ),
-                ],
-              ),
-              SizedBox(height: config.localHeight * 0.02),
               Text(
                 "Hi, Parent!",
                 style: TextStyle(
@@ -113,7 +100,6 @@ class _ParentLoginState extends State<ParentLogin> {
                     fontWeight: FontWeight.bold
                 ),
               ),
-              SizedBox(height: config.localHeight * 0.02),
               Expanded(
                 flex: 3,
                 child: Center(
@@ -130,7 +116,7 @@ class _ParentLoginState extends State<ParentLogin> {
                 child: Form(
                   key: _formKey,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomTextField(
                         fieldController: emailController,
@@ -139,6 +125,7 @@ class _ParentLoginState extends State<ParentLogin> {
                         fieldObscure: false,
                         validator: Validators.validateEmail,
                       ),
+                      SizedBox(height: config.localHeight*0.001,),
                       CustomTextField(
                         fieldController: passwordController,
                         fieldIcon: const Icon(Icons.lock),
@@ -155,6 +142,7 @@ class _ParentLoginState extends State<ParentLogin> {
                         ),
                         validator: Validators.validatePassword,
                       ),
+                      SizedBox(height: config.localHeight*0.01,),
                       Container(
                         width: config.localWidth * 0.55,
                         decoration: BoxDecoration(

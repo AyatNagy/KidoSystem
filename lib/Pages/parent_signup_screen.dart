@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kido/Models/user.dart';
 import 'package:kido/Pages/student_data_screen.dart';
 import 'package:kido/api_service/api_services.dart';
+import '../Widgets/appBar.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
 import '../Widgets/ResponsiveProvider.dart';
@@ -70,20 +71,13 @@ class _ParentSignupState extends State<ParentSignup> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: KidoAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: config.pagePadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: config.localHeight * 0.02),
-              Row(
-                children: [
-                  Image.asset('assets/images/log.png', height: config.imageHeight(0.07)),
-                  SizedBox(width: config.localWidth * 0.02),
-                ],
-              ),
-              SizedBox(height: config.localHeight * 0.03),
               Text(
                 "Hi, Parent!",
                 style: TextStyle(

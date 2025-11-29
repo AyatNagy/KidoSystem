@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kido/Pages/Questions/tall_short_question_page.dart';
+import '../Widgets/appBar.dart';
 import '../Widgets/text_field_item.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,22 +43,13 @@ class _StudentDataState extends State<StudentData> {
     final config = ResponsiveProvider.of(context);
 
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: KidoAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: config.pagePadding,
           child: Column(
             children: [
-              SizedBox(height: config.localHeight * 0.02),
-              Row(
-                children: [
-                  Image.asset(
-                    'assets/images/log.png',
-                    height: config.imageHeight(0.07),
-                  ),
-                  SizedBox(width: config.localWidth * 0.02),
-                ],
-              ),
-              SizedBox(height: config.localHeight * 0.03),
               Text(
                 "Bring kid onboard",
                 style: TextStyle(

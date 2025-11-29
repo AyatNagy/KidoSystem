@@ -1,28 +1,39 @@
 import 'package:flutter/material.dart';
+import 'ResponsiveProvider.dart';
 
 class KidoAppBar extends StatelessWidget implements PreferredSizeWidget {
   const KidoAppBar({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(60);
+  Size get preferredSize => const Size.fromHeight(40);
 
   @override
   Widget build(BuildContext context) {
+    final config = ResponsiveProvider.of(context);
+
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
-      centerTitle: true,
-      automaticallyImplyLeading: false,
 
+      leadingWidth: config.localWidth * 0.35,
       leading: Row(
         children: [
-          const SizedBox(width: 9),
-          Image.asset('assets/images/log.png', height: 35,width: 50,),
-          const SizedBox(width: 5),
-          Image.asset('assets/images/kido.png', height: 30),
+          SizedBox(width: config.localWidth * 0.02),
+
+          Image.asset(
+            'assets/images/log.png',
+            height: config.imageHeight(0.06),
+            width: config.imageWidth(0.12),
+            fit: BoxFit.contain,
+          ),
+
+          Image.asset(
+            'assets/images/kido.png',
+            height: config.imageHeight(0.05),
+            fit: BoxFit.contain,
+          ),
         ],
       ),
     );
   }
 }
-

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import '../Widgets/appBar.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
 import '../Widgets/ResponsiveProvider.dart';
-import '../config/ResponsiveConfig.dart';
 
 class TeacherLogin extends StatefulWidget {
   const TeacherLogin({super.key});
@@ -30,32 +30,13 @@ class _TeacherLoginState extends State<TeacherLogin> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: KidoAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: config.pagePadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: config.localHeight * 0.02),
-
-              // LOGO
-              Row(
-                children: [
-                  Image.asset(
-                    'assets/images/log.png',
-                    height: config.imageHeight(0.07),
-                  ),
-                  SizedBox(width: config.localWidth * 0.02),
-                  Image.asset(
-                    'assets/images/kido.png',
-                    height: config.imageHeight(0.07),
-                  ),
-                ],
-              ),
-
-              SizedBox(height: config.localHeight * 0.03),
-
-              // TITLE
               Text(
                 "Hi, Teacher!",
                 style: TextStyle(
@@ -70,25 +51,18 @@ class _TeacherLoginState extends State<TeacherLogin> {
                   ],
                 ),
               ),
-
               SizedBox(height: config.localHeight * 0.02),
-
-              // IMAGE
               Image.asset(
-                'assets/images/te.png',
+                'assets/images/teacher.png',
                 height: config.imageHeight(0.32),
                 width: config.imageWidth(0.8),
                 fit: BoxFit.contain,
               ),
-
               SizedBox(height: config.localHeight * 0.03),
-
-              // FORM
               Form(
                 key: _formKey,
                 child: Column(
                   children: [
-                    // EMAIL
                     CustomTextField(
                       fieldController: emailController,
                       fieldIcon: const Icon(Icons.email),
@@ -96,10 +70,7 @@ class _TeacherLoginState extends State<TeacherLogin> {
                       fieldObscure: false,
                       validator: Validators.validateEmail,
                     ),
-
                     SizedBox(height: config.localHeight * 0.02),
-
-                    // PASSWORD
                     CustomTextField(
                       fieldController: passwordController,
                       fieldIcon: const Icon(Icons.lock),
@@ -119,11 +90,7 @@ class _TeacherLoginState extends State<TeacherLogin> {
                         ),
                       ),
                       validator: Validators.validatePassword,
-                    ),
-
-                    SizedBox(height: config.localHeight * 0.04),
-
-                    // SIGN IN BUTTON
+                    ),SizedBox(height: config.localHeight * 0.04),
                     Container(
                       width: config.localWidth * 0.45,
                       decoration: BoxDecoration(
@@ -159,10 +126,7 @@ class _TeacherLoginState extends State<TeacherLogin> {
                         ),
                       ),
                     ),
-
                     SizedBox(height: config.localHeight * 0.02),
-
-                    // FORGET PASSWORD
                     TextButton(
                       onPressed: () {},
                       child: Text(
