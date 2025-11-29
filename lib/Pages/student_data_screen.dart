@@ -44,7 +44,7 @@ class _StudentDataState extends State<StudentData> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: KidoAppBar(),
+      appBar: const KidoAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: config.pagePadding,

@@ -31,7 +31,7 @@ class _KidoLoginState extends State<KidoLogin> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: KidoAppBar(),
+      appBar: const KidoAppBar(),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {

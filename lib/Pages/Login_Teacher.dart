@@ -30,7 +30,7 @@ class _TeacherLoginState extends State<TeacherLogin> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: KidoAppBar(),
+      appBar: const KidoAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: config.pagePadding,

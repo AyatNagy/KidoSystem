@@ -12,7 +12,7 @@ class Start extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: KidoAppBar(),
+      appBar: const KidoAppBar(),
       body: Padding(
         padding: config.pagePadding,
         child: Column(

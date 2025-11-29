@@ -71,7 +71,7 @@ class _ParentSignupState extends State<ParentSignup> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: KidoAppBar(),
+      appBar: const KidoAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: config.pagePadding,

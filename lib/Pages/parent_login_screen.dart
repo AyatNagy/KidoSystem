@@ -87,7 +87,7 @@ class _ParentLoginState extends State<ParentLogin> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: KidoAppBar(),
+      appBar: const KidoAppBar(),
       body: SafeArea(
         child: Padding(
           padding: config.pagePadding,

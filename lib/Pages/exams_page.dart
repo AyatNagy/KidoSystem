@@ -44,7 +44,7 @@ class _ExamScreenState extends State<ExamScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: KidoAppBar(),
+      appBar: const KidoAppBar(),
       body: SafeArea(
         child: Padding(
           padding: config.pagePadding,
