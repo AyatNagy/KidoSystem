@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:kido/Pages/Questions/tall_short_question_page.dart';
+import 'package:kido/Widgets/appBar.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import '../Models/question_model.dart';
 import '../controllers/question_data.dart';
@@ -43,6 +44,7 @@ class _ExamScreenState extends State<ExamScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: KidoAppBar(),
       body: SafeArea(
         child: Padding(
           padding: config.pagePadding,
