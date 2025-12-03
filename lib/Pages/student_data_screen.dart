@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kido/Pages/Questions/tall_short_question_page.dart';
+import 'package:kido/Pages/exam_screen.dart';
 import '../Widgets/appBar.dart';
 import '../Widgets/text_field_item.dart';
 import '../Widgets/ResponsiveProvider.dart';
@@ -33,7 +34,9 @@ class _StudentDataState extends State<StudentData> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const ExamScreen()),
+        MaterialPageRoute(
+          builder: (_) => const ExamSkeletonScreen(examId: 'exam1'),
+        ),
       );
     }
   }
