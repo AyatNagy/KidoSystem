@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:kido/Pages/Auth/reset_password_page.dart';
 import 'package:kido/Widgets/custom_app_button.dart';
 import 'package:kido/Widgets/otp_field.dart';
+import 'package:kido/api_service/api_services.dart';
 
 class VerifyCode extends StatefulWidget {
-  const VerifyCode({super.key});
+  final String email;
+  const VerifyCode({super.key, required this.email});
 
   @override
   State<VerifyCode> createState() => _VerifyCodeState();
@@ -17,41 +19,67 @@ class _VerifyCodeState extends State<VerifyCode> {
   );
   final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
   bool _hasError = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
-    for (var c in _controllers) {
-      c.dispose();
-    }
-    for (var f in _focusNodes) {
-      f.dispose();
-    }
+    for (var c in _controllers) c.dispose();
+    for (var f in _focusNodes) f.dispose();
     super.dispose();
   }
 
-  String GetOtp() {
+  String getOtp() {
     return _controllers.map((c) => c.text).join();
   }
 
-  void handleVerify() {
-    final otp = GetOtp();
+  Future<void> handleVerify() async {
+    final otp = getOtp();
     if (otp.length == 4) {
       setState(() {
         _hasError = false;
+        _isLoading = true;
       });
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ResetPassword()),
-      );
-    } else {
-      setState(() {
-        _hasError = true;
-      });
-      for (var c in _controllers) {
-        c.clear();
+
+      final response = await ApiService.verifyOtp(widget.email, otp);
+      setState(() => _isLoading = false);
+
+      if (response != null && response['success'] == true) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => ResetPassword(email: widget.email, otpCode: otp),
+          ),
+        );
+      } else {
+        setState(() => _hasError = true);
+        for (var c in _controllers) c.clear();
+        FocusScope.of(context).requestFocus(_focusNodes[0]);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response?['message'] ?? 'Invalid OTP')),
+        );
       }
+    } else {
+      setState(() => _hasError = true);
+      for (var c in _controllers) c.clear();
       FocusScope.of(context).requestFocus(_focusNodes[0]);
     }
+  }
+
+  Future<void> handleResend() async {
+    setState(() => _isLoading = true);
+    final response = await ApiService.forgetPassword(widget.email);
+    setState(() => _isLoading = false);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          response != null && response['success'] == true
+              ? 'OTP resent successfully'
+              : 'Failed to resend OTP',
+        ),
+      ),
+    );
   }
 
   @override
@@ -66,19 +94,9 @@ class _VerifyCodeState extends State<VerifyCode> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(width: 8),
-            Image.asset(
-              'assets/images/log.png',
-              height: 40,
-              width: 40,
-              fit: BoxFit.contain,
-            ),
+            Image.asset('assets/images/log.png', height: 40, width: 40),
             SizedBox(width: 6),
-            Image.asset(
-              'assets/images/Kido.png',
-              height: 40,
-              width: 40,
-              fit: BoxFit.contain,
-            ),
+            Image.asset('assets/images/Kido.png', height: 40, width: 40),
           ],
         ),
       ),
@@ -110,22 +128,19 @@ class _VerifyCodeState extends State<VerifyCode> {
             ),
             const SizedBox(height: 10),
 
+            // OTP Fields Row
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 4,
                 (index) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
                   child: OtpField(
                     controller: _controllers[index],
                     focusNode: _focusNodes[index],
                     isError: _hasError,
                     onChanged: (value) {
-                      if (_hasError) {
-                        setState(() {
-                          _hasError = false;
-                        });
-                      }
+                      if (_hasError) setState(() => _hasError = false);
                       if (value.isNotEmpty && index < 3) {
                         FocusScope.of(
                           context,
@@ -148,24 +163,23 @@ class _VerifyCodeState extends State<VerifyCode> {
             ),
             const SizedBox(height: 10),
             TextButton(
-              onPressed: () {
-                print("resend done");
-              },
+              onPressed: _isLoading ? null : handleResend,
               child: Text("Resend", style: TextStyle(color: Colors.red)),
             ),
             const SizedBox(height: 20),
-
-            CustomGradientButton(
-              title: "Verify",
-              onPressed: handleVerify,
-              colors: const [
-                Color(0xff3DF0C4),
-                Color(0xff3BDBE7),
-                Color(0xff2C8FF9),
-              ],
-              width: double.infinity,
-              borderRadius: 30,
-            ),
+            _isLoading
+                ? CircularProgressIndicator()
+                : CustomGradientButton(
+                  title: "Verify",
+                  onPressed: handleVerify,
+                  colors: const [
+                    Color(0xff3DF0C4),
+                    Color(0xff3BDBE7),
+                    Color(0xff2C8FF9),
+                  ],
+                  width: double.infinity,
+                  borderRadius: 30,
+                ),
           ],
         ),
       ),

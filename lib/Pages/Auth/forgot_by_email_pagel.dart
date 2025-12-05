@@ -4,6 +4,7 @@ import 'package:kido/Pages/Auth/verify_code_page.dart';
 import 'package:kido/Pages/parent_login_screen.dart';
 import 'package:kido/Widgets/custom_app_button.dart';
 import 'package:kido/Widgets/text_field_item.dart';
+import 'package:kido/api_service/api_services.dart';
 import 'package:kido/utils/validators.dart';
 
 class ForgotByEmail extends StatefulWidget {
@@ -97,12 +98,22 @@ class _ForgotByEmailState extends State<ForgotByEmail> {
 
               CustomGradientButton(
                 title: "Send verification code",
-                onPressed: () {
+                onPressed: () async{
                   if (_formKey.currentState!.validate()) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => VerifyCode()),
-                    );
+                    final email = emailController.text;
+                    final response = await ApiService.forgetPassword(email);
+                    if (response != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => VerifyCode(email: email)),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Failed to send verification code'),
+                        ),
+                      );
+                    }
                   }
                 },
                 colors: const [

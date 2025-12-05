@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/parent_login_screen.dart';
+import 'package:kido/Widgets/PasswordStrengthTurtle%20.dart';
 import 'package:kido/Widgets/text_field_item.dart';
 import 'package:kido/Widgets/custom_app_button.dart';
 import 'package:kido/utils/validators.dart';
-import 'package:kido/Pages/home_page.dart';
+import 'package:kido/api_service/api_services.dart';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({super.key});
+  final String email;
+  final String otpCode;
+  const ResetPassword({super.key, required this.email, required this.otpCode});
 
   @override
   State<ResetPassword> createState() => _ResetPasswordState();
@@ -19,18 +22,13 @@ class _ResetPasswordState extends State<ResetPassword> {
   bool isNewPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
   bool _isLoading = false;
+  String currentPassword = "";
   final _formKey = GlobalKey<FormState>();
 
   String? validateConfirmPassword(String? value) {
     final passwordValidation = Validators.validatePassword(value);
-    if (passwordValidation != null) {
-      return passwordValidation;
-    }
-
-    // Then check if passwords match
-    if (value != newPasswordController.text) {
-      return "Passwords do not match!";
-    }
+    if (passwordValidation != null) return passwordValidation;
+    if (value != newPasswordController.text) return "Passwords do not match!";
     return null;
   }
 
@@ -64,24 +62,25 @@ class _ResetPasswordState extends State<ResetPassword> {
                 const SizedBox(height: 20),
                 const Text(
                   "Success!",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 const Text(
                   "Password changed successfully!",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
                 ),
                 const SizedBox(height: 24),
                 CustomGradientButton(
                   title: "OK",
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close dialog
-                    Navigator.popUntil(context, (route) => route.isFirst);
+                    // Close dialog
+                    Navigator.of(context).pop();
+                    // Navigate to login page
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => ParentLogin()),
+                      (route) => false,
+                    );
                   },
                   colors: const [
                     Color(0xff3DF0C4),
@@ -100,27 +99,28 @@ class _ResetPasswordState extends State<ResetPassword> {
     );
   }
 
-  void handleResetPassword() {
+  Future<void> handleResetPassword() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      setState(() => _isLoading = true);
 
-      // TODO: Add API call to reset password
-      // final newPassword = newPasswordController.text.trim();
-      // final response = await ApiService.resetPassword(newPassword);
+      final newPassword = newPasswordController.text.trim();
+      final response = await ApiService.resetPassword(
+        widget.email,
+        widget.otpCode,
+        newPassword,
+      );
 
-      // Simulate API call
-      Future.delayed(const Duration(seconds: 2), () {
-        if (!mounted) return;
+      setState(() => _isLoading = false);
 
-        setState(() {
-          _isLoading = false;
-        });
-
-        // Show success dialog instead of SnackBar
+      if (response != null && response['success'] == true) {
         _showSuccessDialog();
-      });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response?['message'] ?? "Failed to reset password"),
+          ),
+        );
+      }
     }
   }
 
@@ -142,20 +142,10 @@ class _ResetPasswordState extends State<ResetPassword> {
         leading: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(width: 8),
-            Image.asset(
-              'assets/images/log.png',
-              height: 40,
-              width: 40,
-              fit: BoxFit.contain,
-            ),
-            SizedBox(width: 6),
-            Image.asset(
-              'assets/images/Kido.png',
-              height: 40,
-              width: 40,
-              fit: BoxFit.contain,
-            ),
+            const SizedBox(width: 8),
+            Image.asset('assets/images/log.png', height: 40, width: 40),
+            const SizedBox(width: 6),
+            Image.asset('assets/images/Kido.png', height: 40, width: 40),
           ],
         ),
       ),
@@ -166,21 +156,10 @@ class _ResetPasswordState extends State<ResetPassword> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 10),
-              Text(
+              const Text(
                 "Change Password",
-                style: TextStyle(
-                  fontSize: 42,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 2,
-                      offset: Offset(0.5, 0.5),
-                      color: Colors.black26,
-                    ),
-                  ],
-                ),
+                style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
               ),
-
               const SizedBox(height: 30),
               Form(
                 key: _formKey,
@@ -191,12 +170,17 @@ class _ResetPasswordState extends State<ResetPassword> {
                       fieldIcon: const Icon(Icons.lock),
                       fieldLabel: "New Password",
                       fieldObscure: !isNewPasswordVisible,
+                      onChanged: (value) {
+                        setState(() {
+                          currentPassword = value;
+                        });
+                      },
                       suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isNewPasswordVisible = !isNewPasswordVisible;
-                          });
-                        },
+                        onPressed:
+                            () => setState(
+                              () =>
+                                  isNewPasswordVisible = !isNewPasswordVisible,
+                            ),
                         icon: Icon(
                           isNewPasswordVisible
                               ? Icons.visibility
@@ -206,6 +190,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                       ),
                       validator: Validators.validatePassword,
                     ),
+                    const SizedBox(height: 8),
+                    PasswordStrengthTurtle(password: currentPassword),
                     const SizedBox(height: 16),
                     CustomTextField(
                       fieldController: confirmPasswordController,
@@ -213,12 +199,12 @@ class _ResetPasswordState extends State<ResetPassword> {
                       fieldLabel: "Confirm Password",
                       fieldObscure: !isConfirmPasswordVisible,
                       suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isConfirmPasswordVisible =
-                                !isConfirmPasswordVisible;
-                          });
-                        },
+                        onPressed:
+                            () => setState(
+                              () =>
+                                  isConfirmPasswordVisible =
+                                      !isConfirmPasswordVisible,
+                            ),
                         icon: Icon(
                           isConfirmPasswordVisible
                               ? Icons.visibility
@@ -229,41 +215,34 @@ class _ResetPasswordState extends State<ResetPassword> {
                       validator: validateConfirmPassword,
                     ),
                     const SizedBox(height: 40),
-                    CustomGradientButton(
-                      title: _isLoading ? "" : "Change Password",
-                      onPressed: _isLoading ? () {} : handleResetPassword,
-                      colors: const [
-                        Color(0xff3DF0C4),
-                        Color(0xff3BDBE7),
-                        Color(0xff2C8FF9),
-                      ],
-                      width: double.infinity,
-                      borderRadius: 30,
-                      fontSize: 22,
-                    ),
-                    if (_isLoading)
-                      const Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: CircularProgressIndicator(
+                    _isLoading
+                        ? const CircularProgressIndicator(
                           color: Color(0xff2C8FF9),
+                        )
+                        : CustomGradientButton(
+                          title: "Change Password",
+                          onPressed: handleResetPassword,
+                          colors: const [
+                            Color(0xff3DF0C4),
+                            Color(0xff3BDBE7),
+                            Color(0xff2C8FF9),
+                          ],
+                          width: double.infinity,
+                          borderRadius: 30,
+                          fontSize: 22,
                         ),
-                      ),
                     const SizedBox(height: 16),
                     TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ParentLogin(),
+                      onPressed:
+                          () => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => ParentLogin()),
                           ),
-                        );
-                      },
                       child: const Text(
                         "Skip",
                         style: TextStyle(
                           fontSize: 18,
                           color: Color(0xff837F7F),
-                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
