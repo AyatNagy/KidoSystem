@@ -11,7 +11,9 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.suffixIcon,
     this.keyboardType,
-    this.inputFormatters,});
+    this.inputFormatters,
+    this.onChanged,
+  });
 
   final TextEditingController fieldController;
   final String fieldLabel;
@@ -21,22 +23,21 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
-
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return  TextFormField(
+    return TextFormField(
       controller: fieldController,
-      obscureText:fieldObscure,
-      validator:validator,
+      obscureText: fieldObscure,
+      validator: validator,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
+      onChanged: onChanged,
       decoration: InputDecoration(
         labelText: fieldLabel,
 
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(50)
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
 
         prefixIcon: fieldIcon,
         suffixIcon: suffixIcon,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/user.dart';
 import 'package:kido/Pages/student_data_screen.dart';
+import 'package:kido/Widgets/PasswordStrengthTurtle%20.dart';
 import 'package:kido/api_service/api_services.dart';
 import '../Widgets/appBar.dart';
 import '../Widgets/text_field_item.dart';
@@ -28,7 +29,7 @@ class _ParentSignupState extends State<ParentSignup> {
   bool isPasswordVisible = false;
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-
+  String currentPassword = "";
   Future<void> handleSignup() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -88,15 +89,15 @@ class _ParentSignupState extends State<ParentSignup> {
                       blurRadius: 2,
                       offset: Offset(0.5, 0.5),
                       color: Colors.black26,
-                    )
+                    ),
                   ],
                 ),
               ),
               SizedBox(height: config.localHeight * 0.02),
               Image.asset(
                 'assets/images/parent_sign up.png',
-                height: config.imageHeight(0.33),
-                width: config.imageWidth(0.8),
+                height: config.imageHeight(0.10),
+                width: config.imageWidth(0.4),
                 fit: BoxFit.contain,
               ),
               SizedBox(height: config.localHeight * 0.03),
@@ -110,8 +111,10 @@ class _ParentSignupState extends State<ParentSignup> {
                       fieldLabel: "Username",
                       fieldObscure: false,
                       validator: (value) {
-                        if (value == null || value.isEmpty) return "Please enter your username!";
-                        if (value.length < 3) return "Username must be at least 3 characters long";
+                        if (value == null || value.isEmpty)
+                          return "Please enter your username!";
+                        if (value.length < 3)
+                          return "Username must be at least 3 characters long";
                         return null;
                       },
                     ),
@@ -131,8 +134,10 @@ class _ParentSignupState extends State<ParentSignup> {
                       fieldObscure: false,
                       keyboardType: TextInputType.number,
                       validator: (value) {
-                        if (value == null || value.isEmpty) return "Please enter your phone!";
-                        if (!phoneRegex.hasMatch(value)) return "Please enter a valid phone number";
+                        if (value == null || value.isEmpty)
+                          return "Please enter your phone!";
+                        if (!phoneRegex.hasMatch(value))
+                          return "Please enter a valid phone number";
                         return null;
                       },
                     ),
@@ -150,21 +155,37 @@ class _ParentSignupState extends State<ParentSignup> {
                       fieldIcon: const Icon(Icons.lock),
                       fieldLabel: "Password",
                       fieldObscure: !isPasswordVisible,
+                      onChanged: (value) {
+                        setState(() {
+                          currentPassword = value;
+                        });
+                      },
                       suffixIcon: IconButton(
-                        onPressed: () => setState(() => isPasswordVisible = !isPasswordVisible),
+                        onPressed:
+                            () => setState(
+                              () => isPasswordVisible = !isPasswordVisible,
+                            ),
                         icon: Icon(
-                          isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           color: const Color(0xff837F7F),
                         ),
                       ),
                       validator: Validators.validatePassword,
                     ),
+                    SizedBox(height: config.localHeight * 0.01),
+                    PasswordStrengthTurtle(password: currentPassword),
                     SizedBox(height: config.localHeight * 0.04),
                     Container(
                       width: config.localWidth * 0.5,
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Color(0xffF8AA3B), Color(0xffFF7A78), Color(0xffEE3187)],
+                          colors: [
+                            Color(0xffF8AA3B),
+                            Color(0xffFF7A78),
+                            Color(0xffEE3187),
+                          ],
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                         ),
@@ -175,21 +196,31 @@ class _ParentSignupState extends State<ParentSignup> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
-                          padding: EdgeInsets.symmetric(vertical: config.localHeight * 0.02),
+                          padding: EdgeInsets.symmetric(
+                            vertical: config.localHeight * 0.02,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
-                        child: _isLoading
-                            ? SizedBox(
-                          height: config.localHeight * 0.03,
-                          width: config.localHeight * 0.03,
-                          child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
-                        )
-                            : Text(
-                          "Create Account",
-                          style: TextStyle(fontSize: config.title, color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
+                        child:
+                            _isLoading
+                                ? SizedBox(
+                                  height: config.localHeight * 0.03,
+                                  width: config.localHeight * 0.03,
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 3,
+                                  ),
+                                )
+                                : Text(
+                                  "Create Account",
+                                  style: TextStyle(
+                                    fontSize: config.title,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                       ),
                     ),
                     SizedBox(height: config.localHeight * 0.03),
@@ -198,7 +229,10 @@ class _ParentSignupState extends State<ParentSignup> {
                       children: [
                         Text(
                           "Have an account?",
-                          style: TextStyle(color: const Color(0xff837F7F), fontSize: config.body),
+                          style: TextStyle(
+                            color: const Color(0xff837F7F),
+                            fontSize: config.body,
+                          ),
                         ),
                         TextButton(
                           onPressed: () => Navigator.pop(context),
