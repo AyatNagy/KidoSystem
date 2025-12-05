@@ -285,4 +285,87 @@ class ApiService {
       return null;
     }
   }
+
+  static Future<Map<String, dynamic>?> forgetPassword(String email) async {
+    final url = Uri.parse('$baseUrl/auth/forget');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print("OTP Sent Successfully: ${data['message']}");
+        return data;
+      } else {
+        print("Forget Password Failed: ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("Error during forget password: $e");
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> resetPassword(
+    String email,
+    String otpCode,
+    String newPassword,
+  ) async {
+    final url = Uri.parse('$baseUrl/auth/reset-password');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email": email,
+          "otpCode": otpCode,
+          "newPassword": newPassword,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print("Password Reset Successful: ${data['message']}");
+        return data;
+      } else {
+        print("Reset Password Failed: ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("Error during reset password: $e");
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> verifyOtp(
+    String email,
+    String otpCode,
+  ) async {
+    final url = Uri.parse('$baseUrl/auth/verify-otp');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email, "otpCode": otpCode}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print("OTP Verified Successfully: ${data['message']}");
+        return data;
+      } else {
+        print("Verify OTP Failed: ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("Error during OTP verification: $e");
+      return null;
+    }
+  }
 }
