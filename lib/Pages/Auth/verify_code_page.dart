@@ -115,6 +115,7 @@ class _VerifyCodeState extends State<VerifyCode> {
                   Text(
                     "Enter code",
                     style: TextStyle(
+                      fontFamily:'nunito',
                       fontSize: 42,
                       fontWeight: FontWeight.bold,
                       shadows: [
@@ -159,12 +160,21 @@ class _VerifyCodeState extends State<VerifyCode> {
                   const Text(
                     "We have sent the verification code to you.",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      fontFamily: 'nunito',
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 10),
                   TextButton(
                     onPressed: isLoading ? null : handleResend,
-                    child: Text("Resend", style: TextStyle(color: Colors.red)),
+                    child: Text("Resend",
+                     style: TextStyle(
+                      fontFamily: 'nunito',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.red,
+                      )),
                   ),
                   const SizedBox(height: 20),
                   isLoading

@@ -48,6 +48,7 @@ class OnboardPage extends StatelessWidget {
                       data.title,
                       textAlign: TextAlign.center,
                       style: TextStyle(
+                        fontFamily:'tinyKids',
                         fontSize: responsive.localWidth * 0.07,
                         fontWeight: FontWeight.bold,
                         color: data.color,
