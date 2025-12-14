@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -28,7 +27,8 @@ class GoogleAuthServices{
 
   Future<Map<String,dynamic>?> signinWithGoogle() async{
 
-    final url = Uri.parse('$baseUrl/auth/google');
+    final dio = Dio();
+    final url = '$baseUrl/auth/google';
 
     try{
       final GoogleSignInAccount? account = await _googleSignIn.authenticate();
@@ -38,24 +38,36 @@ class GoogleAuthServices{
 
       if (idToken == null) return null;
 
-      final response = await http.post(
+      final response = await dio.post(
         url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"idToken":idToken}),
+        data: {"idToken":idToken},
+        options: Options(
+          headers: {"Content-Type": "application/json"},
+          validateStatus: (status) {
+            return status! < 500; // Don't throw for 4xx errors
+          },
+        ),
       );
 
       if(response.statusCode==200){
-        final data =jsonDecode(response.body);
+        final data = response.data;
         print("Google Login Successful: ${data['user']}");
         return data;
       } else {
-        print(" Login Failed: ${response.body}");
+        print("Google Login Failed: ${response.statusCode} - ${response.data}");
         return null;
       }
 
 
-    }catch(error){
-      print("Error during Goole login: $error");
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print("Error during Google login: ${e.response?.statusCode} - ${e.response?.data}");
+      } else {
+        print("Error during Google login: ${e.message}");
+      }
+      return null;
+    } catch(error){
+      print("Error during Google login: $error");
       return null;
 
     }

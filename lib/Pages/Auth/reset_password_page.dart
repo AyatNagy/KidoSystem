@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/parent_login_screen.dart';
 import 'package:kido/Widgets/PasswordStrengthTurtle%20.dart';
 import 'package:kido/Widgets/text_field_item.dart';
 import 'package:kido/Widgets/custom_app_button.dart';
 import 'package:kido/utils/validators.dart';
-import 'package:kido/api_service/api_services.dart';
+import '../../bloc/reset_password/reset_password_cubit.dart';
 
 class ResetPassword extends StatefulWidget {
   final String email;
@@ -21,7 +22,6 @@ class _ResetPasswordState extends State<ResetPassword> {
       TextEditingController();
   bool isNewPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
-  bool _isLoading = false;
   String currentPassword = "";
   final _formKey = GlobalKey<FormState>();
 
@@ -99,31 +99,6 @@ class _ResetPasswordState extends State<ResetPassword> {
     );
   }
 
-  Future<void> handleResetPassword() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-
-      final newPassword = newPasswordController.text.trim();
-      final response = await ApiService.resetPassword(
-        widget.email,
-        widget.otpCode,
-        newPassword,
-      );
-
-      setState(() => _isLoading = false);
-
-      if (response != null && response['success'] == true) {
-        _showSuccessDialog();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response?['message'] ?? "Failed to reset password"),
-          ),
-        );
-      }
-    }
-  }
-
   @override
   void dispose() {
     newPasswordController.dispose();
@@ -133,125 +108,160 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leadingWidth: 120,
-        leading: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(width: 8),
-            Image.asset('assets/images/log.png', height: 40, width: 40),
-            const SizedBox(width: 6),
-            Image.asset('assets/images/Kido.png', height: 40, width: 40),
-          ],
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 10),
-              const Text(
-                "Change Password",
-                style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
+    return BlocProvider(
+      create: (context) => ResetPasswordCubit(),
+      child: BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
+        listener: (context, state) {
+          if (state is ResetPasswordSuccess) {
+            _showSuccessDialog();
+          } else if (state is ResetPasswordFailure) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+          }
+        },
+        builder: (context, state) {
+          final cubit = context.read<ResetPasswordCubit>();
+          final isLoading = state is ResetPasswordLoading;
+
+          Future<void> handleResetPassword() async {
+            if (_formKey.currentState!.validate()) {
+              final newPassword = newPasswordController.text.trim();
+              cubit.resetPassword(widget.email, widget.otpCode, newPassword);
+            }
+          }
+
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              leadingWidth: 120,
+              leading: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 8),
+                  Image.asset('assets/images/log.png', height: 40, width: 40),
+                  const SizedBox(width: 6),
+                  Image.asset('assets/images/Kido.png', height: 40, width: 40),
+                ],
               ),
-              const SizedBox(height: 30),
-              Form(
-                key: _formKey,
+            ),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 20,
+                ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CustomTextField(
-                      fieldController: newPasswordController,
-                      fieldIcon: const Icon(Icons.lock),
-                      fieldLabel: "New Password",
-                      fieldObscure: !isNewPasswordVisible,
-                      onChanged: (value) {
-                        setState(() {
-                          currentPassword = value;
-                        });
-                      },
-                      suffixIcon: IconButton(
-                        onPressed:
-                            () => setState(
-                              () =>
-                                  isNewPasswordVisible = !isNewPasswordVisible,
-                            ),
-                        icon: Icon(
-                          isNewPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: const Color(0xff837F7F),
-                        ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "Change Password",
+                      style: TextStyle(
+                        fontSize: 42,
+                        fontWeight: FontWeight.bold,
                       ),
-                      validator: Validators.validatePassword,
                     ),
-                    const SizedBox(height: 8),
-                    PasswordStrengthTurtle(password: currentPassword),
-                    const SizedBox(height: 16),
-                    CustomTextField(
-                      fieldController: confirmPasswordController,
-                      fieldIcon: const Icon(Icons.lock_outline),
-                      fieldLabel: "Confirm Password",
-                      fieldObscure: !isConfirmPasswordVisible,
-                      suffixIcon: IconButton(
-                        onPressed:
-                            () => setState(
-                              () =>
-                                  isConfirmPasswordVisible =
-                                      !isConfirmPasswordVisible,
+                    const SizedBox(height: 30),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          CustomTextField(
+                            fieldController: newPasswordController,
+                            fieldIcon: const Icon(Icons.lock),
+                            fieldLabel: "New Password",
+                            fieldObscure: !isNewPasswordVisible,
+                            onChanged: (value) {
+                              setState(() {
+                                currentPassword = value;
+                              });
+                            },
+                            suffixIcon: IconButton(
+                              onPressed:
+                                  () => setState(
+                                    () =>
+                                        isNewPasswordVisible =
+                                            !isNewPasswordVisible,
+                                  ),
+                              icon: Icon(
+                                isNewPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: const Color(0xff837F7F),
+                              ),
                             ),
-                        icon: Icon(
-                          isConfirmPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: const Color(0xff837F7F),
-                        ),
-                      ),
-                      validator: validateConfirmPassword,
-                    ),
-                    const SizedBox(height: 40),
-                    _isLoading
-                        ? const CircularProgressIndicator(
-                          color: Color(0xff2C8FF9),
-                        )
-                        : CustomGradientButton(
-                          title: "Change Password",
-                          onPressed: handleResetPassword,
-                          colors: const [
-                            Color(0xff3DF0C4),
-                            Color(0xff3BDBE7),
-                            Color(0xff2C8FF9),
-                          ],
-                          width: double.infinity,
-                          borderRadius: 30,
-                          fontSize: 22,
-                        ),
-                    const SizedBox(height: 16),
-                    TextButton(
-                      onPressed:
-                          () => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => ParentLogin()),
+                            validator: Validators.validatePassword,
                           ),
-                      child: const Text(
-                        "Skip",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color(0xff837F7F),
-                        ),
+                          const SizedBox(height: 8),
+                          PasswordStrengthTurtle(password: currentPassword),
+                          const SizedBox(height: 16),
+                          CustomTextField(
+                            fieldController: confirmPasswordController,
+                            fieldIcon: const Icon(Icons.lock_outline),
+                            fieldLabel: "Confirm Password",
+                            fieldObscure: !isConfirmPasswordVisible,
+                            suffixIcon: IconButton(
+                              onPressed:
+                                  () => setState(
+                                    () =>
+                                        isConfirmPasswordVisible =
+                                            !isConfirmPasswordVisible,
+                                  ),
+                              icon: Icon(
+                                isConfirmPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: const Color(0xff837F7F),
+                              ),
+                            ),
+                            validator: validateConfirmPassword,
+                          ),
+                          const SizedBox(height: 40),
+                          isLoading
+                              ? const CircularProgressIndicator(
+                                color: Color(0xff2C8FF9),
+                              )
+                              : CustomGradientButton(
+                                title: "Change Password",
+                                onPressed: handleResetPassword,
+                                colors: const [
+                                  Color(0xff3DF0C4),
+                                  Color(0xff3BDBE7),
+                                  Color(0xff2C8FF9),
+                                ],
+                                width: double.infinity,
+                                borderRadius: 30,
+                                fontSize: 22,
+                              ),
+                          const SizedBox(height: 16),
+                          TextButton(
+                            onPressed:
+                                () => Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ParentLogin(),
+                                  ),
+                                ),
+                            child: const Text(
+                              "Skip",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Color(0xff837F7F),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
