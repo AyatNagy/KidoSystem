@@ -84,8 +84,10 @@ class _ParentSignupState extends State<ParentSignup> {
               Text(
                 "Hi, Parent!",
                 style: TextStyle(
+                  fontFamily: 'tinyKids',
                   fontSize: config.headline,
                   fontWeight: FontWeight.bold,
+                  color: Color(0xffEE3187),
                   shadows: const [
                     Shadow(
                       blurRadius: 2,
