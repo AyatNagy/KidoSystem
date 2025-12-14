@@ -6,6 +6,8 @@ class User {
   final String email;
   final String? phone;
   final DateTime? createdAt;
+  final bool? isVerified;
+  final String? resetToken;
 
   User({
     this.id,
@@ -15,6 +17,8 @@ class User {
     required this.email,
     this.phone,
     this.createdAt,
+    this.isVerified,
+    this.resetToken,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -29,6 +33,8 @@ class User {
           json['createdAt'] != null
               ? DateTime.tryParse(json['createdAt'])
               : null,
+      isVerified: json['isVerified'],
+      resetToken: json['resetToken'],
     );
   }
 
@@ -38,7 +44,7 @@ class User {
       'password': password,
       'name': name,
       'email': email,
-      'phone': phone,
+      if (phone != null) 'phone': phone, // يرسل فقط لو موجود
     };
   }
 }

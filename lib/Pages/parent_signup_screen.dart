@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/user.dart';
+import 'package:kido/Pages/VerifyEmailScreen.dart';
 import 'package:kido/Pages/student_data_screen.dart';
 import 'package:kido/Widgets/PasswordStrengthTurtle%20.dart';
 import 'package:kido/api_service/api_services.dart';
@@ -54,7 +55,8 @@ class _ParentSignupState extends State<ParentSignup> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const StudentData()),
+        MaterialPageRoute(builder: (_) =>  VerifyEmailScreen(email: user.email),
+),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

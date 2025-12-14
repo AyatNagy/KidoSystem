@@ -44,6 +44,7 @@ dependencies:
   shared_preferences: ^2.5.3
   flutter_secure_storage: ^9.2.4
   lottie: ^3.1.2
+  flutter_bloc: ^8.1.6
 
 dev_dependencies:
   flutter_test:
