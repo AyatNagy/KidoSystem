@@ -79,6 +79,7 @@ class ForgotByEmail extends StatelessWidget {
                       "Forgot password ?",
                       textAlign: TextAlign.center,
                       style: TextStyle(
+                        fontFamily:'nunito',
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         shadows: [
@@ -92,9 +93,10 @@ class ForgotByEmail extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "Donot worry! Enter your email below to receive a code",
+                      "Don't worry! Enter your email below to receive a code",
                       textAlign: TextAlign.center,
                       style: TextStyle(
+                        fontFamily:'nunito',
                         fontSize: 16,
                         color: Colors.black87,
                         fontWeight: FontWeight.w600,

@@ -106,8 +106,10 @@ class ParentLogin extends StatelessWidget {
                             Text(
                               "Hi, Parent!",
                               style: TextStyle(
+                                fontFamily: 'tinyKids',
                                 fontSize: config.headline,
                                 fontWeight: FontWeight.bold,
+                                color: Color(0xff3BDBE7),
                               ),
                             ),
                             Expanded(
@@ -223,6 +225,7 @@ class ParentLogin extends StatelessWidget {
                                       child: Text(
                                         "Forget Password?",
                                         style: TextStyle(
+                                          fontFamily: 'nunito',
                                           color: const Color(0xff837F7F),
                                           fontSize: config.body,
                                         ),
@@ -235,7 +238,12 @@ class ParentLogin extends StatelessWidget {
                                           padding: EdgeInsets.symmetric(
                                             horizontal: 10,
                                           ),
-                                          child: Text("or sign in with"),
+                                          child: Text(
+                                            "or sign in with",
+                                            style: TextStyle(
+                                              fontFamily: 'nunito',
+                                              fontSize: 18,
+                                            ),),
                                         ),
                                         Expanded(child: Divider()),
                                       ],
@@ -295,6 +303,7 @@ class ParentLogin extends StatelessWidget {
                                         Text(
                                           "Don't have an account?",
                                           style: TextStyle(
+                                            fontFamily: 'nunito',
                                             color: const Color(0xff837F7F),
                                             fontSize: config.body,
                                           ),
@@ -313,6 +322,7 @@ class ParentLogin extends StatelessWidget {
                                             "Create one",
                                             style: TextStyle(
                                               color: const Color(0xff2C8FF9),
+                                              fontFamily: 'nunito',
                                               fontSize: config.body,
                                               fontWeight: FontWeight.bold,
                                             ),

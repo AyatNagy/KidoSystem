@@ -81,6 +81,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                   ),
                   SizedBox(height: config.localHeight * 0.02),
                   GradientButton(
+                    gradientColors: onboardData[_index].gradientColors,
                     title: "Continue",
                     height: config.buttonHeight,
                     fontSize: config.buttonFont,
