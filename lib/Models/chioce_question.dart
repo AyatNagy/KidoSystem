@@ -1,19 +1,18 @@
-class ChoiceQuestion {
-  final String examId; // الامتحان اللي السؤال تابع له
-  final String questionText;
-  final List<String> choices; // مسار الصور لكل اختيار
-  final int correctIndex; // index الاختيار الصحيح
+import 'package:kido/Models/questionModel.dart';
+
+class ChoiceQuestion extends Question{
+  final List<String> choices;
+  final int correctIndex;
 
   ChoiceQuestion({
-    required this.examId,
-    required this.questionText,
+    required super.examId,
+    required super.questionText,
     required this.choices,
     required this.correctIndex,
   });
 }
 
 final List<ChoiceQuestion> allChoiceQuestions = [
-  // امتحان 1
   ChoiceQuestion(
     examId: 'exam1',
     questionText: "which one is a girl ?",
@@ -26,7 +25,6 @@ final List<ChoiceQuestion> allChoiceQuestions = [
     choices: [
       "assets/images/elephant.png",
       "assets/images/feather.png",
-      "assets/images/duck.png",
     ],
     correctIndex: 0,
   ),
@@ -37,13 +35,10 @@ final List<ChoiceQuestion> allChoiceQuestions = [
     choices: [
       "assets/images/whale.png",
       "assets/images/small.png",
-      "assets/images/duck.png",
-      "assets/images/duck.png",
     ],
     correctIndex: 0,
   ),
 
-  // امتحان 2
   ChoiceQuestion(
     examId: 'exam2',
     questionText: "Where is the dog ?",

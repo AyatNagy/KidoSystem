@@ -15,11 +15,8 @@ class Question {
     required this.items,
   });
 
-  /// التحقق من صحة البيانات
   bool get isValid {
     if (groups.isEmpty || items.isEmpty) return false;
-    
-    // التحقق من أن كل item له correctGroupId موجود في groups
     final groupIds = groups.map((g) => g.id).toSet();
     return items.every((item) => groupIds.contains(item.correctGroupId));
   }
