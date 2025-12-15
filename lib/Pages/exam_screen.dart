@@ -47,12 +47,14 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
 
     examQuestions = [
       ...allChoiceQuestions
-          .where((q) => q.examId == widget.examId)
+          .where((q) => q.examId.contains(widget.examId))
           .map((q) => ExamQuestion(type: QuestionType.choice, data: q)),
+
       ...allDrawingQuestions
-          .where((q) => q.examId == widget.examId)
+          .where((q) => q.examId.contains(widget.examId))
           .map((q) => ExamQuestion(type: QuestionType.drawing, data: q)),
     ];
+
 
     selectedChoiceIndex = null;
   }

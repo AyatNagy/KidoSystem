@@ -14,13 +14,13 @@ class DrawingQuestion extends Question{
 
 final List<DrawingQuestion> allDrawingQuestions = [
   DrawingQuestion(
-      examId: 'exam1',
+      examId: ['exam1'],
       questionText: "Draw letter 'V'",
       targetShape: 'V-shape',
       image: "assets/images/letterV.png"
   ),
   DrawingQuestion(
-      examId: 'exam2',
+      examId: ['exam2'],
       questionText: "Draw a Circle",
       targetShape: 'Circle',
       image: "assets/images/circle.png"
