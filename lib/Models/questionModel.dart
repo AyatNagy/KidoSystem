@@ -1,5 +1,5 @@
 abstract class Question{
-  final String examId;
+  final List<String> examId;
   final String questionText;
 
   Question({
