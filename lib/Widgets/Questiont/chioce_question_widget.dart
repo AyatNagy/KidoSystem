@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kido/Models/chioce_question.dart';
 import 'package:kido/Widgets/ResponsiveProvider.dart';
 
+import '../../config/ResponsiveConfig.dart';
+
 typedef OnChoiceSelected = void Function(int selectedIndex);
 
 class ChoiceQuestionWidget extends StatefulWidget {
@@ -51,7 +53,17 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
-    final choices = widget.question.choices;
+    final isColorQuestion = widget.question.colors != null;
+
+    if (isColorQuestion) {
+      return _buildColorQuestionLayout(config);
+    } else {
+      return _buildImageChoicesLayout(config);
+    }
+  }
+
+ Widget _buildImageChoicesLayout(ResponsiveConfig config) {
+    final choices = widget.question.choices!;
 
     return Container(
       color: Colors.white,
@@ -71,35 +83,99 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
             final isSelected = selectedIndex == index;
 
             return Center(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = index;
-                    });
-                    widget.onSelected(index);
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: isSelected
-                          ? glowBoxShadow
-                          : defaultBoxShadow,
-                    ),
-                    padding: EdgeInsets.all(config.localWidth * 0.01),
-                    child: Center(
-                      child: Image.asset(
-                        choice,
-                        fit: BoxFit.fitHeight,
-                      ),
+              child: GestureDetector(
+                onTap: () => _handleChoiceSelection(index),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: isSelected ? glowBoxShadow : defaultBoxShadow,
+                  ),
+                  padding: EdgeInsets.all(config.localWidth * 0.01),
+                  child: Center(
+                    child: Image.asset(
+                      choice,
+                      fit: BoxFit.fitHeight,
                     ),
                   ),
-                )
+                ),
+              ),
             );
           },
         ),
       ),
     );
+  }
+
+  Widget _buildColorQuestionLayout(ResponsiveConfig config) {
+    final colors = widget.question.colors!;
+    final colorImage = widget.question.colorImage!;
+    final selectedColor = selectedIndex != null ? colors[selectedIndex!] : null;
+
+    Widget imageWidget = Image.asset(
+      colorImage,
+      height: config.localHeight * 0.3,
+      fit: BoxFit.contain,
+    );
+
+    if (selectedColor != null) {
+      imageWidget = ColorFiltered(
+        colorFilter: ColorFilter.mode(
+          selectedColor,
+          BlendMode.modulate,
+        ),
+        child: imageWidget,
+      );
+    }
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: config.localHeight * 0.05),
+            child: imageWidget,
+          ),
+          SizedBox(
+            height: config.localHeight * 0.1,
+            child: ListView.separated(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: colors.length,
+              separatorBuilder: (context, index) =>
+                  SizedBox(width: config.localWidth * 0.05),
+              itemBuilder: (context, index) {
+                final color = colors[index];
+                final isSelected = selectedIndex == index;
+
+                return GestureDetector(
+                  onTap: () => _handleChoiceSelection(index),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    width: config.localWidth * 0.15,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                      boxShadow: isSelected ? glowBoxShadow : defaultBoxShadow,
+                      border: isSelected
+                          ? Border.all(color: Colors.white, width: 4)
+                          : null,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleChoiceSelection(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+    widget.onSelected(index);
   }
 }
