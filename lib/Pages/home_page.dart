@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Pages/exam_screen.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import '../config/ResponsiveConfig.dart';
 import 'Kid_Login.dart';
@@ -20,7 +21,6 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-
               SizedBox(height: config.localHeight * 0.03),
 
               Image.asset(
@@ -66,7 +66,9 @@ class HomePage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => TeacherLogin()),
+                        MaterialPageRoute(
+                          builder: (_) => ExamSkeletonScreen(examId: 'exam1'),
+                        ),
                       );
                     },
                   ),
@@ -119,16 +121,12 @@ class HomePage extends StatelessWidget {
   }) {
     return Container(
       width: config.localWidth * 0.25,
-      height: config.buttonHeight*1.4,
+      height: config.buttonHeight * 1.4,
       decoration: BoxDecoration(
         gradient: gradient,
         borderRadius: BorderRadius.circular(30),
         boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 6,
-            offset: Offset(2, 4),
-          ),
+          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(2, 4)),
         ],
       ),
       child: ElevatedButton(
@@ -145,11 +143,7 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null)
-              Icon(
-                  icon,
-                  color: Colors.white,
-                  size: config.buttonFont
-              )
+              Icon(icon, color: Colors.white, size: config.buttonFont)
             else if (image != null)
               Image.asset(
                 image,
