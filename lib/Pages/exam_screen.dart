@@ -34,7 +34,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   int? selectedChoiceIndex;
   List<Offset> drawnPoints = [];
   bool drawingAnswered = false;
-  Map<String, String?> dragAnswers = {}; // لإجابات Drag & Drop
+  Map<String, String?> dragAnswers = {};
 
   FlutterTts flutterTts = FlutterTts();
 
@@ -42,7 +42,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   void initState() {
     super.initState();
 
-    // جمع كل الأسئلة (Choice + Drawing + Drag & Drop)
     examQuestions = [
       ...allChoiceQuestions
           .where((q) => q.examId.contains(widget.examId))
@@ -62,7 +61,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     flutterTts.setSpeechRate(0.6);
     flutterTts.setVolume(1.0);
     flutterTts.setPitch(1.0);
-    await Future.delayed(const Duration(milliseconds: 150));
+    await Future.delayed(const Duration(milliseconds: 100));
     flutterTts.speak(text);
   }
 
@@ -169,7 +168,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
       if (allCorrect) score++;
     }
 
-    // الانتقال للسؤال التالي
     if (currentIndex < examQuestions.length - 1) {
       setState(() {
         currentIndex++;

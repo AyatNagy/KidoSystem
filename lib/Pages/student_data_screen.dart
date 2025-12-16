@@ -63,7 +63,7 @@ class _StudentDataState extends State<StudentData> {
               SizedBox(height: config.localHeight * 0.02),
               Image.asset(
                 'assets/images/student_data.png',
-                height: config.imageHeight(0.33),
+                height: config.imageHeight(0.25),
                 width: config.imageWidth(0.8),
                 fit: BoxFit.contain,
               ),

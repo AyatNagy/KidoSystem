@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/chioce_question.dart';
 import 'package:kido/Widgets/ResponsiveProvider.dart';
-
 import '../../config/ResponsiveConfig.dart';
 
 typedef OnChoiceSelected = void Function(int selectedIndex);

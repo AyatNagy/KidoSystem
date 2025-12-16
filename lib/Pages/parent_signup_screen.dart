@@ -4,7 +4,9 @@ import 'package:kido/Pages/VerifyEmailScreen.dart';
 import 'package:kido/Pages/student_data_screen.dart';
 import 'package:kido/Widgets/PasswordStrengthTurtle%20.dart';
 import 'package:kido/api_service/api_services.dart';
+import '../Models/dailogModel.dart';
 import '../Widgets/appBar.dart';
+import '../Widgets/dialog_widget.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
 import '../Widgets/ResponsiveProvider.dart';
@@ -53,17 +55,31 @@ class _ParentSignupState extends State<ParentSignup> {
       await prefs.setString('username', user.username);
       await prefs.setString('email', user.email);
 
-      Navigator.pushReplacement(
+      CustomDialog(
         context,
-        MaterialPageRoute(builder: (_) =>  VerifyEmailScreen(email: user.email),
-),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Registration failed. Try again!"),
-          backgroundColor: Colors.red,
+        dialogModel(
+          title: "Success 🎉",
+          message: "Registration success!",
+          image: "assets/images/signup-success.png",
         ),
+        titleColor: Colors.green,
+      );
+
+      Future.delayed(const Duration(seconds: 4), () {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) =>  VerifyEmailScreen(email: user.email),)
+        );
+      });
+    } else {
+      CustomDialog(
+        context,
+        dialogModel(
+          title: "Error ❌",
+          message: "Registration Failed.",
+          image: "assets/images/signup-faied.png",
+        ),
+        titleColor: Colors.red,
       );
     }
   }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/Auth/forgot_by_email_pagel.dart';
+import '../Models/dailogModel.dart';
 import '../Widgets/appBar.dart';
+import '../Widgets/dialog_widget.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
 import 'parent_signup_screen.dart';
@@ -28,44 +30,60 @@ class ParentLogin extends StatelessWidget {
       child: BlocListener<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Login successful!"),
-                backgroundColor: Colors.green,
-              ),
-            );
-            Navigator.pushReplacement(
+            CustomDialog(
               context,
-              MaterialPageRoute(builder: (_) => const StudentData()),
-            );
-          } else if (state is LoginFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage),
-                backgroundColor: Colors.red,
+              dialogModel(
+                title: "Success 🎉",
+                message: "Login successful!",
+                image: "assets/images/signin-success.png",
               ),
+              titleColor: Colors.green,
+            );
+            Future.delayed(const Duration(seconds: 4), () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const StudentData()),
+              );
+            });
+          } else if (state is LoginFailure) {
+            CustomDialog(
+              context,
+              dialogModel(
+                title: "Error ❌",
+                message: state.errorMessage,
+                image: "assets/images/signin-failed.png",
+              ),
+              titleColor: Colors.red,
             );
           }
         },
         child: BlocListener<GoogleAuthCubit, GoogleAuthState>(
           listener: (context, state) {
             if (state is GoogleAuthSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Google Login Successful"),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              Navigator.pushReplacement(
+              CustomDialog(
                 context,
-                MaterialPageRoute(builder: (_) => const StudentData()),
-              );
-            } else if (state is GoogleAuthFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.errorMessage),
-                  backgroundColor: Colors.red,
+                dialogModel(
+                  title: "Success 🎉",
+                  message: "Google Login successful!",
+                  image: "assets/images/google-success.png",
                 ),
+                titleColor: Colors.green,
+              );
+              Future.delayed(const Duration(seconds: 4), () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const StudentData()),
+                );
+              });
+            } else if (state is GoogleAuthFailure) {
+              CustomDialog(
+                context,
+                dialogModel(
+                  title: "Error ❌",
+                  message: state.errorMessage,
+                  image: "assets/images/google-failed.png",
+                ),
+                titleColor: Colors.red,
               );
             }
           },
@@ -75,7 +93,7 @@ class ParentLogin extends StatelessWidget {
               final googleCubit = context.read<GoogleAuthCubit>();
               final isLoading =
                   loginState is LoginLoading ||
-                  context.watch<GoogleAuthCubit>().state is GoogleAuthLoading;
+                      context.watch<GoogleAuthCubit>().state is GoogleAuthLoading;
               bool isPasswordVisible = false;
 
               Future<void> handleLogin() async {
@@ -129,7 +147,7 @@ class ParentLogin extends StatelessWidget {
                                 key: _formKey,
                                 child: Column(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     CustomTextField(
                                       fieldController: emailController,
@@ -156,9 +174,9 @@ class ParentLogin extends StatelessWidget {
                                         onPressed:
                                             () => setState(
                                               () =>
-                                                  isPasswordVisible =
-                                                      !isPasswordVisible,
-                                            ),
+                                          isPasswordVisible =
+                                          !isPasswordVisible,
+                                        ),
                                       ),
                                       validator: Validators.validatePassword,
                                     ),
@@ -177,13 +195,13 @@ class ParentLogin extends StatelessWidget {
                                       ),
                                       child: ElevatedButton(
                                         onPressed:
-                                            isLoading ? null : handleLogin,
+                                        isLoading ? null : handleLogin,
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.transparent,
                                           shadowColor: Colors.transparent,
                                           padding: EdgeInsets.symmetric(
                                             vertical:
-                                                config.localHeight * 0.012,
+                                            config.localHeight * 0.012,
                                           ),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(
@@ -192,36 +210,36 @@ class ParentLogin extends StatelessWidget {
                                           ),
                                         ),
                                         child:
-                                            isLoading
-                                                ? SizedBox(
-                                                  height:
-                                                      config.localHeight * 0.03,
-                                                  width:
-                                                      config.localHeight * 0.03,
-                                                  child:
-                                                      const CircularProgressIndicator(
-                                                        color: Colors.white,
-                                                        strokeWidth: 3,
-                                                      ),
-                                                )
-                                                : Text(
-                                                  "Sign In",
-                                                  style: TextStyle(
-                                                    fontSize: config.title,
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
+                                        isLoading
+                                            ? SizedBox(
+                                          height:
+                                          config.localHeight * 0.03,
+                                          width:
+                                          config.localHeight * 0.03,
+                                          child:
+                                          const CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 3,
+                                          ),
+                                        )
+                                            : Text(
+                                          "Sign In",
+                                          style: TextStyle(
+                                            fontSize: config.title,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     TextButton(
                                       onPressed:
                                           () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (_) => ForgotByEmail(),
-                                            ),
-                                          ),
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => ForgotByEmail(),
+                                        ),
+                                      ),
                                       child: Text(
                                         "Forget Password?",
                                         style: TextStyle(
@@ -250,11 +268,11 @@ class ParentLogin extends StatelessWidget {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         OutlinedButton(
                                           onPressed:
-                                              isLoading ? null : handleGoogle,
+                                          isLoading ? null : handleGoogle,
                                           style: OutlinedButton.styleFrom(
                                             padding: EdgeInsets.all(
                                               config.localHeight * 0.015,
@@ -264,7 +282,7 @@ class ParentLogin extends StatelessWidget {
                                             ),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(50),
+                                              BorderRadius.circular(50),
                                             ),
                                           ),
                                           child: Image.asset(
@@ -286,7 +304,7 @@ class ParentLogin extends StatelessWidget {
                                             ),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(50),
+                                              BorderRadius.circular(50),
                                             ),
                                           ),
                                           child: Image.asset(
@@ -298,7 +316,7 @@ class ParentLogin extends StatelessWidget {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           "Don't have an account?",
@@ -311,13 +329,13 @@ class ParentLogin extends StatelessWidget {
                                         TextButton(
                                           onPressed:
                                               () => Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder:
-                                                      (_) =>
-                                                          const ParentSignup(),
-                                                ),
-                                              ),
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (_) =>
+                                              const ParentSignup(),
+                                            ),
+                                          ),
                                           child: Text(
                                             "Create one",
                                             style: TextStyle(
