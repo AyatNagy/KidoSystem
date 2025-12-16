@@ -115,16 +115,9 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   }
 
   void handleChoiceSelected(int index) {
-    final examQuestion = examQuestions[currentIndex];
-    final q = examQuestion.data as ChoiceQuestion;
-
     setState(() {
       selectedChoiceIndex = index;
     });
-
-    if (q.colors != null && q.correctIndex != null && index == q.correctIndex) {
-      score++;
-    }
   }
 
   void handleDrawingUpdate(List<Offset> points) {
@@ -152,7 +145,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
         return;
       }
 
-      if (q.choices != null && q.correctIndex != null && selectedChoiceIndex == q.correctIndex) {
+      if (q.correctIndex != null && selectedChoiceIndex == q.correctIndex) {
         score++;
       }
     }
