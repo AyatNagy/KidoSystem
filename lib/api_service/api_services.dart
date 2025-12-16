@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:kido/Models/user.dart';
 
 class ApiService {
-  static const String baseUrl = "http://localhost:3000/api";
-  //static const String baseUrl = "https://kidosystem.duckdns.org/api";
+  //static const String baseUrl = "http://localhost:3000/api";
+  static const String baseUrl = "https://kidosystem.duckdns.org/api";
 
   static Future<bool> registerUser(User user) async {
     final dio = Dio();
@@ -42,9 +42,9 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>?> loginUser(
-    String email,
-    String password,
-  ) async {
+      String email,
+      String password,
+      ) async {
     final dio = Dio();
     final url = '$baseUrl/auth/login';
 
@@ -119,10 +119,10 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>?> resetPassword(
-    String email,
-    String otpCode,
-    String newPassword,
-  ) async {
+      String email,
+      String otpCode,
+      String newPassword,
+      ) async {
     final dio = Dio();
     final url = '$baseUrl/auth/reset-password';
 
@@ -164,9 +164,9 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>?> verifyOtp(
-    String email,
-    String otpCode,
-  ) async {
+      String email,
+      String otpCode,
+      ) async {
     final dio = Dio();
     final url = '$baseUrl/auth/verify-otp';
 
@@ -197,172 +197,6 @@ class ApiService {
         print("Error during OTP verification: ${e.message}");
       }
       return null;
-    } catch (e) {
-      print("Error during OTP verification: $e");
-      return null;
-    }
-  }
-
-  static Future<Map<String, dynamic>?> forgetPassword(String email) async {
-    final url = Uri.parse('$baseUrl/auth/forget');
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": email}),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        print("OTP Sent Successfully: ${data['message']}");
-        return data;
-      } else {
-        print("Forget Password Failed: ${response.body}");
-        return null;
-      }
-    } catch (e) {
-      print("Error during forget password: $e");
-      return null;
-    }
-  }
-
-  static Future<Map<String, dynamic>?> resetPassword(
-    String email,
-    String otpCode,
-    String newPassword,
-  ) async {
-    final url = Uri.parse('$baseUrl/auth/reset-password');
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": email,
-          "otpCode": otpCode,
-          "newPassword": newPassword,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        print("Password Reset Successful: ${data['message']}");
-        return data;
-      } else {
-        print("Reset Password Failed: ${response.body}");
-        return null;
-      }
-    } catch (e) {
-      print("Error during reset password: $e");
-      return null;
-    }
-  }
-
-  static Future<Map<String, dynamic>?> verifyOtp(
-    String email,
-    String otpCode,
-  ) async {
-    final url = Uri.parse('$baseUrl/auth/verify-otp');
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": email, "otpCode": otpCode}),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        print("OTP Verified Successfully: ${data['message']}");
-        return data;
-      } else {
-        print("Verify OTP Failed: ${response.body}");
-        return null;
-      }
-    } catch (e) {
-      print("Error during OTP verification: $e");
-      return null;
-    }
-  }
-
-  static Future<Map<String, dynamic>?> forgetPassword(String email) async {
-    final url = Uri.parse('$baseUrl/auth/forget');
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": email}),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        print("OTP Sent Successfully: ${data['message']}");
-        return data;
-      } else {
-        print("Forget Password Failed: ${response.body}");
-        return null;
-      }
-    } catch (e) {
-      print("Error during forget password: $e");
-      return null;
-    }
-  }
-
-  static Future<Map<String, dynamic>?> resetPassword(
-    String email,
-    String otpCode,
-    String newPassword,
-  ) async {
-    final url = Uri.parse('$baseUrl/auth/reset-password');
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": email,
-          "otpCode": otpCode,
-          "newPassword": newPassword,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        print("Password Reset Successful: ${data['message']}");
-        return data;
-      } else {
-        print("Reset Password Failed: ${response.body}");
-        return null;
-      }
-    } catch (e) {
-      print("Error during reset password: $e");
-      return null;
-    }
-  }
-
-  static Future<Map<String, dynamic>?> verifyOtp(
-    String email,
-    String otpCode,
-  ) async {
-    final url = Uri.parse('$baseUrl/auth/verify-otp');
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": email, "otpCode": otpCode}),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        print("OTP Verified Successfully: ${data['message']}");
-        return data;
-      } else {
-        print("Verify OTP Failed: ${response.body}");
-        return null;
-      }
     } catch (e) {
       print("Error during OTP verification: $e");
       return null;

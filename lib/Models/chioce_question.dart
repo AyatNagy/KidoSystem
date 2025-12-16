@@ -1,14 +1,19 @@
+import 'package:flutter/material.dart';
 import 'package:kido/Models/questionModel.dart';
 
 class ChoiceQuestion extends Question{
-  final List<String> choices;
+  final List<String>? choices;
+  final List<Color>? colors;
   final int correctIndex;
+  final String? colorImage;
 
   ChoiceQuestion({
     required super.examId,
     required super.questionText,
-    required this.choices,
+    this.choices,
+    this.colors,
     required this.correctIndex,
+    this.colorImage,
   });
 }
 
@@ -22,6 +27,7 @@ final List<ChoiceQuestion> allChoiceQuestions = [
     ],
     correctIndex: 1,
   ),
+
   ChoiceQuestion(
     examId: ['exam1'],
     questionText: "Which one is Heavy ?",
@@ -73,4 +79,18 @@ final List<ChoiceQuestion> allChoiceQuestions = [
     ],
     correctIndex: 0,
   ),
+
+  ChoiceQuestion(
+      examId: ['exam1'],
+      questionText: "Color The Sun",
+      colorImage: "assets/images/gray-sun.png",
+      colors: [
+        Colors.red,
+        Colors.blue,
+        Colors.yellow,
+        Colors.green,
+      ],
+      correctIndex: 2
+  )
+
 ];

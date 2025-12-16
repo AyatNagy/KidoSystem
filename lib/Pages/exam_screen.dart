@@ -49,12 +49,10 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
       ...allChoiceQuestions
           .where((q) => q.examId.contains(widget.examId))
           .map((q) => ExamQuestion(type: QuestionType.choice, data: q)),
-
       ...allDrawingQuestions
           .where((q) => q.examId.contains(widget.examId))
           .map((q) => ExamQuestion(type: QuestionType.drawing, data: q)),
     ];
-
 
     selectedChoiceIndex = null;
   }
@@ -69,7 +67,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     await Future.delayed(const Duration(milliseconds: 150));
     flutterTts.speak(text);
   }
-
 
   bool checkDrawingSoft(String targetShape, List<Offset> points) {
     if (points.length < 15) return false;
@@ -93,10 +90,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     List<double> distances = points.map((p) => (p - center).distance).toList();
     double avgDist = distances.reduce((a, b) => a + b) / distances.length;
 
-    double deviation = distances
-        .map((d) => (d - avgDist).abs())
-        .reduce((a, b) => a + b) /
-        distances.length;
+    double deviation = distances.map((d) => (d - avgDist).abs()).reduce((a, b) => a + b) / distances.length;
 
     return deviation < 50;
   }
@@ -120,11 +114,17 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     return (b - a).direction * 180 / 3.14159;
   }
 
-
   void handleChoiceSelected(int index) {
+    final examQuestion = examQuestions[currentIndex];
+    final q = examQuestion.data as ChoiceQuestion;
+
     setState(() {
       selectedChoiceIndex = index;
     });
+
+    if (q.colors != null && q.correctIndex != null && index == q.correctIndex) {
+      score++;
+    }
   }
 
   void handleDrawingUpdate(List<Offset> points) {
@@ -152,7 +152,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
         return;
       }
 
-      if (selectedChoiceIndex == q.correctIndex) {
+      if (q.choices != null && q.correctIndex != null && selectedChoiceIndex == q.correctIndex) {
         score++;
       }
     }
@@ -163,11 +163,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
         return;
       }
 
-      bool correct = checkDrawingSoft(
-        examQuestion.data.targetShape,
-        drawnPoints,
-      );
-
+      bool correct = checkDrawingSoft(examQuestion.data.targetShape, drawnPoints);
       if (correct) score++;
     }
 
@@ -184,8 +180,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   }
 
   void _showSnack(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _finishExam() {
@@ -207,7 +202,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
-
     final examQuestion = examQuestions[currentIndex];
     final questionText = examQuestion.type == QuestionType.choice
         ? (examQuestion.data as ChoiceQuestion).questionText
@@ -221,7 +215,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
           child: Column(
             children: [
               SizedBox(height: config.localHeight * 0.02),
-
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -232,9 +225,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                   ),
                 ),
               ),
-
               SizedBox(height: config.localHeight * 0.01),
-
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -250,15 +241,12 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.volume_up,
-                        color: Colors.deepPurpleAccent),
+                    icon: const Icon(Icons.volume_up, color: Colors.deepPurpleAccent),
                     onPressed: () => speakQuestion(questionText),
                   ),
                 ],
               ),
-
               SizedBox(height: config.localHeight * 0.03),
-
               Expanded(
                 child: examQuestion.type == QuestionType.choice
                     ? ChoiceQuestionWidget(
@@ -273,21 +261,15 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                   onClear: clearDrawing,
                 ),
               ),
-
               SizedBox(height: config.localHeight * 0.02),
-
               CustomGradientButton(
                 title: "Next",
                 onPressed: handleNext,
                 width: double.infinity,
                 borderRadius: 30,
                 fontSize: config.title,
-                colors: const [
-                  Color(0xfff06292),
-                  Color(0xffff8a65),
-                ],
+                colors: const [Color(0xfff06292), Color(0xffff8a65)],
               ),
-
               SizedBox(height: config.localHeight * 0.02),
             ],
           ),
