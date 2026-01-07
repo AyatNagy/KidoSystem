@@ -41,18 +41,6 @@ final List<ChoiceQuestion> allChoiceQuestions = [
 
   ChoiceQuestion(
     examId: ['exam2'],
-    questionText: "Where is the dog ?",
-    choices: [
-      "assets/images/elephant.png",
-      "assets/images/god.png",
-      "assets/images/duck.png",
-      "assets/images/duck.png",
-    ],
-    correctIndex: 0,
-  ),
-
-  ChoiceQuestion(
-    examId: ['exam2'],
     questionText: "Which Book is for Cars ?",
     choices: ["assets/images/animals-book.png", "assets/images/cars-book.png"],
     correctIndex: 1,

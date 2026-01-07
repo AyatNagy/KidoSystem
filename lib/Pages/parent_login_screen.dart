@@ -117,7 +117,8 @@ class ParentLogin extends StatelessWidget {
                     backgroundColor: Colors.white,
                     appBar: const KidoAppBar(),
                     body: SafeArea(
-                      child: Padding(
+                      child:
+                      Padding(
                         padding: config.pagePadding,
                         child: Column(
                           children: [

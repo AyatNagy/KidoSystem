@@ -1,18 +1,17 @@
 import 'dart:ui';
 import 'package:kido/Models/dragable_item.dart';
 import 'package:kido/Models/targets_item.dart';
+import 'package:kido/Models/questionModel.dart';
 
-class DragDropQuestion {
-  final String examId;
-  final String questionText;
+class DragDropQuestion extends Question{
   final String? backgroundImage;
   final String? extraImage;
   final List<DragItem> items;
   final List<DragTargetZone> targets;
 
   DragDropQuestion({
-    required this.examId,
-    required this.questionText,
+    required super.examId,
+    required super.questionText,
     this.backgroundImage,
     this.extraImage,
     required this.items,
@@ -22,8 +21,8 @@ class DragDropQuestion {
 
 final List<DragDropQuestion> allDragDropQuestions = [
   DragDropQuestion(
-    examId: 'exam1',
-    questionText: "Putt the correct food on each animal",
+    examId: ['exam1'],
+    questionText: "Put the correct food on each animal",
     items: [
       DragItem(
         id: "bone",
@@ -70,8 +69,8 @@ final List<DragDropQuestion> allDragDropQuestions = [
   ),
 
   DragDropQuestion(
-    examId: 'exam1',
-    questionText: "Put the correct food on each animal",
+    examId: ['exam1'],
+    questionText: "Room OR Kitchen?",
     items: [
       DragItem(
         id: "bed",
@@ -103,9 +102,10 @@ final List<DragDropQuestion> allDragDropQuestions = [
       ),
     ],
   ),
+
   DragDropQuestion(
-    examId: 'exam1',
-    questionText: "Put the giraffe in the box",
+    examId: ['exam1'],
+    questionText: "Tall OR Short?",
     items: [
       DragItem(
         id: "tall",
@@ -139,30 +139,117 @@ final List<DragDropQuestion> allDragDropQuestions = [
   ),
 
   DragDropQuestion(
-    examId: 'exam1',
-    questionText: "complete the car",
+    examId: ['exam1'],
+    questionText: "Complete The Car!",
+    backgroundImage: "assets/images/targethalfcar.png",
     items: [
       DragItem(
-        id: "wrong_car",
-        image: "assets/images/wrongcar.png",
-        startPosition: const Offset(0.10, 0.60),
-        size: const Size(0.45, 0.45),
-      ),
-      DragItem(
-        id: "half_car",
+        id: "right_half",
         image: "assets/images/halfcar.png",
         startPosition: const Offset(0.55, 0.65),
-        size: const Size(0.45, 0.40),
+        size: const Size(0.2, 0.2),
       ),
     ],
     targets: [
       DragTargetZone(
         id: "car_target",
-        acceptedItemIds: ["half_car"],
-        position: const Offset(0.0, 0.05),
-        size: const Size(1.0, 0.80),
-        image: "assets/images/targethalfcar.png",
+        acceptedItemIds: ["right_half"],
+        position: const Offset(0.49, 0.43),
+        size: const Size(0.15, 0.15),
+        image: "",
       ),
     ],
+  ),
+
+  DragDropQuestion(
+    examId: ['exam1'],
+    questionText: "Complete The Duck!",
+    backgroundImage: "assets/images/puzzle_duck.png",
+    items: [
+      DragItem(
+        id: "tail",
+        image: "assets/images/duck_tail.png",
+        startPosition: const Offset(0.65, 0.65),
+        size: const Size(0.4, 0.3),
+      ),
+    ],
+    targets: [
+      DragTargetZone(
+        id: "duck_target",
+        acceptedItemIds: ["tail"],
+        position: const Offset(0.43, 0.43),
+        size: const Size(0.4, 0.3),
+        image: "",
+      ),
+    ],
+  ),
+
+  DragDropQuestion(
+      examId: ['exam2'],
+      questionText: "Find Red",
+      items: [
+        DragItem(
+            id: "red",
+            image: "assets/images/apple.png",
+            startPosition: const Offset(0.36, 0.6),
+            size: const Size(0.45, 0.55)
+        ),
+        DragItem(
+            id: "yellow",
+            image: "assets/images/yelow-car.png",
+            startPosition: const Offset(0.062, 0.6),
+            size: const Size(0.45, 0.55)
+        ),
+        DragItem(
+            id: "blue",
+            image: "assets/images/blue-duck.png",
+            startPosition: const Offset(0.65, 0.6),
+            size: const Size(0.4, 0.3)
+        ),
+      ],
+      targets: [
+        DragTargetZone(
+            id: "red_target",
+            acceptedItemIds: ["red"],
+            position: const Offset(0.35, 0.05),
+            size: const Size(0.5, 0.5),
+            image: "assets/images/red-box.png"
+        )
+      ]
+  ),
+
+  DragDropQuestion(
+      examId: ['exam2'],
+      questionText: "Put The Clothes In The Right Box!",
+      items: [
+        DragItem(
+            id: "cotton",
+            image: "",
+            startPosition: const Offset(0.05,0.05),
+            size: const Size(0.5,0.5)
+        ),
+        DragItem(
+            id: "wool",
+            image: "assets/images/wool.png",
+            startPosition: const Offset(0.05,0.05),
+            size: const Size(0.5,0.5)
+        ),
+      ],
+      targets: [
+        DragTargetZone(
+            id: "cotton_target",
+            acceptedItemIds: ["cotton"],
+            position: const Offset(0.1, 0.1),
+            size: const Size(0.45, 0.45),
+            image:"assets/images/cotton.png",
+        ),
+        DragTargetZone(
+          id: "wool_target",
+          acceptedItemIds: ["wool"],
+          position: const Offset(0.1, 0.1),
+          size: const Size(0.45, 0.45),
+          image:"assets/images/wool.png",
+        ),
+      ]
   ),
 ];

@@ -3,13 +3,17 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:kido/Models/chioce_question.dart';
 import 'package:kido/Models/draw_question.dart';
 import 'package:kido/Models/draganddrop_question.dart';
-import 'package:kido/Widgets/Questiont/chioce_question_widget.dart';
-import 'package:kido/Widgets/Questiont/draw_question_widget.dart';
-import 'package:kido/Widgets/Questiont/draganddrop_question_widget.dart';
+import 'package:kido/Widgets/Questions/chioce_question_widget.dart';
+import 'package:kido/Widgets/Questions/draw_question_widget.dart';
+import 'package:kido/Widgets/Questions/draganddrop_question_widget.dart';
 import 'package:kido/Widgets/ResponsiveProvider.dart';
 import 'package:kido/Widgets/custom_app_button.dart';
 
-enum QuestionType { choice, drawing, dragDrop }
+enum QuestionType {
+  choice,
+  drawing,
+  dragDrop
+}
 
 class ExamQuestion {
   final QuestionType type;
@@ -147,16 +151,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     // Drag & Drop Question
     if (examQuestion.type == QuestionType.dragDrop) {
       final q = examQuestion.data as DragDropQuestion;
-
-      bool allPlaced = q.items.every(
-        (item) =>
-            dragAnswers[item.id] != null && dragAnswers[item.id]!.isNotEmpty,
-      );
-      if (!allPlaced) {
-        _showSnack("Please place all items");
-        return;
-      }
-
       bool allCorrect = q.items.every((item) {
         final correctTargets =
             q.targets
