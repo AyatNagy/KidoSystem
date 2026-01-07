@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:kido/Models/user.dart';
+import 'package:kido/Models/child.dart';
+import 'package:kido/config/cache_helper.dart';
 
 class ApiService {
   //static const String baseUrl = "http://localhost:3000/api";
@@ -63,6 +65,15 @@ class ApiService {
       if (response.statusCode == 200) {
         final data = response.data;
         print("Login Successful: ${data['user']}");
+        
+        // Save parent token and user ID
+        if (data['token'] != null) {
+          await LocalStorage.setParentToken(data['token']);
+        }
+        if (data['user'] != null && data['user']['id'] != null) {
+          await LocalStorage.setUserId(data['user']['id']);
+        }
+        
         return data;
       } else {
         print("Login Failed: ${response.statusCode} - ${response.data}");
@@ -102,8 +113,9 @@ class ApiService {
         print("OTP Sent Successfully: ${data['message']}");
         return data;
       } else {
+        // Return error response data to show proper error message
         print("Forget Password Failed: ${response.statusCode} - ${response.data}");
-        return null;
+        return response.data as Map<String, dynamic>?;
       }
     } on DioException catch (e) {
       if (e.response != null) {
@@ -147,8 +159,9 @@ class ApiService {
         print("Password Reset Successful: ${data['message']}");
         return data;
       } else {
+        // Return error response data to show proper error message
         print("Reset Password Failed: ${response.statusCode} - ${response.data}");
-        return null;
+        return response.data as Map<String, dynamic>?;
       }
     } on DioException catch (e) {
       if (e.response != null) {
@@ -187,8 +200,9 @@ class ApiService {
         print("OTP Verified Successfully: ${data['message']}");
         return data;
       } else {
+        // Return error response data to show proper error message
         print("Verify OTP Failed: ${response.statusCode} - ${response.data}");
-        return null;
+        return response.data as Map<String, dynamic>?;
       }
     } on DioException catch (e) {
       if (e.response != null) {
@@ -199,6 +213,62 @@ class ApiService {
       return null;
     } catch (e) {
       print("Error during OTP verification: $e");
+      return null;
+    }
+  }
+
+  // Child Registration (requires parent authentication)
+  static Future<Map<String, dynamic>?> registerChild(Child child) async {
+    final dio = Dio();
+    final url = '$baseUrl/child/register';
+    
+    // Get parent token from storage
+    final parentToken = await LocalStorage.getParentToken();
+    
+    if (parentToken == null) {
+      print("Error: Parent token not found. Please login as parent first.");
+      return null;
+    }
+
+    try {
+      final response = await dio.post(
+        url,
+        data: child.toJson(),
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $parentToken", // Add parent token to header
+          },
+          validateStatus: (status) {
+            return status! < 500; // Don't throw for 4xx errors
+          },
+        ),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final data = response.data;
+        print("Child Registered Successfully: ${data['child']}");
+        
+        // Save child data if needed
+        if (data['child'] != null && data['child']['id'] != null) {
+          await LocalStorage.setChildId(data['child']['id']);
+        }
+        
+        return data;
+      } else {
+        // Return error response data to show proper error message
+        print("Child Registration Failed: ${response.statusCode} - ${response.data}");
+        return response.data as Map<String, dynamic>?;
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print("Error during child registration: ${e.response?.statusCode} - ${e.response?.data}");
+      } else {
+        print("Error during child registration: ${e.message}");
+      }
+      return null;
+    } catch (e) {
+      print("Error during child registration: $e");
       return null;
     }
   }

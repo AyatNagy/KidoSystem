@@ -38,6 +38,8 @@ class _VerifyCodeState extends State<VerifyCode> {
       child: BlocConsumer<VerifyCodeCubit, VerifyCodeState>(
         listener: (context, state) {
           if (state is VerifyCodeSuccess) {
+            // Skip verify-otp and go directly to reset password
+            // The OTP will be verified during reset-password
             Navigator.push(
               context,
               MaterialPageRoute(
