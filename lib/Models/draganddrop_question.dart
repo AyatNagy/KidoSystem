@@ -224,13 +224,13 @@ final List<DragDropQuestion> allDragDropQuestions = [
       items: [
         DragItem(
             id: "cotton",
-            image: "",
+            image: "assets/images/cotton-Tshirt.png",
             startPosition: const Offset(0.05,0.05),
             size: const Size(0.5,0.5)
         ),
         DragItem(
             id: "wool",
-            image: "assets/images/wool.png",
+            image: "assets/images/wool-Tshirt.png",
             startPosition: const Offset(0.05,0.05),
             size: const Size(0.5,0.5)
         ),
