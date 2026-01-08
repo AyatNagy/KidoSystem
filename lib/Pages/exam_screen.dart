@@ -61,10 +61,10 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
 
   Future<void> speakQuestion(String text) async {
     await flutterTts.stop();
-    flutterTts.setLanguage("en-US");
-    flutterTts.setSpeechRate(0.6);
+    flutterTts.setLanguage("ar-EG");
+    flutterTts.setSpeechRate(0.4);
     flutterTts.setVolume(1.0);
-    flutterTts.setPitch(1.0);
+    flutterTts.setPitch(1.1);
     await Future.delayed(const Duration(milliseconds: 100));
     flutterTts.speak(text);
   }
