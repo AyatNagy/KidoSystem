@@ -8,11 +8,15 @@ import 'package:kido/utils/validators.dart';
 import '../../bloc/forget_password/forget_password_cubit.dart';
 
 class ForgotByEmail extends StatelessWidget {
-  const ForgotByEmail({super.key});
+  final String? email;
+
+  const ForgotByEmail({super.key, this.email});
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
+    final TextEditingController emailController = TextEditingController(
+      text: email ?? '',
+    );
     final _formKey = GlobalKey<FormState>();
 
     return BlocProvider(
@@ -79,7 +83,7 @@ class ForgotByEmail extends StatelessWidget {
                       "Forgot password ?",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily:'nunito',
+                        fontFamily: 'nunito',
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         shadows: [
@@ -96,7 +100,7 @@ class ForgotByEmail extends StatelessWidget {
                       "Don't worry! Enter your email below to receive a code",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily:'nunito',
+                        fontFamily: 'nunito',
                         fontSize: 16,
                         color: Colors.black87,
                         fontWeight: FontWeight.w600,

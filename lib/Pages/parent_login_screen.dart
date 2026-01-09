@@ -20,7 +20,6 @@ class ParentLogin extends StatefulWidget {
 }
 
 class _ParentLoginState extends State<ParentLogin> {
-
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
@@ -107,8 +106,12 @@ class _ParentLoginState extends State<ParentLogin> {
 
               Future<void> handleLogin() async {
                 setState(() {
-                  emailError = Validators.validateEmail(emailController.text.trim());
-                  passwordError = Validators.validatePassword(passwordController.text.trim());
+                  emailError = Validators.validateEmail(
+                    emailController.text.trim(),
+                  );
+                  passwordError = Validators.validatePassword(
+                    passwordController.text.trim(),
+                  );
                 });
 
                 if (emailError != null || passwordError != null) return;
@@ -171,7 +174,9 @@ class _ParentLoginState extends State<ParentLogin> {
                                       textInputAction: TextInputAction.next,
                                       onChanged: (value) {
                                         setState(() {
-                                          emailError = Validators.validateEmail(value);
+                                          emailError = Validators.validateEmail(
+                                            value,
+                                          );
                                         });
                                       },
                                     ),
@@ -180,7 +185,10 @@ class _ParentLoginState extends State<ParentLogin> {
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
                                           emailError!,
-                                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                                          style: const TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 12,
+                                          ),
                                         ),
                                       ),
                                     SizedBox(
@@ -208,7 +216,10 @@ class _ParentLoginState extends State<ParentLogin> {
                                       ),
                                       onChanged: (value) {
                                         setState(() {
-                                          passwordError = Validators.validatePassword(value);
+                                          passwordError =
+                                              Validators.validatePassword(
+                                                value,
+                                              );
                                         });
                                       },
                                     ),
@@ -217,7 +228,10 @@ class _ParentLoginState extends State<ParentLogin> {
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
                                           passwordError!,
-                                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                                          style: const TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 12,
+                                          ),
                                         ),
                                       ),
                                     SizedBox(height: config.localHeight * 0.01),
@@ -277,7 +291,12 @@ class _ParentLoginState extends State<ParentLogin> {
                                           () => Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (_) => ForgotByEmail(),
+                                              builder:
+                                                  (_) => ForgotByEmail(
+                                                    email:
+                                                        emailController.text
+                                                            .trim(),
+                                                  ),
                                             ),
                                           ),
                                       child: Text(
@@ -406,5 +425,4 @@ class _ParentLoginState extends State<ParentLogin> {
       ),
     );
   }
-
 }

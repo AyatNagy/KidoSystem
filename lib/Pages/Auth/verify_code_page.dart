@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kido/Models/dailogModel.dart';
 import 'package:kido/Pages/Auth/reset_password_page.dart';
 import 'package:kido/Widgets/custom_app_button.dart';
+import 'package:kido/Widgets/dialog_widget.dart';
 import 'package:kido/Widgets/otp_field.dart';
 import '../../bloc/verify_code/verify_code_cubit.dart';
 
@@ -19,7 +21,7 @@ class _VerifyCodeState extends State<VerifyCode>
     with SingleTickerProviderStateMixin {
   final List<TextEditingController> _controllers = List.generate(
     4,
-        (_) => TextEditingController(),
+    (_) => TextEditingController(),
   );
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
 
@@ -122,9 +124,9 @@ class _VerifyCodeState extends State<VerifyCode>
               MaterialPageRoute(
                 builder:
                     (_) => ResetPassword(
-                  email: widget.email,
-                  otpCode: state.otpCode,
-                ),
+                      email: widget.email,
+                      otpCode: state.otpCode,
+                    ),
               ),
             );
           } else if (state is VerifyCodeFailure) {
@@ -133,15 +135,15 @@ class _VerifyCodeState extends State<VerifyCode>
             _triggerShake();
           } else if (state is VerifyCodeResendSuccess) {
             _startCountdown();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Verification code sent successfully'),
-              ),
-            );
-          } else if (state is VerifyCodeFailure) {
-            ScaffoldMessenger.of(
+            CustomDialog(
               context,
-            ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+              dialogModel(
+                title: "Success 🎉",
+                message: "Verification code sent successfully",
+                image: "assets/images/signin-success.png",
+              ),
+              titleColor: Colors.green,
+            );
           }
         },
         builder: (context, state) {
@@ -160,9 +162,9 @@ class _VerifyCodeState extends State<VerifyCode>
               leading: Row(
                 children: [
                   const SizedBox(width: 8),
-                  Image.asset('assets/images/log.png', height: 40),
+                  Image.asset('assets/images/log.png', height: 40, width: 40),
                   const SizedBox(width: 6),
-                  Image.asset('assets/images/Kido.png', height: 40),
+                  Image.asset('assets/images/Kido.png', height: 40, width: 40),
                 ],
               ),
             ),
@@ -172,123 +174,127 @@ class _VerifyCodeState extends State<VerifyCode>
                   horizontal: screenWidth * 0.06,
                   vertical: screenHeight * 0.02,
                 ),
-                child: Column(
-                  children: [
-                    SizedBox(height: screenHeight * 0.03),
-                    Image.asset(
-                      'assets/images/verifycode.png',
-                      height: screenHeight * 0.25,
-                    ),
-                    SizedBox(height: screenHeight * 0.01),
-                    const Text(
-                      "Enter code",
-                      style: TextStyle(
-                        fontFamily: 'nunito',
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: screenHeight * 0.03),
+                      Image.asset(
+                        'assets/images/verifycode.png',
+                        height: screenHeight * 0.25,
                       ),
-                    ),
-                    SizedBox(height: screenHeight * 0.02),
+                      SizedBox(height: screenHeight * 0.01),
+                      const Text(
+                        "Enter code",
+                        style: TextStyle(
+                          fontFamily: 'nunito',
+                          fontSize: 42,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
 
-                    /// OTP Fields with shake animation
-                    AnimatedBuilder(
-                      animation: _shakeController,
-                      builder: (context, child) {
-                        return Transform.translate(
-                          offset: Offset(
-                            _shakeAnimation.value *
-                                (_shakeController.status ==
-                                    AnimationStatus.forward
-                                    ? 1
-                                    : 0),
-                            0,
-                          ),
-                          child: child,
-                        );
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          4,
-                              (index) => Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 6),
-                            child: OtpField(
-                              controller: _controllers[index],
-                              focusNode: _focusNodes[index],
-                              isError: hasError,
-                              enabled: !isLoading,
-                              onChanged: (value) async {
-                                if (value.length > 1) {
-                                  pasteOtp(value, cubit);
-                                  return;
-                                }
+                      /// OTP Fields with shake animation
+                      AnimatedBuilder(
+                        animation: _shakeController,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset: Offset(
+                              _shakeAnimation.value *
+                                  (_shakeController.status ==
+                                          AnimationStatus.forward
+                                      ? 1
+                                      : 0),
+                              0,
+                            ),
+                            child: child,
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            4,
+                            (index) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                              ),
+                              child: OtpField(
+                                controller: _controllers[index],
+                                focusNode: _focusNodes[index],
+                                isError: hasError,
+                                enabled: !isLoading,
+                                onChanged: (value) async {
+                                  if (value.length > 1) {
+                                    pasteOtp(value, cubit);
+                                    return;
+                                  }
 
-                                HapticFeedback.selectionClick();
+                                  HapticFeedback.selectionClick();
 
-                                if (value.isNotEmpty && index < 3) {
-                                  FocusScope.of(
-                                    context,
-                                  ).requestFocus(_focusNodes[index + 1]);
-                                } else if (value.isEmpty && index > 0) {
-                                  FocusScope.of(
-                                    context,
-                                  ).requestFocus(_focusNodes[index - 1]);
-                                }
+                                  if (value.isNotEmpty && index < 3) {
+                                    FocusScope.of(
+                                      context,
+                                    ).requestFocus(_focusNodes[index + 1]);
+                                  } else if (value.isEmpty && index > 0) {
+                                    FocusScope.of(
+                                      context,
+                                    ).requestFocus(_focusNodes[index - 1]);
+                                  }
 
-                                if (getOtp().length == 4) {
-                                  Future.delayed(
-                                    const Duration(milliseconds: 150),
-                                        () => submitOtp(cubit),
-                                  );
-                                }
-                              },
+                                  if (getOtp().length == 4) {
+                                    Future.delayed(
+                                      const Duration(milliseconds: 150),
+                                      () => submitOtp(cubit),
+                                    );
+                                  }
+                                },
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
 
-                    SizedBox(height: screenHeight * 0.02),
-                    const Text(
-                      "We have sent the verification code to you.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    SizedBox(height: screenHeight * 0.01),
+                      SizedBox(height: screenHeight * 0.02),
+                      const Text(
+                        "We have sent the verification code to you.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      SizedBox(height: screenHeight * 0.01),
 
-                    /// Resend button
-                    TextButton(
-                      onPressed:
-                      (_secondsLeft == 0 && !isLoading)
-                          ? () => cubit.resendOtp(widget.email)
-                          : null,
-                      child: Text(
-                        _secondsLeft == 0
-                            ? "Resend code"
-                            : "Resend in 00:${_secondsLeft.toString().padLeft(2, '0')}",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: _secondsLeft == 0 ? Colors.red : Colors.grey,
+                      /// Resend button
+                      TextButton(
+                        onPressed:
+                            (_secondsLeft == 0 && !isLoading)
+                                ? () => cubit.resendOtp(widget.email)
+                                : null,
+                        child: Text(
+                          _secondsLeft == 0
+                              ? "Resend code"
+                              : "Resend in 00:${_secondsLeft.toString().padLeft(2, '0')}",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: _secondsLeft == 0 ? Colors.red : Colors.grey,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: screenHeight * 0.02),
-                    CustomGradientButton(
-                      title: isLoading ? "Verifying..." : "Verify",
-                      onPressed:
-                      otpFilled && !isLoading
-                          ? () => submitOtp(cubit)
-                          : () {},
-                      colors: const [
-                        Color(0xff3DF0C4),
-                        Color(0xff3BDBE7),
-                        Color(0xff2C8FF9),
-                      ],
-                      width: double.infinity,
-                      borderRadius: 30,
-                    ),
-                  ],
+                      SizedBox(height: screenHeight * 0.02),
+                      CustomGradientButton(
+                        title: isLoading ? "Verifying..." : "Verify",
+                        onPressed:
+                            otpFilled && !isLoading
+                                ? () => submitOtp(cubit)
+                                : () {},
+                        colors: const [
+                          Color(0xff3DF0C4),
+                          Color(0xff3BDBE7),
+                          Color(0xff2C8FF9),
+                        ],
+                        width: double.infinity,
+                        borderRadius: 30,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
