@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:kido/Models/chioce_question.dart';
 import 'package:kido/Models/draw_question.dart';
 import 'package:kido/Models/draganddrop_question.dart';
+import 'package:kido/Pages/parent_home_page.dart';
 import 'package:kido/Widgets/Questions/chioce_question_widget.dart';
 import 'package:kido/Widgets/Questions/draw_question_widget.dart';
 import 'package:kido/Widgets/Questions/draganddrop_question_widget.dart';
@@ -190,7 +192,13 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
             content: Text("Your score is $score / ${examQuestions.length}"),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute(builder: (context) => const ParentHomePage()),
+                        (route) => false,
+                  );
+                },
                 child: const Text("OK"),
               ),
             ],
