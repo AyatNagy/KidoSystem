@@ -13,6 +13,23 @@ class ParentHomePage extends StatefulWidget {
 
 class _ParentHomePageState extends State<ParentHomePage> {
   int _selectedIndex = 0;
+  // القائمة التي تخزن بيانات الأطفال
+  List<Map<String, dynamic>> childrenList = [];
+
+  // دالة الانتقال واستقبال البيانات
+  void _goToAddChild() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const StudentData()),
+    );
+
+    // إذا رجع ببيانات (اسم ودرجة) من شاشة البيانات
+    if (result != null && result is Map<String, dynamic>) {
+      setState(() {
+        childrenList.add(result);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +44,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF0F4F8),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: _buildBottomNav(),
     );
   }
@@ -55,6 +69,23 @@ class _ParentHomePageState extends State<ParentHomePage> {
                   ),
                 ),
                 SizedBox(height: config.localHeight * 0.02),
+
+                // عرض قائمة الأطفال المضافين ديناميكياً
+                ...childrenList
+                    .map(
+                      (child) => Padding(
+                        padding: const EdgeInsets.only(bottom: 15),
+                        child: _buildChildCard(
+                          config,
+                          child['name'],
+                          "Level 1",
+                          const Color(0xfff06292),
+                          child['score'], // نمرر الدرجة هنا للـ progress
+                        ),
+                      ),
+                    )
+                    .toList(),
+
                 _buildAddChildButton(config),
                 SizedBox(height: config.localHeight * 0.15),
               ],
@@ -92,16 +123,22 @@ class _ParentHomePageState extends State<ParentHomePage> {
             boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
           ),
           child: Icon(
-              CupertinoIcons.bell_fill,
-              color: Colors.blueAccent,
-              size: config.headline
+            CupertinoIcons.bell_fill,
+            color: Colors.blueAccent,
+            size: config.headline,
           ),
-        )
+        ),
       ],
     );
   }
 
-  Widget _buildChildCard(config, String name, String level, Color color, double progress) {
+  Widget _buildChildCard(
+    config,
+    String name,
+    String level,
+    Color color,
+    double progress,
+  ) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(config.localWidth * 0.04),
@@ -109,21 +146,19 @@ class _ParentHomePageState extends State<ParentHomePage> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
-          BoxShadow(color: color.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 5)
-          )
+          BoxShadow(
+            color: color.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
         ],
       ),
       child: Row(
         children: [
           CircleAvatar(
-              radius: 25,
-              backgroundColor: color.withOpacity(0.1),
-              child: Icon(
-                  Icons.face,
-                  color: color
-              )
+            radius: 25,
+            backgroundColor: color.withOpacity(0.1),
+            child: Icon(Icons.face, color: color),
           ),
           SizedBox(width: 15),
           Expanded(
@@ -131,19 +166,25 @@ class _ParentHomePageState extends State<ParentHomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    name,
-                    style: TextStyle(
-                        fontSize: config.body,
-                        fontWeight: FontWeight.bold
-                    )
+                  name,
+                  style: TextStyle(
+                    fontSize: config.body,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                const SizedBox(height: 5),
                 LinearProgressIndicator(
-                    value: progress,
-                    color: color,
-                    backgroundColor: Colors.grey[200]
+                  value: progress,
+                  color: color,
+                  backgroundColor: Colors.grey[200],
                 ),
               ],
             ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            "${(progress * 100).toInt()}%",
+            style: TextStyle(fontWeight: FontWeight.bold, color: color),
           ),
         ],
       ),
@@ -156,9 +197,9 @@ class _ParentHomePageState extends State<ParentHomePage> {
       height: config.localHeight * 0.1,
       decoration: BoxDecoration(
         border: Border.all(
-            color: Colors.grey.shade400,
-            style: BorderStyle.solid,
-            width: 2
+          color: Colors.grey.shade400,
+          style: BorderStyle.solid,
+          width: 2,
         ),
         borderRadius: BorderRadius.circular(25),
       ),
@@ -166,28 +207,23 @@ class _ParentHomePageState extends State<ParentHomePage> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(25),
-          onTap: () {
-            Navigator.push(
-                context,
-                CupertinoPageRoute(builder: (_) => const StudentData())
-            );
-          },
+          onTap: _goToAddChild, // تم الربط بالدالة المحدثة
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                  CupertinoIcons.add_circled,
-                  size: config.headline,
-                  color: Colors.grey
+                CupertinoIcons.add_circled,
+                size: config.headline,
+                color: Colors.grey,
               ),
               const SizedBox(width: 10),
               Text(
-                  "Add Child",
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w600,
-                      fontSize: config.body
-                  )
+                "Add Child",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w600,
+                  fontSize: config.body,
+                ),
               ),
             ],
           ),
@@ -201,26 +237,23 @@ class _ParentHomePageState extends State<ParentHomePage> {
       padding: EdgeInsets.all(config.localWidth * 0.05),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-            colors: [
-              Color(0xFF6A11CB),
-              Color(0xFF2575FC)
-            ]
+          colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
         ),
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-              color: Colors.blueAccent.withOpacity(0.3),
-              blurRadius: 15,
-              offset: const Offset(0, 8)
-          )
+            color: Colors.blueAccent.withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
         ],
       ),
       child: Row(
         children: [
           Icon(
-              CupertinoIcons.sparkles,
-              color: Colors.white,
-              size: config.headline
+            CupertinoIcons.sparkles,
+            color: Colors.white,
+            size: config.headline,
           ),
           SizedBox(width: 15),
           Expanded(
@@ -228,19 +261,19 @@ class _ParentHomePageState extends State<ParentHomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    "Need advice?",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: config.body
-                    )
+                  "Need advice?",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: config.body,
+                  ),
                 ),
                 Text(
-                    "Ask our AI about progress",
-                    style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: config.body * 0.8
-                    )
+                  "Ask our AI about progress",
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: config.body * 0.8,
+                  ),
                 ),
               ],
             ),
@@ -253,13 +286,8 @@ class _ParentHomePageState extends State<ParentHomePage> {
               shape: const StadiumBorder(),
               padding: const EdgeInsets.symmetric(horizontal: 12),
             ),
-            child: Text(
-                "Chat",
-                style: TextStyle(
-                    fontSize: config.body * 0.8
-                )
-            ),
-          )
+            child: Text("Chat", style: TextStyle(fontSize: config.body * 0.8)),
+          ),
         ],
       ),
     );
@@ -274,9 +302,18 @@ class _ParentHomePageState extends State<ParentHomePage> {
       onTap: (index) => setState(() => _selectedIndex = index),
       items: const [
         BottomNavigationBarItem(icon: Icon(CupertinoIcons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(CupertinoIcons.graph_square), label: "Dashboard"),
-        BottomNavigationBarItem(icon: Icon(CupertinoIcons.play_rectangle), label: "Learn"),
-        BottomNavigationBarItem(icon: Icon(CupertinoIcons.person), label: "Profile"),
+        BottomNavigationBarItem(
+          icon: Icon(CupertinoIcons.graph_square),
+          label: "Dashboard",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(CupertinoIcons.play_rectangle),
+          label: "Learn",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(CupertinoIcons.person),
+          label: "Profile",
+        ),
       ],
     );
   }

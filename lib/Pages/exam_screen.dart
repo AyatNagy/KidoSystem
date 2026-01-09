@@ -4,18 +4,13 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:kido/Models/chioce_question.dart';
 import 'package:kido/Models/draw_question.dart';
 import 'package:kido/Models/draganddrop_question.dart';
-import 'package:kido/Pages/parent_home_page.dart';
 import 'package:kido/Widgets/Questions/chioce_question_widget.dart';
 import 'package:kido/Widgets/Questions/draw_question_widget.dart';
 import 'package:kido/Widgets/Questions/draganddrop_question_widget.dart';
 import 'package:kido/Widgets/ResponsiveProvider.dart';
 import 'package:kido/Widgets/custom_app_button.dart';
 
-enum QuestionType {
-  choice,
-  drawing,
-  dragDrop
-}
+enum QuestionType { choice, drawing, dragDrop }
 
 class ExamQuestion {
   final QuestionType type;
@@ -26,8 +21,14 @@ class ExamQuestion {
 
 class ExamSkeletonScreen extends StatefulWidget {
   final String examId;
+  final String
+  childName; // أضفت المتغير هنا ليتوافق مع الاستدعاء في صفحة StudentData
 
-  const ExamSkeletonScreen({super.key, required this.examId});
+  const ExamSkeletonScreen({
+    super.key,
+    required this.examId,
+    required this.childName,
+  });
 
   @override
   State<ExamSkeletonScreen> createState() => _ExamSkeletonScreenState();
@@ -130,7 +131,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   void handleNext() {
     final examQuestion = examQuestions[currentIndex];
 
-    // Choice Question
     if (examQuestion.type == QuestionType.choice) {
       final q = examQuestion.data as ChoiceQuestion;
       if (selectedChoiceIndex == null) {
@@ -141,7 +141,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
         score++;
     }
 
-    // Drawing Question
     if (examQuestion.type == QuestionType.drawing) {
       if (!drawingAnswered) {
         _showSnack("Please draw your answer first");
@@ -150,7 +149,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
       if (checkDrawingSoft(examQuestion.data.targetShape, drawnPoints)) score++;
     }
 
-    // Drag & Drop Question
     if (examQuestion.type == QuestionType.dragDrop) {
       final q = examQuestion.data as DragDropQuestion;
       bool allCorrect = q.items.every((item) {
@@ -184,22 +182,34 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   }
 
   void _finishExam() {
+    // نحسب النسبة المئوية للنجاح (مثلاً من 1.0)
+    double finalScoreResult = score / examQuestions.length;
+
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder:
           (_) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             title: const Text("Exam Finished"),
-            content: Text("Your score is $score / ${examQuestions.length}"),
+            content: Text(
+              "Great job ${widget.childName}!\nYour score is $score / ${examQuestions.length}",
+            ),
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.pop(context); // إغلاق الدايلوج
+                  Navigator.pop(
                     context,
-                    CupertinoPageRoute(builder: (context) => const ParentHomePage()),
-                        (route) => false,
-                  );
+                    finalScoreResult,
+                  ); // العودة لصفحة StudentData وإعطاؤها النتيجة
                 },
-                child: const Text("OK"),
+                child: const Text(
+                  "OK",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
               ),
             ],
           ),

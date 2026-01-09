@@ -36,9 +36,10 @@ class _KidoLoginState extends State<KidoLogin> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
-              physics: constraints.maxHeight < 700
-                  ? const BouncingScrollPhysics()
-                  : const NeverScrollableScrollPhysics(),
+              physics:
+                  constraints.maxHeight < 700
+                      ? const BouncingScrollPhysics()
+                      : const NeverScrollableScrollPhysics(),
               padding: config.pagePadding,
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
@@ -55,7 +56,7 @@ class _KidoLoginState extends State<KidoLogin> {
                             blurRadius: 2,
                             offset: const Offset(0.5, 0.5),
                             color: Colors.black26,
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -115,7 +116,7 @@ class _KidoLoginState extends State<KidoLogin> {
                                 colors: [
                                   Color(0xff3DF0C4),
                                   Color(0xff3BDBE7),
-                                  Color(0xff2C8FF9)
+                                  Color(0xff2C8FF9),
                                 ],
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
@@ -128,7 +129,8 @@ class _KidoLoginState extends State<KidoLogin> {
                                 backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
                                 padding: EdgeInsets.symmetric(
-                                    vertical: config.localHeight * 0.025),
+                                  vertical: config.localHeight * 0.025,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25),
                                 ),

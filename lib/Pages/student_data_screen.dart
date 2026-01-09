@@ -6,7 +6,6 @@ import '../Widgets/text_field_item.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class StudentData extends StatefulWidget {
   const StudentData({super.key});
 
@@ -24,18 +23,24 @@ class _StudentDataState extends State<StudentData> {
 
   Future<void> handleAdd() async {
     if (_formKey.currentState!.validate()) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String childName = nameController.text.trim();
 
-      await prefs.setString('child_name', nameController.text.trim());
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('child_name', childName);
       await prefs.setString('child_username', usernameController.text.trim());
       await prefs.setString('child_age', ageController.text.trim());
 
-      Navigator.push(
+      final double? scoreResult = await Navigator.push<double>(
         context,
         MaterialPageRoute(
-          builder: (_) => const ExamSkeletonScreen(examId: 'exam2'),
+          builder:
+              (_) => ExamSkeletonScreen(examId: 'exam2', childName: childName),
         ),
       );
+
+      if (mounted && scoreResult != null) {
+        Navigator.pop(context, {'name': childName, 'score': scoreResult});
+      }
     }
   }
 
@@ -114,7 +119,7 @@ class _StudentDataState extends State<StudentData> {
                     ),
                     SizedBox(height: config.localHeight * 0.04),
                     Container(
-                      width: config.localWidth * 0.5,
+                      width: config.localWidth * 0.6,
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [

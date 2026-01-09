@@ -66,9 +66,7 @@ class HomePage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => ExamSkeletonScreen(examId: 'exam1'),
-                        ),
+                        MaterialPageRoute(builder: (_) => TeacherLogin()),
                       );
                     },
                   ),
