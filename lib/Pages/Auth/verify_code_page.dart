@@ -26,13 +26,12 @@ class _VerifyCodeState extends State<VerifyCode>
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
 
   bool _isSubmitting = false;
+  bool _hasError = false;
 
-  // Resend countdown
   Timer? _timer;
   int _secondsLeft = 45;
   bool _canResend = false;
 
-  // Shake animation for OTP fields
   late AnimationController _shakeController;
   late Animation<double> _shakeAnimation;
 
@@ -68,8 +67,13 @@ class _VerifyCodeState extends State<VerifyCode>
 
   void submitOtp(VerifyCodeCubit cubit) {
     if (_isSubmitting) return;
+
     final otp = getOtp();
-    if (otp.length < 4) return; // button disabled anyway
+
+    if (otp.length < 4) {
+      return;
+    }
+
     _isSubmitting = true;
     cubit.verifyOtp(widget.email, otp);
   }
@@ -133,6 +137,9 @@ class _VerifyCodeState extends State<VerifyCode>
             _isSubmitting = false;
             HapticFeedback.vibrate();
             _triggerShake();
+            setState(() {
+              _hasError = true;
+            });
           } else if (state is VerifyCodeResendSuccess) {
             _startCountdown();
             CustomDialog(
@@ -149,7 +156,6 @@ class _VerifyCodeState extends State<VerifyCode>
         builder: (context, state) {
           final cubit = context.read<VerifyCodeCubit>();
           final isLoading = state is VerifyCodeLoading;
-          final hasError = state is VerifyCodeFailure;
 
           final otpFilled = getOtp().length == 4;
 
@@ -193,7 +199,6 @@ class _VerifyCodeState extends State<VerifyCode>
                       ),
                       SizedBox(height: screenHeight * 0.02),
 
-                      /// OTP Fields with shake animation
                       AnimatedBuilder(
                         animation: _shakeController,
                         builder: (context, child) {
@@ -220,9 +225,15 @@ class _VerifyCodeState extends State<VerifyCode>
                               child: OtpField(
                                 controller: _controllers[index],
                                 focusNode: _focusNodes[index],
-                                isError: hasError,
+                                isError: _hasError,
                                 enabled: !isLoading,
                                 onChanged: (value) async {
+                                  if (_hasError) {
+                                    setState(() {
+                                      _hasError = false;
+                                    });
+                                  }
+
                                   if (value.length > 1) {
                                     pasteOtp(value, cubit);
                                     return;
@@ -261,7 +272,6 @@ class _VerifyCodeState extends State<VerifyCode>
                       ),
                       SizedBox(height: screenHeight * 0.01),
 
-                      /// Resend button
                       TextButton(
                         onPressed:
                             (_secondsLeft == 0 && !isLoading)
@@ -281,10 +291,19 @@ class _VerifyCodeState extends State<VerifyCode>
                       SizedBox(height: screenHeight * 0.02),
                       CustomGradientButton(
                         title: isLoading ? "Verifying..." : "Verify",
-                        onPressed:
-                            otpFilled && !isLoading
-                                ? () => submitOtp(cubit)
-                                : () {},
+                        onPressed: () {
+                          setState(() {
+                            _hasError = getOtp().length < 4;
+                          });
+
+                          if (_hasError) {
+                            _triggerShake();
+                            HapticFeedback.vibrate();
+                            return;
+                          }
+
+                          submitOtp(cubit);
+                        },
                         colors: const [
                           Color(0xff3DF0C4),
                           Color(0xff3BDBE7),

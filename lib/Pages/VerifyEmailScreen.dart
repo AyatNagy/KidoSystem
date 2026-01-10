@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/parent_login_screen.dart';
-import 'package:kido/Widgets/otp_input_widget.dart';
+import 'package:kido/Widgets/otp_field.dart';
 import 'package:kido/bloc/verify_email/verify_email_cubit.dart';
-
 
 class VerifyEmailScreen extends StatefulWidget {
   final String email;
@@ -15,12 +14,26 @@ class VerifyEmailScreen extends StatefulWidget {
 }
 
 class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
-  final GlobalKey<OtpInputWidgetState> _otpInputKey = GlobalKey();
+  final List<TextEditingController> _controllers = List.generate(
+    4,
+    (_) => TextEditingController(),
+  );
+
+  final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
+
+  String getOtp() => _controllers.map((c) => c.text).join();
+
+  @override
+  void dispose() {
+    for (var c in _controllers) c.dispose();
+    for (var f in _focusNodes) f.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => VerifyEmailCubit(),
+      create: (_) => VerifyEmailCubit(),
       child: BlocConsumer<VerifyEmailCubit, VerifyEmailState>(
         listener: (context, state) {
           if (state is VerifyEmailSuccess) {
@@ -33,9 +46,11 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
         builder: (context, state) {
           final cubit = context.read<VerifyEmailCubit>();
           final isLoading = state is VerifyEmailLoading;
-          final errorMessage = state is VerifyEmailFailure
-              ? state.errorMessage
-              : (state is VerifyEmailInitial ? state.errorMessage : null);
+
+          final errorMessage =
+              state is VerifyEmailFailure
+                  ? state.errorMessage
+                  : (state is VerifyEmailInitial ? state.errorMessage : null);
 
           return Scaffold(
             appBar: AppBar(title: const Text("Verify Email")),
@@ -60,46 +75,66 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
                   const SizedBox(height: 30),
 
-                  /// OTP INPUT
-                  OtpInputWidget(
-                    key: _otpInputKey,
-                    onCompleted: (otp) {
-                      cubit.updateOtpCode(otp);
-                      // Auto-verify when all 4 digits are entered
-                      cubit.verifyOtp(widget.email, otp);
-                    },
+                  /// OTP Fields
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      4,
+                      (index) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        child: OtpField(
+                          controller: _controllers[index],
+                          focusNode: _focusNodes[index],
+                          enabled: !isLoading,
+                          isError: errorMessage != null,
+                          onChanged: (value) {
+                            if (value.isNotEmpty && index < 3) {
+                              FocusScope.of(
+                                context,
+                              ).requestFocus(_focusNodes[index + 1]);
+                            } else if (value.isEmpty && index > 0) {
+                              FocusScope.of(
+                                context,
+                              ).requestFocus(_focusNodes[index - 1]);
+                            }
+
+                            if (getOtp().length == 4) {
+                              cubit.updateOtpCode(getOtp());
+                              cubit.verifyOtp(widget.email, getOtp());
+                            }
+                          },
+                        ),
+                      ),
+                    ),
                   ),
 
                   const SizedBox(height: 20),
 
+                  /// Error from cubit (زي ما هو)
                   if (errorMessage != null)
-                    Text(errorMessage!, style: const TextStyle(color: Colors.red)),
+                    Text(
+                      errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
 
                   const SizedBox(height: 30),
 
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: isLoading ? null : () {
-                        // Get OTP from the widget directly
-                        final otpCode = _otpInputKey.currentState?.getCurrentOtp() ?? "";
-                        final currentState = state;
-                        String finalOtp = otpCode;
-                        
-                        // Fallback to state if widget doesn't have it
-                        if (finalOtp.isEmpty) {
-                          if (currentState is VerifyEmailInitial) {
-                            finalOtp = currentState.otpCode;
-                          } else if (currentState is VerifyEmailFailure) {
-                            finalOtp = currentState.otpCode;
-                          }
-                        }
-                        
-                        cubit.verifyOtp(widget.email, finalOtp);
-                      },
+                      onPressed:
+                          isLoading
+                              ? null
+                              : () {
+                                final otp = getOtp();
+                                cubit.updateOtpCode(otp);
+                                cubit.verifyOtp(widget.email, otp);
+                              },
                       child:
                           isLoading
-                              ? const CircularProgressIndicator(color: Colors.white)
+                              ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
                               : const Text("Verify"),
                     ),
                   ),

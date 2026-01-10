@@ -119,13 +119,17 @@ class ForgotByEmail extends StatelessWidget {
                     const SizedBox(height: 15),
 
                     CustomGradientButton(
-                      title: "Send verification code",
-                      onPressed: () {
-                        if (!isLoading && _formKey.currentState!.validate()) {
-                          final email = emailController.text;
-                          cubit.forgetPassword(email);
-                        }
-                      },
+                      title:
+                          isLoading ? "Sending..." : "Send verification code",
+                      onPressed:
+                          !isLoading
+                              ? () {
+                                if (_formKey.currentState!.validate()) {
+                                  final email = emailController.text;
+                                  cubit.forgetPassword(email);
+                                }
+                              }
+                              : () {},
                       colors: const [
                         Color(0xff3DF0C4),
                         Color(0xff3BDBE7),
