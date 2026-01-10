@@ -33,11 +33,13 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
   void _updateAnswers() {
     widget.onAnswered?.call({
       for (var it in widget.question.items)
-        it.id: targetOccupied.entries
-         .firstWhere(
-              (e) => e.value == it.id,
-          orElse: () => const MapEntry('', null),
-         ).key,
+        it.id:
+            targetOccupied.entries
+                .firstWhere(
+                  (e) => e.value == it.id,
+                  orElse: () => const MapEntry('', null),
+                )
+                .key,
     });
   }
 
@@ -80,16 +82,20 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
 
         targetOccupied.forEach((targetId, itemId) {
           if (itemId == null) return;
-          final target = widget.question.targets.firstWhere((t) => t.id == targetId);
+          final target = widget.question.targets.firstWhere(
+            (t) => t.id == targetId,
+          );
           final item = widget.question.items.firstWhere((i) => i.id == itemId);
 
           final double scale = isPuzzle ? 1.0 : 0.5;
 
           stackChildren.add(
             Positioned(
-              left: (containerSize.width * target.position.dx) +
+              left:
+                  (containerSize.width * target.position.dx) +
                   (containerSize.width * target.size.width * (1 - scale)) / 2,
-              top: (containerSize.height * target.position.dy) +
+              top:
+                  (containerSize.height * target.position.dy) +
                   (containerSize.height * target.size.height * (1 - scale)) / 2,
               width: containerSize.width * target.size.width * scale,
               height: containerSize.height * target.size.height * scale,

@@ -93,7 +93,9 @@ class _ParentSignupState extends State<ParentSignup> {
       Future.delayed(const Duration(seconds: 4), () {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => VerifyEmailScreen(email: user.email)),
+          MaterialPageRoute(
+            builder: (_) => VerifyEmailScreen(email: user.email),
+          ),
         );
       });
     } else {
@@ -167,19 +169,19 @@ class _ParentSignupState extends State<ParentSignup> {
                         setState(() {
                           usernameError = Validators.validateUsername(value);
                         });
-                        },
+                      },
                     ),
-                  if (usernameError != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        usernameError!,
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 12,
+                    if (usernameError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                          usernameError!,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
-                    ),
                     SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
                       fieldController: nameController,
@@ -221,7 +223,7 @@ class _ParentSignupState extends State<ParentSignup> {
                           return "Please enter a valid phone number";
                         return null;
                       },
-                      onChanged: (value){
+                      onChanged: (value) {
                         setState(() {
                           phoneError = Validators.validatePhone(value);
                         });

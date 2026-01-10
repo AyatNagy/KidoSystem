@@ -21,8 +21,7 @@ class ExamQuestion {
 
 class ExamSkeletonScreen extends StatefulWidget {
   final String examId;
-  final String
-  childName;
+  final String childName;
 
   const ExamSkeletonScreen({
     super.key,
@@ -200,10 +199,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  Navigator.pop(
-                    context,
-                    finalScoreResult,
-                  );
+                  Navigator.pop(context, finalScoreResult);
                 },
                 child: const Text(
                   "OK",
