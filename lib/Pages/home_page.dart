@@ -56,20 +56,20 @@ class HomePage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildRoleButton(
-                    config: config,
-                    title: 'Teacher',
-                    icon: Icons.school_outlined,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF8869B3), Color(0xFF4C99A8)],
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => TeacherLogin()),
-                      );
-                    },
-                  ),
+                  // _buildRoleButton(
+                  //   config: config,
+                  //   title: 'Teacher',
+                  //   icon: Icons.school_outlined,
+                  //   gradient: const LinearGradient(
+                  //     colors: [Color(0xFF8869B3), Color(0xFF4C99A8)],
+                  //   ),
+                  //   onPressed: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(builder: (_) => TeacherLogin()),
+                  //     );
+                  //   },
+                  // ),
                   _buildRoleButton(
                     config: config,
                     title: 'Parent',
