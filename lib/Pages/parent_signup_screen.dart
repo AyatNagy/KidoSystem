@@ -25,6 +25,11 @@ class _ParentSignupState extends State<ParentSignup> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  String? usernameError;
+  String? nameError;
+  String? phoneError;
+  String? emailError;
+  String? passwordError;
   final phoneRegex = RegExp(
     r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
   );
@@ -34,16 +39,36 @@ class _ParentSignupState extends State<ParentSignup> {
   bool _isLoading = false;
   String currentPassword = "";
   Future<void> handleSignup() async {
-    if (!_formKey.currentState!.validate()) return;
+    final username = usernameController.text.trim();
+    final name = nameController.text.trim();
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    final phone = phoneController.text.trim();
+
+    setState(() {
+      usernameError = Validators.validateUsername(username);
+      nameError = Validators.validateName(name);
+      phoneError = Validators.validatePhone(phone);
+      emailError = Validators.validateEmail(email);
+      passwordError = Validators.validatePassword(password);
+    });
+
+    if (usernameError != null ||
+        nameError != null ||
+        phoneError != null ||
+        emailError != null ||
+        passwordError != null) {
+      return;
+    }
 
     setState(() => _isLoading = true);
 
     final user = User(
-      username: usernameController.text.trim(),
-      name: nameController.text.trim(),
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-      phone: phoneController.text.trim(),
+      username: username,
+      name: name,
+      email: email,
+      password: password,
+      phone: phone,
     );
 
     final success = await ApiService.registerUser(user);
@@ -67,8 +92,8 @@ class _ParentSignupState extends State<ParentSignup> {
 
       Future.delayed(const Duration(seconds: 4), () {
         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) =>  VerifyEmailScreen(email: user.email),)
+          context,
+          MaterialPageRoute(builder: (_) => VerifyEmailScreen(email: user.email)),
         );
       });
     } else {
@@ -130,6 +155,7 @@ class _ParentSignupState extends State<ParentSignup> {
                       fieldIcon: const Icon(Icons.account_circle),
                       fieldLabel: "Username",
                       fieldObscure: false,
+                      textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null || value.isEmpty)
                           return "Please enter your username!";
@@ -137,6 +163,22 @@ class _ParentSignupState extends State<ParentSignup> {
                           return "Username must be at least 3 characters long";
                         return null;
                       },
+                      onChanged: (value) {
+                        setState(() {
+                          usernameError = Validators.validateUsername(value);
+                        });
+                        },
+                    ),
+                  if (usernameError != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        usernameError!,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                        ),
+                      ),
                     ),
                     SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
@@ -145,7 +187,25 @@ class _ParentSignupState extends State<ParentSignup> {
                       fieldLabel: "Full Name",
                       fieldObscure: false,
                       validator: Validators.validateName,
+                      textCapitalization: TextCapitalization.words,
+                      textInputAction: TextInputAction.next,
+                      onChanged: (value) {
+                        setState(() {
+                          nameError = Validators.validateName(value);
+                        });
+                      },
                     ),
+                    if (nameError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                          nameError!,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
                     SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
                       fieldController: phoneController,
@@ -153,6 +213,7 @@ class _ParentSignupState extends State<ParentSignup> {
                       fieldLabel: "Phone Number",
                       fieldObscure: false,
                       keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null || value.isEmpty)
                           return "Please enter your phone!";
@@ -160,7 +221,23 @@ class _ParentSignupState extends State<ParentSignup> {
                           return "Please enter a valid phone number";
                         return null;
                       },
+                      onChanged: (value){
+                        setState(() {
+                          phoneError = Validators.validatePhone(value);
+                        });
+                      },
                     ),
+                    if (phoneError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                          phoneError!,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
                     SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
                       fieldController: emailController,
@@ -168,16 +245,35 @@ class _ParentSignupState extends State<ParentSignup> {
                       fieldLabel: "Email",
                       fieldObscure: false,
                       validator: Validators.validateEmail,
+                      textInputAction: TextInputAction.next,
+                      onChanged: (value) {
+                        setState(() {
+                          emailError = Validators.validateEmail(value);
+                        });
+                      },
                     ),
+                    if (emailError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                          emailError!,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
                     SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
                       fieldController: passwordController,
                       fieldIcon: const Icon(Icons.lock),
                       fieldLabel: "Password",
                       fieldObscure: !isPasswordVisible,
+                      textInputAction: TextInputAction.done,
                       onChanged: (value) {
                         setState(() {
                           currentPassword = value;
+                          passwordError = Validators.validatePassword(value);
                         });
                       },
                       suffixIcon: IconButton(
@@ -194,6 +290,17 @@ class _ParentSignupState extends State<ParentSignup> {
                       ),
                       validator: Validators.validatePassword,
                     ),
+                    if (passwordError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                          passwordError!,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
                     SizedBox(height: config.localHeight * 0.01),
                     PasswordStrengthTurtle(password: currentPassword),
                     SizedBox(height: config.localHeight * 0.04),

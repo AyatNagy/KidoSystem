@@ -22,7 +22,7 @@ class ExamQuestion {
 class ExamSkeletonScreen extends StatefulWidget {
   final String examId;
   final String
-  childName; // أضفت المتغير هنا ليتوافق مع الاستدعاء في صفحة StudentData
+  childName;
 
   const ExamSkeletonScreen({
     super.key,
@@ -182,7 +182,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   }
 
   void _finishExam() {
-    // نحسب النسبة المئوية للنجاح (مثلاً من 1.0)
     double finalScoreResult = score / examQuestions.length;
 
     showDialog(
@@ -200,11 +199,11 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context); // إغلاق الدايلوج
+                  Navigator.pop(context);
                   Navigator.pop(
                     context,
                     finalScoreResult,
-                  ); // العودة لصفحة StudentData وإعطاؤها النتيجة
+                  );
                 },
                 child: const Text(
                   "OK",

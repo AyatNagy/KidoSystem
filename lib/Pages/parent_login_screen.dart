@@ -13,14 +13,22 @@ import '../Widgets/ResponsiveProvider.dart';
 import '../bloc/login/login_cubit.dart';
 import '../bloc/google_auth/google_auth_cubit.dart';
 
-class ParentLogin extends StatelessWidget {
+class ParentLogin extends StatefulWidget {
   const ParentLogin({super.key});
+  @override
+  State<ParentLogin> createState() => _ParentLoginState();
+}
+
+class _ParentLoginState extends State<ParentLogin> {
 
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
+    String? passwordError;
+    String? emailError;
+    bool isPasswordVisible = false;
     final _formKey = GlobalKey<FormState>();
 
     return MultiBlocProvider(
@@ -98,12 +106,17 @@ class ParentLogin extends StatelessWidget {
               bool isPasswordVisible = false;
 
               Future<void> handleLogin() async {
-                if (_formKey.currentState!.validate()) {
-                  loginCubit.loginUser(
-                    emailController.text.trim(),
-                    passwordController.text.trim(),
-                  );
-                }
+                setState(() {
+                  emailError = Validators.validateEmail(emailController.text.trim());
+                  passwordError = Validators.validatePassword(passwordController.text.trim());
+                });
+
+                if (emailError != null || passwordError != null) return;
+
+                loginCubit.loginUser(
+                  emailController.text.trim(),
+                  passwordController.text.trim(),
+                );
               }
 
               Future<void> handleGoogle() async {
@@ -155,8 +168,21 @@ class ParentLogin extends StatelessWidget {
                                       fieldIcon: const Icon(Icons.email),
                                       fieldLabel: "Email",
                                       fieldObscure: false,
-                                      validator: Validators.validateEmail,
+                                      textInputAction: TextInputAction.next,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          emailError = Validators.validateEmail(value);
+                                        });
+                                      },
                                     ),
+                                    if (emailError != null)
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          emailError!,
+                                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                                        ),
+                                      ),
                                     SizedBox(
                                       height: config.localHeight * 0.001,
                                     ),
@@ -165,6 +191,7 @@ class ParentLogin extends StatelessWidget {
                                       fieldIcon: const Icon(Icons.lock),
                                       fieldLabel: "Password",
                                       fieldObscure: !isPasswordVisible,
+                                      textInputAction: TextInputAction.done,
                                       suffixIcon: IconButton(
                                         icon: Icon(
                                           isPasswordVisible
@@ -179,8 +206,20 @@ class ParentLogin extends StatelessWidget {
                                                       !isPasswordVisible,
                                             ),
                                       ),
-                                      validator: Validators.validatePassword,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          passwordError = Validators.validatePassword(value);
+                                        });
+                                      },
                                     ),
+                                    if (passwordError != null)
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          passwordError!,
+                                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                                        ),
+                                      ),
                                     SizedBox(height: config.localHeight * 0.01),
                                     Container(
                                       width: config.localWidth * 0.55,
@@ -367,4 +406,5 @@ class ParentLogin extends StatelessWidget {
       ),
     );
   }
+
 }

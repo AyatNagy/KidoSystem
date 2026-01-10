@@ -6,6 +6,8 @@ import '../Widgets/text_field_item.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../utils/validators.dart';
+
 class StudentData extends StatefulWidget {
   const StudentData({super.key});
 
@@ -18,11 +20,27 @@ class _StudentDataState extends State<StudentData> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
+  String? nameError;
+  String? usernameError;
+  String? ageError;
+  String? passwordError;
   bool isPasswordVisible = false;
   final _formKey = GlobalKey<FormState>();
 
   Future<void> handleAdd() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        nameError = Validators.validateName(nameController.text);
+        usernameError = Validators.validateUsername(usernameController.text);
+        ageError = Validators.validateAge(ageController.text);
+        passwordError = Validators.validatePassword(passwordController.text);
+      });
+      if (nameError != null ||
+          usernameError != null ||
+          ageError != null ||
+          passwordError != null) {
+        return;
+      }
       String childName = nameController.text.trim();
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -80,6 +98,19 @@ class _StudentDataState extends State<StudentData> {
                       fieldIcon: const Icon(Icons.face),
                       fieldLabel: "Child's name",
                       fieldObscure: false,
+                  onChanged: (value) {
+                    setState(() {
+                      nameError = Validators.validateName(value);
+                    });
+                  },
+                ),
+                  if (nameError != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        nameError!,
+                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                      ),
                     ),
                     SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
@@ -87,7 +118,20 @@ class _StudentDataState extends State<StudentData> {
                       fieldIcon: const Icon(Icons.people),
                       fieldLabel: "Child's Username",
                       fieldObscure: false,
+                      onChanged: (value) {
+                        setState(() {
+                          usernameError = Validators.validateUsername(value);
+                        });
+                      },
                     ),
+                    if (usernameError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                          usernameError!,
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                        ),
+                      ),
                     SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
                       fieldController: ageController,
@@ -96,17 +140,35 @@ class _StudentDataState extends State<StudentData> {
                       fieldObscure: false,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      onChanged: (value) {
+                        setState(() {
+                          ageError = Validators.validateAge(value);
+                        });
+                      },
                     ),
+                    if (ageError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                          ageError!,
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                        ),
+                      ),
                     SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
                       fieldController: passwordController,
                       fieldIcon: const Icon(Icons.lock),
                       fieldLabel: "Child's Password",
                       fieldObscure: !isPasswordVisible,
+                      onChanged: (value) {
+                        setState(() {
+                          passwordError = Validators.validatePassword(value);
+                        });
+                      },
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(
-                            () => isPasswordVisible = !isPasswordVisible,
+                                () => isPasswordVisible = !isPasswordVisible,
                           );
                         },
                         icon: Icon(
@@ -117,6 +179,14 @@ class _StudentDataState extends State<StudentData> {
                         ),
                       ),
                     ),
+                    if (passwordError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                          passwordError!,
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                        ),
+                      ),
                     SizedBox(height: config.localHeight * 0.04),
                     Container(
                       width: config.localWidth * 0.6,

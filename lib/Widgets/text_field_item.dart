@@ -13,6 +13,8 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.inputFormatters,
     this.onChanged,
+    this.textInputAction,
+    this.textCapitalization = TextCapitalization.none
   });
 
   final TextEditingController fieldController;
@@ -24,6 +26,8 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final Function(String)? onChanged;
+  final TextInputAction? textInputAction;
+  final TextCapitalization textCapitalization;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +38,8 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       onChanged: onChanged,
+      textInputAction: textInputAction,
+      textCapitalization: textCapitalization,
       decoration: InputDecoration(
         labelText: fieldLabel,
 
