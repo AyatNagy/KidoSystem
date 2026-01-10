@@ -5,7 +5,6 @@ import '../Widgets/appBar.dart';
 import '../Widgets/text_field_item.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../utils/validators.dart';
 
 class StudentData extends StatefulWidget {
