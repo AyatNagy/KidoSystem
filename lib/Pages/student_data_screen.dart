@@ -34,24 +34,36 @@ class _StudentDataState extends State<StudentData> {
         ageError = Validators.validateAge(ageController.text);
         passwordError = Validators.validatePassword(passwordController.text);
       });
+
       if (nameError != null ||
           usernameError != null ||
           ageError != null ||
           passwordError != null) {
         return;
       }
+
       String childName = nameController.text.trim();
+      int childAge = int.parse(ageController.text.trim());
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('child_name', childName);
       await prefs.setString('child_username', usernameController.text.trim());
       await prefs.setString('child_age', ageController.text.trim());
 
+      if (childAge < 3) {
+        if (mounted) {
+          Navigator.pop(context, {'name': childName, 'addedDirectly': true});
+        }
+
+        return;
+      }
+
+      String examId = (childAge >= 3 && childAge <= 5) ? 'exam2' : 'exam1';
       final double? scoreResult = await Navigator.push<double>(
         context,
         MaterialPageRoute(
           builder:
-              (_) => ExamSkeletonScreen(examId: 'exam2', childName: childName),
+              (_) => ExamSkeletonScreen(examId: examId, childName: childName),
         ),
       );
 
@@ -97,20 +109,23 @@ class _StudentDataState extends State<StudentData> {
                       fieldIcon: const Icon(Icons.face),
                       fieldLabel: "Child's name",
                       fieldObscure: false,
-                  onChanged: (value) {
-                    setState(() {
-                      nameError = Validators.validateName(value);
-                    });
-                  },
-                ),
-                  if (nameError != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        nameError!,
-                        style: const TextStyle(color: Colors.red, fontSize: 12),
-                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          nameError = Validators.validateName(value);
+                        });
+                      },
                     ),
+                    if (nameError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                          nameError!,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
                     SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
                       fieldController: usernameController,
@@ -128,7 +143,10 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           usernameError!,
-                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     SizedBox(height: config.localHeight * 0.02),
@@ -150,7 +168,10 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           ageError!,
-                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     SizedBox(height: config.localHeight * 0.02),
@@ -183,7 +204,10 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           passwordError!,
-                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     SizedBox(height: config.localHeight * 0.04),
