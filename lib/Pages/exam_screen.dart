@@ -13,7 +13,6 @@ import 'package:kido/Widgets/custom_app_button.dart';
 enum QuestionType { choice, drawing, dragDrop }
 
 class ExamQuestion {
-
   final QuestionType type;
   final dynamic data;
 
@@ -90,7 +89,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     double avgDist = distances.reduce((a, b) => a + b) / distances.length;
     double deviation =
         distances.map((d) => (d - avgDist).abs()).reduce((a, b) => a + b) /
-            distances.length;
+        distances.length;
     return deviation < 50;
   }
 
@@ -139,27 +138,39 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
       }
       if (q.correctIndex != null && selectedChoiceIndex == q.correctIndex)
         score++;
-    }
-
-    if (examQuestion.type == QuestionType.drawing) {
+    } else if (examQuestion.type == QuestionType.drawing) {
       if (!drawingAnswered) {
         _showSnack("Please draw your answer first");
         return;
       }
       if (checkDrawingSoft(examQuestion.data.targetShape, drawnPoints)) score++;
-    }
-
-    if (examQuestion.type == QuestionType.dragDrop) {
+    } else if (examQuestion.type == QuestionType.dragDrop) {
       final q = examQuestion.data as DragDropQuestion;
-      bool allCorrect = q.items.every((item) {
-        final correctTargets =
-        q.targets
-            .where((t) => t.acceptedItemIds.contains(item.id))
-            .map((t) => t.id)
-            .toList();
-        return correctTargets.contains(dragAnswers[item.id]);
+
+      bool allTargetsFilled = q.targets.every((target) {
+        return dragAnswers.containsValue(target.id);
       });
-      if (allCorrect) score++;
+
+      if (!allTargetsFilled) {
+        _showSnack("من فضلك ضع الإجابة في مكانها أولاً");
+        return;
+      }
+
+      bool isAllCorrect = true;
+      for (var target in q.targets) {
+        String? itemIdInThisTarget =
+            dragAnswers.entries
+                .where((e) => e.value == target.id)
+                .map((e) => e.key)
+                .firstOrNull;
+
+        if (itemIdInThisTarget == null ||
+            !target.acceptedItemIds.contains(itemIdInThisTarget)) {
+          isAllCorrect = false;
+          break;
+        }
+      }
+      if (isAllCorrect) score++;
     }
 
     if (currentIndex < examQuestions.length - 1) {
@@ -189,26 +200,26 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
       barrierDismissible: false,
       builder:
           (_) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: const Text("Exam Finished"),
-        content: Text(
-          "Great job ${widget.childName}!\nYour score is $score / ${examQuestions.length}",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context, finalScoreResult);
-            },
-            child: const Text(
-              "OK",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
+            title: const Text("Exam Finished"),
+            content: Text(
+              "Great job ${widget.childName}!\nYour score is $score / ${examQuestions.length}",
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context, finalScoreResult);
+                },
+                child: const Text(
+                  "OK",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -217,11 +228,11 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     final config = ResponsiveProvider.of(context);
     final examQuestion = examQuestions[currentIndex];
     final questionText =
-    examQuestion.type == QuestionType.choice
-        ? (examQuestion.data as ChoiceQuestion).questionText
-        : examQuestion.type == QuestionType.drawing
-        ? (examQuestion.data as DrawingQuestion).questionText
-        : (examQuestion.data as DragDropQuestion).questionText;
+        examQuestion.type == QuestionType.choice
+            ? (examQuestion.data as ChoiceQuestion).questionText
+            : examQuestion.type == QuestionType.drawing
+            ? (examQuestion.data as DrawingQuestion).questionText
+            : (examQuestion.data as DragDropQuestion).questionText;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -268,26 +279,26 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
               SizedBox(height: config.localHeight * 0.03),
               Expanded(
                 child:
-                examQuestion.type == QuestionType.choice
-                    ? ChoiceQuestionWidget(
-                  key: ValueKey("choice_$currentIndex"),
-                  question: examQuestion.data,
-                  onSelected: handleChoiceSelected,
-                )
-                    : examQuestion.type == QuestionType.drawing
-                    ? DrawingQuestionWidget(
-                  key: ValueKey("drawing_$currentIndex"),
-                  question: examQuestion.data,
-                  onDrawingUpdate: handleDrawingUpdate,
-                  onClear: clearDrawing,
-                )
-                    : DragDropQuestionWidget(
-                  key: ValueKey("dragDrop_$currentIndex"),
-                  question: examQuestion.data,
-                  onAnswered: (answers) {
-                    setState(() => dragAnswers = answers);
-                  },
-                ),
+                    examQuestion.type == QuestionType.choice
+                        ? ChoiceQuestionWidget(
+                          key: ValueKey("choice_$currentIndex"),
+                          question: examQuestion.data,
+                          onSelected: handleChoiceSelected,
+                        )
+                        : examQuestion.type == QuestionType.drawing
+                        ? DrawingQuestionWidget(
+                          key: ValueKey("drawing_$currentIndex"),
+                          question: examQuestion.data,
+                          onDrawingUpdate: handleDrawingUpdate,
+                          onClear: clearDrawing,
+                        )
+                        : DragDropQuestionWidget(
+                          key: ValueKey("dragDrop_$currentIndex"),
+                          question: examQuestion.data,
+                          onAnswered: (answers) {
+                            setState(() => dragAnswers = answers);
+                          },
+                        ),
               ),
               SizedBox(height: config.localHeight * 0.02),
               CustomGradientButton(
