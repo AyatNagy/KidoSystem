@@ -11,6 +11,8 @@ import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kido/Widgets/password_errors_view.dart';
+
 
 class ParentSignup extends StatefulWidget {
   const ParentSignup({super.key});
@@ -29,7 +31,7 @@ class _ParentSignupState extends State<ParentSignup> {
   String? nameError;
   String? phoneError;
   String? emailError;
-  String? passwordError;
+  //String? passwordError;
   final phoneRegex = RegExp(
     r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
   );
@@ -50,14 +52,15 @@ class _ParentSignupState extends State<ParentSignup> {
       nameError = Validators.validateName(name);
       phoneError = Validators.validatePhone(phone);
       emailError = Validators.validateEmail(email);
-      passwordError = Validators.validatePassword(password);
+      //passwordError = Validators.validatePassword(password);
     });
 
-    if (usernameError != null ||
-        nameError != null ||
-        phoneError != null ||
-        emailError != null ||
-        passwordError != null) {
+    if (usernameError != null 
+        ||nameError != null 
+        ||phoneError != null 
+        ||emailError != null 
+        //||passwordError != null
+        ) {
       return;
     }
 
@@ -272,10 +275,11 @@ class _ParentSignupState extends State<ParentSignup> {
                       fieldLabel: "Password",
                       fieldObscure: !isPasswordVisible,
                       textInputAction: TextInputAction.done,
+                      validator: Validators.validatePassword,
                       onChanged: (value) {
                         setState(() {
                           currentPassword = value;
-                          passwordError = Validators.validatePassword(value);
+                          
                         });
                       },
                       suffixIcon: IconButton(
@@ -290,19 +294,15 @@ class _ParentSignupState extends State<ParentSignup> {
                           color: const Color(0xff837F7F),
                         ),
                       ),
-                      validator: Validators.validatePassword,
                     ),
-                    if (passwordError != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Text(
-                          passwordError!,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
-                        ),
+                    const SizedBox(height: 3,),
+                    
+                      Container(
+                        width: double.infinity,
+                        child: PasswordErrorsView(password: currentPassword)
                       ),
+                       
+                      
                     SizedBox(height: config.localHeight * 0.01),
                     PasswordStrengthTurtle(password: currentPassword),
                     SizedBox(height: config.localHeight * 0.04),
