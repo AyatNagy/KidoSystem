@@ -61,7 +61,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
       ...allDragDropQuestions
           .where((q) => q.examId.contains(widget.examId))
           .map((q) => ExamQuestion(type: QuestionType.dragDrop, data: q)),
-      ...allSpaekQuestions // Added
+      ...allSpaekQuestions
           .where((q) => q.examId.contains(widget.examId))
           .map((q) => ExamQuestion(type: QuestionType.speak, data: q)),
     ];
@@ -243,7 +243,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     final config = ResponsiveProvider.of(context);
     final examQuestion = examQuestions[currentIndex];
 
-    // Added SpeakQuestion support to questionText logic
     final questionText =
     examQuestion.type == QuestionType.choice
         ? (examQuestion.data as ChoiceQuestion).questionText
@@ -319,7 +318,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                     setState(() => dragAnswers = answers);
                   },
                 )
-                    : SpeakQuestionWidget( // Added widget
+                    : SpeakQuestionWidget(
                   key: ValueKey("speak_$currentIndex"),
                   question: examQuestion.data,
                   onAnswered: (spokenText) {
