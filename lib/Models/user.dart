@@ -44,7 +44,7 @@ class User {
       'password': password,
       'name': name,
       'email': email,
-      if (phone != null) 'phone': phone, // يرسل فقط لو موجود
+      if (phone != null) 'phone': phone,
     };
   }
 }

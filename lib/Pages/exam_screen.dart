@@ -4,16 +4,17 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:kido/Models/chioce_question.dart';
 import 'package:kido/Models/draw_question.dart';
 import 'package:kido/Models/draganddrop_question.dart';
+import 'package:kido/Models/speak_question.dart';
 import 'package:kido/Widgets/Questions/chioce_question_widget.dart';
 import 'package:kido/Widgets/Questions/draw_question_widget.dart';
 import 'package:kido/Widgets/Questions/draganddrop_question_widget.dart';
+import 'package:kido/Widgets/Questions/speak_question_widget.dart';
 import 'package:kido/Widgets/ResponsiveProvider.dart';
 import 'package:kido/Widgets/custom_app_button.dart';
 
-enum QuestionType { choice, drawing, dragDrop }
+enum QuestionType { choice, drawing, dragDrop, speak }
 
 class ExamQuestion {
-
   final QuestionType type;
   final dynamic data;
 
@@ -42,6 +43,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   List<Offset> drawnPoints = [];
   bool drawingAnswered = false;
   Map<String, String?> dragAnswers = {};
+  bool speechCorrect = false;
 
   FlutterTts flutterTts = FlutterTts();
 
@@ -59,6 +61,9 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
       ...allDragDropQuestions
           .where((q) => q.examId.contains(widget.examId))
           .map((q) => ExamQuestion(type: QuestionType.dragDrop, data: q)),
+      ...allSpaekQuestions
+          .where((q) => q.examId.contains(widget.examId))
+          .map((q) => ExamQuestion(type: QuestionType.speak, data: q)),
     ];
   }
 
@@ -80,17 +85,12 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   }
 
   bool _isCircleSoft(List<Offset> points) {
-    double avgX =
-        points.map((p) => p.dx).reduce((a, b) => a + b) / points.length;
-    double avgY =
-        points.map((p) => p.dy).reduce((a, b) => a + b) / points.length;
+    double avgX = points.map((p) => p.dx).reduce((a, b) => a + b) / points.length;
+    double avgY = points.map((p) => p.dy).reduce((a, b) => a + b) / points.length;
     Offset center = Offset(avgX, avgY);
-
     List<double> distances = points.map((p) => (p - center).distance).toList();
     double avgDist = distances.reduce((a, b) => a + b) / distances.length;
-    double deviation =
-        distances.map((d) => (d - avgDist).abs()).reduce((a, b) => a + b) /
-            distances.length;
+    double deviation = distances.map((d) => (d - avgDist).abs()).reduce((a, b) => a + b) / distances.length;
     return deviation < 50;
   }
 
@@ -99,7 +99,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     int mid = points.length ~/ 2;
     final left = points.sublist(0, mid);
     final right = points.sublist(mid);
-
     double angleLeft = _lineAngle(left.first, left.last);
     double angleRight = _lineAngle(right.first, right.last);
     double angleDiff = (angleLeft - angleRight).abs();
@@ -137,29 +136,25 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
         _showSnack("Please choose an answer first");
         return;
       }
-      if (q.correctIndex != null && selectedChoiceIndex == q.correctIndex)
-        score++;
-    }
-
-    if (examQuestion.type == QuestionType.drawing) {
+      if (selectedChoiceIndex == q.correctIndex) score++;
+    } else if (examQuestion.type == QuestionType.drawing) {
       if (!drawingAnswered) {
         _showSnack("Please draw your answer first");
         return;
       }
       if (checkDrawingSoft(examQuestion.data.targetShape, drawnPoints)) score++;
-    }
-
-    if (examQuestion.type == QuestionType.dragDrop) {
+    } else if (examQuestion.type == QuestionType.dragDrop) {
       final q = examQuestion.data as DragDropQuestion;
       bool allCorrect = q.items.every((item) {
-        final correctTargets =
-        q.targets
+        final correctTargets = q.targets
             .where((t) => t.acceptedItemIds.contains(item.id))
             .map((t) => t.id)
             .toList();
         return correctTargets.contains(dragAnswers[item.id]);
       });
       if (allCorrect) score++;
+    } else if (examQuestion.type == QuestionType.speak) {
+      if (speechCorrect) score++;
     }
 
     if (currentIndex < examQuestions.length - 1) {
@@ -169,6 +164,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
         drawnPoints.clear();
         drawingAnswered = false;
         dragAnswers.clear();
+        speechCorrect = false;
       });
     } else {
       _finishExam();
@@ -176,36 +172,25 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   }
 
   void _showSnack(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _finishExam() {
     double finalScoreResult = score / examQuestions.length;
-
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder:
-          (_) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text("Exam Finished"),
-        content: Text(
-          "Great job ${widget.childName}!\nYour score is $score / ${examQuestions.length}",
-        ),
+        content: Text("Great job ${widget.childName}!\nYour score is $score / ${examQuestions.length}"),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               Navigator.pop(context, finalScoreResult);
             },
-            child: const Text(
-              "OK",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
+            child: const Text("OK", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           ),
         ],
       ),
@@ -216,12 +201,14 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
     final examQuestion = examQuestions[currentIndex];
-    final questionText =
-    examQuestion.type == QuestionType.choice
+
+    final String questionText = examQuestion.type == QuestionType.choice
         ? (examQuestion.data as ChoiceQuestion).questionText
         : examQuestion.type == QuestionType.drawing
         ? (examQuestion.data as DrawingQuestion).questionText
-        : (examQuestion.data as DragDropQuestion).questionText;
+        : examQuestion.type == QuestionType.dragDrop
+        ? (examQuestion.data as DragDropQuestion).questionText
+        : (examQuestion.data as SpeakQuestion).questionText;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -235,10 +222,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Question ${currentIndex + 1}",
-                  style: TextStyle(
-                    fontSize: config.body,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: config.body, color: Colors.grey[600]),
                 ),
               ),
               SizedBox(height: config.localHeight * 0.01),
@@ -249,26 +233,18 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                     child: Text(
                       questionText,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: config.headline,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+                      style: TextStyle(fontSize: config.headline, fontWeight: FontWeight.bold, color: Colors.black87),
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(
-                      Icons.volume_up,
-                      color: Colors.deepPurpleAccent,
-                    ),
+                    icon: const Icon(Icons.volume_up, color: Colors.deepPurpleAccent),
                     onPressed: () => speakQuestion(questionText),
                   ),
                 ],
               ),
               SizedBox(height: config.localHeight * 0.03),
               Expanded(
-                child:
-                examQuestion.type == QuestionType.choice
+                child: examQuestion.type == QuestionType.choice
                     ? ChoiceQuestionWidget(
                   key: ValueKey("choice_$currentIndex"),
                   question: examQuestion.data,
@@ -281,11 +257,23 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                   onDrawingUpdate: handleDrawingUpdate,
                   onClear: clearDrawing,
                 )
-                    : DragDropQuestionWidget(
+                    : examQuestion.type == QuestionType.dragDrop
+                    ? DragDropQuestionWidget(
                   key: ValueKey("dragDrop_$currentIndex"),
                   question: examQuestion.data,
-                  onAnswered: (answers) {
-                    setState(() => dragAnswers = answers);
+                  onAnswered: (answers) => setState(() => dragAnswers = answers),
+                )
+                    : SpeakQuestionWidget(
+                  key: ValueKey("speak_$currentIndex"),
+                  question: examQuestion.data as SpeakQuestion,
+                  onAnswered: (spokenText) {
+                    final q = examQuestion.data as SpeakQuestion;
+                    bool isCorrect = q.acceptedAnswers.any(
+                            (answer) => spokenText.contains(answer)
+                    );
+                    setState(() {
+                      speechCorrect = isCorrect;
+                    });
                   },
                 ),
               ),

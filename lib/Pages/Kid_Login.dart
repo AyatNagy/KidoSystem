@@ -64,7 +64,7 @@ class _KidoLoginState extends State<KidoLogin> {
                     SizedBox(height: config.localHeight * 0.02),
 
                     Image.asset(
-                      'assets/images/learn.png',
+                      'assets/images/learn.jpeg',
                       height: config.imageHeight(0.35),
                       width: config.imageWidth(0.8),
                       fit: BoxFit.contain,
