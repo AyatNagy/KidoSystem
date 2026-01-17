@@ -3,7 +3,7 @@ import 'package:kido/Models/dragable_item.dart';
 import 'package:kido/Models/targets_item.dart';
 import 'package:kido/Models/questionModel.dart';
 
-class DragDropQuestion extends Question{
+class DragDropQuestion extends Question {
   final String? backgroundImage;
   final String? extraImage;
   final List<DragItem> items;
@@ -185,71 +185,71 @@ final List<DragDropQuestion> allDragDropQuestions = [
   ),
 
   DragDropQuestion(
-      examId: ['exam2'],
-      questionText: "Find Red",
-      items: [
-        DragItem(
-            id: "red",
-            image: "assets/images/apple.png",
-            startPosition: const Offset(0.36, 0.6),
-            size: const Size(0.45, 0.55)
-        ),
-        DragItem(
-            id: "yellow",
-            image: "assets/images/yelow-car.png",
-            startPosition: const Offset(0.062, 0.6),
-            size: const Size(0.45, 0.55)
-        ),
-        DragItem(
-            id: "blue",
-            image: "assets/images/blue-duck.png",
-            startPosition: const Offset(0.65, 0.6),
-            size: const Size(0.4, 0.3)
-        ),
-      ],
-      targets: [
-        DragTargetZone(
-            id: "red_target",
-            acceptedItemIds: ["red"],
-            position: const Offset(0.35, 0.05),
-            size: const Size(0.5, 0.5),
-            image: "assets/images/red-box.png"
-        )
-      ]
+    examId: ['exam2'],
+    questionText: "Find Red",
+    items: [
+      DragItem(
+        id: "red",
+        image: "assets/images/apple.png",
+        startPosition: const Offset(0.36, 0.6),
+        size: const Size(0.45, 0.55),
+      ),
+      DragItem(
+        id: "yellow",
+        image: "assets/images/yelow-car.png",
+        startPosition: const Offset(0.062, 0.6),
+        size: const Size(0.45, 0.55),
+      ),
+      DragItem(
+        id: "blue",
+        image: "assets/images/blue-duck.png",
+        startPosition: const Offset(0.65, 0.6),
+        size: const Size(0.4, 0.3),
+      ),
+    ],
+    targets: [
+      DragTargetZone(
+        id: "red_target",
+        acceptedItemIds: ["red"],
+        position: const Offset(0.35, 0.05),
+        size: const Size(0.5, 0.5),
+        image: "assets/images/red-box.png",
+      ),
+    ],
   ),
 
   DragDropQuestion(
-      examId: ['exam2'],
-      questionText: "Put The Clothes In The Right Box!",
-      items: [
-        DragItem(
-            id: "cotton",
-            image: "assets/images/cotton_Tshirt.png",
-            startPosition: const Offset(0.25,0.05),
-            size: const Size(0.5,0.5)
-        ),
-        DragItem(
-            id: "wool",
-            image: "assets/images/wool-Tshirt.png",
-            startPosition: const Offset(0.05,0.05),
-            size: const Size(0.5,0.5)
-        ),
-      ],
-      targets: [
-        DragTargetZone(
-            id: "cotton_target",
-            acceptedItemIds: ["cotton"],
-            position: const Offset(0.1, 0.1),
-            size: const Size(0.45, 0.45),
-            image:"assets/images/cotton.png",
-        ),
-        DragTargetZone(
-          id: "wool_target",
-          acceptedItemIds: ["wool"],
-          position: const Offset(0.1, 0.1),
-          size: const Size(0.45, 0.45),
-          image:"assets/images/wool.png",
-        ),
-      ]
+    examId: ['exam2'],
+    questionText: "Put The Clothes In The Right Box!",
+    items: [
+      DragItem(
+        id: "cotton",
+        image: "assets/images/cotton_Tshirt.png",
+        startPosition: const Offset(0.10, 0.60),
+        size: const Size(0.45, 0.45),
+      ),
+      DragItem(
+        id: "wool",
+        image: "assets/images/wool-Tshirt.png",
+        startPosition: const Offset(0.55, 0.65),
+        size: const Size(0.45, 0.45),
+      ),
+    ],
+    targets: [
+      DragTargetZone(
+        id: "cotton_target",
+        acceptedItemIds: ["cotton"],
+        position: const Offset(0.05, 0.05),
+        size: const Size(0.45, 0.45),
+        image: "assets/images/cotton.png",
+      ),
+      DragTargetZone(
+        id: "wool_target",
+        acceptedItemIds: ["wool"],
+        position: const Offset(0.52, 0.05),
+        size: const Size(0.45, 0.45),
+        image: "assets/images/wool.png",
+      ),
+    ],
   ),
 ];

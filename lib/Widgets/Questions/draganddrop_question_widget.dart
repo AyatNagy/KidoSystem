@@ -31,16 +31,15 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
   }
 
   void _updateAnswers() {
-    widget.onAnswered?.call({
-      for (var it in widget.question.items)
-        it.id:
-            targetOccupied.entries
-                .firstWhere(
-                  (e) => e.value == it.id,
-                  orElse: () => const MapEntry('', null),
-                )
-                .key,
+    Map<String, String?> currentAnswers = {};
+
+    targetOccupied.forEach((targetId, itemId) {
+      if (itemId != null) {
+        currentAnswers[itemId] = targetId;
+      }
     });
+
+    widget.onAnswered?.call(currentAnswers);
   }
 
   @override
