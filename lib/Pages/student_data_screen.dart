@@ -8,6 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/validators.dart';
 import '../Widgets/dialog_widget.dart';
 import '../Models/dailogModel.dart';
+import '../api_service/api_services.dart';
+import '../Models/child.dart';
+import '../config/cache_helper.dart';
 
 class StudentData extends StatefulWidget {
   const StudentData({super.key});
@@ -26,6 +29,7 @@ class _StudentDataState extends State<StudentData> {
   String? ageError;
   String? passwordError;
   bool isPasswordVisible = false;
+  bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
 
   Future<void> handleAdd() async {
@@ -44,44 +48,100 @@ class _StudentDataState extends State<StudentData> {
         return;
       }
 
-      String childName = nameController.text.trim();
-      int childAge = int.tryParse(ageController.text.trim()) ?? 0;
+      setState(() => isLoading = true);
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('child_name', childName);
-      await prefs.setString('child_username', usernameController.text.trim());
-      await prefs.setString('child_age', ageController.text.trim());
+      try {
+        String childName = nameController.text.trim();
+        String childUsername = usernameController.text.trim();
+        String childPassword = passwordController.text.trim();
+        int childAge = int.tryParse(ageController.text.trim()) ?? 0;
 
-      if (childAge < 3) {
-        if (mounted) {
-          Navigator.pop(context, {'name': childName, 'addedDirectly': true});
-        }
-        return;
-      }
+        // حفظ البيانات محلياً في SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('child_name', childName);
+        await prefs.setString('child_username', childUsername);
+        await prefs.setString('child_age', ageController.text.trim());
 
-      String examId = (childAge >= 3 && childAge <= 5) ? 'exam2' : 'exam1';
-
-      CustomDialog(
-        context,
-        dialogModel(
-          title: "Level Assessment",
-          message: "To provide the best experience for $childName, we need to perform a quick exam to determine their current level.",
-          image: 'assets/images/exam.png',
-        ),
-        titleColor: const Color(0xfff06292),
-        onNextPressed: () async {
-          final double? scoreResult = await Navigator.push<double>(
-            context,
-            MaterialPageRoute(
-              builder: (_) => ExamSkeletonScreen(examId: examId, childName: childName),
-            ),
-          );
-
-          if (mounted && scoreResult != null) {
-            Navigator.pop(context, {'name': childName, 'score': scoreResult});
+        if (childAge < 3) {
+          if (mounted) {
+            Navigator.pop(context, {'name': childName, 'addedDirectly': true});
           }
-        },
-      );
+          return;
+        }
+
+        // إنشاء كائن Child لإرساله إلى الخادم
+        final child = Child(
+          name: childName,
+          username: childUsername,
+          password: childPassword,
+          dateOfBirth: DateTime.now().subtract(Duration(days: childAge * 365)),
+        );
+
+        // تسجيل الطفل في قاعدة البيانات عن طريق API
+        final registerResponse = await ApiService.registerChild(child);
+
+        if (registerResponse != null && mounted) {
+          // احفظ معرف الطفل من الاستجابة
+          if (registerResponse['child'] != null &&
+              registerResponse['child']['id'] != null) {
+            await LocalStorage.setChildId(registerResponse['child']['id']);
+          }
+
+          // الآن ننتقل إلى شاشة الامتحان
+          String examId = (childAge >= 3 && childAge <= 5) ? 'exam2' : 'exam1';
+
+          CustomDialog(
+            context,
+            dialogModel(
+              title: "Level Assessment",
+              message:
+                  "To provide the best experience for $childName, we need to perform a quick exam to determine their current level.",
+              image: 'assets/images/exam.png',
+            ),
+            titleColor: const Color(0xfff06292),
+            onNextPressed: () async {
+              final double? scoreResult = await Navigator.push<double>(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => ExamSkeletonScreen(
+                        examId: examId,
+                        childName: childName,
+                      ),
+                ),
+              );
+
+              if (mounted && scoreResult != null) {
+                Navigator.pop(context, {
+                  'name': childName,
+                  'score': scoreResult,
+                  'childId': registerResponse['child']['id'],
+                });
+              }
+            },
+          );
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('فشل في تسجيل الطفل. الرجاء المحاولة مجدداً.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        print('Error: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('حدث خطأ: $e'), backgroundColor: Colors.red),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() => isLoading = false);
+        }
+      }
     }
   }
 
@@ -132,7 +192,10 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           nameError!,
-                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     SizedBox(height: config.localHeight * 0.02),
@@ -152,7 +215,10 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           usernameError!,
-                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     SizedBox(height: config.localHeight * 0.02),
@@ -174,7 +240,10 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           ageError!,
-                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     SizedBox(height: config.localHeight * 0.02),
@@ -190,10 +259,14 @@ class _StudentDataState extends State<StudentData> {
                       },
                       suffixIcon: IconButton(
                         onPressed: () {
-                          setState(() => isPasswordVisible = !isPasswordVisible);
+                          setState(
+                            () => isPasswordVisible = !isPasswordVisible,
+                          );
                         },
                         icon: Icon(
-                          isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           color: const Color(0xff837F7F),
                         ),
                       ),
@@ -203,7 +276,10 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           passwordError!,
-                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     SizedBox(height: config.localHeight * 0.04),
@@ -220,7 +296,7 @@ class _StudentDataState extends State<StudentData> {
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: ElevatedButton(
-                        onPressed: handleAdd,
+                        onPressed: isLoading ? null : handleAdd,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
@@ -231,14 +307,26 @@ class _StudentDataState extends State<StudentData> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
-                        child: Text(
-                          "Add My Little Star",
-                          style: TextStyle(
-                            fontSize: config.title,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        child:
+                            isLoading
+                                ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                                : Text(
+                                  "Add My Little Star",
+                                  style: TextStyle(
+                                    fontSize: config.title,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                       ),
                     ),
                   ],
