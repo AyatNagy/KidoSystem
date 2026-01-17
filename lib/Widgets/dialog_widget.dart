@@ -4,12 +4,12 @@ import '../Models/dailogModel.dart';
 import 'ResponsiveProvider.dart';
 
 void CustomDialog(BuildContext context, dialogModel data,
-    {required Color titleColor}) {
+    {required Color titleColor, VoidCallback? onNextPressed}) {
   final config = ResponsiveProvider.of(context);
 
   showDialog<void>(
     context: context,
-    barrierDismissible: true,
+    barrierDismissible: onNextPressed == null,
     barrierColor: Colors.black.withOpacity(0.3),
     builder: (context) {
       return Center(
@@ -22,12 +22,12 @@ void CustomDialog(BuildContext context, dialogModel data,
               alignment: Alignment.topCenter,
               children: [
                 Container(
-                  width: config.localWidth * 0.8,
+                  width: config.localWidth * 0.85,
                   margin: const EdgeInsets.only(top: 60),
                   padding: const EdgeInsets.fromLTRB(20, 70, 20, 25),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(25),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -37,19 +37,58 @@ void CustomDialog(BuildContext context, dialogModel data,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 25,
+                          fontSize: 24,
                           color: titleColor,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 12),
                       Text(
                         data.message,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           color: Colors.black54,
+                          height: 1.4,
                         ),
                       ),
+                      if (onNextPressed != null) ...[
+                        const SizedBox(height: 25),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            onNextPressed();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  titleColor,
+                                  titleColor.withOpacity(0.7),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: titleColor.withOpacity(0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                )
+                              ],
+                            ),
+                            child: const Text(
+                              "Start Level Test",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -57,8 +96,8 @@ void CustomDialog(BuildContext context, dialogModel data,
                   top: 0,
                   child: Image.asset(
                     data.image,
-                    width: config.imageWidth(0.9),
-                    height: 130,
+                    width: 140,
+                    height: 140,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -70,9 +109,11 @@ void CustomDialog(BuildContext context, dialogModel data,
     },
   );
 
-  Future.delayed(const Duration(seconds: 4), () {
-    if (Navigator.canPop(context)) {
-      Navigator.of(context).pop();
-    }
-  });
+  if (onNextPressed == null) {
+    Future.delayed(const Duration(seconds: 4), () {
+      if (Navigator.canPop(context)) {
+        Navigator.of(context).pop();
+      }
+    });
+  }
 }

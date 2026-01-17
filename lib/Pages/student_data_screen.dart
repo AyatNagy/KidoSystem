@@ -6,6 +6,8 @@ import '../Widgets/text_field_item.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/validators.dart';
+import '../Widgets/dialog_widget.dart';
+import '../Models/dailogModel.dart';
 
 class StudentData extends StatefulWidget {
   const StudentData({super.key});
@@ -43,7 +45,7 @@ class _StudentDataState extends State<StudentData> {
       }
 
       String childName = nameController.text.trim();
-      int childAge = int.parse(ageController.text.trim());
+      int childAge = int.tryParse(ageController.text.trim()) ?? 0;
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('child_name', childName);
@@ -54,22 +56,32 @@ class _StudentDataState extends State<StudentData> {
         if (mounted) {
           Navigator.pop(context, {'name': childName, 'addedDirectly': true});
         }
-
         return;
       }
 
       String examId = (childAge >= 3 && childAge <= 5) ? 'exam2' : 'exam1';
-      final double? scoreResult = await Navigator.push<double>(
-        context,
-        MaterialPageRoute(
-          builder:
-              (_) => ExamSkeletonScreen(examId: examId, childName: childName),
-        ),
-      );
 
-      if (mounted && scoreResult != null) {
-        Navigator.pop(context, {'name': childName, 'score': scoreResult});
-      }
+      CustomDialog(
+        context,
+        dialogModel(
+          title: "Level Assessment",
+          message: "To provide the best experience for $childName, we need to perform a quick exam to determine their current level.",
+          image: 'assets/images/exam.png',
+        ),
+        titleColor: const Color(0xfff06292),
+        onNextPressed: () async {
+          final double? scoreResult = await Navigator.push<double>(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ExamSkeletonScreen(examId: examId, childName: childName),
+            ),
+          );
+
+          if (mounted && scoreResult != null) {
+            Navigator.pop(context, {'name': childName, 'score': scoreResult});
+          }
+        },
+      );
     }
   }
 
@@ -120,10 +132,7 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           nameError!,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                     SizedBox(height: config.localHeight * 0.02),
@@ -143,10 +152,7 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           usernameError!,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                     SizedBox(height: config.localHeight * 0.02),
@@ -168,10 +174,7 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           ageError!,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                     SizedBox(height: config.localHeight * 0.02),
@@ -187,14 +190,10 @@ class _StudentDataState extends State<StudentData> {
                       },
                       suffixIcon: IconButton(
                         onPressed: () {
-                          setState(
-                                () => isPasswordVisible = !isPasswordVisible,
-                          );
+                          setState(() => isPasswordVisible = !isPasswordVisible);
                         },
                         icon: Icon(
-                          isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                          isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                           color: const Color(0xff837F7F),
                         ),
                       ),
@@ -204,10 +203,7 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           passwordError!,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                     SizedBox(height: config.localHeight * 0.04),
