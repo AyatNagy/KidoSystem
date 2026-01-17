@@ -8,13 +8,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/validators.dart';
 import '../Widgets/dialog_widget.dart';
 import '../Models/dailogModel.dart';
-<<<<<<< HEAD
 import '../api_service/api_services.dart';
 import '../Models/child.dart';
 import '../config/cache_helper.dart';
-=======
 import 'package:kido/Widgets/password_errors_view.dart';
->>>>>>> 1c7bfa3 (adding error rules)
+
+
+
 
 class StudentData extends StatefulWidget {
   const StudentData({super.key});
@@ -31,7 +31,7 @@ class _StudentDataState extends State<StudentData> {
   String? nameError;
   String? usernameError;
   String? ageError;
-  String? passwordError;
+  //String? passwordError;
   bool isPasswordVisible = false;
   bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
@@ -42,13 +42,13 @@ class _StudentDataState extends State<StudentData> {
         nameError = Validators.validateName(nameController.text);
         usernameError = Validators.validateUsername(usernameController.text);
         ageError = Validators.validateAge(ageController.text);
-        passwordError = Validators.validatePassword(passwordController.text);
+        //passwordError = Validators.validatePassword(passwordController.text);
       });
 
       if (nameError != null ||
           usernameError != null ||
-          ageError != null ||
-          passwordError != null) {
+          ageError != null 
+         ) {
         return;
       }
 
@@ -266,7 +266,7 @@ class _StudentDataState extends State<StudentData> {
                       fieldObscure: !isPasswordVisible,
                       onChanged: (value) {
                         setState(() {
-                          passwordError = Validators.validatePassword(value);
+                          //passwordError = Validators.validatePassword(value);
                         });
                       },
                       suffixIcon: IconButton(
@@ -283,24 +283,13 @@ class _StudentDataState extends State<StudentData> {
                         ),
                       ),
                     ),
-<<<<<<< HEAD
-                    if (passwordError != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Text(
-                          passwordError!,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
-                        ),
-=======
+
+                   
                    const SizedBox(height: 3,),
                     
                       Container(
                         width: double.infinity,
                         child: PasswordErrorsView(password: passwordController.text)
->>>>>>> 1c7bfa3 (adding error rules)
                       ),
                     SizedBox(height: config.localHeight * 0.04),
                     Container(
