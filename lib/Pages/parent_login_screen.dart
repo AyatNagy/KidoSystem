@@ -109,7 +109,7 @@ class _ParentLoginState extends State<ParentLogin> {
                   emailError = Validators.validateEmail(
                     emailController.text.trim(),
                   );
-                  passwordError = Validators.validatePassword(
+                  passwordError = Validators.validateLoginPassword(
                     passwordController.text.trim(),
                   );
                 });
@@ -217,7 +217,7 @@ class _ParentLoginState extends State<ParentLogin> {
                                       onChanged: (value) {
                                         setState(() {
                                           passwordError =
-                                              Validators.validatePassword(
+                                              Validators.validateLoginPassword(
                                                 value,
                                               );
                                         });

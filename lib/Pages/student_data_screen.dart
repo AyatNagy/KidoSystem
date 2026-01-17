@@ -8,9 +8,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/validators.dart';
 import '../Widgets/dialog_widget.dart';
 import '../Models/dailogModel.dart';
+<<<<<<< HEAD
 import '../api_service/api_services.dart';
 import '../Models/child.dart';
 import '../config/cache_helper.dart';
+=======
+import 'package:kido/Widgets/password_errors_view.dart';
+>>>>>>> 1c7bfa3 (adding error rules)
 
 class StudentData extends StatefulWidget {
   const StudentData({super.key});
@@ -279,6 +283,7 @@ class _StudentDataState extends State<StudentData> {
                         ),
                       ),
                     ),
+<<<<<<< HEAD
                     if (passwordError != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
@@ -289,6 +294,13 @@ class _StudentDataState extends State<StudentData> {
                             fontSize: 12,
                           ),
                         ),
+=======
+                   const SizedBox(height: 3,),
+                    
+                      Container(
+                        width: double.infinity,
+                        child: PasswordErrorsView(password: passwordController.text)
+>>>>>>> 1c7bfa3 (adding error rules)
                       ),
                     SizedBox(height: config.localHeight * 0.04),
                     Container(
