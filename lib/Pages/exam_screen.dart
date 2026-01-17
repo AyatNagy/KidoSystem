@@ -13,6 +13,7 @@ import 'package:kido/Widgets/custom_app_button.dart';
 enum QuestionType { choice, drawing, dragDrop }
 
 class ExamQuestion {
+
   final QuestionType type;
   final dynamic data;
 

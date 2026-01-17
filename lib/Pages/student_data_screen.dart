@@ -54,6 +54,7 @@ class _StudentDataState extends State<StudentData> {
         if (mounted) {
           Navigator.pop(context, {'name': childName, 'addedDirectly': true});
         }
+
         return;
       }
 
