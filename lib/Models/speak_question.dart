@@ -14,7 +14,7 @@ class SpeakQuestion extends Question{
 
 final List<SpeakQuestion> allSpaekQuestions = [
   SpeakQuestion(
-    examId: ['exam1','exam2'],
+    examId: ['exam1'],
     questionText: "اسم الشكل",
     image: "assets/images/circle-shape.png",
     acceptedAnswers: [
@@ -22,5 +22,16 @@ final List<SpeakQuestion> allSpaekQuestions = [
       "دايرة",
       "دائرة",
     ],
+  ),
+
+  SpeakQuestion(
+      examId: ['exam2'],
+      questionText: "اسم الحيوان",
+      image: "assets/images/cat2.png",
+      acceptedAnswers: [
+        "قطة",
+        "قطه",
+        "قط",
+      ],
   )
 ];

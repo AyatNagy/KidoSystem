@@ -56,20 +56,11 @@ class _StudentDataState extends State<StudentData> {
         String childPassword = passwordController.text.trim();
         int childAge = int.tryParse(ageController.text.trim()) ?? 0;
 
-        // حفظ البيانات محلياً في SharedPreferences
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('child_name', childName);
         await prefs.setString('child_username', childUsername);
         await prefs.setString('child_age', ageController.text.trim());
 
-        if (childAge < 3) {
-          if (mounted) {
-            Navigator.pop(context, {'name': childName, 'addedDirectly': true});
-          }
-          return;
-        }
-
-        // إنشاء كائن Child لإرساله إلى الخادم
         final child = Child(
           name: childName,
           username: childUsername,
@@ -77,49 +68,66 @@ class _StudentDataState extends State<StudentData> {
           dateOfBirth: DateTime.now().subtract(Duration(days: childAge * 365)),
         );
 
-        // تسجيل الطفل في قاعدة البيانات عن طريق API
         final registerResponse = await ApiService.registerChild(child);
 
         if (registerResponse != null && mounted) {
-          // احفظ معرف الطفل من الاستجابة
           if (registerResponse['child'] != null &&
               registerResponse['child']['id'] != null) {
             await LocalStorage.setChildId(registerResponse['child']['id']);
           }
 
-          // الآن ننتقل إلى شاشة الامتحان
-          String examId = (childAge >= 3 && childAge <= 5) ? 'exam2' : 'exam1';
-
-          CustomDialog(
-            context,
-            dialogModel(
-              title: "Level Assessment",
-              message:
-                  "To provide the best experience for $childName, we need to perform a quick exam to determine their current level.",
-              image: 'assets/images/exam.png',
-            ),
-            titleColor: const Color(0xfff06292),
-            onNextPressed: () async {
-              final double? scoreResult = await Navigator.push<double>(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) => ExamSkeletonScreen(
-                        examId: examId,
-                        childName: childName,
-                      ),
-                ),
-              );
-
-              if (mounted && scoreResult != null) {
+          if (childAge < 3) {
+            CustomDialog(
+              context,
+              dialogModel(
+                title: "Level Assigned",
+                message: "Since $childName is under 3 years old, they will start at Level 1 to enjoy age-appropriate activities.",
+                image: 'assets/images/exam.png',
+                buttonText: "Start Journey"
+              ),
+              titleColor: const Color(0xff4CAF50),
+              onNextPressed: () {
+                Navigator.pop(context);
                 Navigator.pop(context, {
                   'name': childName,
-                  'score': scoreResult,
+                  'score': 1.0,
                   'childId': registerResponse['child']['id'],
                 });
-              }
-            },
-          );
+              },
+            );
+          } else {
+            String examId = (childAge >= 3 && childAge <= 5) ? 'exam2' : 'exam1';
+
+            CustomDialog(
+              context,
+              dialogModel(
+                title: "Level Assessment",
+                message: "To provide the best experience for $childName, we need to perform a quick exam to determine their current level.",
+                image: 'assets/images/exam.png',
+              ),
+              titleColor: const Color(0xfff06292),
+              onNextPressed: () async {
+                Navigator.pop(context);
+                final double? scoreResult = await Navigator.push<double>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ExamSkeletonScreen(
+                      examId: examId,
+                      childName: childName,
+                    ),
+                  ),
+                );
+
+                if (mounted && scoreResult != null) {
+                  Navigator.pop(context, {
+                    'name': childName,
+                    'score': scoreResult,
+                    'childId': registerResponse['child']['id'],
+                  });
+                }
+              },
+            );
+          }
         } else {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -260,7 +268,7 @@ class _StudentDataState extends State<StudentData> {
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(
-                            () => isPasswordVisible = !isPasswordVisible,
+                                () => isPasswordVisible = !isPasswordVisible,
                           );
                         },
                         icon: Icon(
@@ -307,26 +315,25 @@ class _StudentDataState extends State<StudentData> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
-                        child:
-                            isLoading
-                                ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                                : Text(
-                                  "Add My Little Star",
-                                  style: TextStyle(
-                                    fontSize: config.title,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                        child: isLoading
+                            ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                            strokeWidth: 2,
+                          ),
+                        )
+                            : Text(
+                          "Add My Little Star",
+                          style: TextStyle(
+                            fontSize: config.title,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ],

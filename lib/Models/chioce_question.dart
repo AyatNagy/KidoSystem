@@ -6,6 +6,7 @@ class ChoiceQuestion extends Question {
   final List<Color>? colors;
   final int correctIndex;
   final String? colorImage;
+  final String? sound;
 
   ChoiceQuestion({
     required super.examId,
@@ -14,6 +15,7 @@ class ChoiceQuestion extends Question {
     this.colors,
     required this.correctIndex,
     this.colorImage,
+    this.sound
   });
 }
 
@@ -60,4 +62,15 @@ final List<ChoiceQuestion> allChoiceQuestions = [
     colors: [Colors.red, Colors.blue, Colors.yellow, Colors.green],
     correctIndex: 2,
   ),
+
+  ChoiceQuestion(
+      examId: ['exam2'],
+      questionText: "صوت مين ده",
+      choices: [
+        "assets/images/elephant2.png",
+        "assets/images/dog2.png"
+      ],
+      correctIndex: 1,
+      sound: "assets/audio/dog.mp3"
+  )
 ];

@@ -77,8 +77,8 @@ void CustomDialog(BuildContext context, dialogModel data,
                                 )
                               ],
                             ),
-                            child: const Text(
-                              "Start Level Test",
+                            child: Text(
+                              data.buttonText ?? "Start Level Test",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white,

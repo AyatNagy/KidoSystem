@@ -22,7 +22,7 @@ class DragDropQuestion extends Question {
 final List<DragDropQuestion> allDragDropQuestions = [
   DragDropQuestion(
     examId: ['exam1'],
-    questionText: "Put the correct food on each animal",
+    questionText: "حط الأكل المناسب لكل حيوان",
     items: [
       DragItem(
         id: "bone",
@@ -70,7 +70,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
 
   DragDropQuestion(
     examId: ['exam1'],
-    questionText: "Room OR Kitchen?",
+    questionText: "مكانه في الغرفة ولا المطبخ",
     items: [
       DragItem(
         id: "bed",
@@ -105,7 +105,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
 
   DragDropQuestion(
     examId: ['exam1'],
-    questionText: "Tall OR Short?",
+    questionText: "مين الطويل ومين القصير",
     items: [
       DragItem(
         id: "tall",
@@ -140,7 +140,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
 
   DragDropQuestion(
     examId: ['exam1'],
-    questionText: "Complete The Car!",
+    questionText: "كمل شكل العربية",
     backgroundImage: "assets/images/targethalfcar.png",
     items: [
       DragItem(
@@ -163,7 +163,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
 
   DragDropQuestion(
     examId: ['exam1'],
-    questionText: "Complete The Duck!",
+    questionText: "ركب باقي البطة",
     backgroundImage: "assets/images/puzzle_duck.png",
     items: [
       DragItem(
@@ -186,7 +186,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
 
   DragDropQuestion(
     examId: ['exam2'],
-    questionText: "Find Red",
+    questionText: "فين اللون الأحمر",
     items: [
       DragItem(
         id: "red",
@@ -220,7 +220,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
 
   DragDropQuestion(
     examId: ['exam2'],
-    questionText: "Put The Clothes In The Right Box!",
+    questionText: "حط اللبس في المكان الصح",
     items: [
       DragItem(
         id: "cotton",

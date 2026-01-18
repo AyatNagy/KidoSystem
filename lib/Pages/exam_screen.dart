@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:kido/Models/chioce_question.dart';
 import 'package:kido/Models/draw_question.dart';
 import 'package:kido/Models/draganddrop_question.dart';
@@ -45,7 +46,8 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   Map<String, String?> dragAnswers = {};
   String currentSpokenResult = "";
 
-  FlutterTts flutterTts = FlutterTts();
+  final FlutterTts flutterTts = FlutterTts();
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -67,14 +69,29 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     ];
   }
 
+  @override
+  void dispose() {
+    flutterTts.stop();
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
   Future<void> speakQuestion(String text) async {
     await flutterTts.stop();
+    await _audioPlayer.stop();
     flutterTts.setLanguage("ar-EG");
     flutterTts.setSpeechRate(0.4);
     flutterTts.setVolume(1.0);
     flutterTts.setPitch(1.1);
     await Future.delayed(const Duration(milliseconds: 100));
     flutterTts.speak(text);
+  }
+
+  Future<void> playAnimalSound(String assetPath) async {
+    await flutterTts.stop();
+    await _audioPlayer.stop();
+    String path = assetPath.replaceFirst('assets/', '');
+    await _audioPlayer.play(AssetSource(path));
   }
 
   bool checkDrawingSoft(String targetShape, List<Offset> points) {
@@ -294,6 +311,18 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                   ),
                 ],
               ),
+              if (examQuestion.type == QuestionType.choice && (examQuestion.data as ChoiceQuestion).sound != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: IconButton(
+                    iconSize: config.localWidth * 0.15,
+                    icon: const Icon(
+                        Icons.play_circle_filled,
+                        color: Colors.deepOrangeAccent
+                    ),
+                    onPressed: () => playAnimalSound((examQuestion.data as ChoiceQuestion).sound!),
+                  ),
+                ),
               SizedBox(height: config.localHeight * 0.03),
               Expanded(
                 child:
