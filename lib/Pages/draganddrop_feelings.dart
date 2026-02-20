@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import '../Widgets/ResponsiveProvider.dart';
 import '../controllers/feelings_data.dart';
@@ -13,11 +14,23 @@ class DraganddropFeelings extends StatefulWidget {
 }
 
 class _DraganddropFeelingsState extends State<DraganddropFeelings> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
   String currentBoyPhoto = 'assets/images/normal.png';
   bool isReacting = false;
 
-  void _triggerReaction(Map<String, String> item) {
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void _triggerReaction(Map<String, String> item) async {
     HapticFeedback.heavyImpact();
+
+    if (item['sound'] != null) {
+      await _audioPlayer.stop();
+      await _audioPlayer.play(AssetSource(item['sound']!.replaceFirst('assets/', '')));
+    }
 
     setState(() {
       currentBoyPhoto = item['reaction']!;
@@ -151,11 +164,11 @@ class _DraganddropFeelingsState extends State<DraganddropFeelings> {
           setState(() {
             currentBoyPhoto = 'assets/images/normal.png';
             activeChoices = [
-              {'id': '1', 'action': 'assets/images/gift.png', 'reaction': 'assets/images/happy_boy.png'},
-              {'id': '2', 'action': 'assets/images/medal.png', 'reaction': 'assets/images/proudBoy.png'},
-              {'id': '3', 'action': 'assets/images/ghost.png', 'reaction': 'assets/images/scared_boy.png'},
-              {'id': '4', 'action': 'assets/images/broken_heart.png', 'reaction': 'assets/images/sad_boy.png'},
-              {'id': '5', 'action': 'assets/images/popped_ballon.png', 'reaction': 'assets/images/angry_boy.png'}
+              {'id': '1', 'action': 'assets/images/gift.png', 'reaction': 'assets/images/happy_boy.png', 'sound': 'assets/audio/happy.mp3'},
+              {'id': '2', 'action': 'assets/images/medal.png', 'reaction': 'assets/images/proudBoy.png', 'sound': 'assets/audio/clap.mp3'},
+              {'id': '3', 'action': 'assets/images/ghost.png', 'reaction': 'assets/images/scared_boy.png', 'sound': 'assets/audio/scream.mp3'},
+              {'id': '4', 'action': 'assets/images/broken_heart.png', 'reaction': 'assets/images/sad_boy.png', 'sound': 'assets/audio/sad.wav'},
+              {'id': '5', 'action': 'assets/images/popped_ballon.png', 'reaction': 'assets/images/angry_boy.png', 'sound': 'assets/audio/angry.mp3'}
             ];
           });
         },
