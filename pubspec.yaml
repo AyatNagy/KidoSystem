@@ -110,6 +110,11 @@ flutter:
       fonts:
         - asset:  assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf
           weight: 400
+
+    - family: Fredoka
+      fonts:
+        - asset:  assets/fonts/Fredoka/static/Fredoka-SemiBold.ttf
+          weight: 400
   
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
