@@ -198,7 +198,8 @@ class EmotionScreen extends StatelessWidget{
           child:Text(
             title,
             style:  TextStyle(
-              fontSize:screenHeight * 0.07,
+            fontFamily: 'Fredoka',
+            fontSize:screenHeight * 0.07,
             fontWeight:FontWeight.bold,
             color:Colors.white,
             letterSpacing:2,
