@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:kido/Pages/content/feelings/emotion_page_view.dart';
 import 'Pages/Logo_Page.dart';
 import 'Pages/draganddrop_feelings.dart';
 import 'Widgets/info_widget.dart';

@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:kido/Models/user.dart';
 import 'package:kido/Models/child.dart';
+import 'package:kido/Models/placement_exam_model.dart';
 import 'package:kido/config/cache_helper.dart';
 
+
 class ApiService {
-  //static const String baseUrl = "http://localhost:3000/api";
-  static const String baseUrl = "https://kidosystem.duckdns.org/api";
+  static const String baseUrl = "http://localhost:3000/api";
+ // static const String baseUrl = "https://kidosystem.duckdns.org/api";
 
   static Future<bool> registerUser(User user) async {
     final dio = Dio();
@@ -272,4 +274,101 @@ class ApiService {
       return null;
     }
   }
+
+  static Future<PlacementExamResult> getPlacementExam({
+  required int age,
+  required int childId,
+}) async {
+  final dio = Dio();
+  final url = '$baseUrl/placement-exam/by-age';
+
+  final parentToken = await LocalStorage.getParentToken();
+
+  if (parentToken == null) {
+    throw Exception("Parent token not found. Please login first.");
+  }
+
+  try {
+    final response = await dio.post(
+      url,
+      data: {
+        'age': age,
+        'childId': childId,
+      },
+      options: Options(
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $parentToken",
+        },
+        validateStatus: (status) => status! < 500,
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return PlacementExamResult.fromJson(response.data);
+    } else {
+      throw Exception(
+        "Placement exam failed: ${response.statusCode} - ${response.data}",
+      );
+    }
+  } on DioException catch (e) {
+    if (e.response != null) {
+      throw Exception(
+        "Dio error: ${e.response?.statusCode} - ${e.response?.data}",
+      );
+    } else {
+      throw Exception("Network error: ${e.message}");
+    }
+  }
+}
+
+static Future<Map<String, dynamic>> submitPlacementExam({
+  required int childId,
+  required int placementExamId,
+  required double score,
+}) async {
+  final dio = Dio();
+  final url = '$baseUrl/placement-exam/submit';
+
+  final parentToken = await LocalStorage.getParentToken();
+  if (parentToken == null) {
+    throw Exception("Parent token not found. Please login first.");
+  }
+
+  try {
+    final response = await dio.post(
+      url,
+      data: {
+        'childId': childId,
+        'placementExamId': placementExamId,
+        'score': score,
+      },
+      options: Options(
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $parentToken",
+        },
+        validateStatus: (status) => status! < 500,
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return response.data;
+    } else {
+      throw Exception(
+        "Submit placement exam failed: ${response.statusCode} - ${response.data}",
+      );
+    }
+  } on DioException catch (e) {
+    if (e.response != null) {
+      throw Exception(
+        "Dio error: ${e.response?.statusCode} - ${e.response?.data}",
+      );
+    } else {
+      throw Exception("Network error: ${e.message}");
+    }
+  }
+}
+
+
 }
