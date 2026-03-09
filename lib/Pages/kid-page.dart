@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../Widgets/ResponsiveProvider.dart';
-import 'content/feelingsLevels.dart';
+import 'content/feelings/feelingsLevels.dart';
 
 class CloudSelectionPage extends StatelessWidget {
   const CloudSelectionPage({super.key});

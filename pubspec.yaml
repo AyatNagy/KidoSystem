@@ -45,7 +45,7 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   lottie: ^3.1.2
   flutter_bloc: ^8.1.6
-  speech_to_text: ^6.6.0
+  speech_to_text: ^7.3.0
   smooth_page_indicator: ^1.1.0
   rive: ^0.14.3
   video_player: ^2.8.1

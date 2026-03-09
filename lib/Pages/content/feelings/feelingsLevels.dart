@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../Widgets/ResponsiveProvider.dart';
-import 'feelings/draganddrop_feelings.dart';
-import 'feelings/emotion_page_view.dart';
+import '../../../Widgets/ResponsiveProvider.dart';
+import 'draganddrop_feelings.dart';
+import 'emotion_page_view.dart';
 
 class TreehouseLevels extends StatelessWidget {
   const TreehouseLevels({super.key});
