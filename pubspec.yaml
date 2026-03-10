@@ -47,7 +47,10 @@ dependencies:
   flutter_bloc: ^8.1.6
   speech_to_text: ^7.3.0
   smooth_page_indicator: ^1.1.0
+
+
   rive: ^0.14.3
+
   video_player: ^2.8.1
 
 
@@ -78,6 +81,8 @@ flutter:
      - assets/images/
      - assets/lottie/
      - assets/audio/
+     - assets/videos/
+     - assets/videos/Body_parts/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
