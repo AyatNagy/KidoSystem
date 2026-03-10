@@ -13,6 +13,8 @@ import '../Models/child.dart';
 import '../config/cache_helper.dart';
 import 'package:kido/Widgets/password_errors_view.dart';
 
+import 'kid-page.dart';
+
 
 
 
@@ -92,11 +94,12 @@ class _StudentDataState extends State<StudentData> {
               titleColor: const Color(0xff4CAF50),
               onNextPressed: () {
                 Navigator.pop(context);
-                Navigator.pop(context, {
-                  'name': childName,
-                  'score': 1.0,
-                  'childId': registerResponse['child']['id'],
-                });
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CloudSelectionPage(),
+                  ),
+                );
               },
             );
           } else {

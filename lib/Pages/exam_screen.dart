@@ -95,25 +95,24 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   }
 
   bool checkDrawingSoft(String targetShape, List<Offset> points) {
-    if (points.length < 15) return false;
+    if (points.length < 10) return false;
     if (targetShape == "Circle") return _isCircleSoft(points);
     if (targetShape == "V-shape") return _isVSoft(points);
     return false;
   }
 
   bool _isCircleSoft(List<Offset> points) {
-    double avgX =
-        points.map((p) => p.dx).reduce((a, b) => a + b) / points.length;
-    double avgY =
-        points.map((p) => p.dy).reduce((a, b) => a + b) / points.length;
-    Offset center = Offset(avgX, avgY);
+    if (points.length < 10) return false;
 
+    double avgX = points.map((p) => p.dx).reduce((a, b) => a + b) / points.length;
+    double avgY = points.map((p) => p.dy).reduce((a, b) => a + b) / points.length;
+    Offset center = Offset(avgX, avgY);
     List<double> distances = points.map((p) => (p - center).distance).toList();
-    double avgDist = distances.reduce((a, b) => a + b) / distances.length;
-    double deviation =
-        distances.map((d) => (d - avgDist).abs()).reduce((a, b) => a + b) /
-            distances.length;
-    return deviation < 50;
+    double avgRadius = distances.reduce((a, b) => a + b) / distances.length;
+    if (avgRadius < 20) return false;
+    double totalDeviation = distances.map((d) => (d - avgRadius).abs()).reduce((a, b) => a + b);
+    double avgDeviation = totalDeviation / distances.length;
+    return (avgDeviation / avgRadius) < 0.35;
   }
 
   bool _isVSoft(List<Offset> points) {

@@ -13,17 +13,14 @@ class ParentHomePage extends StatefulWidget {
 
 class _ParentHomePageState extends State<ParentHomePage> {
   int _selectedIndex = 0;
-  // القائمة التي تخزن بيانات الأطفال
   List<Map<String, dynamic>> childrenList = [];
 
-  // دالة الانتقال واستقبال البيانات
   void _goToAddChild() async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const StudentData()),
     );
 
-    // إذا رجع ببيانات (اسم ودرجة) من شاشة البيانات
     if (result != null && result is Map<String, dynamic>) {
       setState(() {
         childrenList.add(result);
@@ -69,8 +66,6 @@ class _ParentHomePageState extends State<ParentHomePage> {
                   ),
                 ),
                 SizedBox(height: config.localHeight * 0.02),
-
-                // عرض قائمة الأطفال المضافين ديناميكياً
                 ...childrenList
                     .map(
                       (child) => Padding(
@@ -80,7 +75,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
                           child['name'],
                           "Level 1",
                           const Color(0xfff06292),
-                          child['score'], // نمرر الدرجة هنا للـ progress
+                          child['score'],
                         ),
                       ),
                     )
@@ -207,7 +202,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(25),
-          onTap: _goToAddChild, // تم الربط بالدالة المحدثة
+          onTap: _goToAddChild,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
