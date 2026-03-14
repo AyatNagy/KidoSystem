@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../../../Widgets/ResponsiveProvider.dart';
-import 'drawing_page.dart';
+import '../../../Widgets/content/drawing_page.dart';
 
 class draw extends StatefulWidget {
   const draw({super.key});
@@ -40,7 +40,7 @@ class _drawState extends State<draw> {
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const DrawingPage(),
+        pageBuilder: (context, animation, secondaryAnimation) => const Drawing(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
