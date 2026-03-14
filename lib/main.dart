@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-            home:  const BallLesson(),
+            home:  Logo(),
           ),
         );
       },
