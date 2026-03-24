@@ -31,7 +31,7 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
     super.initState();
     _pulseController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 2000),
     )..repeat(reverse: true);
   }
 
@@ -44,14 +44,14 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    const double nodeSize = 100.0;
-    const double vPadding = 50.0;
-    const Color pathColor = Color(0xFFE0E0E0);
-    const Color lockedColor = Color(0xFFBDBDBD);
+    const double nodeSize = 120.0;
+    const double vPadding = 60.0;
+    const Color pathColor = Color(0xFFF5F5DC);
+    const Color lockedColor = Color(0xFFD1D1D1);
 
     double calcX(int i) {
-      double wave = math.sin(i * 0.8);
-      return (screenWidth / 2) + (wave * (screenWidth / 4)) - (nodeSize / 2);
+      double wave = math.sin(i * 0.7);
+      return (screenWidth / 2) + (wave * (screenWidth / 5)) - (nodeSize / 2);
     }
 
     double xOffset = calcX(widget.index);
@@ -62,6 +62,7 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
+          // The "Fat" Road
           if (widget.index < widget.totalItems - 1)
             Positioned(
               top: vPadding + (nodeSize / 2),
@@ -76,8 +77,9 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
                 ),
               ),
             ),
+
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: vPadding),
+            padding: EdgeInsets.symmetric(vertical: vPadding),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Padding(
@@ -85,7 +87,7 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
                 child: ScaleTransition(
                   scale: widget.lesson.isLocked
                       ? const AlwaysStoppedAnimation(1.0)
-                      : Tween(begin: 1.0, end: 1.05).animate(
+                      : Tween(begin: 1.0, end: 1.1).animate(
                     CurvedAnimation(
                       parent: _pulseController,
                       curve: Curves.easeInOut,
@@ -93,42 +95,45 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
                   ),
                   child: GestureDetector(
                     onTapDown: (_) {
-                      HapticFeedback.mediumImpact();
+                      HapticFeedback.heavyImpact(); // Stronger feedback
                       setState(() => _isPressed = true);
                     },
                     onTapUp: (_) => setState(() => _isPressed = false),
                     onTapCancel: () => setState(() => _isPressed = false),
                     onTap: widget.lesson.isLocked ? null : widget.onTap,
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 100),
+                      duration: const Duration(milliseconds: 150),
                       height: nodeSize,
                       width: nodeSize,
-                      transform: Matrix4.identity()
-                        ..translate(0.0, _isPressed ? 8.0 : 0.0),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: widget.lesson.isLocked ? lockedColor : widget.buttonColor,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
-                            offset: Offset(0, _isPressed ? 4 : 12),
-                            blurRadius: _isPressed ? 2 : 0,
+                            color: Colors.black.withOpacity(0.2),
+                            offset: Offset(0, _isPressed ? 4 : 15),
+                            blurRadius: _isPressed ? 4 : 0,
+                          ),
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.5),
+                            offset: const Offset(-4, -4),
+                            blurRadius: 10,
                           ),
                         ],
                       ),
                       child: Container(
-                        margin: const EdgeInsets.all(6),
+                        margin: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.4),
-                            width: 4,
+                            color: Colors.white.withOpacity(0.6),
+                            width: 6,
                           ),
                         ),
                         child: Center(
                           child: widget.lesson.isLocked
-                              ? const Icon(Icons.lock_outline_rounded, color: Colors.white, size: 40)
-                              : Image.asset(widget.lesson.image, width: 60),
+                              ? const Icon(Icons.lock_rounded, color: Colors.white, size: 50)
+                              : Image.asset(widget.lesson.image, width: 70),
                         ),
                       ),
                     ),
@@ -159,7 +164,13 @@ class _CurvePainter extends CustomPainter {
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 24
+      ..strokeWidth = 45
+      ..strokeCap = StrokeCap.round;
+
+    final borderPaint = Paint()
+      ..color = Colors.black.withOpacity(0.05)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 52
       ..strokeCap = StrokeCap.round;
 
     final path = Path();
@@ -173,6 +184,7 @@ class _CurvePainter extends CustomPainter {
       height,
     );
 
+    canvas.drawPath(path, borderPaint);
     canvas.drawPath(path, paint);
   }
 
