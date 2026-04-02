@@ -1,10 +1,16 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-import '../../../data/level2/no29.dart';
-
 class DrawingStoryPage extends StatefulWidget {
-  const DrawingStoryPage({super.key});
+  final List<dynamic> storyData;
+  final VoidCallback? onComplete;
+
+  const DrawingStoryPage({
+    super.key,
+    required this.storyData,
+    this.onComplete,
+  });
 
   @override
   State<DrawingStoryPage> createState() => _DrawingStoryPageState();
@@ -22,16 +28,19 @@ class _DrawingStoryPageState extends State<DrawingStoryPage> {
 
   void _startTimer() {
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 4), (_) => _next());
+    if (widget.storyData.length > 1) {
+      _timer = Timer.periodic(const Duration(seconds: 4), (_) => _next());
+    }
   }
 
   void _next() {
-    if (mounted) {
-      if (_index < drawingStory.length - 1) {
-        setState(() => _index++);
-      } else {
-        _timer?.cancel();
-      }
+    if (!mounted) return;
+
+    if (_index < widget.storyData.length - 1) {
+      setState(() => _index++);
+    } else {
+      _timer?.cancel();
+      widget.onComplete?.call();
     }
   }
 
@@ -43,13 +52,12 @@ class _DrawingStoryPageState extends State<DrawingStoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentFrame = drawingStory[_index];
+    final currentFrame = widget.storyData[_index];
 
     return Scaffold(
       backgroundColor: currentFrame.bgColor,
       body: AnimatedContainer(
         duration: const Duration(milliseconds: 1000),
-        curve: Curves.easeInOut,
         color: currentFrame.bgColor,
         child: GestureDetector(
           onTap: () {
@@ -61,21 +69,11 @@ class _DrawingStoryPageState extends State<DrawingStoryPage> {
               Center(
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 800),
-                  switchInCurve: Curves.easeInOutCubic,
-                  switchOutCurve: Curves.easeInOutCubic,
                   child: Image.asset(
                     currentFrame.imagePath,
                     key: ValueKey(_index),
                     fit: BoxFit.contain,
                   ),
-                ),
-              ),
-              Positioned(
-                top: 50,
-                left: 20,
-                child: IconButton(
-                  icon: const Icon(Icons.close_rounded, size: 32, color: Colors.black54),
-                  onPressed: () => Navigator.pop(context),
                 ),
               ),
             ],

@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import '../../../data/level2/no29.dart';
+import '../../../data/level2/no33.dart';
 
-class DrawingStoryPage extends StatefulWidget {
-  const DrawingStoryPage({super.key});
+class DrawingplusStoryPage extends StatefulWidget {
+  const DrawingplusStoryPage({super.key});
 
   @override
-  State<DrawingStoryPage> createState() => _DrawingStoryPageState();
+  State<DrawingplusStoryPage> createState() => _DrawingplusStoryPageState();
 }
 
-class _DrawingStoryPageState extends State<DrawingStoryPage> {
+class _DrawingplusStoryPageState extends State<DrawingplusStoryPage> {
   int _index = 0;
   Timer? _timer;
 
@@ -27,7 +27,7 @@ class _DrawingStoryPageState extends State<DrawingStoryPage> {
 
   void _next() {
     if (mounted) {
-      if (_index < drawingStory.length - 1) {
+      if (_index < drawingPlus.length - 1) {
         setState(() => _index++);
       } else {
         _timer?.cancel();
@@ -43,7 +43,7 @@ class _DrawingStoryPageState extends State<DrawingStoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentFrame = drawingStory[_index];
+    final currentFrame = drawingPlus[_index];
 
     return Scaffold(
       backgroundColor: currentFrame.bgColor,

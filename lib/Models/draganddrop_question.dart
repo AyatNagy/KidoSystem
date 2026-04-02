@@ -10,7 +10,7 @@ class DragDropQuestion extends Question {
   final List<DragTargetZone> targets;
 
   DragDropQuestion({
-    required super.examId,
+    super.examId,
     required super.questionText,
     this.backgroundImage,
     this.extraImage,

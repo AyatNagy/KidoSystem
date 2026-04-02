@@ -55,16 +55,16 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
 
     examQuestions = [
       ...allChoiceQuestions
-          .where((q) => q.examId.contains(widget.examId))
+          .where((q) => q.examId!.contains(widget.examId))
           .map((q) => ExamQuestion(type: QuestionType.choice, data: q)),
       ...allDrawingQuestions
-          .where((q) => q.examId.contains(widget.examId))
+          .where((q) => q.examId!.contains(widget.examId))
           .map((q) => ExamQuestion(type: QuestionType.drawing, data: q)),
       ...allDragDropQuestions
-          .where((q) => q.examId.contains(widget.examId))
+          .where((q) => q.examId!.contains(widget.examId))
           .map((q) => ExamQuestion(type: QuestionType.dragDrop, data: q)),
       ...allSpaekQuestions
-          .where((q) => q.examId.contains(widget.examId))
+          .where((q) => q.examId!.contains(widget.examId))
           .map((q) => ExamQuestion(type: QuestionType.speak, data: q)),
     ];
   }

@@ -18,7 +18,7 @@ class Drawing extends StatefulWidget {
 
 class _DrawingState extends State<Drawing> {
   List<Offset?> points = [];
-  Color selectedColor = Colors.blueAccent;
+  Color selectedColor = Colors.blue;
   final AudioPlayer _player = AudioPlayer();
   bool _isSounding = false;
 
@@ -45,6 +45,25 @@ class _DrawingState extends State<Drawing> {
     }
   }
 
+  void _handlePanUpdate(DragUpdateDetails details, List<Offset>? actualGuidePoints, RenderBox renderBox) {
+    Offset touchPosition = renderBox.globalToLocal(details.globalPosition);
+    Offset positionToDraw = touchPosition;
+
+    if (actualGuidePoints != null) {
+      for (var guidePoint in actualGuidePoints) {
+        double distance = (touchPosition - guidePoint).distance;
+        if (distance < 35) {
+          positionToDraw = guidePoint;
+          break;
+        }
+      }
+    }
+
+    setState(() {
+      points.add(positionToDraw);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
@@ -61,10 +80,8 @@ class _DrawingState extends State<Drawing> {
         GestureDetector(
           onPanStart: (_) => _toggleSound(true),
           onPanUpdate: (details) {
-            setState(() {
-              RenderBox renderBox = context.findRenderObject() as RenderBox;
-              points.add(renderBox.globalToLocal(details.globalPosition));
-            });
+            RenderBox renderBox = context.findRenderObject() as RenderBox;
+            _handlePanUpdate(details, actualGuidePoints, renderBox);
           },
           onPanEnd: (_) {
             _toggleSound(false);
@@ -80,7 +97,6 @@ class _DrawingState extends State<Drawing> {
             size: Size.infinite,
           ),
         ),
-
         Positioned(
           top: config.localHeight * 0.15,
           left: config.localWidth * 0.1,
@@ -93,13 +109,11 @@ class _DrawingState extends State<Drawing> {
               borderRadius: BorderRadius.circular(40),
               boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
             ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
+            child: Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ...[Colors.redAccent, Colors.orangeAccent, Colors.yellow, Colors.greenAccent, Colors.blueAccent].map((color) {
+                  ...[Colors.red, Colors.green, Colors.blue].map((color) {
                     bool isSelected = selectedColor == color;
                     double btnSize = config.isTablet ? 55 : 40;
                     return Padding(
@@ -114,9 +128,15 @@ class _DrawingState extends State<Drawing> {
                             color: color,
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 2),
-                            boxShadow: isSelected ? [
-                              BoxShadow(color: color.withOpacity(0.5), blurRadius: 12, spreadRadius: 4)
-                            ] : [],
+                            boxShadow: isSelected
+                                ? [
+                              BoxShadow(
+                                  color: color.withOpacity(0.5),
+                                  blurRadius: 12,
+                                  spreadRadius: 4)
+
+                            ]
+                                : [],
                           ),
                         ),
                       ),
@@ -124,19 +144,18 @@ class _DrawingState extends State<Drawing> {
                   }),
                   const VerticalDivider(indent: 15, endIndent: 15, color: Colors.black12),
                   IconButton(
-                      icon: Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                          size: config.localHeight * 0.04,
-                      ),
-                      onPressed: () => setState(() => points.clear())
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                      size: config.localHeight * 0.04,
+                    ),
+                    onPressed: () => setState(() => points.clear()),
                   ),
                 ],
               ),
             ),
           ),
         ),
-
         if (widget.instructionText != null)
           Positioned(
             top: config.localHeight * 0.05,
@@ -160,7 +179,7 @@ class _DrawingState extends State<Drawing> {
                 ),
               ),
             ),
-          ),
+          )
       ],
     );
   }
@@ -192,8 +211,8 @@ class SimplePainter extends CustomPainter {
       ..strokeWidth = width;
 
     for (int i = 0; i < points.length - 1; i++) {
-      if (points[i] != null && points[i+1] != null) {
-        canvas.drawLine(points[i]!, points[i+1]!, paint);
+      if (points[i] != null && points[i + 1] != null) {
+        canvas.drawLine(points[i]!, points[i + 1]!, paint);
       }
     }
   }

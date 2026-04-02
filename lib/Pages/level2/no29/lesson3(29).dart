@@ -60,7 +60,6 @@ class _BallLessonState extends State<BallLesson> {
               Offset(0.35, 0.72),
               Offset(0.5, 0.72),
               Offset(0.65, 0.72),
-              Offset(0.8, 0.72),
             ],
           ),
         ],

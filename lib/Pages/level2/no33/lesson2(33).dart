@@ -3,20 +3,20 @@ import 'package:video_player/video_player.dart';
 import '../../../Widgets/ResponsiveProvider.dart';
 import '../../../Widgets/content/drawing_page.dart';
 
-class AnimationDrawPage extends StatefulWidget {
-  const AnimationDrawPage({super.key});
+class AnimationDrawplusPage extends StatefulWidget {
+  const AnimationDrawplusPage({super.key});
 
   @override
-  State<AnimationDrawPage> createState() => _AnimationDrawPageState();
+  State<AnimationDrawplusPage> createState() => _AnimationDrawplusPageState();
 }
 
-class _AnimationDrawPageState extends State<AnimationDrawPage> {
+class _AnimationDrawplusPageState extends State<AnimationDrawplusPage> {
   late VideoPlayerController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset('assets/videos/draw-line.mp4')
+    _controller = VideoPlayerController.asset('assets/videos/+draw.mp4')
       ..initialize().then((_) {
         setState(() {});
         _controller.setPlaybackSpeed(0.5);
@@ -79,20 +79,19 @@ class _AnimationDrawPageState extends State<AnimationDrawPage> {
 
           Expanded(
             flex: 3,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(40),
-                topRight: Radius.circular(40),
-              ),
-              child: Drawing(
-                guidePoints: [
-                  Offset(0.3, 0.37),
-                  Offset(0.5, 0.37),
-                  Offset(0.7, 0.37),
-                  Offset(0.9, 0.37),
-                  Offset(0.11, 0.37),
-                ],
-              ),
+            child:  Drawing(
+              guidePoints: [
+                Offset(0.3, 0.37),
+                Offset(0.5, 0.37),
+                Offset(0.7, 0.37),
+                Offset(0.9, 0.37),
+                Offset(0.11, 0.37),
+
+                Offset(0.5, 0.25),
+                Offset(0.5, 0.3),
+                Offset(0.5, 0.45),
+                Offset(0.5, 0.55),
+              ],
             ),
           ),
         ],
