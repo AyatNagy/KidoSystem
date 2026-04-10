@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-
-import '../../../../Models/level3/letters/first_letter.dart';
+import '../../../../Models/level3/letters/first_lesson.dart';
+import '../../../puls_button.dart';
 
 class FirstLesson extends StatefulWidget {
   final LetterModel model;
@@ -18,20 +18,15 @@ class FirstLesson extends StatefulWidget {
   State<FirstLesson> createState() => _FirstLessonState();
 }
 
-class _FirstLessonState extends State<FirstLesson> with SingleTickerProviderStateMixin {
+class _FirstLessonState extends State<FirstLesson> {
   bool _isTapped = false;
   bool _showNextButton = false;
-  late AnimationController _pulseController;
   final FlutterTts _flutterTts = FlutterTts();
 
   @override
   void initState() {
     super.initState();
     _initTts();
-    _pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    )..repeat(reverse: true);
   }
 
   Future<void> _initTts() async {
@@ -46,7 +41,6 @@ class _FirstLessonState extends State<FirstLesson> with SingleTickerProviderStat
 
   @override
   void dispose() {
-    _pulseController.dispose();
     _flutterTts.stop();
     super.dispose();
   }
@@ -54,10 +48,12 @@ class _FirstLessonState extends State<FirstLesson> with SingleTickerProviderStat
   void _handleInteraction() {
     HapticFeedback.heavyImpact();
     _speak();
-    setState(() {
-      _isTapped = true;
-      _showNextButton = true;
-    });
+    if (!_isTapped) {
+      setState(() {
+        _isTapped = true;
+        _showNextButton = true;
+      });
+    }
   }
 
   @override
@@ -76,29 +72,33 @@ class _FirstLessonState extends State<FirstLesson> with SingleTickerProviderStat
                 child: GestureDetector(
                   onTap: _handleInteraction,
                   child: AnimatedScale(
-                    scale: _isTapped ? 1.05 : 1.0,
-                    duration: const Duration(milliseconds: 200),
+                    scale: _isTapped ? 1.08 : 1.0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.elasticOut,
                     child: Container(
                       height: size.height * 0.35,
                       width: size.width * 0.75,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(50),
+                        borderRadius: BorderRadius.circular(40),
                         border: Border.all(
-                          color: _isTapped ? model.activeBorder : model.circleColor,
-                          width: 10,
+                          color: _isTapped ? model.activeBorder : Colors.white,
+                          width: 8,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
+                            color: model.activeBorder.withOpacity(0.2),
+                            blurRadius: 25,
+                            offset: const Offset(0, 15),
                           ),
                         ],
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(35.0),
-                        child: Image.asset(model.animalPath, fit: BoxFit.contain),
+                        padding: const EdgeInsets.all(40.0),
+                        child: Image.asset(
+                          model.letterPath,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ),
@@ -111,10 +111,13 @@ class _FirstLessonState extends State<FirstLesson> with SingleTickerProviderStat
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Container(
-                    width: size.width * 0.45,
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    width: size.width * 0.5,
                     decoration: BoxDecoration(
-                      color: model.circleColor,
+                      color: _isTapped
+                          ? model.activeBorder.withOpacity(0.15)
+                          : model.circleColor,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -134,20 +137,40 @@ class _FirstLessonState extends State<FirstLesson> with SingleTickerProviderStat
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      onPressed: _handleInteraction,
-                      icon: Icon(Icons.volume_up_rounded, size: 60, color: model.activeBorder),
+                    GestureDetector(
+                      onTap: _handleInteraction,
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: model.activeBorder,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: model.activeBorder.withOpacity(0.4),
+                              blurRadius: 15,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                            Icons.volume_up_rounded,
+                            size: 50,
+                            color: Colors.white
+                        ),
+                      ),
                     ),
+
                     if (_showNextButton)
-                      ScaleTransition(
-                        scale: Tween(begin: 1.0, end: 1.1).animate(_pulseController),
-                        child: IconButton(
-                          icon: const Icon(Icons.play_circle_fill_rounded, size: 90, color: Colors.green),
-                          onPressed: widget.onNextPressed,
+                      PulseButton(
+                        onPressed: widget.onNextPressed,
+                        child: const Icon(
+                          Icons.play_circle_fill_rounded,
+                          size: 100,
+                          color: Colors.green,
                         ),
                       )
                     else
-                      const SizedBox(width: 90),
+                      const SizedBox(width: 100),
                   ],
                 ),
               ),

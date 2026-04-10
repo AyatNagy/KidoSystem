@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart';
 
-class PageCurlPainter extends CustomPainter {
+class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    var paint = Paint()
-      ..color = Colors.white.withOpacity(0.95)
-      ..style = PaintingStyle.fill;
-
+    var paint = Paint()..color = const Color(0xFFF1F8E9).withOpacity(0.5);
     var path = Path();
-    path.moveTo(size.width, size.height);
-    path.lineTo(size.width - 60, size.height);
-    path.quadraticBezierTo(
-      size.width - 20,
-      size.height - 20,
-      size.width,
-      size.height - 60,
-    );
+    path.moveTo(0, 50);
+    path.quadraticBezierTo(size.width * 0.25, 0, size.width * 0.5, 30);
+    path.quadraticBezierTo(size.width * 0.75, 60, size.width, 10);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
     path.close();
-
-    canvas.drawShadow(path, Colors.black26, 6, true);
     canvas.drawPath(path, paint);
   }
 
