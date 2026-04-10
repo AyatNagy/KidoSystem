@@ -64,7 +64,9 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> {
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => Level3Home()),
+          MaterialPageRoute(
+            builder: (_) => Level3Home(childName: widget.childName),
+          ),
         );
         break;
     }

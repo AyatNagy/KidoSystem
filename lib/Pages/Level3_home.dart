@@ -3,11 +3,15 @@ import 'package:kido/Pages/CategoryGrid.dart';
 import 'package:kido/constants.dart';
 
 class Level3Home extends StatelessWidget {
-  const Level3Home({super.key});
+  final String childName;
+  final String? avatarAsset;
+  const Level3Home({super.key, required this.childName, this.avatarAsset});
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -21,42 +25,49 @@ class Level3Home extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      // *** تعديل هنا: إضافة شخصية كرتونية لطيفة (الأفاتار) ***
+                      // الأفاتار — لو موجود يظهر الصورة، لو لأ يظهر الأيقونة
                       Container(
                         width: 55,
                         height: 55,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: AppColors.purpleMain.withOpacity(
-                            0.1,
-                          ), // خلفية أرجوانية خفيفة
+                          color: AppColors.purpleMain.withOpacity(0.1),
                           border: Border.all(
                             color: AppColors.purpleMain.withOpacity(0.2),
                             width: 2,
                           ),
                         ),
-                        // يمكنك استخدام Image.asset للشخصية الكرتونية
-                        child: const Center(
-                          child: Icon(
-                            Icons.face_retouching_natural_rounded,
-                            size: 35,
-                            color: AppColors.purpleMain,
-                          ),
+                        child: ClipOval(
+                          child:
+                              avatarAsset != null
+                                  ? Image.asset(
+                                    avatarAsset!,
+                                    fit: BoxFit.cover,
+                                    width: 55,
+                                    height: 55,
+                                  )
+                                  : const Center(
+                                    child: Icon(
+                                      Icons.face_retouching_natural_rounded,
+                                      size: 35,
+                                      color: AppColors.purpleMain,
+                                    ),
+                                  ),
                         ),
                       ),
                       const SizedBox(width: 15),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Hello, Ayat",
-                            style: TextStyle(
+                          Text(
+                            "Hello, $childName!",
+                            style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: AppColors.textDark,
                             ),
                           ),
-                          Text(
+                          const Text(
                             "Let's play, learn, and have fun!",
                             style: TextStyle(
                               fontSize: 14,
@@ -67,7 +78,6 @@ class Level3Home extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // أيقونة الإشعارات (اختياري)
                   const Icon(
                     Icons.notifications_active_rounded,
                     color: AppColors.textGray,
@@ -75,13 +85,14 @@ class Level3Home extends StatelessWidget {
                 ],
               ),
 
-              SizedBox(height: screenHeight * 0.04), // مسافة مرنة
-              // 2. --- كارت التحدي اليومي (Daily Challenge Card) ---
+              SizedBox(height: screenHeight * 0.04),
+
+              // Daily Challenge Card
               Container(
                 width: screenWidth,
                 padding: const EdgeInsets.all(25.0),
                 decoration: BoxDecoration(
-                  color: AppColors.purpleMain, // أرجواني سادة وقوي
+                  color: AppColors.purpleMain,
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
@@ -116,7 +127,6 @@ class Level3Home extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          // زر Let's Go
                           ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
@@ -140,13 +150,12 @@ class Level3Home extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    // *** تعديل هنا: إضافة قطعة بازل كرتونية (اختياري) لربط التصميم ***
-                    Expanded(
+                    const Expanded(
                       flex: 1,
                       child: Center(
                         child: Opacity(
-                          opacity: 0.2, // خفيفة جداً كخلفية
-                          child: const Icon(
+                          opacity: 0.2,
+                          child: Icon(
                             Icons.extension_rounded,
                             size: 80,
                             color: Colors.white,
@@ -158,8 +167,8 @@ class Level3Home extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: screenHeight * 0.05), // مسافة مرنة
-              // 3. --- عنوان التصنيفات ---
+              SizedBox(height: screenHeight * 0.05),
+
               const Text(
                 "Categories",
                 style: TextStyle(
@@ -171,9 +180,9 @@ class Level3Home extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              CategoryGrid(), // هذا هو المكون الذي يجمع كل الكروت المتحركة
+              CategoryGrid(),
 
-              const SizedBox(height: 30), // مسافة سفلية
+              const SizedBox(height: 30),
             ],
           ),
         ),
