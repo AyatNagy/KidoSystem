@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kido/Pages/child_level_select_page.dart';
+import 'package:kido/Pages/child_profile_setup_page.dart';
 import 'package:kido/Pages/student_data_screen.dart';
+import 'package:kido/config/children_store.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import 'ProfilePage.dart';
 
@@ -15,6 +18,67 @@ class _ParentHomePageState extends State<ParentHomePage> {
   int _selectedIndex = 0;
   List<Map<String, dynamic>> childrenList = [];
 
+  @override
+  void initState() {
+    super.initState();
+    _loadChildren();
+  }
+
+  Future<void> _loadChildren() async {
+    final saved = await ChildrenStore.load();
+    if (!mounted) return;
+    setState(() => childrenList = saved);
+  }
+
+  Future<void> _persistChildren() async {
+    await ChildrenStore.save(childrenList);
+  }
+
+  // الأم بتضغط على كارت الطفل → بيفتح صفحة اختيار الليفل
+  // ChildLevelSelectPage هي اللي بتتحكم في فتح صفحة الليفل المناسبة
+  void _openChildDashboard(Map<String, dynamic> child) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (_) => ChildLevelSelectPage(
+              childName: child['name'] ?? '',
+              recommendedLevel: child['level'] as int?,
+            ),
+      ),
+    );
+  }
+
+  // ✅ Edit يظهر بس لما المستخدم يضغط طويل على الكارت
+  Future<void> _editChild(Map<String, dynamic> child) async {
+    final setup = await Navigator.push<ChildProfileSetupResult>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ChildProfileSetupPage(childName: child['name'] ?? ''),
+      ),
+    );
+    if (!mounted || setup == null) return;
+
+    final pickedLevel = await Navigator.push<ChildLevelSelectResult>(
+      context,
+      MaterialPageRoute(
+        builder:
+            (_) => ChildLevelSelectPage(
+              childName: setup.childName,
+              recommendedLevel: child['level'] as int?,
+            ),
+      ),
+    );
+    if (!mounted || pickedLevel == null) return;
+
+    setState(() {
+      child['name'] = setup.childName;
+      child['avatar'] = setup.avatarAsset;
+      child['level'] = pickedLevel.level;
+    });
+    await _persistChildren();
+  }
+
   void _goToAddChild() async {
     final result = await Navigator.push(
       context,
@@ -22,9 +86,30 @@ class _ParentHomePageState extends State<ParentHomePage> {
     );
 
     if (result != null && result is Map<String, dynamic>) {
+      // ✅ FIX: نتأكد إن score موجود وبقيمة صحيحة
+      final newChild = {
+        'name': result['name'] ?? '',
+        'avatar': result['avatar'],
+        'level': result['level'] ?? 1,
+        'score': (result['score'] as num?)?.toDouble() ?? 0.0,
+      };
+
       setState(() {
-        childrenList.add(result);
+        childrenList.add(newChild);
       });
+      await _persistChildren();
+
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder:
+              (_) => ChildLevelSelectPage(
+                childName: newChild['name'] as String,
+                recommendedLevel: newChild['level'] as int?,
+              ),
+        ),
+      );
     }
   }
 
@@ -32,7 +117,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
 
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       _buildHomeContent(config),
       const Scaffold(body: Center(child: Text("Dashboard"))),
       const Scaffold(body: Center(child: Text("Learn"))),
@@ -41,12 +126,12 @@ class _ParentHomePageState extends State<ParentHomePage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF0F4F8),
-      body: IndexedStack(index: _selectedIndex, children: _pages),
+      body: IndexedStack(index: _selectedIndex, children: pages),
       bottomNavigationBar: _buildBottomNav(),
     );
   }
 
-  Widget _buildHomeContent(config) {
+  Widget _buildHomeContent(dynamic config) {
     return Stack(
       children: [
         SafeArea(
@@ -66,20 +151,49 @@ class _ParentHomePageState extends State<ParentHomePage> {
                   ),
                 ),
                 SizedBox(height: config.localHeight * 0.02),
-                ...childrenList
-                    .map(
-                      (child) => Padding(
-                        padding: const EdgeInsets.only(bottom: 15),
-                        child: _buildChildCard(
-                          config,
-                          child['name'],
-                          "Level 1",
-                          const Color(0xfff06292),
-                          child['score'],
+
+                // ✅ FIX: childrenList بتتعرض صح
+                // Tap → يفتح Dashboard الطفل
+                // Long press → يفتح صفحة التعديل
+                if (childrenList.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Center(
+                      child: Text(
+                        "No children added yet.\nTap \"Add Child\" to get started!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: config.body,
+                          color: Colors.grey,
                         ),
                       ),
-                    )
-                    .toList(),
+                    ),
+                  )
+                else
+                  ...childrenList.map((child) {
+                    // ✅ FIX: score safe cast — يمنع null error
+                    final double score =
+                        (child['score'] as num?)?.toDouble() ?? 0.0;
+                    final int level = (child['level'] as int?) ?? 1;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 15),
+                      child: GestureDetector(
+                        // Tap → يفتح الـ dashboard
+                        onTap: () => _openChildDashboard(child),
+                        // Long press → يفتح التعديل
+                        onLongPress: () => _editChild(child),
+                        child: _buildChildCard(
+                          config,
+                          name: child['name'] as String? ?? 'Unknown',
+                          level: "Level $level",
+                          color: _levelColor(level),
+                          progress: score,
+                          avatarAsset: child['avatar'] as String?,
+                        ),
+                      ),
+                    );
+                  }).toList(),
 
                 _buildAddChildButton(config),
                 SizedBox(height: config.localHeight * 0.15),
@@ -97,7 +211,21 @@ class _ParentHomePageState extends State<ParentHomePage> {
     );
   }
 
-  Widget _buildHeader(config) {
+  // ✅ Helper: كل level ليه لون مختلف
+  Color _levelColor(int level) {
+    switch (level) {
+      case 1:
+        return const Color(0xFF2C8FF9); // أزرق
+      case 2:
+        return const Color(0xFFFF8A65); // برتقالي
+      case 3:
+        return const Color(0xFFF06292); // وردي
+      default:
+        return const Color(0xFF2C8FF9);
+    }
+  }
+
+  Widget _buildHeader(dynamic config) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -127,13 +255,15 @@ class _ParentHomePageState extends State<ParentHomePage> {
     );
   }
 
+  // ✅ FIX: استخدام named parameters بدل positional لمنع الـ errors
   Widget _buildChildCard(
-    config,
-    String name,
-    String level,
-    Color color,
-    double progress,
-  ) {
+    dynamic config, {
+    required String name,
+    required String level,
+    required Color color,
+    required double progress,
+    String? avatarAsset,
+  }) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(config.localWidth * 0.04),
@@ -153,9 +283,19 @@ class _ParentHomePageState extends State<ParentHomePage> {
           CircleAvatar(
             radius: 25,
             backgroundColor: color.withOpacity(0.1),
-            child: Icon(Icons.face, color: color),
+            child:
+                avatarAsset != null
+                    ? ClipOval(
+                      child: Image.asset(
+                        avatarAsset,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                    : Icon(Icons.face, color: color),
           ),
-          SizedBox(width: 15),
+          const SizedBox(width: 15),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,9 +307,18 @@ class _ParentHomePageState extends State<ParentHomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                const SizedBox(height: 3),
+                Text(
+                  level,
+                  style: TextStyle(
+                    fontSize: config.body * 0.85,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black54,
+                  ),
+                ),
                 const SizedBox(height: 5),
                 LinearProgressIndicator(
-                  value: progress,
+                  value: progress.clamp(0.0, 1.0),
                   color: color,
                   backgroundColor: Colors.grey[200],
                 ),
@@ -177,16 +326,30 @@ class _ParentHomePageState extends State<ParentHomePage> {
             ),
           ),
           const SizedBox(width: 10),
-          Text(
-            "${(progress * 100).toInt()}%",
-            style: TextStyle(fontWeight: FontWeight.bold, color: color),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "${(progress.clamp(0.0, 1.0) * 100).toInt()}%",
+                style: TextStyle(fontWeight: FontWeight.bold, color: color),
+              ),
+              const SizedBox(height: 4),
+              // ✅ تلميح للمستخدم إن Long Press بيفتح التعديل
+              Text(
+                "Hold to edit",
+                style: TextStyle(
+                  fontSize: config.body * 0.7,
+                  color: Colors.grey.shade400,
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildAddChildButton(config) {
+  Widget _buildAddChildButton(dynamic config) {
     return Container(
       width: double.infinity,
       height: config.localHeight * 0.1,
@@ -227,7 +390,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
     );
   }
 
-  Widget _buildAIChatCard(config) {
+  Widget _buildAIChatCard(dynamic config) {
     return Container(
       padding: EdgeInsets.all(config.localWidth * 0.05),
       decoration: BoxDecoration(
@@ -250,7 +413,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
             color: Colors.white,
             size: config.headline,
           ),
-          SizedBox(width: 15),
+          const SizedBox(width: 15),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

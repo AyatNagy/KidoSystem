@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kido/Pages/child_level_select_page.dart';
+import 'package:kido/Pages/child_profile_setup_page.dart';
 import 'package:kido/Pages/exam_screen.dart';
 import '../Widgets/appBar.dart';
 import '../Widgets/text_field_item.dart';
@@ -37,6 +39,12 @@ class _StudentDataState extends State<StudentData> {
   bool isPasswordVisible = false;
   bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
+
+  int _recommendLevelFromScore(double scoreRatio) {
+    if (scoreRatio >= 0.80) return 3;
+    if (scoreRatio >= 0.50) return 2;
+    return 1;
+  }
 
   Future<void> handleAdd() async {
     if (_formKey.currentState!.validate()) {
@@ -92,14 +100,34 @@ class _StudentDataState extends State<StudentData> {
                 buttonText: "Start Journey"
               ),
               titleColor: const Color(0xff4CAF50),
-              onNextPressed: () {
-                Navigator.pop(context);
-                Navigator.pushReplacement(
+              onNextPressed: () async {
+                final setup = await Navigator.push<ChildProfileSetupResult>(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CloudSelectionPage(),
+                    builder: (_) => ChildProfileSetupPage(childName: childName),
                   ),
                 );
+                if (!mounted || setup == null) return;
+
+                final pickedLevel = await Navigator.push<ChildLevelSelectResult>(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (_) => ChildLevelSelectPage(
+                          childName: setup.childName,
+                          recommendedLevel: 1,
+                        ),
+                  ),
+                );
+                if (!mounted || pickedLevel == null) return;
+
+                Navigator.pop(context, {
+                  'name': setup.childName,
+                  'score': 1.0,
+                  'childId': registerResponse['child']['id'],
+                  'level': pickedLevel.level,
+                  'avatar': setup.avatarAsset,
+                });
               },
             );
           } else {
@@ -114,7 +142,6 @@ class _StudentDataState extends State<StudentData> {
               ),
               titleColor: const Color(0xfff06292),
               onNextPressed: () async {
-                Navigator.pop(context);
                 final double? scoreResult = await Navigator.push<double>(
                   context,
                   MaterialPageRoute(
@@ -126,10 +153,37 @@ class _StudentDataState extends State<StudentData> {
                 );
 
                 if (mounted && scoreResult != null) {
+                  // Child-facing profile setup
+                  final setup = await Navigator.push<ChildProfileSetupResult>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChildProfileSetupPage(childName: childName),
+                    ),
+                  );
+
+                  if (!mounted || setup == null) return;
+
+                  final recommendedLevel = _recommendLevelFromScore(scoreResult);
+                  final pickedLevel =
+                      await Navigator.push<ChildLevelSelectResult>(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) => ChildLevelSelectPage(
+                                childName: setup.childName,
+                                recommendedLevel: recommendedLevel,
+                              ),
+                        ),
+                      );
+
+                  if (!mounted || pickedLevel == null) return;
+
                   Navigator.pop(context, {
-                    'name': childName,
+                    'name': setup.childName,
                     'score': scoreResult,
                     'childId': registerResponse['child']['id'],
+                    'level': pickedLevel.level,
+                    'avatar': setup.avatarAsset,
                   });
                 }
               },

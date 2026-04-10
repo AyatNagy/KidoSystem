@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/home_page.dart';
 import 'package:kido/controllers/unboarding_data.dart';
+import 'package:kido/Pages/parent_home_page.dart';
+import 'package:kido/Pages/parent_login_screen.dart';
 import '../Widgets/CustomCanditor.dart';
 import '../Widgets/GradientButton.dart';
 import '../Widgets/onBoard.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import '../config/ResponsiveConfig.dart';
+import '../config/app_launch.dart';
 
 class OnboardScreen extends StatefulWidget {
   const OnboardScreen({super.key});
@@ -25,17 +28,25 @@ class _OnboardScreenState extends State<OnboardScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomePage()),
-      );
+      _finishOnboarding();
     }
   }
 
   void _skip() {
+    _finishOnboarding();
+  }
+
+  Future<void> _finishOnboarding() async {
+    await AppLaunch.setOnboardingSeen();
+    if (!mounted) return;
+    final loggedIn = await AppLaunch.isParentLoggedIn();
+    if (!mounted) return;
+
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const HomePage()),
+      MaterialPageRoute(
+        builder: (_) => loggedIn ? const ParentHomePage() : const ParentLogin(),
+      ),
     );
   }
 

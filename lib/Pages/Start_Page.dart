@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../Widgets/ResponsiveProvider.dart';
 import '../Widgets/appBar.dart';
 import 'onboard_page.dart';
+import 'package:kido/Pages/parent_home_page.dart';
+import 'package:kido/Pages/parent_login_screen.dart';
+import '../config/app_launch.dart';
 
 class Start extends StatelessWidget {
   const Start({super.key});
@@ -53,10 +56,30 @@ class Start extends StatelessWidget {
                   width: double.infinity,
                   height: config.buttonHeight,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      final seen = await AppLaunch.isOnboardingSeen();
+                      final loggedIn = await AppLaunch.isParentLoggedIn();
+                      if (!context.mounted) return;
+
+                      if (!seen) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const OnboardScreen(),
+                          ),
+                        );
+                        return;
+                      }
+
+                      Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const OnboardScreen()),
+                        MaterialPageRoute(
+                          builder:
+                              (_) =>
+                                  loggedIn
+                                      ? const ParentHomePage()
+                                      : const ParentLogin(),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
