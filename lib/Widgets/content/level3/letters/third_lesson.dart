@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kido/constants.dart';
 import '../../../../Models/level3/bubbleModel.dart';
 import '../../../../Widgets/content/bubble.dart';
-import '../../../../data/colors.dart';
 
 class BubblePopGame extends StatefulWidget {
   final String targetLetter;
@@ -29,20 +29,27 @@ class _BubblePopGameState extends State<BubblePopGame> {
 
   @override
   void initState() {
-    super.initState();
-    _timer = Timer.periodic(const Duration(milliseconds: 1800), (timer) {
+    super.initState();_timer = Timer.periodic(const Duration(milliseconds: 1600), (timer) {
       if (!_hasWon) _addNewBubble();
     });
   }
 
   void _addNewBubble() {
     if (!mounted) return;
+
+    final List<Color> kidoSelection = [
+      AppColors.kidoPink,
+      AppColors.kidoOrange,
+      AppColors.kidoGreen,
+      AppColors.kidoBlue,
+    ];
+
     setState(() {
       _bubbles.add(BubbleModel(
         id: DateTime.now().millisecondsSinceEpoch,
         xPosition: _random.nextDouble(),
-        color: kidoColors[_random.nextInt(kidoColors.length)],
-        size: 90.0 + _random.nextDouble() * 30.0,
+        color: kidoSelection[_random.nextInt(kidoSelection.length)],
+        size: 85.0 + _random.nextDouble() * 25.0,
       ));
     });
   }
@@ -52,7 +59,7 @@ class _BubblePopGameState extends State<BubblePopGame> {
     setState(() {
       _bubbles.removeWhere((b) => b.id == id);
       if (isTapped) {
-        HapticFeedback.mediumImpact();
+        HapticFeedback.lightImpact();
         _score++;
         if (_score >= widget.goalScore) _handleWin();
       }
@@ -76,17 +83,22 @@ class _BubblePopGameState extends State<BubblePopGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF5E6),
+      backgroundColor: AppColors.bgColor,
       body: Stack(
         children: [
           Opacity(
-            opacity: 0.08,
+            opacity: 0.1,
             child: GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
-              itemBuilder: (context, index) => const Icon(Icons.star, size: 20, color: Colors.blueGrey),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 6),
+              itemBuilder: (context, index) => const Icon(
+                  Icons.cloud_queue_rounded,
+                  size: 30,
+                  color: AppColors.kidoBlue
+              ),
             ),
           ),
+
           ..._bubbles.map((bubble) => BubbleWidget(
             key: ValueKey(bubble.id),
             bubble: bubble,
@@ -102,21 +114,40 @@ class _BubblePopGameState extends State<BubblePopGame> {
 
   Widget _buildAppBar() {
     return Positioned(
-      top: 50,
+      top: 60,
       left: 20,
       right: 20,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+              borderRadius: BorderRadius.circular(25),
+              boxShadow: [
+                BoxShadow(
+                    color: AppColors.kidoBlue.withOpacity(0.2),
+                    blurRadius: 15,
+                    offset: const Offset(0, 5)
+                )
+              ],
             ),
-            child: Text("🌟 $_score / ${widget.goalScore}",
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text("⭐", style: TextStyle(fontSize: 20)),
+                const SizedBox(width: 10),
+                Text(
+                  "$_score / ${widget.goalScore}",
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textDark,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

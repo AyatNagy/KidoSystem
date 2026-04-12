@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  static const Color kidoPink = Color(0xFFFF85A1);
+  static const Color kidoOrange = Color(0xFFFFB366);
+  static const Color kidoYellow = Color(0xFFFFE066);
+  static const Color kidoGreen = Color(0xFF88D498);
+  static const Color kidoBlue = Color(0xFF8ECAE6);
   static const Color purpleMain = Color(0xFF9063F5);
   static const Color textDark = Color(0xFF333333);
   static const Color textGray = Color(0xFF8E8E8E);
+  static const Color bgColor = Color(0xFFFBFDFF);
+
+  final List<Color> kidoColors = [
+    const Color(0xFFBDE0FE),
+    const Color(0xFFA2D2FF),
+    const Color(0xFFCDB4DB),
+    const Color(0xFFFFC8DD),
+    const Color(0xFFB9FBC0),
+    const Color(0xFFFFE5B4),
+  ];
 
   // Card Gradients
   static const List<Color> alphabetGrad = [
