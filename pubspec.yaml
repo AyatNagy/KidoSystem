@@ -87,6 +87,7 @@ flutter:
     - assets/images/arabicLetters/
     - assets/lottie/
     - assets/audio/
+    - assets/audio/numeric_en/
     - assets/videos/
     - assets/videos/Body_parts/
 
