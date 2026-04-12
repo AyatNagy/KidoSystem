@@ -4,6 +4,7 @@ import '../../Models/child.dart';
 import '../../Widgets/headerClipper.dart';
 import '../../Widgets/puls_button.dart';
 import '../../bloc/dashoard.dart';
+import '../../constants.dart';
 import '../../data/dashboard.dart';
 
 class Dashboard extends StatelessWidget {
@@ -18,13 +19,6 @@ class Dashboard extends StatelessWidget {
     required this.score
   });
 
-  static const Color kidoPink = Color(0xFFFF85A1);   // وردي هادئ
-  static const Color kidoOrange = Color(0xFFFFB366); // برتقالي مشمش
-  static const Color kidoYellow = Color(0xFFFFE066); // أصفر كريمي
-  static const Color kidoGreen = Color(0xFF88D498);
-  static const Color kidoBlue = Color(0xFF8ECAE6);
-  static const Color bgColor = Color(0xFFF9FBFF);
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -32,9 +26,9 @@ class Dashboard extends StatelessWidget {
       child: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: bgColor,
+            backgroundColor: AppColors.bgColor,
             body: state.isLoading
-                ? const Center(child: CircularProgressIndicator(color: kidoPink))
+                ? const Center(child: CircularProgressIndicator(color: AppColors.kidoPink))
                 : Stack(
               children: [
                 _buildKidoGradientHeader(),
@@ -63,7 +57,7 @@ class Dashboard extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w900,
-                                color: Color(0xFF434343),
+                                color: AppColors.textDark,
                                 letterSpacing: -0.5
                             )
                         ),
@@ -96,9 +90,9 @@ class Dashboard extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              kidoPink.withOpacity(0.9),
-              kidoOrange.withOpacity(0.9),
-              kidoYellow.withOpacity(0.8)
+              AppColors.kidoPink.withOpacity(0.9),
+              AppColors.kidoOrange.withOpacity(0.9),
+              AppColors.kidoYellow.withOpacity(0.8)
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -142,9 +136,9 @@ class Dashboard extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(3.5),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: LinearGradient(colors: [kidoPink, kidoOrange, kidoYellow])
+                    gradient: LinearGradient(colors: [AppColors.kidoPink, AppColors.kidoOrange, AppColors.kidoYellow])
                 ),
                 child: CircleAvatar(
                   radius: 32,
@@ -153,7 +147,7 @@ class Dashboard extends StatelessWidget {
                     (state.selectedChild?.name != null && state.selectedChild!.name.isNotEmpty)
                         ? state.selectedChild!.name[0].toUpperCase()
                         : "K",
-                    style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: kidoOrange),
+                    style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.kidoOrange),
                   ),
                 ),
               ),
@@ -167,13 +161,13 @@ class Dashboard extends StatelessWidget {
                         style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF434343)
+                            color: AppColors.textDark
                         )
                     ),
                     const Text(
                         "Everything looks great today!",
                         style: TextStyle(
-                            color: Color(0xFF9E9E9E),
+                            color: AppColors.textGray,
                             fontSize: 14
                         )
                     ),
@@ -192,13 +186,13 @@ class Dashboard extends StatelessWidget {
                   "Accuracy",
                   "${state.accuracy}%",
                   Icons.track_changes_rounded,
-                  kidoBlue
+                  AppColors.kidoBlue
               ),
               _buildMetric(
                   "Badges",
                   "${state.badges}",
                   Icons.stars_rounded,
-                  kidoYellow
+                  AppColors.kidoYellow
               ),
             ],
           )
@@ -217,14 +211,14 @@ class Dashboard extends StatelessWidget {
             style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF434343)
+                color: AppColors.textDark
             )
         ),
         Text(
             label,
             style: const TextStyle(
                 fontSize: 12,
-                color: Color(0xFF9E9E9E),
+                color: AppColors.textGray,
                 fontWeight: FontWeight.w500
             )
         ),
@@ -282,7 +276,7 @@ class Dashboard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Color(0xFF434343))),
+                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: AppColors.textDark)),
                 const SizedBox(height: 10),
                 Stack(
                   children: [
@@ -311,7 +305,7 @@ class Dashboard extends StatelessWidget {
               ),
               Icon(
                   isUp ? Icons.trending_up_rounded : Icons.trending_down_rounded,
-                  color: isUp ? kidoGreen : kidoPink,
+                  color: isUp ? AppColors.kidoGreen : AppColors.kidoPink,
                   size: 20
               ),
             ],
@@ -323,13 +317,13 @@ class Dashboard extends StatelessWidget {
 
   Color _getKidoColorByTitle(String title) {
     switch (title.toLowerCase()) {
-      case 'letters': return kidoPink;
-      case 'numbers': return kidoOrange;
-      case 'veggie': return kidoGreen;
-      case 'fruits': return kidoBlue;
-      case 'feelings': return kidoPink;
-      case 'clean up': return kidoOrange;
-      default: return kidoBlue;
+      case 'letters': return AppColors.kidoPink;
+      case 'numbers': return AppColors.kidoOrange;
+      case 'veggie': return AppColors.kidoGreen;
+      case 'fruits': return AppColors.kidoBlue;
+      case 'feelings': return AppColors.kidoPink;
+      case 'clean up': return AppColors.kidoOrange;
+      default: return AppColors.kidoBlue;
     }
   }
 
@@ -338,12 +332,9 @@ class Dashboard extends StatelessWidget {
       onPressed: () => context.read<DashboardBloc>().toggleChild(),
       child: Container(
         height: 70, width: 70,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [kidoPink, kidoOrange]),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(colors: [AppColors.kidoPink, AppColors.kidoOrange]),
           shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(color: kidoPink.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10)),
-          ],
         ),
         child: const Icon(Icons.swap_horizontal_circle_outlined, color: Colors.white, size: 35),
       ),
