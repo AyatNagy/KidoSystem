@@ -85,9 +85,11 @@ flutter:
     - assets/images/
     - assets/images/Characters/
     - assets/images/arabicLetters/
+    - assets/images/fruits/
     - assets/lottie/
     - assets/audio/
     - assets/audio/numeric_en/
+    - assets/audio/fruits/
     - assets/videos/
     - assets/videos/Body_parts/
 
