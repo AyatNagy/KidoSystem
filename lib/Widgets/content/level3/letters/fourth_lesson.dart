@@ -51,7 +51,7 @@ class _MysteryLottieBoxState extends State<MysteryLottieBox> with TickerProvider
                     return Transform.scale(
                       scale: value,
                       child: Image.asset(
-                          'assets/images/ball.png',
+                          'assets/images/arabicLetters/letterأ.png',
                           height: 150
                       ),
                     );

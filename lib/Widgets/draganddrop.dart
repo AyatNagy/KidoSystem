@@ -41,7 +41,6 @@ class _DragDropWidgetState extends State<DragDropWidget> {
         final containerSize = Size(constraints.maxWidth, constraints.maxHeight);
         List<Widget> stackChildren = [];
 
-        // 1. الخلفية
         if (widget.question.backgroundImage != null) {
           stackChildren.add(
             Positioned.fill(
@@ -50,7 +49,6 @@ class _DragDropWidgetState extends State<DragDropWidget> {
           );
         }
 
-        // 2. الأهداف (أماكن الظلال على الحرف وفي المساحة)
         for (var target in widget.question.targets) {
           stackChildren.add(
             Positioned(
@@ -72,7 +70,6 @@ class _DragDropWidgetState extends State<DragDropWidget> {
                   bool isHovering = candidateData.isNotEmpty;
                   bool isOccupied = targetOccupied[target.id] != null;
 
-                  // إظهار ظل الصورة في مكان الهدف إذا لم يكن مشغولاً
                   return AnimatedOpacity(
                     duration: const Duration(milliseconds: 300),
                     opacity: isOccupied ? 0.0 : 1.0,
@@ -80,10 +77,10 @@ class _DragDropWidgetState extends State<DragDropWidget> {
                       color: isHovering ? Colors.greenAccent : Colors.black,
                       sigma: isHovering ? 10 : 2,
                       child: Opacity(
-                        opacity: 0.3, // شفافية الظل
+                        opacity: 0.3,
                         child: Image.asset(
                           target.image,
-                          color: Colors.black, // تلوين الصورة بالأسود لتصبح ظلاً
+                          color: Colors.black,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -95,7 +92,6 @@ class _DragDropWidgetState extends State<DragDropWidget> {
           );
         }
 
-        // 3. العناصر القابلة للسحب (الحروف وملامح الأرنب)
         for (var item in widget.question.items) {
           String? currentTargetId;
           targetOccupied.forEach((tId, iId) { if (iId == item.id) currentTargetId = tId; });
@@ -103,14 +99,12 @@ class _DragDropWidgetState extends State<DragDropWidget> {
           double left, top, width, height;
 
           if (currentTargetId != null) {
-            // إذا تم سحب العنصر لمكانه الصحيح
             final target = widget.question.targets.firstWhere((t) => t.id == currentTargetId);
             left = containerSize.width * target.position.dx;
             top = containerSize.height * target.position.dy;
             width = containerSize.width * target.size.width;
             height = containerSize.height * target.size.height;
           } else {
-            // موضع البداية (في الأسفل مثلاً)
             left = containerSize.width * item.startPosition.dx;
             top = containerSize.height * item.startPosition.dy;
             width = containerSize.width * item.size.width;
@@ -134,7 +128,7 @@ class _DragDropWidgetState extends State<DragDropWidget> {
                   child: Image.asset(item.image, width: width, height: height, fit: BoxFit.contain),
                 ),
                 childWhenDragging: SimpleShadow(
-                  opacity: 0.2, // يبقى مكانه شفافاً أثناء السحب
+                  opacity: 0.2,
                   child: Image.asset(item.image, fit: BoxFit.contain),
                 ),
                 onDragEnd: (details) {

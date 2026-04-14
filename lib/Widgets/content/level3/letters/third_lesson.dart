@@ -9,11 +9,13 @@ import '../../../../Widgets/content/bubble.dart';
 class BubblePopGame extends StatefulWidget {
   final String targetLetter;
   final int goalScore;
+  final VoidCallback? onNext; // Callback for navigation
 
   const BubblePopGame({
     super.key,
     required this.targetLetter,
     this.goalScore = 5,
+    this.onNext,
   });
 
   @override
@@ -29,7 +31,8 @@ class _BubblePopGameState extends State<BubblePopGame> {
 
   @override
   void initState() {
-    super.initState();_timer = Timer.periodic(const Duration(milliseconds: 1600), (timer) {
+    super.initState();
+    _timer = Timer.periodic(const Duration(milliseconds: 1600), (timer) {
       if (!_hasWon) _addNewBubble();
     });
   }
@@ -67,6 +70,7 @@ class _BubblePopGameState extends State<BubblePopGame> {
   }
 
   void _handleWin() {
+    HapticFeedback.lightImpact();
     setState(() {
       _hasWon = true;
       _bubbles.clear();
@@ -86,6 +90,7 @@ class _BubblePopGameState extends State<BubblePopGame> {
       backgroundColor: AppColors.bgColor,
       body: Stack(
         children: [
+          // Background pattern
           Opacity(
             opacity: 0.1,
             child: GridView.builder(
@@ -99,6 +104,7 @@ class _BubblePopGameState extends State<BubblePopGame> {
             ),
           ),
 
+          // Active Bubbles
           ..._bubbles.map((bubble) => BubbleWidget(
             key: ValueKey(bubble.id),
             bubble: bubble,
@@ -106,7 +112,71 @@ class _BubblePopGameState extends State<BubblePopGame> {
             onPop: () => _handleBubbleRemoval(bubble.id, isTapped: true),
             onExpired: () => _handleBubbleRemoval(bubble.id, isTapped: false),
           )),
+
           _buildAppBar(),
+
+          // Win State Overlay
+          if (_hasWon)
+            Center(
+              child: TweenAnimationBuilder<double>(
+                duration: const Duration(milliseconds: 800),
+                tween: Tween(begin: 0.0, end: 1.0),
+                curve: Curves.elasticOut,
+                builder: (context, value, child) {
+                  return Transform.scale(
+                    scale: value,
+                    child: child,
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Awesome!",
+                      style: TextStyle(
+                        fontSize: 42,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.kidoGreen,
+                        fontFamily: 'KidsFont', // Use your project's custom font if applicable
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    GestureDetector(
+                      onTap: widget.onNext,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                        decoration: BoxDecoration(
+                          color: AppColors.kidoGreen,
+                          borderRadius: BorderRadius.circular(40),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.kidoGreen.withOpacity(0.4),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Next",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(width: 15),
+                            Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 35),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );
