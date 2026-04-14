@@ -32,7 +32,11 @@ class CategoryCard extends StatelessWidget {
               curve: Curves.easeOutCubic,
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color: Colors.white,
+                gradient: LinearGradient(
+                  colors: gradient,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(30),
                 boxShadow: [
                   BoxShadow(

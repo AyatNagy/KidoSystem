@@ -25,7 +25,6 @@ class Level3Home extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      // الأفاتار — لو موجود يظهر الصورة، لو لأ يظهر الأيقونة
                       Container(
                         width: 55,
                         height: 55,
@@ -87,7 +86,6 @@ class Level3Home extends StatelessWidget {
 
               SizedBox(height: screenHeight * 0.04),
 
-              // Daily Challenge Card
               Container(
                 width: screenWidth,
                 padding: const EdgeInsets.all(25.0),
