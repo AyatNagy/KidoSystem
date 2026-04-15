@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart' show Colors;
-
+import '../../../constants.dart';
 import '../discovery.dart';
 
 class LetterModel implements DiscoveryItem {
@@ -15,9 +15,9 @@ class LetterModel implements DiscoveryItem {
     required this.letterPath,
     required this.animalPath,
     required this.audioName,
-    this.bgColor = const Color(0xFFFDFCF0),
+    Color? bgColor,
     this.activeBorder = Colors.orangeAccent,
-  });
+  }) : this.bgColor = bgColor ?? AppColors.kidoColors[5];
 
   @override String get mainImage => letterPath;
   @override String? get extraImage => animalPath;

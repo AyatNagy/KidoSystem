@@ -1,74 +1,135 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:flutter/services.dart';
+import 'package:kido/Models/level3/discovery.dart';
+import 'package:lottie/lottie.dart';
 
-class MysteryLottieBox extends StatefulWidget {
-  const MysteryLottieBox({super.key});
+class MysteryBox extends StatefulWidget {
+  final DiscoveryItem model;
+  final String boxLottiePath;
+
+  const MysteryBox({
+    super.key,
+    required this.model,
+    this.boxLottiePath = 'assets/lottie/open box.json',
+  });
 
   @override
-  State<MysteryLottieBox> createState() => _MysteryLottieBoxState();
+  State<MysteryBox> createState() => _MysteryBoxState();
 }
 
-class _MysteryLottieBoxState extends State<MysteryLottieBox> with TickerProviderStateMixin {
-  late final AnimationController _controller;
-  bool _isOpened = false;
+class _MysteryBoxState extends State<MysteryBox> with TickerProviderStateMixin {
+  late final AnimationController _boxController;
+  late final AnimationController _idleController;
+  late final AudioPlayer _audioPlayer;
+
+  bool _isBoxOpen = false;
+  bool _showLetter = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
+    _audioPlayer = AudioPlayer();
+    _boxController = AnimationController(vsync: this);
+
+    _boxController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() => _showLetter = true);
+        _audioPlayer.play(AssetSource(widget.model.soundPath));
+      }
+    });
+
+    _idleController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _boxController.dispose();
+    _idleController.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
   void _handleTap() {
-    if (!_isOpened) {
-      HapticFeedback.heavyImpact();
-      _controller.forward();
-      setState(() => _isOpened = true);
+    if (!_isBoxOpen) {
+      HapticFeedback.mediumImpact();
+      _idleController.stop();
+      _audioPlayer.play(AssetSource('audio/pop.mp3'));
+      setState(() => _isBoxOpen = true);
+      _boxController.forward();
+    } else {
+      setState(() {
+        _isBoxOpen = false;
+        _showLetter = false;
+      });
+      _boxController.reset();
+      _idleController.repeat(reverse: true);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F9FF),
-      body: Center(
+    return Container(
+      decoration: BoxDecoration(
+        gradient: RadialGradient(
+          colors: [Colors.white, widget.model.background],
+          radius: 1.2,
+        ),
+      ),
+      child: Center(
         child: GestureDetector(
           onTap: _handleTap,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              if (_isOpened)
-                TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  duration: const Duration(milliseconds: 800),
-                  builder: (context, value, child) {
-                    return Transform.scale(
-                      scale: value,
-                      child: Image.asset(
-                          'assets/images/arabicLetters/letterأ.png',
-                          height: 150
-                      ),
-                    );
-                  },
+          child: AnimatedBuilder(
+            animation: _idleController,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _isBoxOpen ? 0 : 12 * _idleController.value),
+                child: child,
+              );
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                if (_showLetter)
+                  TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    duration: const Duration(milliseconds: 700),
+                    curve: Curves.elasticOut,
+                    builder: (context, value, child) {
+                      return Transform.translate(
+                        offset: Offset(0, -130 * value),
+                        child: Transform.scale(
+                          scale: value,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.white.withOpacity(0.8),
+                                  blurRadius: 30 * value,
+                                ),
+                              ],
+                            ),
+                            child: Image.asset(widget.model.mainImage, height: 160),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                Lottie.asset(
+                  widget.boxLottiePath,
+                  controller: _boxController,
+                  onLoaded: (comp) => _boxController.duration = comp.duration,
+                  repeat: false,
+                  height: 500,
+                  width: 500,
+                  fit: BoxFit.contain
                 ),
-
-              Lottie.asset(
-                'assets/lottie/open box.json',
-                controller: _controller,
-                onLoaded: (composition) {
-                  _controller.duration = composition.duration;
-                },
-                repeat: false,
-                animate: false,
-                height: 300,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

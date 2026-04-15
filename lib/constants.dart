@@ -11,7 +11,7 @@ class AppColors {
   static const Color textGray = Color(0xFF8E8E8E);
   static const Color bgColor = Color(0xFFFBFDFF);
 
-  final List<Color> kidoColors = [
+  static const List<Color> kidoColors = [
     const Color(0xFFBDE0FE),
     const Color(0xFFA2D2FF),
     const Color(0xFFCDB4DB),

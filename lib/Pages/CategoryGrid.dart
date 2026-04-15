@@ -8,6 +8,8 @@ import 'package:kido/Widgets/ThreeDColorsPalettePainter.dart';
 import 'package:kido/Widgets/ThreeDNumberOnePainter.dart';
 import 'package:kido/constants.dart';
 
+import 'level3/choose_letters.dart';
+
 class CategoryGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,14 @@ class CategoryGrid extends StatelessWidget {
           title: "Alphabets",
           gradient: AppColors.alphabetGrad,
           graphic: Center(child: AnimatedThreeDLetterA(size: 80)),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LanguageSelectionPage()
+                )
+            );
+          },
         ),
 
         CategoryCard(

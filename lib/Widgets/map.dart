@@ -62,17 +62,17 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          // The "Fat" Road
           if (widget.index < widget.totalItems - 1)
             Positioned(
               top: vPadding + (nodeSize / 2),
               left: 0,
               right: 0,
+              height: (vPadding * 2) + nodeSize,
               child: CustomPaint(
                 painter: _CurvePainter(
                   startX: xOffset + (nodeSize / 2),
                   endX: nextX + (nodeSize / 2),
-                  height: nodeSize + (vPadding * 2),
+                  height: (vPadding * 2) + nodeSize,
                   color: pathColor,
                 ),
               ),
@@ -95,7 +95,7 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
                   ),
                   child: GestureDetector(
                     onTapDown: (_) {
-                      HapticFeedback.heavyImpact(); // Stronger feedback
+                      HapticFeedback.heavyImpact();
                       setState(() => _isPressed = true);
                     },
                     onTapUp: (_) => setState(() => _isPressed = false),
