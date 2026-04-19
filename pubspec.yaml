@@ -86,6 +86,7 @@ flutter:
     - assets/images/Characters/
     - assets/images/arabicLetters/
     - assets/images/letters/
+    - assets/images/sizes/
     - assets/images/fruits/
     - assets/lottie/
     - assets/audio/
