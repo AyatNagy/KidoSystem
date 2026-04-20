@@ -6,11 +6,13 @@ import 'package:simple_shadow/simple_shadow.dart';
 class DragDropWidget extends StatefulWidget {
   final DragDropQuestion question;
   final void Function(Map<String, String?> answers)? onAnswered;
+  final VoidCallback? onWrongDrop;
 
   const DragDropWidget({
     super.key,
     required this.question,
     this.onAnswered,
+    this.onWrongDrop,
   });
 
   @override
@@ -133,6 +135,8 @@ class _DragDropWidgetState extends State<DragDropWidget> {
                 ),
                 onDragEnd: (details) {
                   if (!details.wasAccepted) {
+                    widget.onWrongDrop?.call();
+                    HapticFeedback.lightImpact();
                     setState(() {
                       targetOccupied.removeWhere((k, v) => v == item.id);
                       _updateAnswers();

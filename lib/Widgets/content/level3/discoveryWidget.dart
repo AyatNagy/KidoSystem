@@ -149,10 +149,10 @@ class _DiscoveryPageState extends State<DiscoveryPage> {
                     if (_showNextButton)
                       PulseButton(
                         onPressed: widget.onNextPressed,
-                        child: const Icon(
+                        child: Icon(
                             Icons.play_circle_fill_rounded,
                             size: 90,
-                            color: AppColors.kidoGreen
+                            color: widget.model.primaryColor
                         ),
                       )
                     else

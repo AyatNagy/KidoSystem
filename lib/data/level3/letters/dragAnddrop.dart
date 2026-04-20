@@ -4,7 +4,7 @@ import '../../../Models/dragable_item.dart';
 import '../../../Models/draganddrop_question.dart';
 import '../../../Models/targets_item.dart';
 
- final List<DragDropQuestion> firstLetter = [
+ final List<DragDropQuestion> ArLetter = [
 
   DragDropQuestion(
    questionText: 'ألف',
@@ -70,6 +70,157 @@ import '../../../Models/targets_item.dart';
      position: const Offset(0.4, 0.4),
      size: const Size(0.3, 0.4),
      image: "assets/images/arabicLetters/lowerب.png",
+    ),
+   ],
+  ),
+ ];
+
+ final List<DragDropQuestion> EnLetter = [
+  DragDropQuestion(
+   questionText: 'A',
+   items: [
+    DragItem(
+     id: "leftA",
+     image: "assets/images/letters/leftA.png",
+     startPosition: const Offset(0.2, 0.8),
+     size: const Size(0.2, 0.4),
+    ),
+    DragItem(
+     id: "rightA",
+     image: "assets/images/letters/rightA.png",
+     startPosition: const Offset(0.5, 0.8),
+     size: const Size(0.2, 0.4),
+    ),
+    DragItem(
+     id: "horA",
+     image: "assets/images/letters/horizontalLine.png",
+     startPosition: const Offset(0.7, 0.8),
+     size: const Size(0.25, 0.05),
+    ),
+   ],
+   targets: [
+    DragTargetZone(
+     id: "partLeft",
+     acceptedItemIds: ["leftA"],
+     position: const Offset(0.1, 0.15),
+     size: const Size(0.55, 0.4),
+     image: "assets/images/letters/leftA.png",
+    ),
+    DragTargetZone(
+     id: "partRight",
+     acceptedItemIds: ["rightA"],
+     position: const Offset(0.5, 0.15),
+     size: const Size(0.55, 0.4),
+     image: "assets/images/letters/rightA.png",
+    ),
+    DragTargetZone(
+     id: "hor",
+     acceptedItemIds: ["horA"],
+     position: const Offset(0.4, 0.37),
+     size: const Size(0.35, 0.05),
+     image: "assets/images/letters/horizontalLine.png",
+    ),
+   ],
+  ),
+
+  DragDropQuestion(
+   questionText: 'B',
+   items: [
+    DragItem(
+     id: "verB",
+     image: "assets/images/letters/verticalLine.png",
+     startPosition: const Offset(0.1, 0.8),
+     size: const Size(0.15, 0.45),
+    ),
+    DragItem(
+     id: "upB",
+     image: "assets/images/letters/upperB.png",
+     startPosition: const Offset(0.35, 0.8),
+     size: const Size(0.2, 0.2),
+    ),
+    DragItem(
+     id: "downB",
+     image: "assets/images/letters/upperB.png",
+     startPosition: const Offset(0.65, 0.8),
+     size: const Size(0.2, 0.2),
+    ),
+   ],
+   targets: [
+    DragTargetZone(
+     id: "partVer",
+     acceptedItemIds: ["verB"],
+     position: const Offset(0.2, 0.2),
+     size: const Size(0.35, 0.34),
+     image: "assets/images/letters/verticalLine.png",
+    ),
+    DragTargetZone(
+     id: "partUp",
+     acceptedItemIds: ["upB"],
+     position: const Offset(0.43, 0.19),
+     size: const Size(0.3, 0.2),
+     image: "assets/images/letters/upperB.png",
+    ),
+    DragTargetZone(
+     id: "partDown",
+     acceptedItemIds: ["downB"],
+     position: const Offset(0.43, 0.38),
+     size: const Size(0.3, 0.22),
+     image: "assets/images/letters/upperB.png",
+    ),
+   ],
+  ),
+
+  DragDropQuestion(
+   questionText: 'C',
+   items: [
+    DragItem(
+     id: "C",
+     image: "assets/images/letters/C-puzzle.png",
+     startPosition: const Offset(0.3, 0.7),
+     size: const Size(0.25, 0.25),
+    ),
+   ],
+   targets: [
+    DragTargetZone(
+     id: "partC",
+     acceptedItemIds: ["C"],
+     position: const Offset(0.2, 0.15),
+     size: const Size(0.55, 0.4),
+     image: "assets/images/letters/C-puzzle.png",
+    ),
+   ],
+  ),
+
+  DragDropQuestion(
+   questionText: 'D',
+   items: [
+    DragItem(
+     id: "verD",
+     image: "assets/images/letters/verticalLine.png",
+     startPosition: const Offset(0.2, 0.8),
+     size: const Size(0.15, 0.45),
+    ),
+    DragItem(
+     id: "upD",
+     image: "assets/images/letters/upperB.png",
+     startPosition: const Offset(0.7, 0.8),
+     size: const Size(0.2, 0.2),
+    ),
+   ],
+   targets: [
+    DragTargetZone(
+     id: "partVer",
+     acceptedItemIds: ["verD"],
+     position: const Offset(0.2, 0.2),
+     size: const Size(0.35, 0.34),
+     image: "assets/images/letters/verticalLine.png",
+    ),
+    DragTargetZone(
+     id: "partUp",
+     acceptedItemIds: ["upD"],
+     position: const Offset(0.42, 0.2),
+     size: const Size(0.4, 0.4),
+     image: "assets/images/letters/upperB.png",
     ),
    ],
   ),

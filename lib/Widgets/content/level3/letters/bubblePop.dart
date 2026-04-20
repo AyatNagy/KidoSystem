@@ -1,19 +1,24 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kido/constants.dart';
+import 'package:lottie/lottie.dart';
 import '../../../../Models/level3/bubbleModel.dart';
 import '../../../../Widgets/content/bubble.dart';
+import '../../../puls_button.dart';
 
 class BubblePopGame extends StatefulWidget {
   final String targetLetter;
+  final String audioPath;
   final int goalScore;
-  final VoidCallback? onNext; // Callback for navigation
+  final VoidCallback? onNext;
 
   const BubblePopGame({
     super.key,
     required this.targetLetter,
+    required this.audioPath,
     this.goalScore = 5,
     this.onNext,
   });
@@ -26,12 +31,14 @@ class _BubblePopGameState extends State<BubblePopGame> {
   final List<BubbleModel> _bubbles = [];
   final Random _random = Random();
   late Timer _timer;
+  late final AudioPlayer _audioPlayer;
   int _score = 0;
   bool _hasWon = false;
 
   @override
   void initState() {
     super.initState();
+    _audioPlayer = AudioPlayer();
     _timer = Timer.periodic(const Duration(milliseconds: 1600), (timer) {
       if (!_hasWon) _addNewBubble();
     });
@@ -39,7 +46,6 @@ class _BubblePopGameState extends State<BubblePopGame> {
 
   void _addNewBubble() {
     if (!mounted) return;
-
     final List<Color> kidoSelection = [
       AppColors.kidoPink,
       AppColors.kidoOrange,
@@ -63,6 +69,9 @@ class _BubblePopGameState extends State<BubblePopGame> {
       _bubbles.removeWhere((b) => b.id == id);
       if (isTapped) {
         HapticFeedback.lightImpact();
+        String path = widget.audioPath.replaceAll('assets/', '');
+        _audioPlayer.play(AssetSource(path));
+
         _score++;
         if (_score >= widget.goalScore) _handleWin();
       }
@@ -70,7 +79,9 @@ class _BubblePopGameState extends State<BubblePopGame> {
   }
 
   void _handleWin() {
-    HapticFeedback.lightImpact();
+    HapticFeedback.mediumImpact();
+    _audioPlayer.play(AssetSource('audio/win.wav'));
+
     setState(() {
       _hasWon = true;
       _bubbles.clear();
@@ -81,6 +92,7 @@ class _BubblePopGameState extends State<BubblePopGame> {
   @override
   void dispose() {
     _timer.cancel();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -90,21 +102,17 @@ class _BubblePopGameState extends State<BubblePopGame> {
       backgroundColor: AppColors.bgColor,
       body: Stack(
         children: [
-          // Background pattern
           Opacity(
             opacity: 0.1,
             child: GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 6),
               itemBuilder: (context, index) => const Icon(
-                  Icons.cloud_queue_rounded,
-                  size: 30,
-                  color: AppColors.kidoBlue
+                  Icons.cloud_queue_rounded, size: 40, color: AppColors.kidoBlue
               ),
             ),
           ),
 
-          // Active Bubbles
           ..._bubbles.map((bubble) => BubbleWidget(
             key: ValueKey(bubble.id),
             bubble: bubble,
@@ -115,78 +123,33 @@ class _BubblePopGameState extends State<BubblePopGame> {
 
           _buildAppBar(),
 
-          // Win State Overlay
           if (_hasWon)
-            Center(
-              child: TweenAnimationBuilder<double>(
-                duration: const Duration(milliseconds: 800),
-                tween: Tween(begin: 0.0, end: 1.0),
-                curve: Curves.elasticOut,
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: value,
-                    child: child,
-                  );
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      "Awesome!",
-                      style: TextStyle(
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.kidoGreen,
-                        fontFamily: 'KidsFont', // Use your project's custom font if applicable
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    GestureDetector(
-                      onTap: widget.onNext,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                        decoration: BoxDecoration(
-                          color: AppColors.kidoGreen,
-                          borderRadius: BorderRadius.circular(40),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.kidoGreen.withOpacity(0.4),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "Next",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(width: 15),
-                            Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 35),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+            Align(
+              alignment: Alignment.center,
+              child: Lottie.asset(
+                'assets/lottie/confetti.json',
+                repeat: false,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
               ),
             ),
-        ],
-      ),
-    );
+          if (_hasWon)
+            Center(
+               child: PulseButton(
+                 onPressed: widget.onNext!,
+                 child: const Icon(
+                     Icons.play_circle_fill_rounded,
+                     size: 100,
+                     color: AppColors.kidoGreen
+                 ),
+               ),
+            )]));
   }
 
   Widget _buildAppBar() {
     return Positioned(
-      top: 60,
-      left: 20,
-      right: 20,
+      top: 60, left: 20, right: 20,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -196,11 +159,7 @@ class _BubblePopGameState extends State<BubblePopGame> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(25),
               boxShadow: [
-                BoxShadow(
-                    color: AppColors.kidoBlue.withOpacity(0.2),
-                    blurRadius: 15,
-                    offset: const Offset(0, 5)
-                )
+                BoxShadow(color: AppColors.kidoBlue.withOpacity(0.2), blurRadius: 15, offset: const Offset(0, 5))
               ],
             ),
             child: Row(
@@ -210,11 +169,7 @@ class _BubblePopGameState extends State<BubblePopGame> {
                 const SizedBox(width: 10),
                 Text(
                   "$_score / ${widget.goalScore}",
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.textDark,
-                  ),
+                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.textDark),
                 ),
               ],
             ),

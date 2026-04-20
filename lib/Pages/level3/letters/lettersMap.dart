@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kido/constants.dart';
-import '../../../Widgets/map.dart';
+import '../../../Models/level3/letters/letterMap.dart';
+import '../../../Widgets/content/level3/discoveryWidget.dart';
+import '../../../Widgets/content/level3/letters/mysteryBox.dart';
+import '../../../Widgets/content/level3/letters/dragAnddrop.dart';
+import '../../../Widgets/content/level3/letters/bubblePop.dart';
+import '../../../Widgets/journeyMap.dart';
 import '../../../data/level3/letters/journeyLetters.dart';
 
 class LettersMapPage extends StatefulWidget {
@@ -12,71 +17,70 @@ class LettersMapPage extends StatefulWidget {
 
 class _LettersMapPageState extends State<LettersMapPage> {
 
-  void _onNodeTap(int index) async {
-    final currentStep = journeyEn[index];
-    final bool? examPassed = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LetterDetailsFlow(letter: currentStep.image),
-      ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.kidoGreen,
+      body:JourneymapPage(
+        journeyData: journeyEn,
+        backgroundColor: AppColors.kidoGreen,
+        nodeButtonColor: AppColors.kidoColors[4],
+        detailFlowBuilder: (item) => LetterDetailsFlow(item: item,)
+
+      )
     );
-    if (examPassed == true) {
-      setState(() {
-        journeyEn[index].isCompleted = true;
-        if (index + 1 < journeyEn.length) {
-          journeyEn[index + 1].isLocked = false;
-        }
-      });
-    }
   }
+}
+
+class LetterDetailsFlow extends StatelessWidget {
+  final LetterJourney item;
+  const LetterDetailsFlow({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE0F7FA),
-      body: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 100),
-        itemCount: journeyEn.length,
-        itemBuilder: (context, index) {
-          return MapNode(
-            index: index,
-            totalItems: journeyEn.length,
-            lesson: journeyEn[index],
-            buttonColor: AppColors.kidoColors[0],
-            onTap: () => _onNodeTap(index),
+      body: DiscoveryPage(
+        model: item.letterData,
+        onNextPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MysteryBox(
+                model: item.letterData,
+                onComplete: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DragDropLessonPage(
+                        questionData: item.dragData,
+                        letterAudio: item.letterData.audioName,
+                        firstColor: item.letterData.bgColor,
+                        secondColor: item.letterData.activeBorder,
+                        onNext: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BubblePopGame(
+                                targetLetter: item.charName,
+                                audioPath: item.letterData.audioName,
+                                onNext: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context, true);
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           );
         },
-      ),
-    );
-  }
-}
-
-class LetterJourney {
-  final String image;
-  bool isLocked;
-  bool isCompleted;
-
-  LetterJourney({
-    required this.image,
-    this.isLocked = true,
-    this.isCompleted = false,
-  });
-}
-class LetterDetailsFlow extends StatelessWidget {
-  final String letter;
-  const LetterDetailsFlow({super.key, required this.letter});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Letter $letter")),
-      body: Center(
-        child: ElevatedButton(
-          child: const Text("Finish Exam"),
-          onPressed: () {
-            Navigator.pop(context, true);
-          },
-        ),
       ),
     );
   }
