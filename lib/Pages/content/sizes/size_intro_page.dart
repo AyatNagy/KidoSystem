@@ -74,8 +74,7 @@ class _SizeIntroPageState extends State<SizeIntroPage>
               child: CustomGradientButton(
                 title: "ابدأ",
                 width: double.infinity,
-                onPressed: () async {
-                  await AudioSessionManager.stop(); // أمان
+                onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
