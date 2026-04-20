@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:kido/Models/size_lesson_data.dart';
 import 'package:kido/enum/size_goal.dart';
 import 'package:kido/services/audio_service.dart';
 
@@ -24,36 +25,20 @@ class _SizePracticePageState extends State<SizePracticePage>
 
   Timer? hintTimer;
 
-  bool hasWrongTapped = false;
+  late SizeLessonData data;
 
-  // 🎧 الصوت
-  String get audioFileName => "where_tall.wav";
+  bool isAudioPlaying = false;
 
-  Map<String, String> get assets {
-    switch (widget.goal) {
-      case SizeGoal.longShort:
-        return {
-          "first": "assets/images/sizes/tallcandel.png",
-          "second": "assets/images/sizes/shortcandel.png",
-        };
-      case SizeGoal.thickThin:
-        return {
-          "first": "assets/images/sizes/thick.png",
-          "second": "assets/images/sizes/thin.png",
-        };
-      case SizeGoal.bigSmall:
-        return {
-          "first": "assets/images/sizes/big.png",
-          "second": "assets/images/sizes/small.png",
-        };
-    }
-  }
+  /// 🧠 Queue عشان نمنع تداخل الصوت
+  Future<void> audioQueue = Future.value();
 
   bool get isFirstCorrect => true;
 
   @override
   void initState() {
     super.initState();
+
+    data = SizeLessonMapper.get(widget.goal);
 
     glowController = AnimationController(
       vsync: this,
@@ -65,19 +50,28 @@ class _SizePracticePageState extends State<SizePracticePage>
       end: 1.0,
     ).animate(CurvedAnimation(parent: glowController, curve: Curves.easeInOut));
 
-    // 🎯 بداية الدرس
     startHintFlow();
+  }
+
+  /// 🎧 تشغيل صوت بدون تداخل (Queue)
+  Future<void> playSequential(String fileName) {
+    audioQueue = audioQueue.then((_) async {
+      isAudioPlaying = true;
+      await AudioService.play(fileName: fileName);
+      isAudioPlaying = false;
+    });
+
+    return audioQueue;
   }
 
   void startHintFlow() async {
     await Future.delayed(const Duration(seconds: 1));
 
-    await AudioService.play(fileName: audioFileName);
+    await playSequential(data.questionAudio);
 
-    // ⏳ بعد 5 ثواني لو مفيش اختيار → نعيد التوجيه
-    hintTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+    hintTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (selected == null) {
-        await AudioService.play(fileName: audioFileName);
+        playSequential(data.questionAudio);
       } else {
         timer.cancel();
       }
@@ -95,9 +89,11 @@ class _SizePracticePageState extends State<SizePracticePage>
     if (isLocked) return;
 
     isLocked = true;
+    hintTimer?.cancel();
 
     bool correct = (isFirst == isFirstCorrect);
 
+    // 👇 التسجيل الفوري بدون أي انتظار للصوت
     setState(() {
       selected = isFirst ? "first" : "second";
     });
@@ -107,14 +103,11 @@ class _SizePracticePageState extends State<SizePracticePage>
         showSuccess = true;
       });
 
-      await AudioService.play(fileName: "tall_correct.wav");
+      await playSequential(data.audio);
     } else {
-      // ❌ غلط → يصغر ومبيرجعش يكبر
-      hasWrongTapped = true;
+      await playSequential(data.questionAudio);
 
-      await AudioService.play(fileName: audioFileName);
-
-      await Future.delayed(const Duration(milliseconds: 600));
+      await Future.delayed(const Duration(milliseconds: 400));
 
       setState(() {
         isLocked = false;
@@ -131,12 +124,10 @@ class _SizePracticePageState extends State<SizePracticePage>
 
     double scale = 1.0;
 
-    // ❌ الغلط يصغر ويفضل صغير
     if (selected == keyName && !isCorrect) {
       scale = 0.7;
     }
 
-    // 🟢 الصح: يفضل يعمل glow طول الوقت + يتكلم مع الطفل
     bool shouldGlow = isCorrect && (selected == null || !showSuccess);
 
     Widget imageWidget = AnimatedBuilder(
@@ -166,7 +157,6 @@ class _SizePracticePageState extends State<SizePracticePage>
         child: AnimatedScale(
           scale: scale,
           duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
           child: GestureDetector(
             onTap: () => handleTap(isFirst),
             child: imageWidget,
@@ -178,11 +168,10 @@ class _SizePracticePageState extends State<SizePracticePage>
 
   @override
   Widget build(BuildContext context) {
-    final data = assets;
+    final dataLocal = data;
 
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         title: const Text("اختبر نفسك"),
         automaticallyImplyLeading: false,
@@ -190,7 +179,6 @@ class _SizePracticePageState extends State<SizePracticePage>
         elevation: 0,
         centerTitle: true,
       ),
-
       body: SafeArea(
         child: Center(
           child:
@@ -199,18 +187,18 @@ class _SizePracticePageState extends State<SizePracticePage>
                     scale: 1.7,
                     duration: const Duration(milliseconds: 700),
                     curve: Curves.elasticOut,
-                    child: Image.asset(data["first"]!),
+                    child: Image.asset(dataLocal.firstImage),
                   )
                   : Row(
                     children: [
                       buildItem(
                         keyName: "first",
-                        image: data["first"]!,
+                        image: dataLocal.firstImage,
                         isFirst: true,
                       ),
                       buildItem(
                         keyName: "second",
-                        image: data["second"]!,
+                        image: dataLocal.secondImage,
                         isFirst: false,
                       ),
                     ],

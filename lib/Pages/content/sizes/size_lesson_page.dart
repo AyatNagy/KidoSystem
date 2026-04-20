@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Models/size_lesson_data.dart';
 import 'package:kido/Pages/content/sizes/size_practice_page.dart';
 import 'package:kido/Widgets/content/sizes/size_comparison_item.dart';
 import 'package:kido/Widgets/custom_app_button.dart';
@@ -19,42 +20,15 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
   bool isPlaying = false;
   bool showPracticeButton = false;
 
-  String get audioFileName {
-    switch (widget.goal) {
-      case SizeGoal.longShort:
-        return "tall.wav";
-      case SizeGoal.thickThin:
-        return "thick.wav";
-      case SizeGoal.bigSmall:
-        return "big.wav";
-    }
-  }
-
-  Map<String, String> get lessonAssets {
-    switch (widget.goal) {
-      case SizeGoal.longShort:
-        return {
-          "first": "assets/images/sizes/tallcandel.png",
-          "second": "assets/images/sizes/shortcandel.png",
-        };
-      case SizeGoal.thickThin:
-        return {
-          "first": "assets/images/sizes/thick.png",
-          "second": "assets/images/sizes/thin.png",
-        };
-      case SizeGoal.bigSmall:
-        return {
-          "first": "assets/images/sizes/big.png",
-          "second": "assets/images/sizes/small.png",
-        };
-    }
-  }
+  late SizeLessonData data;
 
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(milliseconds: 500), startLesson);
+    data = SizeLessonMapper.get(widget.goal);
+
+    startLesson();
   }
 
   Future<void> startLesson() async {
@@ -65,14 +39,14 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
       showPracticeButton = false;
     });
 
-    await Future.delayed(const Duration(seconds: 2));
-
     for (int i = 0; i < 3; i++) {
       if (!mounted) return;
 
       setState(() => isFirstHighlighted = true);
 
-      await AudioService.play(fileName: audioFileName);
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      await AudioService.play(fileName: data.audio);
 
       setState(() => isFirstHighlighted = false);
 
@@ -87,10 +61,27 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
     });
   }
 
+  // 👇 دي المهمة الجديدة (إعادة الصوت لما الطفل يدوس)
+  Future<void> repeatAudio() async {
+    if (isPlaying) return;
+
+    setState(() {
+      isPlaying = true;
+      isFirstHighlighted = true;
+    });
+
+    await AudioService.play(fileName: data.audio);
+
+    if (!mounted) return;
+
+    setState(() {
+      isPlaying = false;
+      isFirstHighlighted = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final assets = lessonAssets;
-
     return Scaffold(
       backgroundColor: Colors.white,
 
@@ -111,16 +102,19 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
                 children: [
                   Expanded(
                     child: Center(
-                      child: SizeComparisonItem(
-                        imagePath: assets["first"]!,
-                        isHighlighted: isFirstHighlighted,
+                      child: GestureDetector(
+                        onTap: repeatAudio, // 👈 هنا
+                        child: SizeComparisonItem(
+                          imagePath: data.firstImage,
+                          isHighlighted: isFirstHighlighted,
+                        ),
                       ),
                     ),
                   ),
                   Expanded(
                     child: Center(
                       child: SizeComparisonItem(
-                        imagePath: assets["second"]!,
+                        imagePath: data.secondImage,
                         isHighlighted: false,
                       ),
                     ),
@@ -128,7 +122,8 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
                 ],
               ),
             ),
-            //عاملى مشاكل انت
+
+            // 👇 زرار البراكتس
             if (showPracticeButton)
               Padding(
                 padding: const EdgeInsets.all(20),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:kido/Pages/content/sizes/size_intro_page.dart';
 import 'package:kido/Pages/content/sizes/size_lesson_page.dart';
 import 'package:kido/enum/size_goal.dart';
 //import 'Pages/Logo_Page.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-            home: SizeLessonPage(goal: SizeGoal.longShort),
+            home: SizeIntroPage(goal: SizeGoal.longShort),
           ),
         );
       },
