@@ -1,213 +1,114 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:math' as math;
+import '../../Models/child.dart';
+import '../../Widgets/headerClipper.dart';
+import '../../Widgets/puls_button.dart';
+import '../../bloc/dashoard.dart';
+import '../../constants.dart';
+import '../../data/dashboard.dart';
 
-class DashboardState {
-  final String childName;
-  final Map<String, double> portageProgress;
-  final String nextLesson;
-  final bool isLoading;
+class Dashboard extends StatelessWidget {
+  final Child child;
+  final int level;
+  final double score;
 
-  DashboardState({
-    this.childName = "",
-    this.portageProgress = const {},
-    this.nextLesson = "",
-    this.isLoading = true,
+  const Dashboard({
+    super.key,
+    required this.child,
+    required this.level,
+    required this.score
   });
-}
-
-class DashboardBloc extends Cubit<DashboardState> {
-  DashboardBloc() : super(DashboardState());
-
-  void loadDashboardData() async {
-    await Future.delayed(const Duration(seconds: 1));
-    emit(DashboardState(
-      childName: "Habiba",
-      portageProgress: {
-        "Cognitive": 0.7,
-        "Social": 0.4,
-        "Motor": 0.9,
-        "Self-Care": 0.5,
-      },
-      nextLesson: "Matching Emotions",
-      isLoading: false,
-    ));
-  }
-}
-
-class ParentDashboard extends StatelessWidget {
-  const ParentDashboard({super.key});
-
-  static const Color bgColor = Color(0xFFEFF3F6);
-  static const Color lightShadow = Colors.white;
-  static final Color darkShadow = Colors.black.withOpacity(0.1);
-  static const Color textDark = Color(0xFF2D3436);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => DashboardBloc()..loadDashboardData(),
-    child: Scaffold(
-    backgroundColor: bgColor,
-    body: BlocBuilder<DashboardBloc, DashboardState>(
-    builder: (context, state) {
-    if (state.isLoading) {
-    return const Center(child: CircularProgressIndicator());
-    }
-
-    return SingleChildScrollView(
-    padding: const EdgeInsets.fromLTRB(24, 60, 24, 20),
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    _buildTopNavBar(),
-    const SizedBox(height: 25),
-    _build3DGradientHeader(state.childName),
-    const SizedBox(height: 35),
-    const Text("Developmental Growth",
-    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textDark)),
-    const SizedBox(height: 25),
-    GridView.count(
-    shrinkWrap: true,
-    physics: const NeverScrollableScrollPhysics(),
-    crossAxisCount: 2,
-    mainAxisSpacing: 25,
-    crossAxisSpacing: 25,
-    childAspectRatio: 0.9,
-    children: [
-    _buildNeumorphicCard("Cognitive", state.portageProgress["Cognitive"] ?? 0, const Color(0xFF6C5CE7), Icons.psychology),
-    _buildNeumorphicCard("Social", state.portageProgress["Social"] ?? 0, const Color(0xFF0984E3), Icons.groups),
-    _buildNeumorphicCard("Motor", state.portageProgress["Motor"] ?? 0, const Color(0xFF00B894), Icons.directions_run),
-    _buildNeumorphicCard("Self-Care", state.portageProgress["Self-Care"] ?? 0, const Color(0xFFE17055), Icons.auto_awesome),
-    ],
-    ),
-    const SizedBox(height: 35),
-    _build3DActionCard(state.nextLesson),
-    const SizedBox(height: 20),
-    ],
-    ),
-    );
-    },
-    ),
-    ),
-    );
-  }
-
-  Widget _buildTopNavBar() {
-    return const Center(
-      child: Text("Kido Journey",
-          style: TextStyle(
-              color: textDark,
-              fontWeight: FontWeight.w900,
-              fontSize: 22,
-              letterSpacing: 1.5)),
-    );
-  }
-
-  Widget _build3DGradientHeader(String name) {
-    return Container(
-      padding: const EdgeInsets.all(25),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF8E44AD), Color(0xFF6C5CE7)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(color: const Color(0xFF6C5CE7).withOpacity(0.4), blurRadius: 25, offset: const Offset(0, 12)),
-          BoxShadow(color: Colors.white.withOpacity(0.1), blurRadius: 2, offset: const Offset(-3, -3)),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(
-              color: Colors.white24,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.star, color: Colors.white, size: 35),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      create: (context) => DashboardBloc()..loadDashboardData(child, level, score),
+      child: BlocBuilder<DashboardBloc, DashboardState>(
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: AppColors.bgColor,
+            body: state.isLoading
+                ? const Center(child: CircularProgressIndicator(color: AppColors.kidoPink))
+                : Stack(
               children: [
-                const Text("Habiba's Progress", style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w500)),
-                const SizedBox(height: 5),
-                Text("Level Up Soon!",
-                    style: TextStyle(color: Colors.white.withOpacity(0.95), fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: 0.5)),
+                _buildKidoGradientHeader(),
+
+                SafeArea(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+                        const Text(
+                            "Dashboard",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 26,
+                                fontWeight: FontWeight.w900
+                            )
+                        ),
+                        const SizedBox(height: 30),
+                        _buildModernHeroCard(state),
+                        const SizedBox(height: 35),
+                        const Text(
+                            "Learning Journey",
+                            style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.textDark,
+                                letterSpacing: -0.5
+                            )
+                        ),
+                        const SizedBox(height: 15),
+                        _buildCreativeTaskGrid(state),
+                        const SizedBox(height: 100),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  bottom: 30,
+                  right: 20,
+                  child: _buildSwitchButton(context),
+                ),
               ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildNeumorphicCard(String title, double val, Color accentColor, IconData icon) {
-    return Container(
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(color: darkShadow, offset: const Offset(8, 8), blurRadius: 15),
-          const BoxShadow(color: lightShadow, offset: Offset(-8, -8), blurRadius: 15),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
+  Widget _buildKidoGradientHeader() {
+    return ClipPath(
+      clipper: HeaderClipper(),
+      child: Container(
+        height: 280,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppColors.kidoPink.withOpacity(0.9),
+              AppColors.kidoOrange.withOpacity(0.9),
+              AppColors.kidoYellow.withOpacity(0.8)
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         child: Stack(
           children: [
             Positioned(
-              right: -15,
-              top: -15,
-              child: Transform.rotate(
-                angle: -math.pi / 6,
-                child: Icon(icon, size: 100, color: accentColor.withOpacity(0.06)),
-              ),
+              top: -10,
+              right: -10,
+              child: CircleAvatar(radius: 80, backgroundColor: Colors.white.withOpacity(0.15)),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(title,
-                      style: TextStyle(fontWeight: FontWeight.w900, color: textDark.withOpacity(0.8), fontSize: 16, letterSpacing: 0.5)),
-                  const SizedBox(height: 20),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        height: 70,
-                        width: 70,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: bgColor,
-                          boxShadow: [
-                            BoxShadow(color: darkShadow.withOpacity(0.05), offset: const Offset(3, 3), blurRadius: 3, spreadRadius: -1),
-                            const BoxShadow(color: lightShadow, offset: Offset(-3, -3), blurRadius: 3, spreadRadius: -1),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 70,
-                        width: 70,
-                        child: CircularProgressIndicator(
-                          value: val,
-                          strokeWidth: 10,
-                          backgroundColor: accentColor.withOpacity(0.1),
-                          color: accentColor,
-                          strokeCap: StrokeCap.round,
-                        ),
-                      ),
-                      Text("${(val * 100).toInt()}%",
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: textDark)),
-                    ],
-                  ),
-                ],
-              ),
+            Positioned(
+              bottom: 40,
+              left: 20,
+              child: CircleAvatar(radius: 30, backgroundColor: Colors.white.withOpacity(0.1)),
             ),
           ],
         ),
@@ -215,41 +116,227 @@ class ParentDashboard extends StatelessWidget {
     );
   }
 
-  Widget _build3DActionCard(String lesson) {
+  Widget _buildModernHeroCard(DashboardState state) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(35),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 30, offset: const Offset(0, 15)),
+          BoxShadow(
+              color: const Color(0xFFDDE7F5).withOpacity(0.4),
+              blurRadius: 30,
+              offset: const Offset(0, 15)
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(3.5),
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(colors: [AppColors.kidoPink, AppColors.kidoOrange, AppColors.kidoYellow])
+                ),
+                child: CircleAvatar(
+                  radius: 32,
+                  backgroundColor: Colors.white,
+                  child: Text(
+                    (state.selectedChild?.name != null && state.selectedChild!.name.isNotEmpty)
+                        ? state.selectedChild!.name[0].toUpperCase()
+                        : "K",
+                    style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.kidoOrange),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 18),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "${state.selectedChild?.name}!",
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark
+                        )
+                    ),
+                    const Text(
+                        "Everything looks great today!",
+                        style: TextStyle(
+                            color: AppColors.textGray,
+                            fontSize: 14
+                        )
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 25),
+          const Divider(height: 1, color: Color(0xFFF5F5F5)),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildMetric(
+                  "Accuracy",
+                  "${state.accuracy}%",
+                  Icons.track_changes_rounded,
+                  AppColors.kidoBlue
+              ),
+              _buildMetric(
+                  "Badges",
+                  "${state.badges}",
+                  Icons.stars_rounded,
+                  AppColors.kidoYellow
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMetric(String label, String value, IconData icon, Color color) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 28),
+        const SizedBox(height: 8),
+        Text(
+            value,
+            style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textDark
+            )
+        ),
+        Text(
+            label,
+            style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.textGray,
+                fontWeight: FontWeight.w500
+            )
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCreativeTaskGrid(DashboardState state) {
+    final items = state.level == 3 ? level3Data(state.progress) : level2Data(state.progress);
+    return Column(
+      children: items.map((item) => _buildModernTaskCard(item, state.previousProgress)).toList(),
+    );
+  }
+
+  Widget _buildModernTaskCard(Map<String, dynamic> item, Map<String, double> prevProgress) {
+    final String title = item['title'];
+    final String symbol = item['symbol'];
+    final double currentVal = (item['progress'] as num).toDouble();
+    final double previousVal = prevProgress[title] ?? currentVal;
+    final bool isUp = currentVal >= previousVal;
+    final Color kidoColor = _getKidoColorByTitle(title);
+
+    bool isImagePath = symbol.contains("assets/");
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+              color: const Color(0xFFE0E0E0).withOpacity(0.2),
+              blurRadius: 15,
+              offset: const Offset(0, 8)
+          ),
         ],
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(15),
+            width: 60, height: 60,
             decoration: BoxDecoration(
-              color: const Color(0xFFFAB1A0).withOpacity(0.15),
-              shape: BoxShape.circle,
+              color: kidoColor.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(20),
             ),
-            child: const Icon(Icons.rocket_launch, color: Color(0xFFE17055), size: 30),
+            child: Center(
+              child: isImagePath
+                  ? Image.asset(symbol, width: 32, fit: BoxFit.contain)
+                  : Text(symbol, style: const TextStyle(fontSize: 28)),
+            ),
           ),
-          const SizedBox(width: 20),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("NEXT STEP",
-                    style: TextStyle(letterSpacing: 2.0, fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFFE17055))),
-                const SizedBox(height: 3),
-                Text(lesson,
-                    style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900, color: textDark)),
+                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: AppColors.textDark)),
+                const SizedBox(height: 10),
+                Stack(
+                  children: [
+                    Container(height: 10, decoration: BoxDecoration(color: const Color(0xFFF0F2F5), borderRadius: BorderRadius.circular(10))),
+                    FractionallySizedBox(
+                      widthFactor: currentVal,
+                      child: Container(
+                          height: 10,
+                          decoration: BoxDecoration(
+                              color: kidoColor.withOpacity(0.8),
+                              borderRadius: BorderRadius.circular(10)
+                          )
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
+          const SizedBox(width: 15),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text("${(currentVal * 100).toInt()}%",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: kidoColor)
+              ),
+              Icon(
+                  isUp ? Icons.trending_up_rounded : Icons.trending_down_rounded,
+                  color: isUp ? AppColors.kidoGreen : AppColors.kidoPink,
+                  size: 20
+              ),
+            ],
+          )
         ],
+      ),
+    );
+  }
+
+  Color _getKidoColorByTitle(String title) {
+    switch (title.toLowerCase()) {
+      case 'letters': return AppColors.kidoPink;
+      case 'numbers': return AppColors.kidoOrange;
+      case 'veggie': return AppColors.kidoGreen;
+      case 'fruits': return AppColors.kidoBlue;
+      case 'feelings': return AppColors.kidoPink;
+      case 'clean up': return AppColors.kidoOrange;
+      default: return AppColors.kidoBlue;
+    }
+  }
+
+  Widget _buildSwitchButton(BuildContext context) {
+    return PulseButton(
+      onPressed: () => context.read<DashboardBloc>().toggleChild(),
+      child: Container(
+        height: 70, width: 70,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(colors: [AppColors.kidoPink, AppColors.kidoOrange]),
+          shape: BoxShape.circle,
+        ),
+        child: const Icon(Icons.swap_horizontal_circle_outlined, color: Colors.white, size: 35),
       ),
     );
   }

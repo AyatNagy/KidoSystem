@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kido/Models/draganddrop_question.dart';
+import 'package:simple_shadow/simple_shadow.dart';
 
 class DragDropWidget extends StatefulWidget {
   final DragDropQuestion question;
@@ -55,11 +57,9 @@ class _DragDropWidgetState extends State<DragDropWidget> {
               width: containerSize.width * target.size.width,
               height: containerSize.height * target.size.height,
               child: DragTarget<String>(
-                onWillAccept: (itemId) {
-                  return target.acceptedItemIds.contains(itemId) &&
-                      (targetOccupied[target.id] == null || targetOccupied[target.id] == itemId);
-                },
+                onWillAccept: (itemId) => target.acceptedItemIds.contains(itemId),
                 onAccept: (itemId) {
+                  HapticFeedback.mediumImpact();
                   setState(() {
                     targetOccupied.removeWhere((k, v) => v == itemId);
                     targetOccupied[target.id] = itemId;
@@ -68,18 +68,23 @@ class _DragDropWidgetState extends State<DragDropWidget> {
                 },
                 builder: (context, candidateData, rejectedData) {
                   bool isHovering = candidateData.isNotEmpty;
-                  return AnimatedContainer(
+                  bool isOccupied = targetOccupied[target.id] != null;
+
+                  return AnimatedOpacity(
                     duration: const Duration(milliseconds: 300),
-                    decoration: BoxDecoration(
-                      color: isHovering ? Colors.yellow.withOpacity(0.3) : Colors.transparent,
-                      borderRadius: BorderRadius.circular(15),
+                    opacity: isOccupied ? 0.0 : 1.0,
+                    child: SimpleShadow(
+                      color: isHovering ? Colors.greenAccent : Colors.black,
+                      sigma: isHovering ? 10 : 2,
+                      child: Opacity(
+                        opacity: 0.3,
+                        child: Image.asset(
+                          target.image,
+                          color: Colors.black,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     ),
-                    child: target.image.isNotEmpty
-                        ? Opacity(
-                      opacity: targetOccupied.containsValue(target.id) ? 0.0 : 0.5,
-                      child: Image.asset(target.image, fit: BoxFit.contain),
-                    )
-                        : const SizedBox.shrink(),
                   );
                 },
               ),
@@ -89,9 +94,7 @@ class _DragDropWidgetState extends State<DragDropWidget> {
 
         for (var item in widget.question.items) {
           String? currentTargetId;
-          targetOccupied.forEach((tId, iId) {
-            if (iId == item.id) currentTargetId = tId;
-          });
+          targetOccupied.forEach((tId, iId) { if (iId == item.id) currentTargetId = tId; });
 
           double left, top, width, height;
 
@@ -110,7 +113,7 @@ class _DragDropWidgetState extends State<DragDropWidget> {
 
           stackChildren.add(
             AnimatedPositioned(
-              duration: const Duration(milliseconds: 400),
+              duration: const Duration(milliseconds: 600),
               curve: Curves.elasticOut,
               key: ValueKey(item.id),
               left: left,
@@ -119,14 +122,12 @@ class _DragDropWidgetState extends State<DragDropWidget> {
               height: height,
               child: Draggable<String>(
                 data: item.id,
-                feedback: Material(
-                  color: Colors.transparent,
-                  child: Transform.scale(
-                    scale: 1.2,
-                    child: Image.asset(item.image, width: width, height: height, fit: BoxFit.contain),
-                  ),
+                feedback: SimpleShadow(
+                  opacity: 0.5,
+                  offset: const Offset(10, 10),
+                  child: Image.asset(item.image, width: width, height: height, fit: BoxFit.contain),
                 ),
-                childWhenDragging: Opacity(
+                childWhenDragging: SimpleShadow(
                   opacity: 0.2,
                   child: Image.asset(item.image, fit: BoxFit.contain),
                 ),
@@ -138,7 +139,11 @@ class _DragDropWidgetState extends State<DragDropWidget> {
                     });
                   }
                 },
-                child: Image.asset(item.image, fit: BoxFit.contain),
+                child: SimpleShadow(
+                  opacity: 0.3,
+                  offset: const Offset(2, 2),
+                  child: Image.asset(item.image, fit: BoxFit.contain),
+                ),
               ),
             ),
           );

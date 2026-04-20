@@ -117,7 +117,7 @@ class _FirstLessonState extends State<FirstLesson> {
                     decoration: BoxDecoration(
                       color: _isTapped
                           ? model.activeBorder.withOpacity(0.15)
-                          : model.circleColor,
+                          : model.primaryColor,
                       shape: BoxShape.circle,
                     ),
                   ),
