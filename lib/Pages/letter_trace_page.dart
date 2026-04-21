@@ -1,4 +1,3 @@
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:kido/Models/letter_step.dart';
 import 'package:kido/Pages/Painter/letter_path_painter.dart';
@@ -12,7 +11,8 @@ import 'package:kido/utils/tracing_score.dart';
 
 class LetterTracePage extends StatefulWidget {
   final String letter;
-  const LetterTracePage({super.key, required this.letter});
+  final VoidCallback? onComplete;
+  const LetterTracePage({super.key, required this.letter,this.onComplete});
 
   @override
   State<LetterTracePage> createState() => _LetterTracePageState();
@@ -87,7 +87,12 @@ class _LetterTracePageState extends State<LetterTracePage>
             letter: widget.letter,
             onContinue: () {
               Navigator.of(context).pop();
-              _resetAll();
+              if(widget.onComplete != null) {
+                widget.onComplete!();
+              } else {
+                Navigator.of(context).pop(true);
+              }
+              //_resetAll();
               // هنا تقدر تروح للحرف الجاي
               // Navigator.pushReplacement(context, MaterialPageRoute(
               //   builder: (_) => LetterTracePage(letter: nextLetter),

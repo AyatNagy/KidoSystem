@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Pages/letter_trace_page.dart';
 import 'package:kido/constants.dart';
 import '../../../Models/level3/letters/letterMap.dart';
 import '../../../Widgets/content/level3/discoveryWidget.dart';
@@ -26,7 +27,6 @@ class _LettersMapPageState extends State<LettersMapPage> {
         backgroundColor: AppColors.kidoGreen,
         nodeButtonColor: AppColors.kidoColors[4],
         detailFlowBuilder: (item) => LetterDetailsFlow(item: item,)
-
       )
     );
   }
@@ -39,15 +39,15 @@ class LetterDetailsFlow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: DiscoveryPage(
+      body: MysteryBox(
         model: item.letterData,
-        onNextPressed: () {
+        onComplete: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MysteryBox(
+              builder: (context) => DiscoveryPage(
                 model: item.letterData,
-                onComplete: () {
+                onNextPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -64,10 +64,22 @@ class LetterDetailsFlow extends StatelessWidget {
                                 targetLetter: item.charName,
                                 audioPath: item.letterData.audioName,
                                 onNext: () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context, true);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LetterTracePage(
+                                        letter: item.charName,
+                                        onComplete: () {
+                                          Navigator.of(context)
+                                            ..pop()
+                                            ..pop()
+                                            ..pop()
+                                            ..pop()
+                                            ..pop(true);
+                                        },
+                                      ),
+                                    ),
+                                  );
                                 },
                               ),
                             ),

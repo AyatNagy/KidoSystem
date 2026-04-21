@@ -26,4 +26,12 @@ final List<LetterJourney> journeyEn = [
     letterData: Enletters[2],
     dragData: EnLetter[2],
   ),
+
+  LetterJourney(
+    image: "assets/images/letters/logo-D.png",
+    isLocked: true,
+    charName: 'D',
+    letterData: Enletters[3],
+    dragData: EnLetter[3],
+  ),
 ];

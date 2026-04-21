@@ -3,6 +3,8 @@ import 'dart:math' as math;
 
 import 'package:kido/constants.dart';
 
+import 'letters/lettersMap.dart';
+
 class LanguageSelectionPage extends StatefulWidget {
   const LanguageSelectionPage({super.key});
 
@@ -75,7 +77,14 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> with Sing
                       cardColor: AppColors.kidoGreen,
                       photoWidthFactor: 1,
                       delay: math.pi,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                            MaterialPageRoute(
+                              builder: (context) => LettersMapPage()
+                            )
+                        );
+                      },
                     ),
                   ],
                 ),

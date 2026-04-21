@@ -30,7 +30,6 @@ class _MysteryBoxState extends State<MysteryBox> with TickerProviderStateMixin {
 
   bool _isBoxOpen = false;
   bool _showLetter = false;
-  bool _canGoNext = false;
 
   @override
   void initState() {
@@ -38,15 +37,18 @@ class _MysteryBoxState extends State<MysteryBox> with TickerProviderStateMixin {
     _audioPlayer = AudioPlayer();
     _boxController = AnimationController(vsync: this);
 
-    _boxController.addStatusListener((status) {
+    _boxController.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
         setState(() {
           _showLetter = true;
-          _canGoNext = true;
         });
 
         String soundPath = widget.model.soundPath.replaceAll('assets/', '');
         _audioPlayer.play(AssetSource(soundPath));
+        await Future.delayed(const Duration(seconds: 3));
+        if(mounted) {
+          widget.onComplete();
+        }
       }
     });
 
@@ -124,26 +126,6 @@ class _MysteryBoxState extends State<MysteryBox> with TickerProviderStateMixin {
                 ),
               ),
             ),
-
-            if (_canGoNext)
-              Positioned(
-                bottom: 50,
-                right: 40,
-                child: TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  duration: const Duration(milliseconds: 500),
-                  builder: (context, value, child) {
-                    return PulseButton(
-                      onPressed: widget.onComplete,
-                      child: Icon(
-                          Icons.play_circle_fill_rounded,
-                          size: 90,
-                          color: widget.model.primaryColor
-                      ),
-                    );
-                  },
-                ),
-              ),
           ],
         ),
       ),
@@ -162,7 +144,6 @@ class _MysteryBoxState extends State<MysteryBox> with TickerProviderStateMixin {
       setState(() {
         _isBoxOpen = false;
         _showLetter = false;
-        _canGoNext = false;
       });
       _boxController.reset();
       _idleController.repeat(reverse: true);

@@ -42,9 +42,17 @@ final List<LetterModel> Enletters = [
 
   LetterModel(
     letterPath: 'assets/images/Letters/Cc.png',
-    animalPath: 'assets/images/cat.png',
+    animalPath: 'assets/images/cat2.png',
     audioName: 'audio/alphabet_en/kid-c.mp3',
     bgColor: AppColors.kidoGreen,
     activeBorder: AppColors.kidoColors[4]
+  ),
+
+  LetterModel(
+      letterPath: 'assets/images/Letters/Dd.png',
+      animalPath: 'assets/images/dog2.png',
+      audioName: 'audio/alphabet_en/kid-d.mp3',
+      bgColor: AppColors.purpleMain,
+      activeBorder: AppColors.kidoColors[2]
   ),
 ];
