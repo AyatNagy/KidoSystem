@@ -21,7 +21,6 @@ class _LettersMapPageState extends State<LettersMapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.kidoGreen,
       body:JourneymapPage(
         journeyData: journeyEn,
         backgroundColor: AppColors.kidoGreen,
@@ -61,14 +60,14 @@ class LetterDetailsFlow extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => BubblePopGame(
-                                targetLetter: item.charName,
+                                targetLetter: item.charName!,
                                 audioPath: item.letterData.audioName,
                                 onNext: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => LetterTracePage(
-                                        letter: item.charName,
+                                        letter: item.charName!,
                                         onComplete: () {
                                           Navigator.of(context)
                                             ..pop()

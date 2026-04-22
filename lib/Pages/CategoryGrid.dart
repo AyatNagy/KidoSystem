@@ -9,6 +9,7 @@ import 'package:kido/Widgets/ThreeDNumberOnePainter.dart';
 import 'package:kido/constants.dart';
 
 import 'level3/choose_letters.dart';
+import 'level3/fruits/fruitsMap.dart';
 
 class CategoryGrid extends StatelessWidget {
   @override
@@ -59,7 +60,14 @@ class CategoryGrid extends StatelessWidget {
           graphic: Center(
             child: AnimatedCuteApple(size: 80),
           ),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FruitsMapPage()
+                )
+            );
+          },
         ),
         CategoryCard(
           title: "Vegetables",

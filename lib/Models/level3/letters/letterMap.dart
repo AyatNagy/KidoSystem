@@ -3,7 +3,7 @@ class LetterJourney {
   bool isLocked;
   final dynamic letterData;
   final dynamic dragData;
-  final String charName;
+  final String? charName;
 
   LetterJourney({
     required this.image,

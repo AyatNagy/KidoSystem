@@ -5,17 +5,22 @@ import '../../../Models/level3/fruits/pixelFruits.dart';
 import '../../../Widgets/content/level3/pixelWidget.dart';
 import '../../../Widgets/puls_button.dart';
 import '../../../constants.dart';
-import '../../../data/level3/fruits/fruits_pixel.dart';
 
 class FruitGamePage extends StatefulWidget {
-  const FruitGamePage({super.key});
+  final PixelFruitModel fruit;
+  final VoidCallback? onComplete;
+
+  const FruitGamePage({
+    super.key,
+    required this.fruit,
+    this.onComplete,
+  });
 
   @override
   State<FruitGamePage> createState() => _FruitGamePageState();
 }
 
 class _FruitGamePageState extends State<FruitGamePage> with TickerProviderStateMixin {
-  int _currentIndex = 0;
   late AudioPlayer _audioPlayer;
   late final AnimationController _cloudController = AnimationController(
     vsync: this,
@@ -41,8 +46,8 @@ class _FruitGamePageState extends State<FruitGamePage> with TickerProviderStateM
 
   void _onFruitComplete() {
     HapticFeedback.heavyImpact();
-    _playFruitSound(fruits[_currentIndex].soundPath);
-    _showCreativeSuccessDialog(fruits[_currentIndex]);
+    _playFruitSound(widget.fruit.soundPath);
+    _showCreativeSuccessDialog(widget.fruit);
   }
 
   void _showCreativeSuccessDialog(PixelFruitModel fruit) {
@@ -92,28 +97,21 @@ class _FruitGamePageState extends State<FruitGamePage> with TickerProviderStateM
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    fruit.title.toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textDark,
-                    ),
-                  ),
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: PulseButton(
                       onPressed: () => _playFruitSound(fruit.soundPath),
                       child: Container(
-                        padding: const EdgeInsets.all(15),
-                        decoration: const BoxDecoration(
-                          color: AppColors.kidoOrange,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: widget.fruit.primaryColor,
                           shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(color: AppColors.kidoOrange, blurRadius: 10, offset: Offset(0, 4))
-                          ],
                         ),
-                        child: const Icon(Icons.volume_up_rounded, size: 45, color: Colors.white),
+                        child: const Icon(
+                          Icons.volume_up,
+                          size: 30,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -122,29 +120,20 @@ class _FruitGamePageState extends State<FruitGamePage> with TickerProviderStateM
                     child: GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
-                        _nextFruit();
+                        _finishLesson();
                       },
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                              colors: [AppColors.kidoGreen, Color(0xFF81C784)]
-                          ),
-                          borderRadius: BorderRadius.circular(25),
-                          boxShadow: [
-                            BoxShadow(color: Colors.green.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 5))
-                          ],
-                        ),
-                        child: const Center(
+                      child: Center(
                           child: Text(
                               "NEXT",
-                              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)
+                              style: TextStyle(
+                                  color: widget.fruit.fruitColor,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold
+                              )
                           ),
                         ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -154,13 +143,11 @@ class _FruitGamePageState extends State<FruitGamePage> with TickerProviderStateM
     );
   }
 
-  void _nextFruit() {
-    if (_currentIndex < fruits.length - 1) {
-      setState(() {
-        _currentIndex++;
-      });
+  void _finishLesson() {
+    if (widget.onComplete != null) {
+      widget.onComplete!();
     } else {
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     }
   }
 
@@ -173,14 +160,13 @@ class _FruitGamePageState extends State<FruitGamePage> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    final currentFruit = fruits[_currentIndex];
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       body: SafeArea(
         child: Column(
           children: [
             const Spacer(),
-            _buildMagicEasel(currentFruit),
+            _buildMagicEasel(widget.fruit),
             const Spacer(),
           ],
         ),
@@ -203,7 +189,6 @@ class _FruitGamePageState extends State<FruitGamePage> with TickerProviderStateM
             right: 50,
             child: Container(width: 15, height: 120, color: Colors.brown.shade300)
         ),
-
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
