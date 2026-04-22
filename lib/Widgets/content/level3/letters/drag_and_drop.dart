@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,9 +44,10 @@ class _DragDropLessonPageState extends State<DragDropLessonPage> {
     super.dispose();
   }
 
-  void _playSound(String path) {
+  void _playSound(String path) async {
     String cleanPath = path.replaceAll('assets/', '');
-    _audioPlayer.play(AssetSource(cleanPath));
+    await _audioPlayer.stop();
+    await _audioPlayer.play(AssetSource(cleanPath));
   }
 
   @override
@@ -64,7 +64,6 @@ class _DragDropLessonPageState extends State<DragDropLessonPage> {
               ),
             ),
           ),
-
           Positioned(
             top: 100,
             left: -40,
@@ -75,7 +74,6 @@ class _DragDropLessonPageState extends State<DragDropLessonPage> {
             right: -20,
             child: _buildBlob(100, Colors.white.withOpacity(0.3)),
           ),
-
           Align(
             alignment: Alignment.bottomCenter,
             child: SizedBox(
@@ -84,23 +82,21 @@ class _DragDropLessonPageState extends State<DragDropLessonPage> {
               child: CustomPaint(painter: CurvePainter()),
             ),
           ),
-
           SafeArea(
             child: DragDropWidget(
               question: widget.questionData,
+              onDragStart: () => _playSound(widget.letterAudio),
               onWrongDrop: () {
                 HapticFeedback.vibrate();
-                _playSound('audio/wrong.wav');
+                _playSound('audio/wrong.mp3');
               },
               onAnswered: (answers) {
                 if (answers.length == widget.questionData.targets.length) {
                   HapticFeedback.heavyImpact();
                   _playSound('audio/win.wav');
-
                   Future.delayed(const Duration(milliseconds: 1000), () {
                     _playSound(widget.letterAudio);
                   });
-
                   setState(() {
                     _isFinished = true;
                   });
@@ -108,7 +104,6 @@ class _DragDropLessonPageState extends State<DragDropLessonPage> {
               },
             ),
           ),
-
           if (_isFinished)
             IgnorePointer(
               child: Lottie.asset(
@@ -119,7 +114,6 @@ class _DragDropLessonPageState extends State<DragDropLessonPage> {
                 height: double.infinity,
               ),
             ),
-
           if (_isFinished)
             Positioned(
               bottom: 50,
