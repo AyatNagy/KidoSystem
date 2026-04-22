@@ -4,7 +4,7 @@ import '../../../Models/dragable_item.dart';
 import '../../../Models/draganddrop_question.dart';
 import '../../../Models/targets_item.dart';
 
- final List<DragDropQuestion> ArLetter = [
+ final List<DragDropQuestion> arLetter = [
 
   DragDropQuestion(
    questionText: 'ألف',
@@ -75,7 +75,7 @@ import '../../../Models/targets_item.dart';
   ),
  ];
 
- final List<DragDropQuestion> EnLetter = [
+ final List<DragDropQuestion> enLetter = [
   DragDropQuestion(
    questionText: 'A',
    items: [

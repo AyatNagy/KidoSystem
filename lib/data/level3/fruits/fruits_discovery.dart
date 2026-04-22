@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../Models/level3/fruits/discoveryFruits.dart';
+import '../../../Models/level3/fruits/discovery_fruits.dart';
 
-final List<FruitsModel> fruits_discovery = [
+final List<FruitsModel> fruitsDiscovery = [
 
   FruitsModel(
       fruitPath: "assets/images/apple.png",
