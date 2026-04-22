@@ -13,12 +13,13 @@ class LetterPathPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..color = color;
+    final paint =
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeWidth
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round
+          ..color = color;
 
     canvas.drawPath(path, paint);
   }
@@ -30,4 +31,3 @@ class LetterPathPainter extends CustomPainter {
         oldDelegate.strokeWidth != strokeWidth;
   }
 }
-

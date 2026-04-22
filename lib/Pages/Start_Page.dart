@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../Widgets/ResponsiveProvider.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
+
 import '../Widgets/appBar.dart';
 import 'onboard_page.dart';
 import 'package:kido/Pages/parent_home_page.dart';

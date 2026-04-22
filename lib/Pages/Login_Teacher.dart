@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 import '../Widgets/appBar.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
-import '../Widgets/ResponsiveProvider.dart';
 
 class TeacherLogin extends StatefulWidget {
   const TeacherLogin({super.key});
@@ -20,7 +20,7 @@ class _TeacherLoginState extends State<TeacherLogin> {
 
   void handle() {
     if (_formKey.currentState!.validate()) {
-      print("success");
+      debugPrint("success");
     }
   }
 
@@ -47,7 +47,7 @@ class _TeacherLoginState extends State<TeacherLogin> {
                       blurRadius: 2,
                       offset: const Offset(0.5, 0.5),
                       color: Colors.black26,
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -90,7 +90,8 @@ class _TeacherLoginState extends State<TeacherLogin> {
                         ),
                       ),
                       validator: Validators.validatePassword,
-                    ),SizedBox(height: config.localHeight * 0.04),
+                    ),
+                    SizedBox(height: config.localHeight * 0.04),
                     Container(
                       width: config.localWidth * 0.45,
                       decoration: BoxDecoration(
@@ -98,7 +99,7 @@ class _TeacherLoginState extends State<TeacherLogin> {
                           colors: [
                             Color(0xff3DF0C4),
                             Color(0xff3BDBE7),
-                            Color(0xff2C8FF9)
+                            Color(0xff2C8FF9),
                           ],
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
@@ -111,7 +112,8 @@ class _TeacherLoginState extends State<TeacherLogin> {
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
                           padding: EdgeInsets.symmetric(
-                              vertical: config.localHeight * 0.02),
+                            vertical: config.localHeight * 0.02,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),

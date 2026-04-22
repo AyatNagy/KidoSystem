@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 import '../Widgets/appBar.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
-import '../Widgets/ResponsiveProvider.dart';
-import '../config/ResponsiveConfig.dart';
 
 class KidoLogin extends StatefulWidget {
   const KidoLogin({super.key});
@@ -20,9 +19,7 @@ class _KidoLoginState extends State<KidoLogin> {
   final _formKey = GlobalKey<FormState>();
 
   void handle() {
-    if (_formKey.currentState!.validate()) {
-      print("success");
-    }
+    if (_formKey.currentState!.validate()) {}
   }
 
   @override

@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Models/OnboardModel.dart';
-import '../Widgets/ResponsiveProvider.dart';
+import 'package:kido/Models/onboard_model.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 import 'appBar.dart';
 
 class OnboardPage extends StatelessWidget {
   final OnboardModel data;
 
-  const OnboardPage({
-    super.key,
-    required this.data,
-  });
+  const OnboardPage({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +25,6 @@ class OnboardPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -48,7 +44,7 @@ class OnboardPage extends StatelessWidget {
                       data.title,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily:'tinyKids',
+                        fontFamily: 'tinyKids',
                         fontSize: responsive.localWidth * 0.07,
                         fontWeight: FontWeight.bold,
                         color: data.color,

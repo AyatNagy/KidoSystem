@@ -1,7 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:kido/Models/chioce_question.dart';
-import 'package:kido/Widgets/ResponsiveProvider.dart';
-import '../../config/ResponsiveConfig.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
+import '../../config/responsive_config.dart';
 
 typedef OnChoiceSelected = void Function(int selectedIndex);
 
@@ -61,7 +63,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
     }
   }
 
- Widget _buildImageChoicesLayout(ResponsiveConfig config) {
+  Widget _buildImageChoicesLayout(ResponsiveConfig config) {
     final choices = widget.question.choices!;
 
     return Container(
@@ -93,10 +95,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
                   ),
                   padding: EdgeInsets.all(config.localWidth * 0.01),
                   child: Center(
-                    child: Image.asset(
-                      choice,
-                      fit: BoxFit.fitHeight,
-                    ),
+                    child: Image.asset(choice, fit: BoxFit.fitHeight),
                   ),
                 ),
               ),
@@ -120,10 +119,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
 
     if (selectedColor != null) {
       imageWidget = ColorFiltered(
-        colorFilter: ColorFilter.mode(
-          selectedColor,
-          BlendMode.modulate,
-        ),
+        colorFilter: ColorFilter.mode(selectedColor, BlendMode.modulate),
         child: imageWidget,
       );
     }
@@ -142,8 +138,8 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemCount: colors.length,
-              separatorBuilder: (context, index) =>
-                  SizedBox(width: config.localWidth * 0.05),
+              separatorBuilder:
+                  (context, index) => SizedBox(width: config.localWidth * 0.05),
               itemBuilder: (context, index) {
                 final color = colors[index];
                 final isSelected = selectedIndex == index;
@@ -157,9 +153,10 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
                       color: color,
                       shape: BoxShape.circle,
                       boxShadow: isSelected ? glowBoxShadow : defaultBoxShadow,
-                      border: isSelected
-                          ? Border.all(color: Colors.white, width: 4)
-                          : null,
+                      border:
+                          isSelected
+                              ? Border.all(color: Colors.white, width: 4)
+                              : null,
                     ),
                   ),
                 );

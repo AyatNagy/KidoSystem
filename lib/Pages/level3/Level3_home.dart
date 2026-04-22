@@ -1,5 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/CategoryGrid.dart';
+import 'package:kido/Pages/category_grid.dart';
 import 'package:kido/constants.dart';
 
 class Level3Home extends StatelessWidget {

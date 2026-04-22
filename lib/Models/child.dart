@@ -23,13 +23,15 @@ class Child {
       username: json['username'],
       password: json['password'] ?? '',
       name: json['name'],
-      dateOfBirth: json['dateOfBirth'] != null
-          ? DateTime.tryParse(json['dateOfBirth'])
-          : null,
+      dateOfBirth:
+          json['dateOfBirth'] != null
+              ? DateTime.tryParse(json['dateOfBirth'])
+              : null,
       motherId: json['motherId'],
-      createdAt: json['createdAt'] != null
-          ? DateTime.tryParse(json['createdAt'])
-          : null,
+      createdAt:
+          json['createdAt'] != null
+              ? DateTime.tryParse(json['createdAt'])
+              : null,
     );
   }
 
@@ -39,8 +41,8 @@ class Child {
       'password': password,
       'name': name,
       if (dateOfBirth != null)
-        'dateOfBirth': dateOfBirth!.toIso8601String().split('T')[0], // YYYY-MM-DD format
+        'dateOfBirth':
+            dateOfBirth!.toIso8601String().split('T')[0], // YYYY-MM-DD format
     };
   }
 }
-

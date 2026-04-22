@@ -17,4 +17,3 @@ class GoogleAuthFailure extends GoogleAuthState {
 
   GoogleAuthFailure(this.errorMessage);
 }
-

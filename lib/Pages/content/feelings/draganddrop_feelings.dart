@@ -1,9 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 
-import '../../../Widgets/ResponsiveProvider.dart';
 import '../../../controllers/feelings_data.dart';
 
 class DraganddropFeelings extends StatefulWidget {
@@ -29,7 +31,9 @@ class _DraganddropFeelingsState extends State<DraganddropFeelings> {
 
     if (item['sound'] != null) {
       await _audioPlayer.stop();
-      await _audioPlayer.play(AssetSource(item['sound']!.replaceFirst('assets/', '')));
+      await _audioPlayer.play(
+        AssetSource(item['sound']!.replaceFirst('assets/', '')),
+      );
     }
 
     setState(() {
@@ -66,7 +70,9 @@ class _DraganddropFeelingsState extends State<DraganddropFeelings> {
                   height: config.localHeight,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(40),
-                    boxShadow: [const BoxShadow(color: Colors.black12, blurRadius: 20)],
+                    boxShadow: [
+                      const BoxShadow(color: Colors.black12, blurRadius: 20),
+                    ],
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(40),
@@ -139,17 +145,24 @@ class _DraganddropFeelingsState extends State<DraganddropFeelings> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
-            color: isDragging ? Colors.orangeAccent : Colors.lightBlueAccent,
-            width: 6
+          color: isDragging ? Colors.orangeAccent : Colors.lightBlueAccent,
+          width: 6,
         ),
-        boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4))],
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
         child: Image.asset(
           imagePath,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 50),
+          errorBuilder:
+              (context, error, stackTrace) => const Icon(Icons.error, size: 50),
         ),
       ),
     );
@@ -164,11 +177,36 @@ class _DraganddropFeelingsState extends State<DraganddropFeelings> {
           setState(() {
             currentBoyPhoto = 'assets/images/normal.png';
             activeChoices = [
-              {'id': '1', 'action': 'assets/images/gift.png', 'reaction': 'assets/images/happy_boy.png', 'sound': 'assets/audio/happy.mp3'},
-              {'id': '2', 'action': 'assets/images/medal.png', 'reaction': 'assets/images/proudBoy.png', 'sound': 'assets/audio/clap.mp3'},
-              {'id': '3', 'action': 'assets/images/ghost.png', 'reaction': 'assets/images/scared_boy.png', 'sound': 'assets/audio/scream.mp3'},
-              {'id': '4', 'action': 'assets/images/broken_heart.png', 'reaction': 'assets/images/sad_boy.png', 'sound': 'assets/audio/sad.wav'},
-              {'id': '5', 'action': 'assets/images/popped_ballon.png', 'reaction': 'assets/images/angry_boy.png', 'sound': 'assets/audio/angry.mp3'}
+              {
+                'id': '1',
+                'action': 'assets/images/gift.png',
+                'reaction': 'assets/images/happy_boy.png',
+                'sound': 'assets/audio/happy.mp3',
+              },
+              {
+                'id': '2',
+                'action': 'assets/images/medal.png',
+                'reaction': 'assets/images/proudBoy.png',
+                'sound': 'assets/audio/clap.mp3',
+              },
+              {
+                'id': '3',
+                'action': 'assets/images/ghost.png',
+                'reaction': 'assets/images/scared_boy.png',
+                'sound': 'assets/audio/scream.mp3',
+              },
+              {
+                'id': '4',
+                'action': 'assets/images/broken_heart.png',
+                'reaction': 'assets/images/sad_boy.png',
+                'sound': 'assets/audio/sad.wav',
+              },
+              {
+                'id': '5',
+                'action': 'assets/images/popped_ballon.png',
+                'reaction': 'assets/images/angry_boy.png',
+                'sound': 'assets/audio/angry.mp3',
+              },
             ];
           });
         },

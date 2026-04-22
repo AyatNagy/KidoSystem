@@ -1,6 +1,8 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/level3/Level3_home.dart';
-import 'package:kido/Widgets/ResponsiveProvider.dart';
+import 'package:kido/Pages/level3/level3_home.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 
 class ChildLevelSelectResult {
   final int level; // 1..3
@@ -38,7 +40,7 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> {
     // كل level بيفتح صفحته المناسبة مباشرة
     switch (level) {
       case 1:
-        // TODO: استبدليه بصفحة Level 1 لما تجهزيها
+        //todo: استبدليه بصفحة Level 1 لما تجهزيها
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -50,7 +52,7 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> {
         );
         break;
       case 2:
-        // TODO: استبدليه بصفحة Level 2 لما تجهزيها
+        // todo: استبدليه بصفحة Level 2 لما تجهزيها
         Navigator.push(
           context,
           MaterialPageRoute(

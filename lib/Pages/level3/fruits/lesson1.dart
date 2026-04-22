@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../Widgets/content/level3/discoveryWidget.dart';
+import '../../../Widgets/content/level3/discovery_widget.dart';
 import '../../../data/level3/fruits/fruits_discovery.dart';
 import '../../../data/level3/fruits/fruits_pixel.dart';
+
 class FruitDiscoveryScreen extends StatefulWidget {
   const FruitDiscoveryScreen({super.key});
 
@@ -17,16 +18,14 @@ class _FruitDiscoveryScreenState extends State<FruitDiscoveryScreen> {
       if (_currentIndex < fruits.length - 1) {
         _currentIndex++;
       } else {
-        Navigator.pop(context); }
+        Navigator.pop(context);
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentFruit = fruits_discovery[_currentIndex];
-    return DiscoveryPage(
-      model: currentFruit,
-      onNextPressed: _handleNext
-    );
+    final currentFruit = fruitsDiscovery[_currentIndex];
+    return DiscoveryPage(model: currentFruit, onNextPressed: _handleNext);
   }
 }

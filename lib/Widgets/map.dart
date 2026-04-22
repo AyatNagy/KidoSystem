@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
@@ -85,14 +87,15 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
               child: Padding(
                 padding: EdgeInsets.only(left: xOffset),
                 child: ScaleTransition(
-                  scale: widget.lesson.isLocked
-                      ? const AlwaysStoppedAnimation(1.0)
-                      : Tween(begin: 1.0, end: 1.1).animate(
-                    CurvedAnimation(
-                      parent: _pulseController,
-                      curve: Curves.easeInOut,
-                    ),
-                  ),
+                  scale:
+                      widget.lesson.isLocked
+                          ? const AlwaysStoppedAnimation(1.0)
+                          : Tween(begin: 1.0, end: 1.1).animate(
+                            CurvedAnimation(
+                              parent: _pulseController,
+                              curve: Curves.easeInOut,
+                            ),
+                          ),
                   child: GestureDetector(
                     onTapDown: (_) {
                       HapticFeedback.heavyImpact();
@@ -107,7 +110,10 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
                       width: nodeSize,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: widget.lesson.isLocked ? lockedColor : widget.buttonColor,
+                        color:
+                            widget.lesson.isLocked
+                                ? lockedColor
+                                : widget.buttonColor,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.2),
@@ -131,9 +137,14 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
                           ),
                         ),
                         child: Center(
-                          child: widget.lesson.isLocked
-                              ? const Icon(Icons.lock_rounded, color: Colors.white, size: 50)
-                              : Image.asset(widget.lesson.image, width: 70),
+                          child:
+                              widget.lesson.isLocked
+                                  ? const Icon(
+                                    Icons.lock_rounded,
+                                    color: Colors.white,
+                                    size: 50,
+                                  )
+                                  : Image.asset(widget.lesson.image, width: 70),
                         ),
                       ),
                     ),
@@ -161,28 +172,23 @@ class _CurvePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 45
-      ..strokeCap = StrokeCap.round;
+    final paint =
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 45
+          ..strokeCap = StrokeCap.round;
 
-    final borderPaint = Paint()
-      ..color = Colors.black.withOpacity(0.05)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 52
-      ..strokeCap = StrokeCap.round;
+    final borderPaint =
+        Paint()
+          ..color = Colors.black.withOpacity(0.05)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 52
+          ..strokeCap = StrokeCap.round;
 
     final path = Path();
     path.moveTo(startX, 0);
-    path.cubicTo(
-      startX,
-      height * 0.5,
-      endX,
-      height * 0.5,
-      endX,
-      height,
-    );
+    path.cubicTo(startX, height * 0.5, endX, height * 0.5, endX, height);
 
     canvas.drawPath(path, borderPaint);
     canvas.drawPath(path, paint);

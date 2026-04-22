@@ -2,26 +2,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Models/placement_exam_model.dart';
 import 'package:kido/api_service/api_services.dart';
 
-part  'placement_exam_state.dart';
+part 'placement_exam_state.dart';
 
-class PlacementExamCubit extends Cubit<PlacementExamState>{
-  PlacementExamCubit():super(PlacementExamInitial());
+class PlacementExamCubit extends Cubit<PlacementExamState> {
+  PlacementExamCubit() : super(PlacementExamInitial());
 
   Future<void> fetchPlacementExam({
     required int age,
     required int childId,
-  })async {
+  }) async {
     emit(PlacementExamLoading());
 
-    try{
+    try {
       final result = await ApiService.getPlacementExam(
-        age: age, 
-        childId: childId
-        );
-        emit(PlacementExamLoaded(result));
-
-
-    }catch(e){
+        age: age,
+        childId: childId,
+      );
+      emit(PlacementExamLoaded(result));
+    } catch (e) {
       emit(PlacementExamError('Failed to load placement exam'));
     }
   }
@@ -30,23 +28,21 @@ class PlacementExamCubit extends Cubit<PlacementExamState>{
     required int childId,
     required int placementExamId,
     required double score,
-
-  })async{
+  }) async {
     emit(PlacementExamLoading());
-    try{
+    try {
       final result = await ApiService.submitPlacementExam(
-        childId:childId,
-        placementExamId:placementExamId,
-        score:score,
+        childId: childId,
+        placementExamId: placementExamId,
+        score: score,
       );
 
-      if(result['passed']==true){
+      if (result['passed'] == true) {
         emit(PlacementExamPassed(result['level']));
-      }else{
+      } else {
         emit(PlacementExamRetry(result['retryPlacementExam']));
       }
-
-    }catch(e){
+    } catch (e) {
       emit(PlacementExamError(e.toString()));
     }
   }

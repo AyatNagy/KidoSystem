@@ -46,7 +46,10 @@ class _DragDropWidgetState extends State<DragDropWidget> {
         if (widget.question.backgroundImage != null) {
           stackChildren.add(
             Positioned.fill(
-              child: Image.asset(widget.question.backgroundImage!, fit: BoxFit.contain),
+              child: Image.asset(
+                widget.question.backgroundImage!,
+                fit: BoxFit.contain,
+              ),
             ),
           );
         }
@@ -59,8 +62,10 @@ class _DragDropWidgetState extends State<DragDropWidget> {
               width: containerSize.width * target.size.width,
               height: containerSize.height * target.size.height,
               child: DragTarget<String>(
-                onWillAccept: (itemId) => target.acceptedItemIds.contains(itemId),
-                onAccept: (itemId) {
+                onWillAcceptWithDetails:
+                    (details) => target.acceptedItemIds.contains(details.data),
+                onAcceptWithDetails: (details) {
+                  final itemId = details.data;
                   HapticFeedback.mediumImpact();
                   setState(() {
                     targetOccupied.removeWhere((k, v) => v == itemId);
@@ -96,12 +101,16 @@ class _DragDropWidgetState extends State<DragDropWidget> {
 
         for (var item in widget.question.items) {
           String? currentTargetId;
-          targetOccupied.forEach((tId, iId) { if (iId == item.id) currentTargetId = tId; });
+          targetOccupied.forEach((tId, iId) {
+            if (iId == item.id) currentTargetId = tId;
+          });
 
           double left, top, width, height;
 
           if (currentTargetId != null) {
-            final target = widget.question.targets.firstWhere((t) => t.id == currentTargetId);
+            final target = widget.question.targets.firstWhere(
+              (t) => t.id == currentTargetId,
+            );
             left = containerSize.width * target.position.dx;
             top = containerSize.height * target.position.dy;
             width = containerSize.width * target.size.width;
@@ -127,7 +136,12 @@ class _DragDropWidgetState extends State<DragDropWidget> {
                 feedback: SimpleShadow(
                   opacity: 0.5,
                   offset: const Offset(10, 10),
-                  child: Image.asset(item.image, width: width, height: height, fit: BoxFit.contain),
+                  child: Image.asset(
+                    item.image,
+                    width: width,
+                    height: height,
+                    fit: BoxFit.contain,
+                  ),
                 ),
                 childWhenDragging: SimpleShadow(
                   opacity: 0.2,

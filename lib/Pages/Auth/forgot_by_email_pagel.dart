@@ -17,7 +17,7 @@ class ForgotByEmail extends StatelessWidget {
     final TextEditingController emailController = TextEditingController(
       text: email ?? '',
     );
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return BlocProvider(
       create: (context) => ForgetPasswordCubit(),
@@ -69,7 +69,7 @@ class ForgotByEmail extends StatelessWidget {
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               child: Form(
-                key: _formKey,
+                key: formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -124,7 +124,7 @@ class ForgotByEmail extends StatelessWidget {
                       onPressed:
                           !isLoading
                               ? () {
-                                if (_formKey.currentState!.validate()) {
+                                if (formKey.currentState!.validate()) {
                                   final email = emailController.text;
                                   cubit.forgetPassword(email);
                                 }

@@ -49,8 +49,8 @@ class Validators {
     return null;
   }
 
-  static String? validateLoginPassword(String? password){
-    if(password == null || password.isEmpty){
+  static String? validateLoginPassword(String? password) {
+    if (password == null || password.isEmpty) {
       return "Please enter your password!";
     }
     return null;
@@ -73,6 +73,7 @@ class Validators {
 
     return null;
   }
+
   static String? validateUsername(String? username) {
     final trimmed = username?.trim();
     if (trimmed == null || trimmed.isEmpty) {
@@ -86,9 +87,12 @@ class Validators {
     }
     return null;
   }
+
   static String? validatePhone(String? phone) {
     final trimmed = phone?.trim();
-    final phoneRegex = RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$');
+    final phoneRegex = RegExp(
+      r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
+    );
 
     if (trimmed == null || trimmed.isEmpty) {
       return "Please enter your phone number!";
@@ -98,16 +102,15 @@ class Validators {
     }
     return null;
   }
+
   static String? validateAge(String? value) {
-    if (value == null || value.trim().isEmpty){
+    if (value == null || value.trim().isEmpty) {
       return "Please enter the child's age!";
     }
     final age = int.tryParse(value);
-    if (age == null || age <= 0){
+    if (age == null || age <= 0) {
       return "Please enter a valid age";
     }
     return null;
   }
 }
-
-

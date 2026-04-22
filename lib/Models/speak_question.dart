@@ -1,6 +1,6 @@
-import 'package:kido/Models/questionModel.dart';
+import 'package:kido/Models/question_model.dart';
 
-class SpeakQuestion extends Question{
+class SpeakQuestion extends Question {
   final String image;
   final List<String> acceptedAnswers;
 
@@ -17,21 +17,13 @@ final List<SpeakQuestion> allSpaekQuestions = [
     examId: ['exam1'],
     questionText: "اسم الشكل",
     image: "assets/images/circle-shape.png",
-    acceptedAnswers: [
-      "دايره",
-      "دايرة",
-      "دائرة",
-    ],
+    acceptedAnswers: ["دايره", "دايرة", "دائرة"],
   ),
 
   SpeakQuestion(
-      examId: ['exam2'],
-      questionText: "اسم الحيوان",
-      image: "assets/images/cat2.png",
-      acceptedAnswers: [
-        "قطة",
-        "قطه",
-        "قط",
-      ],
-  )
+    examId: ['exam2'],
+    questionText: "اسم الحيوان",
+    image: "assets/images/cat2.png",
+    acceptedAnswers: ["قطة", "قطه", "قط"],
+  ),
 ];

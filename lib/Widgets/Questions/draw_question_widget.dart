@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 import '../../Models/draw_question.dart';
-import '../ResponsiveProvider.dart';
 
 class DrawingPoint {
   Offset point;
@@ -112,9 +112,11 @@ class _DrawingQuestionWidgetState extends State<DrawingQuestionWidget> {
               onPanEnd: _onPanEnd,
               child: CustomPaint(
                 painter: DrawingPainter(
-                    [...paths.expand((p) => p), ...currentPath]
-                        .map((dp) => dp.point)
-                        .toList()),
+                  [
+                    ...paths.expand((p) => p),
+                    ...currentPath,
+                  ].map((dp) => dp.point).toList(),
+                ),
                 size: Size.infinite,
               ),
             ),
@@ -130,10 +132,13 @@ class _DrawingQuestionWidgetState extends State<DrawingQuestionWidget> {
               label: const Text('Undo'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFFFFDAB9),
-                padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
             ElevatedButton.icon(
@@ -142,10 +147,13 @@ class _DrawingQuestionWidgetState extends State<DrawingQuestionWidget> {
               label: const Text('Redo'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xff4bd6ac),
-                padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
             ElevatedButton.icon(
@@ -154,10 +162,13 @@ class _DrawingQuestionWidgetState extends State<DrawingQuestionWidget> {
               label: const Text('Clear'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xffff8a65),
-                padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
           ],
@@ -175,11 +186,12 @@ class DrawingPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (points.isEmpty) return;
-    final paint = Paint()
-      ..color = Colors.blue
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 12.0
-      ..style = PaintingStyle.stroke;
+    final paint =
+        Paint()
+          ..color = Colors.blue
+          ..strokeCap = StrokeCap.round
+          ..strokeWidth = 12.0
+          ..style = PaintingStyle.stroke;
 
     Path path = Path();
     path.moveTo(points.first.dx, points.first.dy);

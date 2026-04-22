@@ -1,6 +1,6 @@
-import 'package:kido/Models/questionModel.dart';
+import 'package:kido/Models/question_model.dart';
 
-class DrawingQuestion extends Question{
+class DrawingQuestion extends Question {
   final String targetShape;
   final String image;
 
@@ -14,15 +14,15 @@ class DrawingQuestion extends Question{
 
 final List<DrawingQuestion> allDrawingQuestions = [
   DrawingQuestion(
-      examId: ['exam1'],
-      questionText: "'V' ارسم حرف ",
-      targetShape: 'V-shape',
-      image: "assets/images/letterV.png"
+    examId: ['exam1'],
+    questionText: "'V' ارسم حرف ",
+    targetShape: 'V-shape',
+    image: "assets/images/letterV.png",
   ),
   DrawingQuestion(
-      examId: ['exam2'],
-      questionText: "ارسم دائرة",
-      targetShape: 'Circle',
-      image: "assets/images/circle.png"
+    examId: ['exam2'],
+    questionText: "ارسم دائرة",
+    targetShape: 'Circle',
+    image: "assets/images/circle.png",
   ),
 ];

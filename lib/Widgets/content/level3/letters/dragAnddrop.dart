@@ -1,9 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../Models/draganddrop_question.dart';
-import '../../../curclePainter.dart';
+import '../../../curcle_painter.dart';
 import '../../../draganddrop.dart';
 import '../../../puls_button.dart';
 
@@ -63,8 +65,16 @@ class _DragDropLessonPageState extends State<DragDropLessonPage> {
             ),
           ),
 
-          Positioned(top: 100, left: -40, child: _buildBlob(150, Colors.white.withOpacity(0.4))),
-          Positioned(top: 250, right: -20, child: _buildBlob(100, Colors.white.withOpacity(0.3))),
+          Positioned(
+            top: 100,
+            left: -40,
+            child: _buildBlob(150, Colors.white.withOpacity(0.4)),
+          ),
+          Positioned(
+            top: 250,
+            right: -20,
+            child: _buildBlob(100, Colors.white.withOpacity(0.3)),
+          ),
 
           Align(
             alignment: Alignment.bottomCenter,
@@ -139,7 +149,8 @@ class _DragDropLessonPageState extends State<DragDropLessonPage> {
 
   Widget _buildBlob(double size, Color color) {
     return Container(
-      width: size, height: size,
+      width: size,
+      height: size,
       decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }

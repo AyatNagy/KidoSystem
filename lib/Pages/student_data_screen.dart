@@ -5,20 +5,15 @@ import 'package:kido/Pages/child_profile_setup_page.dart';
 import 'package:kido/Pages/exam_screen.dart';
 import '../Widgets/appBar.dart';
 import '../Widgets/text_field_item.dart';
-import '../Widgets/ResponsiveProvider.dart';
+import '../Widgets/responsiveprovider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/validators.dart';
 import '../Widgets/dialog_widget.dart';
-import '../Models/dailogModel.dart';
+import '../Models/dailog_model.dart';
 import '../api_service/api_services.dart';
 import '../Models/child.dart';
 import '../config/cache_helper.dart';
 import 'package:kido/Widgets/password_errors_view.dart';
-
-import 'kid-page.dart';
-
-
-
 
 class StudentData extends StatefulWidget {
   const StudentData({super.key});
@@ -55,10 +50,7 @@ class _StudentDataState extends State<StudentData> {
         //passwordError = Validators.validatePassword(passwordController.text);
       });
 
-      if (nameError != null ||
-          usernameError != null ||
-          ageError != null 
-         ) {
+      if (nameError != null || usernameError != null || ageError != null) {
         return;
       }
 
@@ -91,13 +83,15 @@ class _StudentDataState extends State<StudentData> {
           }
 
           if (childAge < 3) {
-            CustomDialog(
+            if (!mounted) return;
+            customDialog(
               context,
-              dialogModel(
+              DailogModel(
                 title: "Level Assigned",
-                message: "Since $childName is under 3 years old, they will start at Level 1 to enjoy age-appropriate activities.",
+                message:
+                    "Since $childName is under 3 years old, they will start at Level 1 to enjoy age-appropriate activities.",
                 image: 'assets/images/exam.png',
-                buttonText: "Start Journey"
+                buttonText: "Start Journey",
               ),
               titleColor: const Color(0xff4CAF50),
               onNextPressed: () async {
@@ -109,16 +103,17 @@ class _StudentDataState extends State<StudentData> {
                 );
                 if (!mounted || setup == null) return;
 
-                final pickedLevel = await Navigator.push<ChildLevelSelectResult>(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (_) => ChildLevelSelectPage(
-                          childName: setup.childName,
-                          recommendedLevel: 1,
-                        ),
-                  ),
-                );
+                final pickedLevel =
+                    await Navigator.push<ChildLevelSelectResult>(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (_) => ChildLevelSelectPage(
+                              childName: setup.childName,
+                              recommendedLevel: 1,
+                            ),
+                      ),
+                    );
                 if (!mounted || pickedLevel == null) return;
 
                 Navigator.pop(context, {
@@ -131,13 +126,15 @@ class _StudentDataState extends State<StudentData> {
               },
             );
           } else {
-            String examId = (childAge >= 3 && childAge <= 5) ? 'exam2' : 'exam1';
-
-            CustomDialog(
+            String examId =
+                (childAge >= 3 && childAge <= 5) ? 'exam2' : 'exam1';
+            if (!mounted) return;
+            customDialog(
               context,
-              dialogModel(
+              DailogModel(
                 title: "Level Assessment",
-                message: "To provide the best experience for $childName, we need to perform a quick exam to determine their current level.",
+                message:
+                    "To provide the best experience for $childName, we need to perform a quick exam to determine their current level.",
                 image: 'assets/images/exam.png',
               ),
               titleColor: const Color(0xfff06292),
@@ -145,10 +142,11 @@ class _StudentDataState extends State<StudentData> {
                 final double? scoreResult = await Navigator.push<double>(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => ExamSkeletonScreen(
-                      examId: examId,
-                      childName: childName,
-                    ),
+                    builder:
+                        (_) => ExamSkeletonScreen(
+                          examId: examId,
+                          childName: childName,
+                        ),
                   ),
                 );
 
@@ -157,13 +155,16 @@ class _StudentDataState extends State<StudentData> {
                   final setup = await Navigator.push<ChildProfileSetupResult>(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => ChildProfileSetupPage(childName: childName),
+                      builder:
+                          (_) => ChildProfileSetupPage(childName: childName),
                     ),
                   );
 
                   if (!mounted || setup == null) return;
 
-                  final recommendedLevel = _recommendLevelFromScore(scoreResult);
+                  final recommendedLevel = _recommendLevelFromScore(
+                    scoreResult,
+                  );
                   final pickedLevel =
                       await Navigator.push<ChildLevelSelectResult>(
                         context,
@@ -200,7 +201,6 @@ class _StudentDataState extends State<StudentData> {
           }
         }
       } catch (e) {
-        print('Error: $e');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('حدث خطأ: $e'), backgroundColor: Colors.red),
@@ -329,7 +329,7 @@ class _StudentDataState extends State<StudentData> {
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(
-                                () => isPasswordVisible = !isPasswordVisible,
+                            () => isPasswordVisible = !isPasswordVisible,
                           );
                         },
                         icon: Icon(
@@ -341,13 +341,14 @@ class _StudentDataState extends State<StudentData> {
                       ),
                     ),
 
-                   
-                   const SizedBox(height: 3,),
-                    
-                      Container(
-                        width: double.infinity,
-                        child: PasswordErrorsView(password: passwordController.text)
+                    const SizedBox(height: 3),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: PasswordErrorsView(
+                        password: passwordController.text,
                       ),
+                    ),
                     SizedBox(height: config.localHeight * 0.04),
                     Container(
                       width: config.localWidth * 0.6,
@@ -373,25 +374,26 @@ class _StudentDataState extends State<StudentData> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
-                        child: isLoading
-                            ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
-                            ),
-                            strokeWidth: 2,
-                          ),
-                        )
-                            : Text(
-                          "Add My Little Star",
-                          style: TextStyle(
-                            fontSize: config.title,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        child:
+                            isLoading
+                                ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                                : Text(
+                                  "Add My Little Star",
+                                  style: TextStyle(
+                                    fontSize: config.title,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                       ),
                     ),
                   ],

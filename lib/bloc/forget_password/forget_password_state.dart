@@ -18,4 +18,3 @@ class ForgetPasswordFailure extends ForgetPasswordState {
 
   ForgetPasswordFailure(this.errorMessage);
 }
-

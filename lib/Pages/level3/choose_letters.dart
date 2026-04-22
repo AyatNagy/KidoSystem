@@ -1,9 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import 'package:kido/constants.dart';
 
-import 'letters/lettersMap.dart';
+import 'letters/letters_map.dart';
 
 class LanguageSelectionPage extends StatefulWidget {
   const LanguageSelectionPage({super.key});
@@ -12,7 +14,8 @@ class LanguageSelectionPage extends StatefulWidget {
   State<LanguageSelectionPage> createState() => _LanguageSelectionPageState();
 }
 
-class _LanguageSelectionPageState extends State<LanguageSelectionPage> with SingleTickerProviderStateMixin {
+class _LanguageSelectionPageState extends State<LanguageSelectionPage>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _mainController;
 
   @override
@@ -80,9 +83,9 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> with Sing
                       onTap: () {
                         Navigator.push(
                           context,
-                            MaterialPageRoute(
-                              builder: (context) => LettersMapPage()
-                            )
+                          MaterialPageRoute(
+                            builder: (context) => LettersMapPage(),
+                          ),
                         );
                       },
                     ),
@@ -107,7 +110,9 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> with Sing
     return AnimatedBuilder(
       animation: _mainController,
       builder: (context, child) {
-        final floatValue = math.sin(_mainController.value * 2 * math.pi + delay);
+        final floatValue = math.sin(
+          _mainController.value * 2 * math.pi + delay,
+        );
 
         return Transform.translate(
           offset: Offset(0, 10 * floatValue),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Widgets/ResponsiveProvider.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 
 class ChildProfileSetupResult {
   final String childName;

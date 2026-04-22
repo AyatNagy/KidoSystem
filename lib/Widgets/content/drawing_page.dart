@@ -1,16 +1,14 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import '../ResponsiveProvider.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 
 class Drawing extends StatefulWidget {
   final String? instructionText;
   final List<Offset>? guidePoints;
 
-  const Drawing({
-    super.key,
-    this.instructionText,
-    this.guidePoints,
-  });
+  const Drawing({super.key, this.instructionText, this.guidePoints});
 
   @override
   State<Drawing> createState() => _DrawingState();
@@ -45,7 +43,11 @@ class _DrawingState extends State<Drawing> {
     }
   }
 
-  void _handlePanUpdate(DragUpdateDetails details, List<Offset>? actualGuidePoints, RenderBox renderBox) {
+  void _handlePanUpdate(
+    DragUpdateDetails details,
+    List<Offset>? actualGuidePoints,
+    RenderBox renderBox,
+  ) {
     Offset touchPosition = renderBox.globalToLocal(details.globalPosition);
     Offset positionToDraw = touchPosition;
 
@@ -70,9 +72,10 @@ class _DrawingState extends State<Drawing> {
 
     List<Offset>? actualGuidePoints;
     if (widget.guidePoints != null) {
-      actualGuidePoints = widget.guidePoints!.map((p) {
-        return Offset(p.dx * config.localWidth, p.dy * config.localHeight);
-      }).toList();
+      actualGuidePoints =
+          widget.guidePoints!.map((p) {
+            return Offset(p.dx * config.localWidth, p.dy * config.localHeight);
+          }).toList();
     }
 
     return Stack(
@@ -107,7 +110,9 @@ class _DrawingState extends State<Drawing> {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.9),
               borderRadius: BorderRadius.circular(40),
-              boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
+              boxShadow: const [
+                BoxShadow(color: Colors.black12, blurRadius: 10),
+              ],
             ),
             child: Center(
               child: Row(
@@ -128,21 +133,26 @@ class _DrawingState extends State<Drawing> {
                             color: color,
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 2),
-                            boxShadow: isSelected
-                                ? [
-                              BoxShadow(
-                                  color: color.withOpacity(0.5),
-                                  blurRadius: 12,
-                                  spreadRadius: 4)
-
-                            ]
-                                : [],
+                            boxShadow:
+                                isSelected
+                                    ? [
+                                      BoxShadow(
+                                        color: color.withOpacity(0.5),
+                                        blurRadius: 12,
+                                        spreadRadius: 4,
+                                      ),
+                                    ]
+                                    : [],
                           ),
                         ),
                       ),
                     );
                   }),
-                  const VerticalDivider(indent: 15, endIndent: 15, color: Colors.black12),
+                  const VerticalDivider(
+                    indent: 15,
+                    endIndent: 15,
+                    color: Colors.black12,
+                  ),
                   IconButton(
                     icon: Icon(
                       Icons.delete,
@@ -163,11 +173,17 @@ class _DrawingState extends State<Drawing> {
             right: config.localWidth * 0.1,
             child: Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: selectedColor.withOpacity(0.3), width: 2),
+                  border: Border.all(
+                    color: selectedColor.withOpacity(0.3),
+                    width: 2,
+                  ),
                 ),
                 child: Text(
                   widget.instructionText!,
@@ -179,7 +195,7 @@ class _DrawingState extends State<Drawing> {
                 ),
               ),
             ),
-          )
+          ),
       ],
     );
   }
@@ -196,19 +212,21 @@ class SimplePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (guidePoints != null) {
-      Paint guidePaint = Paint()
-        ..color = Colors.black12
-        ..style = PaintingStyle.fill;
+      Paint guidePaint =
+          Paint()
+            ..color = Colors.black12
+            ..style = PaintingStyle.fill;
 
       for (var dot in guidePoints!) {
         canvas.drawCircle(dot, width * 0.6, guidePaint);
       }
     }
 
-    Paint paint = Paint()
-      ..color = color
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = width;
+    Paint paint =
+        Paint()
+          ..color = color
+          ..strokeCap = StrokeCap.round
+          ..strokeWidth = width;
 
     for (int i = 0; i < points.length - 1; i++) {
       if (points[i] != null && points[i + 1] != null) {

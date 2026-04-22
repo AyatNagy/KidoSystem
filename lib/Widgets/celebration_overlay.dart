@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
@@ -53,18 +55,17 @@ class _CelebrationOverlayState extends State<CelebrationOverlay>
       color: Colors.transparent,
       child: Stack(
         children: [
-          Positioned.fill(
-            child: Container(color: Colors.black45),
-          ),
+          Positioned.fill(child: Container(color: Colors.black45)),
           Positioned.fill(
             child: AnimatedBuilder(
               animation: _confettiController,
-              builder: (_, __) => CustomPaint(
-                painter: _ConfettiPainter(
-                  particles: _particles,
-                  progress: _confettiController.value,
-                ),
-              ),
+              builder:
+                  (_, __) => CustomPaint(
+                    painter: _ConfettiPainter(
+                      particles: _particles,
+                      progress: _confettiController.value,
+                    ),
+                  ),
             ),
           ),
           Center(
@@ -175,9 +176,7 @@ class _CelebrationOverlayState extends State<CelebrationOverlay>
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(color: color.withOpacity(0.4), blurRadius: 8),
-          ],
+          boxShadow: [BoxShadow(color: color.withOpacity(0.4), blurRadius: 8)],
         ),
         child: Row(
           children: [
@@ -214,12 +213,12 @@ class _ConfettiParticle {
   final double rotation;
 
   _ConfettiParticle(math.Random rnd)
-      : x = rnd.nextDouble(),
-        speedY = 0.3 + rnd.nextDouble() * 0.7,
-        speedX = (rnd.nextDouble() - 0.5) * 0.3,
-        color = Colors.primaries[rnd.nextInt(Colors.primaries.length)],
-        size = 6 + rnd.nextDouble() * 8,
-        rotation = rnd.nextDouble() * math.pi;
+    : x = rnd.nextDouble(),
+      speedY = 0.3 + rnd.nextDouble() * 0.7,
+      speedX = (rnd.nextDouble() - 0.5) * 0.3,
+      color = Colors.primaries[rnd.nextInt(Colors.primaries.length)],
+      size = 6 + rnd.nextDouble() * 8,
+      rotation = rnd.nextDouble() * math.pi;
 }
 
 class _ConfettiPainter extends CustomPainter {
@@ -243,7 +242,10 @@ class _ConfettiPainter extends CustomPainter {
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromCenter(
-              center: Offset.zero, width: p.size, height: p.size * 0.5),
+            center: Offset.zero,
+            width: p.size,
+            height: p.size * 0.5,
+          ),
           const Radius.circular(2),
         ),
         paint,

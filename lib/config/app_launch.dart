@@ -20,4 +20,3 @@ class AppLaunch {
     return loggedIn && token != null && token.isNotEmpty;
   }
 }
-

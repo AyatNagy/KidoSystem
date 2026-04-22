@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Models/questionModel.dart';
+import 'package:kido/Models/question_model.dart';
 
 class ChoiceQuestion extends Question {
   final List<String>? choices;
@@ -15,7 +15,7 @@ class ChoiceQuestion extends Question {
     this.colors,
     required this.correctIndex,
     this.colorImage,
-    this.sound
+    this.sound,
   });
 }
 
@@ -57,20 +57,17 @@ final List<ChoiceQuestion> allChoiceQuestions = [
 
   ChoiceQuestion(
     examId: ['exam1'],
-    questionText:" لون الشمس",
+    questionText: " لون الشمس",
     colorImage: "assets/images/gray-sun.png",
     colors: [Colors.red, Colors.blue, Colors.yellow, Colors.green],
     correctIndex: 2,
   ),
 
   ChoiceQuestion(
-      examId: ['exam2'],
-      questionText: "صوت مين ده",
-      choices: [
-        "assets/images/elephant2.png",
-        "assets/images/dog2.png"
-      ],
-      correctIndex: 1,
-      sound: "assets/audio/dog.mp3"
-  )
+    examId: ['exam2'],
+    questionText: "صوت مين ده",
+    choices: ["assets/images/elephant2.png", "assets/images/dog2.png"],
+    correctIndex: 1,
+    sound: "assets/audio/dog.mp3",
+  ),
 ];
