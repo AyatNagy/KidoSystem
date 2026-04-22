@@ -1,47 +1,21 @@
-import 'dart:async';
-import 'dart:html' as html;
-import 'package:flutter/services.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class AudioService {
-  static html.AudioElement? _currentAudio;
+  static final AudioPlayer _player = AudioPlayer();
 
   static Future<void> play({required String fileName}) async {
-    // 1. إيقاف أي صوت شغال حالياً فوراً قبل بدء الجديد
-    stop();
-
-    final completer = Completer<void>();
     try {
-      final data = await rootBundle.load('assets/audio/$fileName');
-      final bytes = data.buffer.asUint8List();
-      final blob = html.Blob([bytes]);
-      final url = html.Url.createObjectUrlFromBlob(blob);
+      await _player.stop();
 
-      final audio =
-          html.AudioElement()
-            ..src = url
-            ..autoplay = true;
-
-      _currentAudio = audio;
-
-      audio.onEnded.listen((_) {
-        html.Url.revokeObjectUrl(url);
-        if (_currentAudio == audio) _currentAudio = null;
-        completer.complete();
-      });
-
-      await audio.play();
+      // هنا إحنا بنقول للمكتبة:
+      // روحي لـ assets/audio/ وضيفي عليها اسم الملف اللي جاي من الـ Mapper
+      await _player.play(AssetSource('audio/$fileName'));
     } catch (e) {
-      print("Audio Error: $e");
-      completer.complete();
+      print("Audio Play Error: $e");
     }
-    return completer.future;
   }
 
   static void stop() {
-    if (_currentAudio != null) {
-      _currentAudio!.pause();
-      _currentAudio!.src = ''; // تفريغ المصدر لضمان التوقف
-      _currentAudio = null;
-    }
+    _player.stop();
   }
 }

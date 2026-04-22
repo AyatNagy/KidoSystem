@@ -47,18 +47,24 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
     for (int i = 0; i < 3; i++) {
       if (!mounted) return;
 
+      // 1. شغل الأنيميشن (Highlight)
       setState(() => isFirstHighlighted = true);
 
-      await Future.delayed(const Duration(milliseconds: 300));
-
-      // 🔊 تعديل: استخدام play الجديد اللي بيمسح أي صوت قديم
+      // 2. ابدأ الصوت واستني ثانية بسيطة عشان التزامن البصري
+      await Future.delayed(const Duration(milliseconds: 200));
       await AudioService.play(fileName: data.audio);
 
-      if (!mounted) return; // تأمين إضافي
+      // 3. 🛑 هنا السر: استني وقت كافي عشان الكلمة تخلص (مثلاً 1.5 ثانية)
+      // لو الكلمة طويلة زودي الوقت ده
+      await Future.delayed(const Duration(milliseconds: 1500));
 
+      if (!mounted) return;
+
+      // 4. طفي الأنيميشن
       setState(() => isFirstHighlighted = false);
 
-      await Future.delayed(const Duration(seconds: 1));
+      // 5. استراحة قصيرة بين كل مرة والتانية
+      await Future.delayed(const Duration(milliseconds: 800));
     }
 
     if (!mounted) return;
@@ -70,15 +76,17 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
   }
 
   Future<void> repeatAudio() async {
-    if (isPlaying) return; // ده بيمنع الطفل يدوس طول ما فيه شرح شغال
+    if (isPlaying) return;
 
     setState(() {
-      isPlaying = true;
+      isPlaying = true; // نمنع الضغط المتكرر اللي بيبوظ الصوت
       isFirstHighlighted = true;
     });
 
-    // 🔊 تعديل: استخدام play الجديد
     await AudioService.play(fileName: data.audio);
+
+    // استني وقت الكلمة قبل ما تشيلي الـ Highlight وتسمحي بضغط جديد
+    await Future.delayed(const Duration(milliseconds: 1500));
 
     if (!mounted) return;
 
@@ -129,12 +137,17 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
                     child: GestureDetector(
                       onTap: repeatAudio,
                       child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 700),
-                        curve: Curves.elasticOut,
+                        duration: const Duration(
+                          milliseconds: 1200,
+                        ), // زودنا الوقت عشان يبقى ناعم وسلس
+                        curve:
+                            Curves
+                                .easeInOutBack, // الحركة تبقى أهدى وشكلها طفولي أكتر
                         transform:
                             Matrix4.identity()
                               ..translate(0.0, translateY)
                               ..scale(scaleX, scaleY),
+
                         transformAlignment: Alignment.center,
                         child: Image.asset(
                           data.firstImage,
