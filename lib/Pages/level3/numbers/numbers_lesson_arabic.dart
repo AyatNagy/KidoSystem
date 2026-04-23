@@ -25,6 +25,7 @@ class _ArabicNumberLessonState extends State<ArabicNumberLesson> {
         itemBuilder: (context, index) {
           return NumberLessonWidget(
             data: lessons[index],
+            isEnglish: false,
             onNext: () {
               if (index < lessons.length - 1) {
                 _pageController.nextPage(
