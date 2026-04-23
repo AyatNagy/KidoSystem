@@ -9,7 +9,10 @@ class Exam {
     required this.id,
     required this.title,
     required List<ChoiceQuestion> allQuestions,
-  }) : questions = allQuestions.where((q) => q.examId == id).toList();
+  }) : questions =
+           allQuestions.where((q) {
+             return q.examId?.contains(id) ?? false;
+           }).toList();
 }
 
 final exams = [

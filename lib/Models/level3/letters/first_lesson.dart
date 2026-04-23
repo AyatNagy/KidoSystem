@@ -17,11 +17,16 @@ class LetterModel implements DiscoveryItem {
     required this.audioName,
     Color? bgColor,
     this.activeBorder = Colors.orangeAccent,
-  }) : this.bgColor = bgColor ?? AppColors.kidoColors[5];
+  }) : bgColor = bgColor ?? AppColors.kidoColors[5];
 
-  @override String get mainImage => letterPath;
-  @override String? get extraImage => animalPath;
-  @override String get soundPath => audioName;
-  @override Color get primaryColor => activeBorder;
-  @override Color get background => bgColor;
+  @override
+  String get mainImage => letterPath;
+  @override
+  String? get extraImage => animalPath;
+  @override
+  String get soundPath => audioName;
+  @override
+  Color get primaryColor => activeBorder;
+  @override
+  Color get background => bgColor;
 }

@@ -14,7 +14,7 @@ class CustomTextField extends StatelessWidget {
     this.inputFormatters,
     this.onChanged,
     this.textInputAction,
-    this.textCapitalization = TextCapitalization.none
+    this.textCapitalization = TextCapitalization.none,
   });
 
   final TextEditingController fieldController;

@@ -1,11 +1,13 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/child_level_select_page.dart';
 import 'package:kido/Pages/child_profile_setup_page.dart';
 import 'package:kido/Pages/student_data_screen.dart';
 import 'package:kido/config/children_store.dart';
-import '../Widgets/ResponsiveProvider.dart';
-import 'ProfilePage.dart';
+import '../Widgets/responsive_provider.dart';
+import 'profile_page.dart';
 
 class ParentHomePage extends StatefulWidget {
   const ParentHomePage({super.key});
@@ -193,7 +195,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
 
                 _buildAddChildButton(config),
                 SizedBox(height: config.localHeight * 0.15),

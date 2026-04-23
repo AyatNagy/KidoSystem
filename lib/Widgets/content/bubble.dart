@@ -1,6 +1,8 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
-import '../../Models/level3/bubbleModel.dart';
+import '../../Models/level3/bubble_model.dart';
 
 class BubbleWidget extends StatefulWidget {
   final BubbleModel bubble;
@@ -13,24 +15,27 @@ class BubbleWidget extends StatefulWidget {
     required this.bubble,
     required this.onPop,
     required this.onExpired,
-    required this.letter
+    required this.letter,
   });
 
   @override
   State<BubbleWidget> createState() => _BubbleWidgetState();
 }
 
-class _BubbleWidgetState extends State<BubbleWidget> with SingleTickerProviderStateMixin {
+class _BubbleWidgetState extends State<BubbleWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _movement;
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 8));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 8),
+    );
     _movement = Tween<double>(begin: 1.3, end: -1.3).animate(
-        CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine)
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
     );
     _controller.forward().then((_) {
       if (mounted) widget.onExpired();
@@ -50,7 +55,9 @@ class _BubbleWidgetState extends State<BubbleWidget> with SingleTickerProviderSt
       builder: (context, child) {
         return Align(
           alignment: Alignment(
-              widget.bubble.xPosition * 2 - 1, _movement.value),
+            widget.bubble.xPosition * 2 - 1,
+            _movement.value,
+          ),
           child: child,
         );
       },
@@ -64,21 +71,23 @@ class _BubbleWidgetState extends State<BubbleWidget> with SingleTickerProviderSt
             shape: BoxShape.circle,
             border: Border.all(color: Colors.white.withOpacity(0.8), width: 4),
             boxShadow: [
-              BoxShadow(color: widget.bubble.color.withOpacity(0.3),
-                  blurRadius: 15,
-                  spreadRadius: 2)
+              BoxShadow(
+                color: widget.bubble.color.withOpacity(0.3),
+                blurRadius: 15,
+                spreadRadius: 2,
+              ),
             ],
           ),
           child: Center(
             child: Text(
               widget.letter,
               style: TextStyle(
-                  fontSize: widget.bubble.size * 0.45,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(color: Colors.black.withOpacity(0.1), blurRadius: 5)
-                  ]
+                fontSize: widget.bubble.size * 0.45,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                shadows: [
+                  Shadow(color: Colors.black.withOpacity(0.1), blurRadius: 5),
+                ],
               ),
             ),
           ),

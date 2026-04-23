@@ -14,12 +14,9 @@ class LetterRepository {
     final strokes = _normalizedStrokes(letter);
     if (strokes == null || strokes.isEmpty) {
       // Fallback: a simple vertical stroke.
-      return _fromNormalizedStrokes(
-        [
-          [const Offset(0.5, 0.1), const Offset(0.5, 0.9)],
-        ],
-        canvasSize: canvasSize,
-      );
+      return _fromNormalizedStrokes([
+        [const Offset(0.5, 0.1), const Offset(0.5, 0.9)],
+      ], canvasSize: canvasSize);
     }
     return _fromNormalizedStrokes(strokes, canvasSize: canvasSize);
   }
@@ -29,7 +26,10 @@ class LetterRepository {
     required Size canvasSize,
   }) {
     // Fit strokes into a nice inner rect.
-    final pad = math.max(18.0, math.min(canvasSize.width, canvasSize.height) * 0.06);
+    final pad = math.max(
+      18.0,
+      math.min(canvasSize.width, canvasSize.height) * 0.06,
+    );
     final bounds = Rect.fromLTWH(
       pad,
       pad,
@@ -70,10 +70,7 @@ class LetterRepository {
   static List<Offset> _line(Offset a, Offset b, {int count = 10}) {
     return List.generate(count + 1, (i) {
       final t = i / count;
-      return Offset(
-        a.dx + (b.dx - a.dx) * t,
-        a.dy + (b.dy - a.dy) * t,
-      );
+      return Offset(a.dx + (b.dx - a.dx) * t, a.dy + (b.dy - a.dy) * t);
     });
   }
 
@@ -101,14 +98,8 @@ class LetterRepository {
     switch (letter.toUpperCase()) {
       case 'A':
         return [
-          _poly(const [
-            Offset(0.50, 0.12),
-            Offset(0.18, 0.90),
-          ]),
-          _poly(const [
-            Offset(0.50, 0.12),
-            Offset(0.82, 0.90),
-          ]),
+          _poly(const [Offset(0.50, 0.12), Offset(0.18, 0.90)]),
+          _poly(const [Offset(0.50, 0.12), Offset(0.82, 0.90)]),
           _poly(const [
             // Cross bar positioned to touch both legs.
             Offset(0.295, 0.62),
@@ -336,4 +327,3 @@ class LetterRepository {
     return null;
   }
 }
-

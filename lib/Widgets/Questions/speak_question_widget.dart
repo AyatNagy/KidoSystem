@@ -1,7 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../Models/speak_question.dart';
-import '../ResponsiveProvider.dart';
+import '../responsive_provider.dart';
 
 class SpeakQuestionWidget extends StatefulWidget {
   final SpeakQuestion question;
@@ -91,13 +93,14 @@ class _SpeakQuestionWidgetState extends State<SpeakQuestionWidget> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
-                  colors: isListening
-                      ? [Colors.redAccent, Colors.red]
-                      : [
-                    const Color(0xffffB74D),
-                    const Color(0xffff8A65),
-                    const Color(0xfff06292),
-                  ],
+                  colors:
+                      isListening
+                          ? [Colors.redAccent, Colors.red]
+                          : [
+                            const Color(0xffffB74D),
+                            const Color(0xffff8A65),
+                            const Color(0xfff06292),
+                          ],
                 ),
                 boxShadow: [
                   BoxShadow(

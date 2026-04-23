@@ -1,7 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/parent_login_screen.dart';
-import 'package:kido/Widgets/PasswordStrengthTurtle%20.dart';
+import 'package:kido/Widgets/password_strength_turtle%20.dart';
 import 'package:kido/Widgets/text_field_item.dart';
 import 'package:kido/Widgets/custom_app_button.dart';
 import 'package:kido/utils/validators.dart';

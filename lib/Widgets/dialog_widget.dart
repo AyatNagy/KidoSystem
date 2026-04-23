@@ -1,10 +1,16 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../Models/dailogModel.dart';
-import 'ResponsiveProvider.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
+import '../Models/dailog_model.dart';
 
-void CustomDialog(BuildContext context, dialogModel data,
-    {required Color titleColor, VoidCallback? onNextPressed}) {
+void customDialog(
+  BuildContext context,
+  DailogModel data, {
+  required Color titleColor,
+  VoidCallback? onNextPressed,
+}) {
   final config = ResponsiveProvider.of(context);
 
   showDialog<void>(
@@ -74,7 +80,7 @@ void CustomDialog(BuildContext context, dialogModel data,
                                   color: titleColor.withOpacity(0.3),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
-                                )
+                                ),
                               ],
                             ),
                             child: Text(
@@ -111,8 +117,10 @@ void CustomDialog(BuildContext context, dialogModel data,
 
   if (onNextPressed == null) {
     Future.delayed(const Duration(seconds: 4), () {
-      if (Navigator.canPop(context)) {
-        Navigator.of(context).pop();
+      if (context.mounted) {
+        if (Navigator.canPop(context)) {
+          Navigator.of(context).pop();
+        }
       }
     });
   }

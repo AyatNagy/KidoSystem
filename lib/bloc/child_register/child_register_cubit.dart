@@ -20,22 +20,28 @@ class ChildRegisterCubit extends Cubit<ChildRegisterState> {
           username: childData['username'],
           password: child.password, // Keep original password (not hashed)
           name: childData['name'],
-          dateOfBirth: childData['dateOfBirth'] != null
-              ? DateTime.tryParse(childData['dateOfBirth'])
-              : null,
+          dateOfBirth:
+              childData['dateOfBirth'] != null
+                  ? DateTime.tryParse(childData['dateOfBirth'])
+                  : null,
           motherId: childData['motherId'],
-          createdAt: childData['createdAt'] != null
-              ? DateTime.tryParse(childData['createdAt'])
-              : null,
+          createdAt:
+              childData['createdAt'] != null
+                  ? DateTime.tryParse(childData['createdAt'])
+                  : null,
         );
         emit(ChildRegisterSuccess(child: registeredChild));
       } else {
-        final errorMessage = response?['message'] ?? "Child registration failed. Try again!";
+        final errorMessage =
+            response?['message'] ?? "Child registration failed. Try again!";
         emit(ChildRegisterFailure(errorMessage));
       }
     } catch (e) {
-      emit(ChildRegisterFailure("Error during child registration: ${e.toString()}"));
+      emit(
+        ChildRegisterFailure(
+          "Error during child registration: ${e.toString()}",
+        ),
+      );
     }
   }
 }
-

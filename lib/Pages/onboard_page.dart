@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/home_page.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/controllers/unboarding_data.dart';
 import 'package:kido/Pages/parent_home_page.dart';
 import 'package:kido/Pages/parent_login_screen.dart';
-import '../Widgets/CustomCanditor.dart';
-import '../Widgets/GradientButton.dart';
-import '../Widgets/onBoard.dart';
-import '../Widgets/ResponsiveProvider.dart';
-import '../config/ResponsiveConfig.dart';
+import '../Widgets/custom_canditor.dart';
+import '../Widgets/gradient_button.dart';
+import '../Widgets/onboard.dart';
+import '../config/responsive_config.dart';
 import '../config/app_launch.dart';
 
 class OnboardScreen extends StatefulWidget {
@@ -69,17 +68,17 @@ class _OnboardScreenState extends State<OnboardScreen> {
                   onPageChanged: (value) {
                     setState(() => _index = value);
                   },
-                  itemBuilder: (context, i) => OnboardPage(
-                    data: onboardData[i],
-                  ),
+                  itemBuilder:
+                      (context, i) => OnboardPage(data: onboardData[i]),
                 ),
-              ), Column(
+              ),
+              Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       onboardData.length,
-                          (i) => Padding(
+                      (i) => Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: config.localWidth * 0.01,
                         ),

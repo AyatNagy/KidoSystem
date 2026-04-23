@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/user.dart';
-import 'package:kido/Pages/VerifyEmailScreen.dart';
-import 'package:kido/Pages/student_data_screen.dart';
-import 'package:kido/Widgets/PasswordStrengthTurtle%20.dart';
+import 'package:kido/Pages/verify_email_page.dart';
+import 'package:kido/Widgets/password_strength_turtle%20.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/api_service/api_services.dart';
-import '../Models/dailogModel.dart';
+import '../Models/dailog_model.dart';
 import '../Widgets/appBar.dart';
 import '../Widgets/dialog_widget.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
-import '../Widgets/ResponsiveProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kido/Widgets/password_errors_view.dart';
-
 
 class ParentSignup extends StatefulWidget {
   const ParentSignup({super.key});
@@ -55,12 +53,12 @@ class _ParentSignupState extends State<ParentSignup> {
       //passwordError = Validators.validatePassword(password);
     });
 
-    if (usernameError != null 
-        ||nameError != null 
-        ||phoneError != null 
-        ||emailError != null 
-        //||passwordError != null
-        ) {
+    if (usernameError != null ||
+        nameError != null ||
+        phoneError != null ||
+        emailError != null
+    //||passwordError != null
+    ) {
       return;
     }
 
@@ -83,9 +81,10 @@ class _ParentSignupState extends State<ParentSignup> {
       await prefs.setString('username', user.username);
       await prefs.setString('email', user.email);
 
-      CustomDialog(
+      if (!mounted) return;
+      customDialog(
         context,
-        dialogModel(
+        DailogModel(
           title: "Success 🎉",
           message: "Registration success!",
           image: "assets/images/signup-success.png",
@@ -94,6 +93,7 @@ class _ParentSignupState extends State<ParentSignup> {
       );
 
       Future.delayed(const Duration(seconds: 4), () {
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -102,9 +102,10 @@ class _ParentSignupState extends State<ParentSignup> {
         );
       });
     } else {
-      CustomDialog(
+      if (!mounted) return;
+      customDialog(
         context,
-        dialogModel(
+        DailogModel(
           title: "Error ❌",
           message: "Registration Failed.",
           image: "assets/images/signup-faied.png",
@@ -162,10 +163,12 @@ class _ParentSignupState extends State<ParentSignup> {
                       fieldObscure: false,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
-                        if (value == null || value.isEmpty)
+                        if (value == null || value.isEmpty) {
                           return "Please enter your username!";
-                        if (value.length < 3)
+                        }
+                        if (value.length < 3) {
                           return "Username must be at least 3 characters long";
+                        }
                         return null;
                       },
                       onChanged: (value) {
@@ -220,10 +223,12 @@ class _ParentSignupState extends State<ParentSignup> {
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
-                        if (value == null || value.isEmpty)
+                        if (value == null || value.isEmpty) {
                           return "Please enter your phone!";
-                        if (!phoneRegex.hasMatch(value))
+                        }
+                        if (!phoneRegex.hasMatch(value)) {
                           return "Please enter a valid phone number";
+                        }
                         return null;
                       },
                       onChanged: (value) {
@@ -279,7 +284,6 @@ class _ParentSignupState extends State<ParentSignup> {
                       onChanged: (value) {
                         setState(() {
                           currentPassword = value;
-                          
                         });
                       },
                       suffixIcon: IconButton(
@@ -295,14 +299,13 @@ class _ParentSignupState extends State<ParentSignup> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 3,),
-                    
-                      Container(
-                        width: double.infinity,
-                        child: PasswordErrorsView(password: currentPassword)
-                      ),
-                       
-                      
+                    const SizedBox(height: 3),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: PasswordErrorsView(password: currentPassword),
+                    ),
+
                     SizedBox(height: config.localHeight * 0.01),
                     PasswordStrengthTurtle(password: currentPassword),
                     SizedBox(height: config.localHeight * 0.04),

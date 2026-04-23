@@ -5,13 +5,12 @@ import '../Models/device_info.dart';
 class InfoWidget extends StatelessWidget {
   final Widget Function(BuildContext context, DeviceInfo deviceInfo) builder;
 
-  const InfoWidget({Key? key, required this.builder}) : super(key: key);
+  const InfoWidget({super.key, required this.builder});
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-
         var mediaQueryData = MediaQuery.of(context);
 
         var deviceInfo = DeviceInfo(

@@ -1,6 +1,8 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:video_player/video_player.dart';
-import '../../../Widgets/ResponsiveProvider.dart';
 
 class FlipBookLesson extends StatefulWidget {
   final int level;
@@ -8,7 +10,7 @@ class FlipBookLesson extends StatefulWidget {
   const FlipBookLesson({super.key, required this.level});
 
   @override
-  _FlipBookLessonState createState() => _FlipBookLessonState();
+  State<FlipBookLesson> createState() => _FlipBookLessonState();
 }
 
 class _FlipBookLessonState extends State<FlipBookLesson> {
@@ -18,7 +20,7 @@ class _FlipBookLessonState extends State<FlipBookLesson> {
 
   final List<Map<String, dynamic>> _pages = [
     {'content': 'assets/images/duck.png', 'bg': const Color(0xFFFFFDE7)},
-    {'content': '🍏',  'bg': const Color(0xFFF1F8E9)},
+    {'content': '🍏', 'bg': const Color(0xFFF1F8E9)},
     {'content': 'assets/images/cat2.png', 'bg': const Color(0xFFFFF3E0)},
   ];
 
@@ -108,14 +110,18 @@ class _FlipBookLessonState extends State<FlipBookLesson> {
 
   Widget _buildFullVideoSection(config) {
     if (_controller == null || !_controller!.value.isInitialized) {
-      return const Center(child: CircularProgressIndicator(color: Colors.orangeAccent));
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.orangeAccent),
+      );
     }
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: Colors.white, width: 10),
-        boxShadow: [BoxShadow(color: Colors.orange.withOpacity(0.2), blurRadius: 20)],
+        boxShadow: [
+          BoxShadow(color: Colors.orange.withOpacity(0.2), blurRadius: 20),
+        ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
@@ -128,7 +134,8 @@ class _FlipBookLessonState extends State<FlipBookLesson> {
   }
 
   Widget _buildVideoSection(config) {
-    if (_controller == null || !_controller!.value.isInitialized) return const SizedBox();
+    if (_controller == null || !_controller!.value.isInitialized)
+      return const SizedBox();
     return Container(
       height: config.localHeight * 0.25,
       margin: const EdgeInsets.symmetric(horizontal: 40),
@@ -144,7 +151,8 @@ class _FlipBookLessonState extends State<FlipBookLesson> {
   }
 
   Widget _buildFlipPage(config) {
-    double height = widget.level == 3 ? config.localHeight * 0.6 : config.localHeight * 0.4;
+    double height =
+        widget.level == 3 ? config.localHeight * 0.6 : config.localHeight * 0.4;
 
     return GestureDetector(
       onHorizontalDragEnd: (details) {
@@ -185,25 +193,37 @@ class _FlipBookLessonState extends State<FlipBookLesson> {
   Widget _buildPageContent(String content, int level) {
     double size = level == 3 ? 130 : 90;
     if (content.contains('assets/')) {
-      return Image.asset(content, height: size + 20, errorBuilder: (context, error, stack) {
-        return Icon(Icons.broken_image, size: size, color: Colors.grey);
-      });
+      return Image.asset(
+        content,
+        height: size + 20,
+        errorBuilder: (context, error, stack) {
+          return Icon(Icons.broken_image, size: size, color: Colors.grey);
+        },
+      );
     }
     return Text(content, style: TextStyle(fontSize: size));
   }
 
   Widget _buildBackground() => Container(
     decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        colors: [Color(0xFFFFF3E0), Color(0xFFFFE0B2)],
-      ),
+      gradient: LinearGradient(colors: [Color(0xFFFFF3E0), Color(0xFFFFE0B2)]),
     ),
   );
 
-  Widget _buildCircles(config) => Stack(children: [
-    Positioned(top: -50, right: -50, child: _circle(config.localWidth * 0.6, Colors.orange.withOpacity(0.1))),
-    Positioned(bottom: -20, left: -20, child: _circle(config.localWidth * 0.4, Colors.white.withOpacity(0.3))),
-  ]);
+  Widget _buildCircles(config) => Stack(
+    children: [
+      Positioned(
+        top: -50,
+        right: -50,
+        child: _circle(config.localWidth * 0.6, Colors.orange.withOpacity(0.1)),
+      ),
+      Positioned(
+        bottom: -20,
+        left: -20,
+        child: _circle(config.localWidth * 0.4, Colors.white.withOpacity(0.3)),
+      ),
+    ],
+  );
 
   Widget _circle(double size, Color color) => Container(
     width: size,
@@ -255,15 +275,22 @@ class _FlipBookLessonState extends State<FlipBookLesson> {
 class PageCurlPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.black.withOpacity(0.1)
-      ..style = PaintingStyle.fill;
+    final paint =
+        Paint()
+          ..color = Colors.black.withOpacity(0.1)
+          ..style = PaintingStyle.fill;
 
-    final path = Path()
-      ..moveTo(size.width, size.height)
-      ..lineTo(size.width - 40, size.height)
-      ..quadraticBezierTo(size.width - 10, size.height - 10, size.width, size.height - 40)
-      ..close();
+    final path =
+        Path()
+          ..moveTo(size.width, size.height)
+          ..lineTo(size.width - 40, size.height)
+          ..quadraticBezierTo(
+            size.width - 10,
+            size.height - 10,
+            size.width,
+            size.height - 40,
+          )
+          ..close();
 
     canvas.drawPath(path, paint);
   }

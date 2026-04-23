@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kido/Models/dailogModel.dart';
+import 'package:kido/Models/dailog_model.dart';
 import 'package:kido/Pages/Auth/reset_password_page.dart';
 import 'package:kido/Widgets/custom_app_button.dart';
 import 'package:kido/Widgets/dialog_widget.dart';
@@ -142,9 +142,9 @@ class _VerifyCodeState extends State<VerifyCode>
             });
           } else if (state is VerifyCodeResendSuccess) {
             _startCountdown();
-            CustomDialog(
+            customDialog(
               context,
-              dialogModel(
+              DailogModel(
                 title: "Success 🎉",
                 message: "Verification code sent successfully",
                 image: "assets/images/signin-success.png",

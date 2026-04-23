@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/exam_screen.dart';
-import '../Widgets/ResponsiveProvider.dart';
-import '../config/ResponsiveConfig.dart';
-import 'Kid_Login.dart';
-import 'Login_Teacher.dart';
+import '../Widgets/responsive_provider.dart';
+import '../config/responsive_config.dart';
+import 'kid_login.dart';
 import 'parent_login_screen.dart';
 
 class HomePage extends StatelessWidget {

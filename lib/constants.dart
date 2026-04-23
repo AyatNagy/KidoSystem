@@ -12,12 +12,12 @@ class AppColors {
   static const Color bgColor = Color(0xFFFBFDFF);
 
   static const List<Color> kidoColors = [
-    const Color(0xFFBDE0FE),
-    const Color(0xFFA2D2FF),
-    const Color(0xFFCDB4DB),
-    const Color(0xFFFFC8DD),
-    const Color(0xFFB9FBC0),
-    const Color(0xFFFFE5B4),
+    Color(0xFFBDE0FE),
+    Color(0xFFA2D2FF),
+    Color(0xFFCDB4DB),
+    Color(0xFFFFC8DD),
+    Color(0xFFB9FBC0),
+    Color(0xFFFFE5B4),
   ];
 
   // Card Gradients

@@ -29,7 +29,8 @@ class DashboardState {
     this.isImproving = true,
   });
 
-  Child? get selectedChild => children.isNotEmpty ? children[selectedChildIndex] : null;
+  Child? get selectedChild =>
+      children.isNotEmpty ? children[selectedChildIndex] : null;
 
   DashboardState copyWith({
     List<Child>? children,
@@ -63,51 +64,85 @@ class DashboardState {
 class DashboardBloc extends Cubit<DashboardState> {
   DashboardBloc() : super(DashboardState());
 
-  void loadDashboardData(Child initialChild, int selectedLevel, double score) async {
+  void loadDashboardData(
+    Child initialChild,
+    int selectedLevel,
+    double score,
+  ) async {
     emit(state.copyWith(isLoading: true));
     await Future.delayed(const Duration(milliseconds: 800));
 
-    Map<String, double> yesterdayProgress = selectedLevel == 3
-        ? {"Letters": 0.40, "Numbers": 0.50, "Vegetables": 0.20, "Fruits": 0.10}
-        : {"Emotions": 0.30, "Self-Care": 0.50, "Social": 0.20, "Motor": 0.30};
+    Map<String, double> yesterdayProgress =
+        selectedLevel == 3
+            ? {
+              "Letters": 0.40,
+              "Numbers": 0.50,
+              "Vegetables": 0.20,
+              "Fruits": 0.10,
+            }
+            : {
+              "Emotions": 0.30,
+              "Self-Care": 0.50,
+              "Social": 0.20,
+              "Motor": 0.30,
+            };
 
-    Map<String, double> todayProgress = selectedLevel == 3
-        ? {"Letters": score, "Numbers": 0.45, "Vegetables": 0.25, "Fruits": 0.15}
-        : {"Emotions": score, "Self-Care": 0.60, "Social": 0.40, "Motor": 0.35};
+    Map<String, double> todayProgress =
+        selectedLevel == 3
+            ? {
+              "Letters": score,
+              "Numbers": 0.45,
+              "Vegetables": 0.25,
+              "Fruits": 0.15,
+            }
+            : {
+              "Emotions": score,
+              "Self-Care": 0.60,
+              "Social": 0.40,
+              "Motor": 0.35,
+            };
 
-    emit(DashboardState(
-      children: [initialChild, Child(name: "Sibling", username: "tester", password: "123")],
-      selectedChildIndex: 0,
-      level: selectedLevel,
-      progress: todayProgress,
-      previousProgress: yesterdayProgress,
-      isLoading: false,
-      completedLessons: (score * 10).toInt(),
-      totalLessons: 20,
-      accuracy: 88,
-      badges: 3,
-      isImproving: true,
-    ));
+    emit(
+      DashboardState(
+        children: [
+          initialChild,
+          Child(name: "Sibling", username: "tester", password: "123"),
+        ],
+        selectedChildIndex: 0,
+        level: selectedLevel,
+        progress: todayProgress,
+        previousProgress: yesterdayProgress,
+        isLoading: false,
+        completedLessons: (score * 10).toInt(),
+        totalLessons: 20,
+        accuracy: 88,
+        badges: 3,
+        isImproving: true,
+      ),
+    );
   }
 
   void toggleChild() {
     final nextIndex = (state.selectedChildIndex + 1) % state.children.length;
     final nextLevel = nextIndex == 0 ? 3 : 1;
 
-    Map<String, double> nextDayProgress = nextLevel == 3
-        ? {"Letters": 0.7, "Numbers": 0.2, "Vegetables": 0.9, "Fruits": 0.4}
-        : {"Emotions": 0.95, "Self-Care": 0.3, "Social": 0.5, "Motor": 0.8};
+    Map<String, double> nextDayProgress =
+        nextLevel == 3
+            ? {"Letters": 0.7, "Numbers": 0.2, "Vegetables": 0.9, "Fruits": 0.4}
+            : {"Emotions": 0.95, "Self-Care": 0.3, "Social": 0.5, "Motor": 0.8};
 
-    emit(state.copyWith(
-      selectedChildIndex: nextIndex,
-      level: nextLevel,
-      progress: nextDayProgress,
-      previousProgress: state.progress,
-      completedLessons: nextLevel == 3 ? 14 : 6,
-      accuracy: nextLevel == 3 ? 92 : 75,
-      badges: nextLevel == 3 ? 5 : 2,
-      isImproving: nextLevel == 3,
-      isLoading: false,
-    ));
+    emit(
+      state.copyWith(
+        selectedChildIndex: nextIndex,
+        level: nextLevel,
+        progress: nextDayProgress,
+        previousProgress: state.progress,
+        completedLessons: nextLevel == 3 ? 14 : 6,
+        accuracy: nextLevel == 3 ? 92 : 75,
+        badges: nextLevel == 3 ? 5 : 2,
+        isImproving: nextLevel == 3,
+        isLoading: false,
+      ),
+    );
   }
 }

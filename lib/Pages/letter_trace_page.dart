@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:kido/Models/letter_step.dart';
 import 'package:kido/Pages/Painter/letter_path_painter.dart';
@@ -12,7 +14,7 @@ import 'package:kido/utils/tracing_score.dart';
 class LetterTracePage extends StatefulWidget {
   final String letter;
   final VoidCallback? onComplete;
-  const LetterTracePage({super.key, required this.letter,this.onComplete});
+  const LetterTracePage({super.key, required this.letter, this.onComplete});
 
   @override
   State<LetterTracePage> createState() => _LetterTracePageState();
@@ -87,7 +89,7 @@ class _LetterTracePageState extends State<LetterTracePage>
             letter: widget.letter,
             onContinue: () {
               Navigator.of(context).pop();
-              if(widget.onComplete != null) {
+              if (widget.onComplete != null) {
                 widget.onComplete!();
               } else {
                 Navigator.of(context).pop(true);
@@ -177,8 +179,9 @@ class _LetterTracePageState extends State<LetterTracePage>
                                     if (_lockedAfterSuccess)
                                       TweenAnimationBuilder<double>(
                                         tween: Tween(begin: 0.0, end: 1.0),
-                                        duration:
-                                            const Duration(milliseconds: 260),
+                                        duration: const Duration(
+                                          milliseconds: 260,
+                                        ),
                                         curve: Curves.easeOut,
                                         builder: (context, t, _) {
                                           return CustomPaint(
@@ -194,80 +197,91 @@ class _LetterTracePageState extends State<LetterTracePage>
                                         },
                                       ),
 
-                              // الخطوات (أرقام + أسهم + خطوط متقطعة)
-                              CustomPaint(
-                                painter: StepsPainter(
-                                  steps: _steps,
-                                  currentStep: _currentStep,
-                                ),
-                                size: Size.infinite,
-                              ),
+                                    // الخطوات (أرقام + أسهم + خطوط متقطعة)
+                                    CustomPaint(
+                                      painter: StepsPainter(
+                                        steps: _steps,
+                                        currentStep: _currentStep,
+                                      ),
+                                      size: Size.infinite,
+                                    ),
 
-                              // منطقة الرسم
-                              GestureDetector(
-                                onPanDown: (details) {
-                                  if (_lockedAfterSuccess) return;
-                                  if (_steps.isEmpty) return;
-                                  if (_currentStep >= _steps.length) return;
+                                    // منطقة الرسم
+                                    GestureDetector(
+                                      onPanDown: (details) {
+                                        if (_lockedAfterSuccess) return;
+                                        if (_steps.isEmpty) return;
+                                        if (_currentStep >= _steps.length)
+                                          return;
 
-                                  final start = _steps[_currentStep].startPoint;
-                                  if ((details.localPosition - start).distance <
-                                      50) {
-                                    setState(() {
-                                      _showHand = false;
-                                      pointsList.add([details.localPosition]);
-                                      colorsList.add(selectedColor);
-                                    });
-                                  }
-                                },
-                                onPanUpdate: (details) {
-                                  if (_lockedAfterSuccess) return;
-                                  if (pointsList.isEmpty) return;
-                                  setState(() {
-                                    pointsList.last.add(details.localPosition);
+                                        final start =
+                                            _steps[_currentStep].startPoint;
+                                        if ((details.localPosition - start)
+                                                .distance <
+                                            50) {
+                                          setState(() {
+                                            _showHand = false;
+                                            pointsList.add([
+                                              details.localPosition,
+                                            ]);
+                                            colorsList.add(selectedColor);
+                                          });
+                                        }
+                                      },
+                                      onPanUpdate: (details) {
+                                        if (_lockedAfterSuccess) return;
+                                        if (pointsList.isEmpty) return;
+                                        setState(() {
+                                          pointsList.last.add(
+                                            details.localPosition,
+                                          );
 
-                                    // حساب النجوم لحظياً
-                                    final coverage =
-                                        TracingScore.calculateCoverage(
-                                          pathPoints: _pathSamplePoints,
-                                          drawn: pointsList,
-                                        );
-                                    _stars = TracingScore.calculateStars(
-                                      coverage,
-                                    );
-                                  });
-                                },
-                                onPanEnd: (details) {
-                                  setState(() {
-                                    if (_currentStep < _steps.length - 1) {
-                                      _currentStep++;
-                                      _showHand = true;
-                                      return;
-                                    }
+                                          // حساب النجوم لحظياً
+                                          final coverage =
+                                              TracingScore.calculateCoverage(
+                                                pathPoints: _pathSamplePoints,
+                                                drawn: pointsList,
+                                              );
+                                          _stars = TracingScore.calculateStars(
+                                            coverage,
+                                          );
+                                        });
+                                      },
+                                      onPanEnd: (details) {
+                                        setState(() {
+                                          if (_currentStep <
+                                              _steps.length - 1) {
+                                            _currentStep++;
+                                            _showHand = true;
+                                            return;
+                                          }
 
-                                    // آخر خطوة: لو نجح (3 نجوم) اقفل الرسم واظهر الشكل النضيف
-                                    if (_stars >= 3) {
-                                      _lockedAfterSuccess = true;
-                                      _showCelebration();
-                                      return;
-                                    }
+                                          // آخر خطوة: لو نجح (3 نجوم) اقفل الرسم واظهر الشكل النضيف
+                                          if (_stars >= 3) {
+                                            _lockedAfterSuccess = true;
+                                            _showCelebration();
+                                            return;
+                                          }
 
-                                    // لو لسه مش 3 نجوم: سيبه يحاول تاني بدون ما يقفل الرسم
-                                    _showHand = true;
-                                  });
-                                },
-                                child: CustomPaint(
-                                  painter: MyPainter(pointsList, colorsList),
-                                  size: Size.infinite,
-                                ),
-                              ),
+                                          // لو لسه مش 3 نجوم: سيبه يحاول تاني بدون ما يقفل الرسم
+                                          _showHand = true;
+                                        });
+                                      },
+                                      child: CustomPaint(
+                                        painter: MyPainter(
+                                          pointsList,
+                                          colorsList,
+                                        ),
+                                        size: Size.infinite,
+                                      ),
+                                    ),
 
-                              // اليد المتحركة
-                              AnimatedHandWidget(
-                                steps: _steps,
-                                currentStep: _currentStep,
-                                visible: _showHand,
-                              ),
+                                    // اليد المتحركة
+                                    AnimatedHandWidget(
+                                      steps: _steps,
+                                      currentStep: _currentStep,
+                                      visible: _showHand,
+                                    ),
                                   ],
                                 ),
                               );

@@ -22,4 +22,3 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
     }
   }
 }
-

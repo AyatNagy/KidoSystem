@@ -17,4 +17,3 @@ class ResetPasswordFailure extends ResetPasswordState {
 
   ResetPasswordFailure(this.errorMessage);
 }
-

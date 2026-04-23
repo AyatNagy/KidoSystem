@@ -18,25 +18,21 @@ class PulseButton extends StatefulWidget {
   State<PulseButton> createState() => _PulseButtonState();
 }
 
-class _PulseButtonState extends State<PulseButton> with SingleTickerProviderStateMixin {
+class _PulseButtonState extends State<PulseButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    )..repeat(reverse: true);
+    _controller = AnimationController(vsync: this, duration: widget.duration)
+      ..repeat(reverse: true);
 
     _scaleAnimation = Tween<double>(
-        begin: 1.0,
-        end: widget.pulseScale
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+      begin: 1.0,
+      end: widget.pulseScale,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -49,10 +45,7 @@ class _PulseButtonState extends State<PulseButton> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return ScaleTransition(
       scale: _scaleAnimation,
-      child: GestureDetector(
-        onTap: widget.onPressed,
-        child: widget.child,
-      ),
+      child: GestureDetector(onTap: widget.onPressed, child: widget.child),
     );
   }
 }

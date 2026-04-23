@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class Star3DWidget extends StatefulWidget {
@@ -29,9 +31,10 @@ class _Star3DWidgetState extends State<Star3DWidget>
       TweenSequenceItem(tween: Tween(begin: 0.9, end: 1.0), weight: 30),
     ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    _rotateAnim = Tween(begin: 0.0, end: 0.3).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
-    );
+    _rotateAnim = Tween(
+      begin: 0.0,
+      end: 0.3,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
   }
 
   @override
@@ -58,9 +61,10 @@ class _Star3DWidgetState extends State<Star3DWidget>
           scale: _scaleAnim.value,
           child: Transform(
             alignment: Alignment.center,
-            transform: Matrix4.identity()
-              ..setEntry(3, 2, 0.001) // perspective
-              ..rotateY(_rotateAnim.value),
+            transform:
+                Matrix4.identity()
+                  ..setEntry(3, 2, 0.001) // perspective
+                  ..rotateY(_rotateAnim.value),
             child: _build3DStar(widget.filled),
           ),
         );
@@ -78,9 +82,10 @@ class _Star3DWidgetState extends State<Star3DWidget>
           child: Icon(
             Icons.star,
             size: 56,
-            color: filled
-                ? Colors.orange.shade900.withOpacity(0.4)
-                : Colors.grey.shade600.withOpacity(0.2),
+            color:
+                filled
+                    ? Colors.orange.shade900.withOpacity(0.4)
+                    : Colors.grey.shade600.withOpacity(0.2),
           ),
         ),
 
@@ -94,26 +99,25 @@ class _Star3DWidgetState extends State<Star3DWidget>
         // Bright top layer (light reflection)
         ShaderMask(
           blendMode: BlendMode.srcIn,
-          shaderCallback: (bounds) => LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: filled
-                ? [
-                    Colors.yellow.shade200,
-                    Colors.amber,
-                    Colors.orange.shade700,
-                  ]
-                : [
-                    Colors.grey.shade300,
-                    Colors.grey.shade400,
-                    Colors.grey.shade600,
-                  ],
-            stops: const [0.0, 0.4, 1.0],
-          ).createShader(bounds),
-          child: const Icon(
-            Icons.star,
-            size: 54,
-          ),
+          shaderCallback:
+              (bounds) => LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors:
+                    filled
+                        ? [
+                          Colors.yellow.shade200,
+                          Colors.amber,
+                          Colors.orange.shade700,
+                        ]
+                        : [
+                          Colors.grey.shade300,
+                          Colors.grey.shade400,
+                          Colors.grey.shade600,
+                        ],
+                stops: const [0.0, 0.4, 1.0],
+              ).createShader(bounds),
+          child: const Icon(Icons.star, size: 54),
         ),
 
         // Shine dot (top-left glint)

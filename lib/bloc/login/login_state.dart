@@ -17,4 +17,3 @@ class LoginFailure extends LoginState {
 
   LoginFailure(this.errorMessage);
 }
-

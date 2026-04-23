@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:kido/Models/letter_step.dart';
@@ -99,9 +101,11 @@ class _AnimatedHandWidgetState extends State<AnimatedHandWidget>
             // نبض على نقطة البداية
             if (isAtStart)
               Positioned(
-                left: widget.steps[widget.currentStep].startPoint.dx -
+                left:
+                    widget.steps[widget.currentStep].startPoint.dx -
                     20 * _pulseAnim.value,
-                top: widget.steps[widget.currentStep].startPoint.dy -
+                top:
+                    widget.steps[widget.currentStep].startPoint.dy -
                     20 * _pulseAnim.value,
                 child: Container(
                   width: 40 * _pulseAnim.value,

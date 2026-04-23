@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/Start_Page.dart';
 
-
 class Logo extends StatefulWidget {
+  const Logo({super.key});
+
   @override
   State<Logo> createState() => _SplashScreen();
 }
@@ -12,6 +13,7 @@ class _SplashScreen extends State<Logo> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
+      if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Start()),

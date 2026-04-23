@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/Auth/forgot_by_email_pagel.dart';
 import 'package:kido/Pages/parent_home_page.dart';
-import '../Models/dailogModel.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
+import '../Models/dailog_model.dart';
 import '../Widgets/appBar.dart';
 import '../Widgets/dialog_widget.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
 import 'parent_signup_screen.dart';
 import 'student_data_screen.dart';
-import '../Widgets/ResponsiveProvider.dart';
 import '../bloc/login/login_cubit.dart';
 import '../bloc/google_auth/google_auth_cubit.dart';
 
@@ -27,8 +27,7 @@ class _ParentLoginState extends State<ParentLogin> {
     final TextEditingController passwordController = TextEditingController();
     String? passwordError;
     String? emailError;
-    bool isPasswordVisible = false;
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return MultiBlocProvider(
       providers: [
@@ -38,9 +37,9 @@ class _ParentLoginState extends State<ParentLogin> {
       child: BlocListener<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            CustomDialog(
+            customDialog(
               context,
-              dialogModel(
+              DailogModel(
                 title: "Success 🎉",
                 message: "Login successful!",
                 image: "assets/images/signin-success.png",
@@ -48,15 +47,16 @@ class _ParentLoginState extends State<ParentLogin> {
               titleColor: Colors.green,
             );
             Future.delayed(const Duration(seconds: 4), () {
+              if (!context.mounted) return;
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (_) => const ParentHomePage()),
               );
             });
           } else if (state is LoginFailure) {
-            CustomDialog(
+            customDialog(
               context,
-              dialogModel(
+              DailogModel(
                 title: "Error ❌",
                 message: state.errorMessage,
                 image: "assets/images/signin-failed.png",
@@ -68,9 +68,9 @@ class _ParentLoginState extends State<ParentLogin> {
         child: BlocListener<GoogleAuthCubit, GoogleAuthState>(
           listener: (context, state) {
             if (state is GoogleAuthSuccess) {
-              CustomDialog(
+              customDialog(
                 context,
-                dialogModel(
+                DailogModel(
                   title: "Success 🎉",
                   message: "Google Login successful!",
                   image: "assets/images/google-success.png",
@@ -78,15 +78,16 @@ class _ParentLoginState extends State<ParentLogin> {
                 titleColor: Colors.green,
               );
               Future.delayed(const Duration(seconds: 4), () {
+                if (!context.mounted) return;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (_) => const StudentData()),
                 );
               });
             } else if (state is GoogleAuthFailure) {
-              CustomDialog(
+              customDialog(
                 context,
-                dialogModel(
+                DailogModel(
                   title: "Error ❌",
                   message: state.errorMessage,
                   image: "assets/images/google-failed.png",
@@ -126,6 +127,7 @@ class _ParentLoginState extends State<ParentLogin> {
                 googleCubit.signInWithGoogle();
               }
 
+              // ignore: avoid_print
               void handleFacebook() => print("Facebook Login");
 
               return StatefulBuilder(
@@ -161,7 +163,7 @@ class _ParentLoginState extends State<ParentLogin> {
                             Expanded(
                               flex: 5,
                               child: Form(
-                                key: _formKey,
+                                key: formKey,
                                 child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,

@@ -24,4 +24,3 @@ class GoogleAuthCubit extends Cubit<GoogleAuthState> {
     }
   }
 }
-

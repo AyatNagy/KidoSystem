@@ -26,7 +26,7 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
     initialPositions = {};
 
     for (var item in widget.question.items) {
-      initialPositions[item.id] = item.startPosition ?? const Offset(0.1, 0.8);
+      initialPositions[item.id] = item.startPosition;
     }
   }
 
@@ -178,8 +178,7 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
                 ),
                 onDragEnd: (details) {
                   setState(() {
-                    initialPositions[item.id] =
-                        item.startPosition ?? const Offset(0.1, 0.8);
+                    initialPositions[item.id] = item.startPosition;
                     _updateAnswers();
                   });
                 },
@@ -206,16 +205,21 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
               width: targetSize.width,
               height: targetSize.height,
               child: DragTarget<String>(
-                onWillAccept: (itemId) => true,
-                onAccept: (itemId) {
+                // 1. التعديل هنا: استخدام onWillAcceptWithDetails
+                onWillAcceptWithDetails: (details) => true,
+
+                // 2. التعديل هنا: استخدام onAcceptWithDetails
+                onAcceptWithDetails: (details) {
                   setState(() {
+                    // الوصول للقيمة المسحوبة عن طريق details.data
+                    final itemId = details.data;
+
                     final oldItemId = targetOccupied[target.id];
                     if (oldItemId != null) {
                       initialPositions[oldItemId] =
                           widget.question.items
                               .firstWhere((i) => i.id == oldItemId)
-                              .startPosition ??
-                          const Offset(0.1, 0.8);
+                              .startPosition;
                     }
 
                     targetOccupied[target.id] = itemId;

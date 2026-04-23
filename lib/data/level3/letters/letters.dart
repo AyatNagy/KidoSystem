@@ -1,7 +1,7 @@
 import 'package:kido/Models/level3/letters/first_lesson.dart';
 import 'package:kido/constants.dart';
 
-final List<LetterModel> Arletters = [
+final List<LetterModel> arletters = [
 
   LetterModel(
       letterPath: 'assets/images/arabicLetters/letterأ.png',
@@ -22,7 +22,7 @@ final List<LetterModel> Arletters = [
   ),
 ];
 
-final List<LetterModel> Enletters = [
+final List<LetterModel> enletters = [
 
   LetterModel(
     letterPath: 'assets/images/Letters/Aa.png',

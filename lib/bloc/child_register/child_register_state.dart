@@ -17,4 +17,3 @@ class ChildRegisterFailure extends ChildRegisterState {
 
   ChildRegisterFailure(this.errorMessage);
 }
-

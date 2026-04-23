@@ -4,8 +4,10 @@ import 'package:kido/data/level3/numbers/number_lesson_english_data.dart';
 import 'package:kido/Widgets/content/level3/numbers/number_lesson_widget.dart'; // Make sure you have this widget
 
 class EnglishNumberLesson extends StatefulWidget {
+  const EnglishNumberLesson({super.key});
+
   @override
-  _EnglishNumberLessonState createState() => _EnglishNumberLessonState();
+  State<EnglishNumberLesson> createState() => _EnglishNumberLessonState();
 }
 
 class _EnglishNumberLessonState extends State<EnglishNumberLesson> {
@@ -14,7 +16,8 @@ class _EnglishNumberLessonState extends State<EnglishNumberLesson> {
   @override
   Widget build(BuildContext context) {
     // We call the list from our Repository class
-    final List<NumberLessonData> lessons = NumbersEnglishLessonRepo.numbersEnglessons;
+    final List<NumberLessonData> lessons =
+        NumbersEnglishLessonRepo.numbersEnglessons;
 
     return Scaffold(
       body: PageView.builder(

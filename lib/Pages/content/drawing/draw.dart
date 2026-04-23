@@ -1,16 +1,18 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:video_player/video_player.dart';
-import '../../../Widgets/ResponsiveProvider.dart';
 import '../../../Widgets/content/drawing_page.dart';
 
-class draw extends StatefulWidget {
-  const draw({super.key});
+class Draw extends StatefulWidget {
+  const Draw({super.key});
 
   @override
-  _drawState createState() => _drawState();
+  State<Draw> createState() => _DrawState();
 }
 
-class _drawState extends State<draw> {
+class _DrawState extends State<Draw> {
   late VideoPlayerController _controller;
 
   @override
@@ -29,7 +31,8 @@ class _drawState extends State<draw> {
       });
 
     _controller.addListener(() {
-      if (_controller.value.isInitialized && _controller.value.position >= _controller.value.duration) {
+      if (_controller.value.isInitialized &&
+          _controller.value.position >= _controller.value.duration) {
         _navigateToDrawing();
       }
     });
@@ -40,7 +43,8 @@ class _drawState extends State<draw> {
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const Drawing(),
+        pageBuilder:
+            (context, animation, secondaryAnimation) => const Drawing(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -76,12 +80,20 @@ class _drawState extends State<draw> {
             Positioned(
               top: -config.localHeight * 0.05,
               right: -config.localWidth * 0.1,
-              child: _decorativeCircle(config.localWidth * 0.5, Colors.white.withOpacity(0.4)),
+
+              child: _decorativeCircle(
+                config.localWidth * 0.5,
+                Colors.white.withOpacity(0.4),
+              ),
             ),
             Positioned(
               bottom: -config.localHeight * 0.03,
               left: -config.localWidth * 0.08,
-              child: _decorativeCircle(config.localWidth * 0.35, Colors.white.withOpacity(0.3)),
+
+              child: _decorativeCircle(
+                config.localWidth * 0.35,
+                Colors.white.withOpacity(0.3),
+              ),
             ),
 
             Center(
@@ -99,10 +111,14 @@ class _drawState extends State<draw> {
                   SizedBox(height: config.localHeight * 0.03),
                   Container(
                     padding: EdgeInsets.all(config.localWidth * 0.03),
-                    margin: EdgeInsets.symmetric(horizontal: config.localWidth * 0.08),
+                    margin: EdgeInsets.symmetric(
+                      horizontal: config.localWidth * 0.08,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(config.localWidth * 0.1),
+                      borderRadius: BorderRadius.circular(
+                        config.localWidth * 0.1,
+                      ),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.green.withOpacity(0.1),
@@ -112,18 +128,23 @@ class _drawState extends State<draw> {
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(config.localWidth * 0.08),
-                      child: _controller.value.isInitialized
-                          ? AspectRatio(
-                        aspectRatio: _controller.value.aspectRatio,
-                        child: VideoPlayer(_controller),
-                      )
-                          : SizedBox(
-                        height: config.localHeight * 0.25,
-                        child: const Center(
-                          child: CircularProgressIndicator(color: Colors.lightGreen),
-                        ),
+                      borderRadius: BorderRadius.circular(
+                        config.localWidth * 0.08,
                       ),
+                      child:
+                          _controller.value.isInitialized
+                              ? AspectRatio(
+                                aspectRatio: _controller.value.aspectRatio,
+                                child: VideoPlayer(_controller),
+                              )
+                              : SizedBox(
+                                height: config.localHeight * 0.25,
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.lightGreen,
+                                  ),
+                                ),
+                              ),
                     ),
                   ),
                   if (_controller.value.isInitialized)
@@ -162,11 +183,16 @@ class _drawState extends State<draw> {
                       horizontal: config.localWidth * 0.08,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(config.localWidth * 0.1),
+                      borderRadius: BorderRadius.circular(
+                        config.localWidth * 0.1,
+                      ),
                     ),
                     elevation: 8,
                   ),
-                  icon: Icon(Icons.palette_rounded, size: config.buttonFont * 0.8),
+                  icon: Icon(
+                    Icons.palette_rounded,
+                    size: config.buttonFont * 0.8,
+                  ),
                   label: Text(
                     "يلا نرسم!",
                     style: TextStyle(

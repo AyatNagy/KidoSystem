@@ -6,11 +6,7 @@ class DrawingStoryPage extends StatefulWidget {
   final List<dynamic> storyData;
   final VoidCallback? onComplete;
 
-  const DrawingStoryPage({
-    super.key,
-    required this.storyData,
-    this.onComplete,
-  });
+  const DrawingStoryPage({super.key, required this.storyData, this.onComplete});
 
   @override
   State<DrawingStoryPage> createState() => _DrawingStoryPageState();

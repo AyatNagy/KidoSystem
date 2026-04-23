@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'ResponsiveProvider.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 
 class KidoAppBar extends StatelessWidget implements PreferredSizeWidget {
   const KidoAppBar({super.key});
