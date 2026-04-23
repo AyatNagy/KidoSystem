@@ -57,7 +57,7 @@ class _SizeIntroPageState extends State<SizeIntroPage>
               builder:
                   (_, child) =>
                       Transform.scale(scale: scale.value, child: child),
-              child: Image.asset(data.firstImage, height: 250),
+              child: Image.asset(data.correctImage, height: 250),
             ),
 
             const SizedBox(height: 30),

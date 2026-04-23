@@ -134,8 +134,9 @@ class _FlipBookLessonState extends State<FlipBookLesson> {
   }
 
   Widget _buildVideoSection(config) {
-    if (_controller == null || !_controller!.value.isInitialized)
+    if (_controller == null || !_controller!.value.isInitialized) {
       return const SizedBox();
+    }
     return Container(
       height: config.localHeight * 0.25,
       margin: const EdgeInsets.symmetric(horizontal: 40),

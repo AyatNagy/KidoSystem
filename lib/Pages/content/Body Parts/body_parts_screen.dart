@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Models/body_parts_button.dart';
 import 'package:kido/Models/body_parts_model.dart';
+import 'package:kido/Widgets/next_button.dart';
 import 'package:kido/data/body_parts.dart';
 import 'package:kido/utils/stars_progress.dart';
 import 'package:lottie/lottie.dart';
@@ -132,6 +132,7 @@ class _BodyPartsScreenState extends State<BodyPartsScreen>
                   duration: const Duration(milliseconds: 500),
                   child: NextButton(
                     onPressed: repeatCount >= maxrepeats ? goNext : () {},
+                    color: Colors.blueAccent,
                   ),
                 ),
             ],

@@ -150,7 +150,7 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
 
                         transformAlignment: Alignment.center,
                         child: Image.asset(
-                          data.firstImage,
+                          data.correctImage,
                           height: 400, // حجم كبير وثابت من الأول
                           fit: BoxFit.contain,
                         ),

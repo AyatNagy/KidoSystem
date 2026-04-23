@@ -211,8 +211,9 @@ class _LetterTracePageState extends State<LetterTracePage>
                                       onPanDown: (details) {
                                         if (_lockedAfterSuccess) return;
                                         if (_steps.isEmpty) return;
-                                        if (_currentStep >= _steps.length)
+                                        if (_currentStep >= _steps.length) {
                                           return;
+                                        }
 
                                         final start =
                                             _steps[_currentStep].startPoint;

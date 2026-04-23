@@ -6,6 +6,7 @@ import 'package:kido/Models/size_lesson_data.dart';
 import 'package:kido/Widgets/content/content_app_bar.dart';
 import 'package:kido/enum/size_goal.dart';
 import 'package:kido/services/audio_service.dart';
+import 'package:lottie/lottie.dart'; // لا تنسي إضافة المكتبة
 
 class SizePracticePage extends StatefulWidget {
   final SizeGoal goal;
@@ -30,8 +31,8 @@ class _SizePracticePageState extends State<SizePracticePage>
   late AnimationController stretchController;
   late Animation<double> stretchAnimation;
 
-  // الإجابة الصحيحة دايماً هي الأولى بناءً على منطق الكود بتاعك
-  bool get isFirstCorrect => true;
+  // الإجابة الصحيحة دايماً بنعوض عنها بـ true
+  bool get checkIsCorrect => true;
 
   @override
   void initState() {
@@ -86,10 +87,11 @@ class _SizePracticePageState extends State<SizePracticePage>
     });
   }
 
-  void handleTap(bool isFirst) async {
+  // تعديل المسمى هنا ليكون أوضح (isCorrect بدل isFirst)
+  void handleTap(bool isCorrect) async {
     if (isLocked) return;
 
-    String currentKey = isFirst ? "first" : "second";
+    String currentKey = isCorrect ? "correct" : "wrong";
     if (wrongSelections.contains(currentKey)) return;
 
     setState(() {
@@ -97,8 +99,7 @@ class _SizePracticePageState extends State<SizePracticePage>
       selected = currentKey;
     });
 
-    if (isFirst == isFirstCorrect) {
-      // ✅ الإجابة صح: نوقف التلميحات ونرجع الأنيميشن للصفر بنعومة
+    if (isCorrect == checkIsCorrect) {
       hintTimer?.cancel();
       startDelayTimer?.cancel();
       AudioService.stop();
@@ -106,32 +107,39 @@ class _SizePracticePageState extends State<SizePracticePage>
       if (stretchController.isAnimating) {
         await stretchController.animateTo(
           0,
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 200),
         );
       }
+      if (mounted) {
+        setState(() => showSuccess = true);
+      }
+      //await AudioService.play(fileName: "talleffect.mp3");
+      //await Future.delayed(const Duration(milliseconds: 1000));
+
+      if (mounted) {
+        setState(() => showSuccess = true);
+        AudioService.play(fileName: "yaay.mp3");
+      }
+      await Future.delayed(const Duration(milliseconds: 2000));
 
       await AudioService.play(fileName: data.correctAudio);
       await Future.delayed(const Duration(milliseconds: 500));
 
-      if (mounted) {
-        setState(() => showSuccess = true);
-      }
+      await Future.delayed(const Duration(seconds: 1));
       await AudioService.play(fileName: data.audio);
     } else {
-      // ❌ الإجابة غلط: الأنيميشن بتاع الكبير "لا يتأثر" بيفضل شغال زي ما هو
-      AudioService.stop();
-      await AudioService.play(fileName: "wrong.wav");
-      await Future.delayed(const Duration(seconds: 1));
+      //AudioService.stop();
+      //await AudioService.play(fileName: "wrong.wav");
+      await Future.delayed(const Duration(seconds: 0));
 
       if (mounted) {
         setState(() {
           isLocked = false;
           wrongSelections.add(currentKey);
-          selected = null; // بنصفر الـ selected عشان التلميحات الصوتية ترجع
+          selected = null;
         });
       }
 
-      // نضمن إن الأنيميشن لسه شغال عشان يجذب الطفل للصح
       if (!stretchController.isAnimating && !showSuccess) {
         setState(() => canAnimate = true);
         stretchController.repeat(reverse: true);
@@ -146,9 +154,9 @@ class _SizePracticePageState extends State<SizePracticePage>
 
     switch (widget.goal) {
       case SizeGoal.longShort:
-        scaleX = 1.0 - (0.15 * val);
-        scaleY = 1.0 + (0.6 * val);
-        translateY = -50 * val;
+        scaleX = 1.0 - (0.2 * val);
+        scaleY = 1.0 + (1.2 * val); // تأثير الطول القوي
+        translateY = -80 * val;
         break;
       case SizeGoal.thickThin:
         scaleX = 1.0 + (0.6 * val);
@@ -168,24 +176,21 @@ class _SizePracticePageState extends State<SizePracticePage>
   Widget buildItem({
     required String keyName,
     required String image,
-    required bool isFirst,
+    required bool isCorrect,
   }) {
-    bool isCorrect = (isFirst == isFirstCorrect);
-    // الـ Fade بيعتمد فقط على هل العنصر ده "خسر" ولا لأ
+    bool isActuallyCorrect = (isCorrect == checkIsCorrect);
     bool shouldBeFaded = wrongSelections.contains(keyName);
 
     return Expanded(
       child: GestureDetector(
-        onTap: () => handleTap(isFirst),
+        onTap: () => handleTap(isCorrect),
         child: AnimatedOpacity(
           duration: const Duration(milliseconds: 400),
           opacity: shouldBeFaded ? 0.3 : 1.0,
           child: AnimatedBuilder(
             animation: stretchAnimation,
             builder: (context, child) {
-              // ✅ هنا السر: الأنيميشن بيعتمد فقط على canAnimate و كون العنصر هو الصحيح
-              // مش بيعتمد على selected تماماً، فلو دوست غلط الأنيميشن مش هيتهز
-              bool isAnimatingNow = canAnimate && isCorrect;
+              bool isAnimatingNow = canAnimate && isActuallyCorrect;
 
               return Stack(
                 alignment: Alignment.center,
@@ -220,7 +225,7 @@ class _SizePracticePageState extends State<SizePracticePage>
             },
             child: Image.asset(
               image,
-              height: isFirst ? 300 : 150,
+              height: isCorrect ? 300 : 150, // الحجم الطويل عند الاختيار
               fit: BoxFit.contain,
             ),
           ),
@@ -243,19 +248,22 @@ class _SizePracticePageState extends State<SizePracticePage>
       body: Center(
         child:
             showSuccess
-                ? _buildSuccessView()
+                ? _buildSuccessView() // هنا هيتم استدعاء شاشة النجاح
                 : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    // الصورة الخطأ على الشمال
                     buildItem(
-                      keyName: "first",
-                      image: data.firstImage,
-                      isFirst: true,
-                    ),
-                    buildItem(
-                      keyName: "second",
+                      keyName: "wrong",
                       image: data.secondImage,
-                      isFirst: false,
+                      isCorrect: false,
+                    ),
+
+                    // الصورة الصح على اليمين
+                    buildItem(
+                      keyName: "correct",
+                      image: data.correctImage,
+                      isCorrect: true,
                     ),
                   ],
                 ),
@@ -263,29 +271,44 @@ class _SizePracticePageState extends State<SizePracticePage>
     );
   }
 
+  // --- التعديل الجوهري هنا ---
   Widget _buildSuccessView() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
       children: [
-        TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0.0, end: 1.0),
-          duration: const Duration(milliseconds: 1000),
-          curve: Curves.elasticOut,
-          builder: (context, value, child) {
-            return Container(
-              transform: _getStepTransform(value),
-              transformAlignment: Alignment.center,
-              child: Image.asset(data.firstImage, height: 350),
-            );
-          },
+        // لوتي أنيميشن في الخلفية كاحتفال
+        Positioned.fill(
+          child: Lottie.asset('assets/lottie/CONFETTI.json', fit: BoxFit.cover),
         ),
-        const SizedBox(height: 50),
-        Text(
-          data.title,
-          style: const TextStyle(
-            fontSize: 45,
-            fontWeight: FontWeight.bold,
-            color: Colors.orange,
+        // المحتوى الأصلي للنجاح (الصورة والنص)
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration: const Duration(milliseconds: 1000),
+                curve: Curves.elasticOut,
+                builder: (context, value, child) {
+                  return Container(
+                    transform: _getStepTransform(value),
+                    transformAlignment: Alignment.center,
+                    child: Image.asset(
+                      data.correctImage,
+                      height: 250,
+                    ), // رجعت 350 كما في الأول
+                  );
+                },
+              ),
+              const SizedBox(height: 50),
+              Text(
+                data.title,
+                style: const TextStyle(
+                  fontSize: 45,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange,
+                ),
+              ),
+            ],
           ),
         ),
       ],

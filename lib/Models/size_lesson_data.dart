@@ -5,7 +5,7 @@ class SizeLessonData {
   final String audio;
   final String questionAudio;
   final String correctAudio;
-  final String firstImage;
+  final String correctImage;
   final String secondImage;
 
   SizeLessonData({
@@ -13,7 +13,7 @@ class SizeLessonData {
     required this.audio,
     required this.questionAudio,
     required this.correctAudio,
-    required this.firstImage,
+    required this.correctImage,
     required this.secondImage,
   });
 }
@@ -27,7 +27,7 @@ class SizeLessonMapper {
           audio: "tall.wav",
           questionAudio: "where_tall.wav",
           correctAudio: "tall_correct.wav",
-          firstImage: "assets/images/sizes/tallcandel.png",
+          correctImage: "assets/images/sizes/tallcandel.png",
           secondImage: "assets/images/sizes/shortcandel.png",
         );
 
@@ -37,7 +37,7 @@ class SizeLessonMapper {
           audio: "thick.wav",
           questionAudio: "where_thick.wav",
           correctAudio: "thick_correct.wav",
-          firstImage: "assets/images/sizes/thick.png",
+          correctImage: "assets/images/sizes/thick.png",
           secondImage: "assets/images/sizes/thin.png",
         );
 
@@ -47,7 +47,7 @@ class SizeLessonMapper {
           audio: "big.wav",
           questionAudio: "where_big.wav",
           correctAudio: "big_correct.wav",
-          firstImage: "assets/images/sizes/big.png",
+          correctImage: "assets/images/sizes/big.png",
           secondImage: "assets/images/sizes/small.png",
         );
     }
