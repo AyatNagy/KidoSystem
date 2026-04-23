@@ -1,27 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:kido/Models/level3/numbers/number_lesson_model.dart';
+import 'package:kido/Widgets/next_button.dart';
+import 'package:kido/Widgets/sound_button.dart';
+import 'dart:async';
 
 class NumberLessonWidget extends StatefulWidget {
   final NumberLessonData data;
   final VoidCallback onNext;
+  final bool isEnglish;
+
 
   const NumberLessonWidget({
     super.key,
     required this.data,
     required this.onNext,
+    required this.isEnglish,
   });
 
-  @override
+   @override
   State<NumberLessonWidget> createState() => _NumberLessonWidgetState();
 }
 
-class _NumberLessonWidgetState extends State<NumberLessonWidget>
-    with SingleTickerProviderStateMixin {
+
+
+class _NumberLessonWidgetState extends State<NumberLessonWidget> with TickerProviderStateMixin {
+
   late AnimationController _controller;
   late Animation<double> _pulseAnimation;
+  late AnimationController _entranceController;
+  late Animation<Offset> _slideAnimation;
+  late AnimationController _breatheController;
+  late Animation<double> _breatheAnimation;
+  late AnimationController _idleController;
+  late Animation<double> _idleOffset;
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _hasInteracted = false;
+  Timer? _idleTimer;
+  
 
   @override
   void initState() {
@@ -35,65 +51,93 @@ class _NumberLessonWidgetState extends State<NumberLessonWidget>
     )..addStatusListener((status) {
       if (status == AnimationStatus.completed) _controller.reverse();
     });
+    _entranceController=AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+      );
+
+    _slideAnimation=Tween<Offset>(
+      begin: const Offset(0, 1.5), 
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _entranceController, curve: Curves.bounceOut)
+    );
+    _entranceController.forward();
+
+    _breatheController = AnimationController(
+  vsync: this,
+  duration: const Duration(seconds: 2),
+)..repeat(reverse: true); 
+
+   _breatheAnimation = Tween<double>(begin: 1.0, end: 1.04).animate(
+  CurvedAnimation(parent: _breatheController, curve: Curves.easeInOut),
+);
+
+   _idleController = AnimationController(
+  vsync: this,
+  duration: const Duration(seconds: 1), // Speed of the floating
+)..repeat(reverse: true); // Back and forth
+
+  _idleOffset = Tween<double>(begin: 0, end: -15).animate( // Moves up by 15 pixels
+  CurvedAnimation(parent: _idleController, curve: Curves.easeInOut),
+);
   }
 
   Future<void> _playLesson() async {
     setState(() => _hasInteracted = true);
+    _idleController.stop();
+    _idleController.reset();
     _controller.forward();
     await _audioPlayer.setSource(AssetSource(widget.data.audioPath));
     await _audioPlayer.resume();
+    _startIdleTimer();
   }
+
+  void _startIdleTimer() {
+  _idleTimer?.cancel(); // Cancel any existing timer
+  _idleTimer = Timer(const Duration(seconds: 2), () {
+    if (mounted && !_idleController.isAnimating) {
+      _idleController.repeat(reverse: true); 
+    }
+  });
+}
 
   @override
   void dispose() {
+    _idleTimer?.cancel();
     _controller.dispose();
     _audioPlayer.dispose();
+    _entranceController.dispose();
+    _breatheController.dispose();
+    _idleController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF6A4BB1), Color(0xFF4B2E83)],
-        ),
-      ),
-      child: SafeArea(
+     final Color buttonColor=widget.isEnglish?widget.data.primaryColor:const Color.fromARGB(255, 2, 56, 122);
+    return Scaffold(
+      backgroundColor:Colors.blue[100],
+      body:SafeArea(
         child: Column(
-          children: [
-            // Top Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 25.0,
-                vertical: 15.0,
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white24,
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.volume_up,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                      onPressed: _playLesson,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Number Image - Wrapped in Expanded to prevent overflow
+           children: [
+          
+            // Number Image
             Expanded(
               flex: 3,
-              child: GestureDetector(
+              child: 
+               SlideTransition(
+              position: _slideAnimation,
+              child:Center(
+              child: AnimatedBuilder(
+        animation: _idleOffset,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(0, _idleOffset.value),
+            child: child,
+          );
+        },
+             
+           child:GestureDetector(
                 onTap: _playLesson,
                 child: ScaleTransition(
                   scale: _pulseAnimation,
@@ -104,87 +148,32 @@ class _NumberLessonWidgetState extends State<NumberLessonWidget>
                 ),
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            // Characters in multiple rows for numbers 4-10
-            // Characters section with more space
-            if (widget.data.characterImagePath != null &&
-                widget.data.characterImagePath!.isEmpty)
-              Expanded(
-                flex: 3, // Increased from 2 to 3 to give more vertical room
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  alignment: Alignment.center,
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    runAlignment: WrapAlignment.center,
-                    spacing: 8, // Horizontal space between characters
-                    runSpacing: 12, // Vertical space between the two rows
-                    // At the top of your builder, add this logic:
-                    children: List.generate(widget.data.number, (index) {
-                      return FutureBuilder(
-                        // Delay increases for each character: 0ms, 200ms, 400ms...
-                        future: Future.delayed(
-                          Duration(milliseconds: index * 300),
-                        ),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            return TweenAnimationBuilder<double>(
-                              duration: const Duration(milliseconds: 600),
-                              curve: Curves.elasticOut,
-                              tween: Tween(begin: 0.0, end: 1.0),
-                              builder: (context, value, child) {
-                                return Transform.scale(
-                                  scale: value,
-                                  child: child,
-                                );
-                              },
-                              child: Image.asset(
-                                widget.data.characterImagePath!,
-                                height: widget.data.number <= 3 ? 140 : 75,
-                              ),
-                            );
-                          }
-                          // Return an empty box while waiting for its turn to "pop"
-                          return const SizedBox(width: 80, height: 80);
-                        },
-                      );
-                    }),
-                  ),
-                ),
-              ),
-            // Next Button
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0, top: 10),
-              child: AnimatedOpacity(
-                duration: const Duration(milliseconds: 500),
-                opacity: _hasInteracted ? 1.0 : 0.0,
-                child: SizedBox(
-                  height: 80, // Fixed height container to prevent layout shifts
-                  child:
-                      _hasInteracted
-                          ? ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orangeAccent,
-                              shape: const CircleBorder(),
-                              padding: const EdgeInsets.all(20),
-                            ),
-                            onPressed: widget.onNext,
-                            child: const Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          )
-                          : null,
-                ),
-              ),
+               ),
+               ),
             ),
-          ],
-        ),
-      ),
+            const SizedBox(height: 20),
+            
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ScaleTransition(
+                    scale: _breatheAnimation,
+                    child: SoundButton(color: buttonColor, onPressed: _playLesson),
+                    ),
+                  if(_hasInteracted)
+                  NextButton(color:buttonColor,onPressed:  widget.onNext,)
+                  else
+                  const SizedBox(width: 90,)
+                ],
+
+              ),
+              )
+           ]   
+           
+        )) ,
+          
     );
   }
 }
