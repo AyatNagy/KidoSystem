@@ -3,6 +3,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:kido/Pages/level3/numbers/numbers_train.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/config/responsive_config.dart';
+import 'package:kido/services/asset_service.dart';
 import 'Pages/Logo_Page.dart';
 import 'Widgets/info_widget.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-            home: NumbersTrain(phase:1),
+            home: NumbersTrain(language:TrainLessonLanguage.arabic,phase:1),
           ),
         );
       },

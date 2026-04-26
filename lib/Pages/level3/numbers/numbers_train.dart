@@ -8,9 +8,11 @@ import'dart:async';
 
 class NumbersTrain extends StatefulWidget {
   final int phase;
+  final TrainLessonLanguage language;
   const NumbersTrain({
     super.key,
     required this.phase,
+    required this.language,
     });
 
   @override
@@ -37,7 +39,7 @@ class _NumbersTrainState extends State<NumbersTrain> with TickerProviderStateMix
       AssetService.images.trainBackgroundPath,
       AssetService.images.trainRailwayPath,
       AssetService.images.trainEnginePath,
-      ...AssetService.images.carRange(carsNumberInPhase)
+      ...AssetService.images.carRange(carsNumberInPhase,widget.language)
     ];
     await AssetService.warmupAssets(context, warmUP);
     if(mounted){
@@ -154,15 +156,16 @@ Future playSong() async{
                     children: [
                       Image.asset(AssetService.images.trainEnginePath,height: 180,fit: BoxFit.contain,),
                       ...List.generate(currentCars,(index){
+                        int carNumber = index+1;
                           return Padding(
                             padding: const EdgeInsets.only(left:2.0),
-                            child: Image.asset(AssetService.images.car(index+1),height: 155,fit: BoxFit.contain,
+                            child: Image.asset(AssetService.images.car(widget.language,carNumber),height: 155,fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) {
           return Container(
             color: Colors.amber,
             width: 100,
             height: 150,
-            child: Text('Missing car_${index + 1}'),
+            child: Text('Missing car_$carNumber'),
           );
         },
                             ),
