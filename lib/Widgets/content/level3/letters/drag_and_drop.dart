@@ -93,7 +93,7 @@ class _DragDropLessonPageState extends State<DragDropLessonPage> {
               onAnswered: (answers) {
                 if (answers.length == widget.questionData.targets.length) {
                   HapticFeedback.heavyImpact();
-                  _playSound('audio/win.wav');
+                  _playSound('audio/yaay.mp3');
                   Future.delayed(const Duration(milliseconds: 1000), () {
                     _playSound(widget.letterAudio);
                   });

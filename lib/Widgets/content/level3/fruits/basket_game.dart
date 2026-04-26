@@ -1,10 +1,10 @@
 // ignore_for_file: deprecated_member_use
-
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kido/constants.dart';
+import 'package:lottie/lottie.dart';
+import '../../../puls_button.dart';
 import '../../../../Models/level3/pixel.dart';
 
 class FruitCollectorPage extends StatefulWidget {
@@ -39,11 +39,11 @@ class _FruitCollectorPageState extends State<FruitCollectorPage> {
     super.dispose();
   }
 
-  Future<void> _playFruitSound() async {
+  Future<void> _playSound(String path) async {
     try {
-      String path = widget.fruit.soundPath.replaceFirst('assets/', '');
+      String cleanPath = path.replaceFirst('assets/', '');
       await _audioPlayer.stop();
-      await _audioPlayer.play(AssetSource(path));
+      await _audioPlayer.play(AssetSource(cleanPath));
     } catch (e) {
       debugPrint("Audio Error: $e");
     }
@@ -56,15 +56,15 @@ class _FruitCollectorPageState extends State<FruitCollectorPage> {
 
   void _onItemCollected() {
     HapticFeedback.heavyImpact();
-    _playFruitSound();
 
     setState(() {
       _collectedCount++;
       if (_collectedCount < _targetCount) {
+        _playSound(widget.fruit.soundPath);
         _generateRandomPosition();
       } else {
         _isComplete = true;
-        HapticFeedback.lightImpact();
+        _playSound('audio/yaay.mp3');
       }
     });
   }
@@ -96,10 +96,9 @@ class _FruitCollectorPageState extends State<FruitCollectorPage> {
                     margin: const EdgeInsets.symmetric(horizontal: 5),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color:
-                          index < _collectedCount
-                              ? Colors.white.withOpacity(0.8)
-                              : Colors.black12,
+                      color: index < _collectedCount
+                          ? Colors.white.withOpacity(0.8)
+                          : Colors.black12,
                       shape: BoxShape.circle,
                     ),
                     child: Image.asset(
@@ -107,16 +106,14 @@ class _FruitCollectorPageState extends State<FruitCollectorPage> {
                       height: 35,
                       color: index < _collectedCount ? null : Colors.black26,
                       colorBlendMode:
-                          index < _collectedCount
-                              ? BlendMode.dst
-                              : BlendMode.srcIn,
+                      index < _collectedCount ? BlendMode.dst : BlendMode.srcIn,
                     ),
                   );
                 }),
               ),
             ),
           ),
-          if (_collectedCount < _targetCount)
+          if (!_isComplete)
             Positioned(
               top: _itemTop,
               left: _itemLeft,
@@ -140,12 +137,10 @@ class _FruitCollectorPageState extends State<FruitCollectorPage> {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (_collectedCount == 0)
+                    if (_collectedCount == 0 && !_isComplete)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 8,
-                        ),
+                            horizontal: 20, vertical: 8),
                         decoration: BoxDecoration(
                           color: Colors.white70,
                           borderRadius: BorderRadius.circular(20),
@@ -153,9 +148,7 @@ class _FruitCollectorPageState extends State<FruitCollectorPage> {
                         child: const Text(
                           "ضع الفاكهة في السلة",
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.brown,
-                          ),
+                              fontWeight: FontWeight.bold, color: Colors.brown),
                         ),
                       ),
                     const SizedBox(height: 10),
@@ -173,58 +166,27 @@ class _FruitCollectorPageState extends State<FruitCollectorPage> {
             ),
           ),
           if (_isComplete)
+            Positioned.fill(
+              child: Lottie.asset(
+                'assets/lottie/confetti.json',
+                repeat: false,
+                fit: BoxFit.cover,
+              ),
+            ),
+          if (_isComplete)
             Positioned(
-              bottom: 100,
-              left: 0,
+              bottom: 50,
+              left: 250,
               right: 0,
               child: Center(
-                child: TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 800),
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  curve: Curves.elasticOut,
-                  builder: (context, value, child) {
-                    return Transform.scale(scale: value, child: child);
-                  },
-                  child: GestureDetector(
-                    onTap: widget.onNext,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 40,
-                        vertical: 15,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.kidoGreen,
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 10,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "التالي",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Icon(
-                            Icons.arrow_forward_rounded,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ],
-                      ),
+                child: PulseButton(
+                    onPressed: widget.onNext!,
+                    child: Icon(
+                      Icons.play_circle_fill_rounded,
+                      size: 90,
+                      color: widget.fruit.primaryColor,
                     ),
                   ),
-                ),
               ),
             ),
         ],
