@@ -1,11 +1,11 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:kido/Widgets/puls_button.dart';
 import 'package:kido/constants.dart';
-
+import 'package:lottie/lottie.dart';
 import '../../../../Models/level3/pixel.dart';
+import '../../../../data/level3/fruits/fruits_tree.dart';
 
 class TreeDiscoveryPage extends StatefulWidget {
   final PixelItem fruit;
@@ -20,15 +20,7 @@ class TreeDiscoveryPage extends StatefulWidget {
 class _TreeDiscoveryPageState extends State<TreeDiscoveryPage> {
   late AudioPlayer _audioPlayer;
   final Set<int> _pickedIndices = {};
-
-  // Define positions here so we can check the total count
-  final List<Map<String, dynamic>> _positions = [
-    {'top': 0.25, 'left': 0.25},
-    {'top': 0.40, 'left': 0.20},
-    {'top': 0.5, 'left': 0.65},
-    {'top': 0.52, 'left': 0.01},
-    {'top': 0.32, 'left': 0.55},
-  ];
+  final AudioPlayer _winPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -39,15 +31,14 @@ class _TreeDiscoveryPageState extends State<TreeDiscoveryPage> {
   @override
   void dispose() {
     _audioPlayer.dispose();
+    _winPlayer.dispose();
     super.dispose();
   }
 
-  bool get _isTaskComplete => _pickedIndices.length == _positions.length;
+  bool get _isComplete => _pickedIndices.length == positions.length;
 
   Future<void> _handleFruitTap(int index, PixelItem fruit) async {
     if (_pickedIndices.contains(index)) return;
-
-    HapticFeedback.mediumImpact();
     try {
       String path = fruit.soundPath.replaceFirst('assets/', '');
       await _audioPlayer.stop();
@@ -60,8 +51,17 @@ class _TreeDiscoveryPageState extends State<TreeDiscoveryPage> {
       _pickedIndices.add(index);
     });
 
-    if (_isTaskComplete) {
-      HapticFeedback.lightImpact();
+    if (_isComplete) {
+      await Future.delayed(const Duration(milliseconds: 800));
+      _playWinSequence();
+    }
+  }
+
+  void _playWinSequence() async {
+    try {
+      await _winPlayer.play(AssetSource('audio/yaay.mp3'));
+    } catch (e) {
+      debugPrint("Win sound error: $e");
     }
   }
 
@@ -81,7 +81,7 @@ class _TreeDiscoveryPageState extends State<TreeDiscoveryPage> {
               fit: BoxFit.cover,
             ),
           ),
-          ..._positions.asMap().entries.map((entry) {
+          ...positions.asMap().entries.map((entry) {
             int idx = entry.key;
             var pos = entry.value;
             PixelItem fruit = widget.fruit;
@@ -94,76 +94,35 @@ class _TreeDiscoveryPageState extends State<TreeDiscoveryPage> {
                 child: AnimatedScale(
                   scale: _pickedIndices.contains(idx) ? 0.0 : 1.0,
                   duration: const Duration(milliseconds: 600),
-                  curve:
-                      Curves
-                          .easeInBack, // Changed to easeInBack for a "plucking" feel
+                  curve: Curves.easeInBack,
                   child: Image.asset(fruit.mainImage, height: 100),
                 ),
               ),
             );
           }),
-
-          // The "Next" Button - Appears only when all fruits are picked
-          if (_isTaskComplete)
+          if (_isComplete)
+            Positioned.fill(
+              child: Lottie.asset(
+                'assets/lottie/confetti.json',
+                fit: BoxFit.cover,
+              ),
+            ),
+          if (_isComplete)
             Positioned(
               bottom: 50,
               left: 0,
               right: 0,
               child: Center(
-                child: TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 800),
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  curve: Curves.elasticOut,
-                  builder: (context, value, child) {
-                    return Transform.scale(scale: value, child: child);
-                  },
-                  child: ElevatedButton.icon(
-                    onPressed: widget.onNext,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.kidoGreen,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 40,
-                        vertical: 15,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      elevation: 8,
-                    ),
-                    icon: const Icon(Icons.arrow_forward_rounded, size: 30),
-                    label: const Text(
-                      "Next",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
+                  child: PulseButton(
+                      onPressed: widget.onNext!,
+                      child: Icon(
+                        Icons.play_circle_fill_rounded,
+                        size: 90,
+                        color: widget.fruit.primaryColor,
+                      )
+                  )
               ),
             ),
-
-          // Floating Score/Counter (Optional - helpful for kids)
-          Positioned(
-            top: 60,
-            right: 20,
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
-                shape: BoxShape.circle,
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
-              ),
-              child: Text(
-                "${_pickedIndices.length}/${_positions.length}",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.kidoBlue,
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );

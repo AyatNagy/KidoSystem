@@ -1,0 +1,117 @@
+// ignore_for_file: deprecated_member_use
+import 'package:flutter/material.dart';
+import 'package:kido/Widgets/content/level1/background_colors.dart';
+import 'package:lottie/lottie.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:kido/Widgets/puls_button.dart';
+import 'package:kido/constants.dart';
+import '../../../../services/audio_service.dart';
+import '../../../Widgets/responsive_provider.dart';
+import '../../../config/responsive_config.dart';
+
+class MonkeyCountingPage extends StatefulWidget {
+  final VoidCallback? onNext;
+  const MonkeyCountingPage({super.key, this.onNext});
+
+  @override
+  State<MonkeyCountingPage> createState() => _MonkeyCountingPageState();
+}
+
+class _MonkeyCountingPageState extends State<MonkeyCountingPage> {
+  int _count = 0;
+  final int _totalBananas = 5;
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  final List<bool> _isFed = [false, false, false, false, false];
+
+  void _feedMonkey(int index) async {
+    if (_isFed[index]) return;
+
+    setState(() {
+      _isFed[index] = true;
+      _count++;
+    });
+    await AudioService.play(fileName: 'numeric_ar/kid-$_count.mp3');
+    if (_count == _totalBananas) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      _audioPlayer.play(AssetSource('audio/yaay.mp3'));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ResponsiveConfig responsive = ResponsiveProvider.of(context);
+    final sw = responsive.localWidth;
+    final sh = responsive.localHeight;
+
+    return Scaffold(
+      body: Stack(
+          children: [
+            const BackgroundColors(),
+            Center(
+              child: DragTarget<int>(
+                onAccept: (index) => _feedMonkey(index),
+                builder: (context, candidateData, rejectedData) {
+                  return AnimatedScale(
+                    scale: candidateData.isNotEmpty ? 1.1 : 1.0,
+                    duration: const Duration(milliseconds: 300),
+                    child: Image.asset(
+                          "assets/images/monkey.png",
+                          height: sh * 0.4,
+                        ),
+                  );
+                },
+              ),
+            ),
+
+            for (int i = 0; i < _totalBananas; i++)
+              if (!_isFed[i])
+                Positioned(
+                  bottom: sh * 0.1,
+                  left: (sw / (_totalBananas + 1)) * (i + 1) - 30,
+                  child: Draggable<int>(
+                    data: i,
+                    feedback: _buildBanana(responsive, 1.2),
+                    childWhenDragging: Opacity(
+                        opacity: 0.3,
+                        child: _buildBanana(responsive, 1.0)
+                    ),
+                    child: _buildBanana(responsive, 1.0),
+                  ),
+                ),
+
+            if (_count == _totalBananas) ...[
+              Positioned.fill(
+                child: Lottie.asset(
+                    'assets/lottie/confetti.json',
+                    fit: BoxFit.contain
+                ),
+              ),
+              Positioned(
+                bottom: sh * 0.05,
+                right: sw * 0.05,
+                child: PulseButton(
+                  onPressed: widget.onNext ?? () {},
+                  child: Icon(
+                    Icons.play_circle_fill_rounded,
+                    color: AppColors.kidoOrange,
+                    size: responsive.imageHeight(0.10),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+    );
+  }
+
+  Widget _buildBanana(ResponsiveConfig responsive, double scale) {
+    return Transform.scale(
+      scale: scale,
+      child: Image.asset(
+        "assets/images/fruits/banana.png",
+        width: responsive.imageWidth(0.15),
+        height: responsive.imageHeight(0.1),
+      ),
+    );
+  }
+}

@@ -83,7 +83,7 @@ class _BubblePopGameState extends State<BubblePopGame> {
 
   void _handleWin() {
     HapticFeedback.mediumImpact();
-    _audioPlayer.play(AssetSource('audio/win.wav'));
+    _audioPlayer.play(AssetSource('audio/yaay.mp3'));
 
     setState(() {
       _hasWon = true;

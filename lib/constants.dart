@@ -6,6 +6,7 @@ class AppColors {
   static const Color kidoYellow = Color(0xFFFFE066);
   static const Color kidoGreen = Color(0xFF88D498);
   static const Color kidoBlue = Color(0xFF8ECAE6);
+  static const Color kidoRed = Color(0xFFFF8A80);
   static const Color purpleMain = Color(0xFF9063F5);
   static const Color textDark = Color(0xFF333333);
   static const Color textGray = Color(0xFF8E8E8E);
