@@ -83,7 +83,7 @@ class _MonkeyCountingPageState extends State<MonkeyCountingPage> {
               Positioned.fill(
                 child: Lottie.asset(
                     'assets/lottie/confetti.json',
-                    fit: BoxFit.contain
+                    fit: BoxFit.cover
                 ),
               ),
               Positioned(

@@ -131,7 +131,7 @@ class _BeeCountingPageState extends State<BeeCountingPage> with TickerProviderSt
                 child: Positioned.fill(
                   child: Lottie.asset(
                       'assets/lottie/confetti.json',
-                      fit: BoxFit.contain
+                      fit: BoxFit.cover
                   ),
                 ),
               ),

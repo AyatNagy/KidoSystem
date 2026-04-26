@@ -113,7 +113,7 @@ class _ToyRewardPageState extends State<ToyRewardPage> with TickerProviderStateM
             Positioned.fill(
                 child: Lottie.asset(
                   'assets/lottie/confetti.json',
-                  fit: BoxFit.contain,
+                  fit: BoxFit.cover,
                 ),
             ),
           if (_toyCount == 3)
