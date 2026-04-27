@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:kido/constants.dart';
 import 'category.dart';
 
-class Level2Home extends StatelessWidget {
+class Level1Home extends StatelessWidget {
   final String childName;
   final String? avatarAsset;
-  const Level2Home({super.key, required this.childName, this.avatarAsset});
+  const Level1Home({super.key, required this.childName, this.avatarAsset});
 
   @override
   Widget build(BuildContext context) {

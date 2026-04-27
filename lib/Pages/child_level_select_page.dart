@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/level2/level2_home.dart';
+import 'package:kido/Pages/level1/level1_home.dart';
 import 'package:kido/Pages/level3/level3_home.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 
@@ -43,10 +43,7 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder:
-                (_) => const Scaffold(
-                  body: Center(child: Text("Level 1 - Coming Soon")),
-                ),
+            builder: (_) => Level1Home(childName: widget.childName)
           ),
         );
         break;
@@ -54,7 +51,9 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => Level2Home(childName: widget.childName)
+            builder: (_) => const Scaffold(
+              body: Center(child: Text("Level 2 - Coming Soon")),
+            ),
           ),
         );
         break;

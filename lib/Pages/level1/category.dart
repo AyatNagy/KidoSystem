@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Pages/level1/no3/moving_car.dart';
+import 'package:kido/Pages/level1/no6/lesson1.dart';
 import 'package:kido/Widgets/category_card.dart';
 import 'package:kido/constants.dart';
 import '../../Widgets/Animation/counting.dart';
 import '../../Widgets/Animation/peg_board.dart';
 import '../../Widgets/Animation/senses.dart';
 import '../../Widgets/Animation/sorting_tower.dart';
+import 'no1/banana_count.dart';
+import 'no1/bees_count.dart';
+import 'no1/toys_count.dart';
 
 class Category extends StatelessWidget {
   const Category({super.key});
@@ -26,6 +31,30 @@ class Category extends StatelessWidget {
           gradient: AppColors.alphabetGrad,
           graphic: Center(child: Counting()),
           onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MonkeyCountingPage(
+                  onNext: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BeeCountingPage(
+                          onNext: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ToyRewardPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
           },
         ),
 
@@ -33,14 +62,28 @@ class Category extends StatelessWidget {
           title: "Sorting",
           gradient: AppColors.numbersGrad,
           graphic: Center(child: SortingTower()),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MovingCarPage()
+              )
+            );
+          },
         ),
 
         CategoryCard(
           title: "PegBoard",
           gradient: AppColors.colorsGrad,
           graphic: Center(child: PegboardLogo()),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StakesDrag()
+                )
+            );
+          },
         ),
 
         CategoryCard(
