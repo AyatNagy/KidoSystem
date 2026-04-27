@@ -8,8 +8,8 @@ import 'package:kido/Widgets/threed_colors_palette_painter.dart';
 import 'package:kido/Widgets/threed_number1_painter.dart';
 import 'package:kido/constants.dart';
 
-import 'level3/choose_letters.dart';
-import 'level3/fruits/fruits_map.dart';
+import 'choose_letters.dart';
+import 'fruits/fruits_map.dart';
 
 class CategoryGrid extends StatelessWidget {
   const CategoryGrid({super.key});
