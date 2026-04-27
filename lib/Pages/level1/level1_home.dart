@@ -1,13 +1,12 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/level3/category_grid.dart';
 import 'package:kido/constants.dart';
+import 'category.dart';
 
-class Level3Home extends StatelessWidget {
+class Level1Home extends StatelessWidget {
   final String childName;
   final String? avatarAsset;
-  const Level3Home({super.key, required this.childName, this.avatarAsset});
+  const Level1Home({super.key, required this.childName, this.avatarAsset});
 
   @override
   Widget build(BuildContext context) {
@@ -40,20 +39,20 @@ class Level3Home extends StatelessWidget {
                         ),
                         child: ClipOval(
                           child:
-                              avatarAsset != null
-                                  ? Image.asset(
-                                    avatarAsset!,
-                                    fit: BoxFit.cover,
-                                    width: 55,
-                                    height: 55,
-                                  )
-                                  : const Center(
-                                    child: Icon(
-                                      Icons.face_retouching_natural_rounded,
-                                      size: 35,
-                                      color: AppColors.purpleMain,
-                                    ),
-                                  ),
+                          avatarAsset != null
+                              ? Image.asset(
+                            avatarAsset!,
+                            fit: BoxFit.cover,
+                            width: 55,
+                            height: 55,
+                          )
+                              : const Center(
+                            child: Icon(
+                              Icons.face_retouching_natural_rounded,
+                              size: 35,
+                              color: AppColors.purpleMain,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 15),
@@ -85,9 +84,7 @@ class Level3Home extends StatelessWidget {
                   ),
                 ],
               ),
-
               SizedBox(height: screenHeight * 0.04),
-
               Container(
                 width: screenWidth,
                 padding: const EdgeInsets.all(25.0),
@@ -177,11 +174,8 @@ class Level3Home extends StatelessWidget {
                   color: AppColors.textDark,
                 ),
               ),
-
               const SizedBox(height: 20),
-
-              CategoryGrid(),
-
+              Category(),
               const SizedBox(height: 30),
             ],
           ),
