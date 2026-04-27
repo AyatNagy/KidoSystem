@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Pages/level3/vegetables/vegetable_map_screen.dart';
 import 'package:kido/Widgets/animated_3d_letter_a.dart';
 import 'package:kido/Widgets/category_card.dart';
 import 'package:kido/Widgets/family_painter.dart';
@@ -67,7 +68,12 @@ class CategoryGrid extends StatelessWidget {
           title: "Vegetables",
           gradient: AppColors.vegetablesGrad,
           graphic: Center(child: AnimatedCarrot(size: 80)),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => VegetableMapScreen()),
+            );
+          },
         ),
         CategoryCard(
           title: "Family",
