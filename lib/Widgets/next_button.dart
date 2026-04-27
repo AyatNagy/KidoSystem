@@ -1,5 +1,6 @@
 import'package:flutter/material.dart';
 import 'package:kido/Widgets/kido_action_button.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 
 class NextButton extends StatelessWidget{
 
@@ -17,16 +18,15 @@ class NextButton extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    final r = ResponsiveProvider.of(context);
     return KidoActionButton(
       heroTag: 'next_button',
        icon: Icons.play_arrow_rounded,
        color: Colors.green[700]!,
        shadowColor: shadowColor,
        onPressed: onPressed,
-      size:80,
+      size: r.buttonHeight,
     );
-
-      
   }
 
 }

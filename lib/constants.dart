@@ -33,15 +33,13 @@ class AppColors {
 
   static const List<Color> puzzleGrad = [Color(0xFFE3F2FD), Color(0xFFD4F1FF)];
 
-  // *** إضافة تدرج الخضروات هنا ***
   static const List<Color> vegetablesGrad = [
-    Color(0xFFDCEDC8), // أخضر فاتح جداً (Lime 100)
-    Color(0xFFAED581), // أخضر عشبي (Lime 300)
+    Color(0xFFDCEDC8),
+    Color(0xFFAED581),
   ];
 
-  // تدرج إضافي للفاكهة إذا حبتي تميزيها
   static const List<Color> fruitGrad = [
-    Color(0xFFFFEBEE), // أحمر وردي خفيف
-    Color(0xFFFFCDD2), // وردي أعمق قليلاً
+    Color(0xFFFFEBEE),
+    Color(0xFFFFCDD2),
   ];
 }

@@ -46,11 +46,6 @@ class _StakesDragState extends State<StakesDrag> {
     }
   }
 
-  Future<void> _handleFailure() async {
-    HapticFeedback.heavyImpact();
-    await AudioService.play(fileName: 'wrong.mp3');
-  }
-
   @override
   Widget build(BuildContext context) {
     final responsive = ResponsiveProvider.of(context);
@@ -75,7 +70,7 @@ class _StakesDragState extends State<StakesDrag> {
                 fit: BoxFit.cover,
               ),
             ),
-          if (_hasWon)
+          if (_hasWon && widget.onNext != null)
             Positioned(
               bottom: sh * 0.05,
               right: sw * 0.05,
@@ -112,7 +107,7 @@ class _StakesDragState extends State<StakesDrag> {
       onWillAccept: (data) {
         if (_completedIndices.contains(index)) return false;
         if (data != index) {
-          _handleFailure();
+          AudioService.play(fileName: 'wrong.mp3');
           return false;
         }
         return true;
