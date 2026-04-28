@@ -35,3 +35,29 @@ final List<LetterJourney> journeyEn = [
     dragData: enLetter[3],
   ),
 ];
+
+final List<LetterJourney> journeyAr = [
+  LetterJourney(
+    image: "assets/images/arabicletters/logoأ.png",
+    isLocked: false,
+    charName: 'أ',
+    letterData: arletters[0],
+    dragData: arLetter[0],
+  ),
+
+  LetterJourney(
+    image: "assets/images/arabicletters/logoب.png",
+    isLocked: true,
+    charName: 'ب',
+    letterData: arletters[1],
+    dragData: arLetter[1],
+  ),
+
+  LetterJourney(
+    image: "assets/images/arabicletters/logoت.png",
+    isLocked: true,
+    charName: 'ت',
+    letterData: arletters[2],
+    dragData: arLetter[2],
+  ),
+];

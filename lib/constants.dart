@@ -6,6 +6,7 @@ class AppColors {
   static const Color kidoYellow = Color(0xFFFFE066);
   static const Color kidoGreen = Color(0xFF88D498);
   static const Color kidoBlue = Color(0xFF8ECAE6);
+  static const Color kidoRed = Color(0xFFFF8A80);
   static const Color purpleMain = Color(0xFF9063F5);
   static const Color textDark = Color(0xFF333333);
   static const Color textGray = Color(0xFF8E8E8E);
@@ -32,15 +33,13 @@ class AppColors {
 
   static const List<Color> puzzleGrad = [Color(0xFFE3F2FD), Color(0xFFD4F1FF)];
 
-  // *** إضافة تدرج الخضروات هنا ***
   static const List<Color> vegetablesGrad = [
-    Color(0xFFDCEDC8), // أخضر فاتح جداً (Lime 100)
-    Color(0xFFAED581), // أخضر عشبي (Lime 300)
+    Color(0xFFDCEDC8),
+    Color(0xFFAED581),
   ];
 
-  // تدرج إضافي للفاكهة إذا حبتي تميزيها
   static const List<Color> fruitGrad = [
-    Color(0xFFFFEBEE), // أحمر وردي خفيف
-    Color(0xFFFFCDD2), // وردي أعمق قليلاً
+    Color(0xFFFFEBEE),
+    Color(0xFFFFCDD2),
   ];
 }

@@ -1,10 +1,8 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-
 import 'package:kido/constants.dart';
-
+import 'letters/ar_letters_map.dart';
 import 'letters/letters_map.dart';
 
 class LanguageSelectionPage extends StatefulWidget {
@@ -71,7 +69,14 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage>
                       cardColor: AppColors.kidoYellow,
                       photoWidthFactor: 1,
                       delay: 0,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ArLettersMapPage(),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(width: 20),
                     _buildLanguageCard(

@@ -72,6 +72,40 @@ final List<DragDropQuestion> arLetter = [
       ),
     ],
   ),
+
+  DragDropQuestion(
+    questionText: 'ت',
+    items: [
+      DragItem(
+        id: "ت",
+        image: "assets/images/arabicLetters/upperب.png",
+        startPosition: const Offset(0.45, 0.75),
+        size: const Size(0.50, 0.50),
+      ),
+      DragItem(
+        id: "نقطة",
+        image: "assets/images/arabicLetters/lowerب.png",
+        startPosition: const Offset(0.15, 0.8),
+        size: const Size(0.30, 0.30),
+      ),
+    ],
+    targets: [
+      DragTargetZone(
+        id: "partب",
+        acceptedItemIds: ["ب"],
+        position: const Offset(0.1, 0.2),
+        size: const Size(0.8, 0.8),
+        image: "assets/images/arabicLetters/upperب.png",
+      ),
+      DragTargetZone(
+        id: "partنقطة",
+        acceptedItemIds: ["نقطة"],
+        position: const Offset(0.4, 0.4),
+        size: const Size(0.3, 0.4),
+        image: "assets/images/arabicLetters/lowerب.png",
+      ),
+    ],
+  ),
 ];
 
 final List<DragDropQuestion> enLetter = [

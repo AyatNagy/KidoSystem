@@ -51,10 +51,9 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   signature: ^5.5.0
   simple_shadow: ^0.3.1
-
-
+  flutter_animate: ^4.5.0
+  motion_toast: ^2.9.1
   rive: ^0.14.3
-
   video_player: ^2.8.1
 
 
@@ -91,6 +90,7 @@ flutter:
     - assets/images/sizes/
     - assets/images/fruits/
     - assets/images/senses/
+    - assets/images/arabicNumbers/
     - assets/lottie/
     - assets/audio/
     - assets/audio/numeric_en/
@@ -101,6 +101,8 @@ flutter:
     - assets/audio/alphabet_en/
     - assets/videos/
     - assets/videos/Body_parts/
+    - assets/images/cartoonVegetable/
+    - assets/gif/
 
      
 

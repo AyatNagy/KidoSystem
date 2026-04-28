@@ -101,7 +101,7 @@ class _DrawState extends State<Draw> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "شاهد واستعد للمرح! ✨",
+                    "شاهد واستعد للمرح!",
                     style: TextStyle(
                       fontSize: config.headline,
                       fontWeight: FontWeight.bold,
