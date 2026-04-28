@@ -4,11 +4,14 @@ import 'package:kido/Models/draganddrop_question.dart';
 class DragDropQuestionWidget extends StatefulWidget {
   final DragDropQuestion question;
   final void Function(Map<String, String?> answers)? onAnswered;
+  // الإضافة الجديدة هنا
+  final bool isExamMode;
 
   const DragDropQuestionWidget({
     super.key,
     required this.question,
     this.onAnswered,
+    this.isExamMode = false,
   });
 
   @override
@@ -32,13 +35,11 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
 
   void _updateAnswers() {
     Map<String, String?> currentAnswers = {};
-
     targetOccupied.forEach((targetId, itemId) {
       if (itemId != null) {
         currentAnswers[itemId] = targetId;
       }
     });
-
     widget.onAnswered?.call(currentAnswers);
   }
 
@@ -64,10 +65,8 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
           );
         }
 
-        // 2. Targets Layer
         for (var target in widget.question.targets) {
           if (target.image.isEmpty) continue;
-
           stackChildren.add(
             Positioned(
               left: containerSize.width * target.position.dx,
@@ -85,7 +84,6 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
             (t) => t.id == targetId,
           );
           final item = widget.question.items.firstWhere((i) => i.id == itemId);
-
           final double scale = isPuzzle ? 1.0 : 0.5;
 
           stackChildren.add(
@@ -108,22 +106,14 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
                     fit: BoxFit.contain,
                   ),
                 ),
-                childWhenDragging: Opacity(
-                  opacity: 0.3,
-                  child: ColorFiltered(
-                    colorFilter: const ColorFilter.mode(
-                      Colors.grey,
-                      BlendMode.srcIn,
-                    ),
-                    child: Image.asset(item.image, fit: BoxFit.contain),
-                  ),
-                ),
                 child: Image.asset(item.image, fit: BoxFit.contain),
                 onDragEnd: (details) {
-                  setState(() {
-                    targetOccupied.remove(targetId);
-                    _updateAnswers();
-                  });
+                  if (!details.wasAccepted) {
+                    setState(() {
+                      targetOccupied.remove(targetId);
+                      _updateAnswers();
+                    });
+                  }
                 },
               ),
             ),
@@ -132,7 +122,6 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
 
         for (var item in widget.question.items) {
           if (targetOccupied.containsValue(item.id)) continue;
-          final start = initialPositions[item.id]!;
           final itemSize = Size(
             containerSize.width * item.size.width,
             containerSize.height * item.size.height,
@@ -140,8 +129,8 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
 
           stackChildren.add(
             Positioned(
-              left: containerSize.width * start.dx,
-              top: containerSize.height * start.dy,
+              left: containerSize.width * item.startPosition.dx,
+              top: containerSize.height * item.startPosition.dy,
               width: itemSize.width,
               height: itemSize.height,
               child: Draggable<String>(
@@ -157,71 +146,41 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
                 ),
                 childWhenDragging: Opacity(
                   opacity: 0.3,
-                  child: ColorFiltered(
-                    colorFilter: const ColorFilter.mode(
-                      Colors.grey,
-                      BlendMode.srcIn,
-                    ),
-                    child: Image.asset(
-                      item.image,
-                      width: itemSize.width,
-                      height: itemSize.height,
-                      fit: BoxFit.contain,
-                    ),
+                  child: Image.asset(
+                    item.image,
+                    width: itemSize.width,
+                    fit: BoxFit.contain,
                   ),
                 ),
                 child: Image.asset(
                   item.image,
                   width: itemSize.width,
-                  height: itemSize.height,
                   fit: BoxFit.contain,
                 ),
-                onDragEnd: (details) {
-                  setState(() {
-                    initialPositions[item.id] = item.startPosition;
-                    _updateAnswers();
-                  });
-                },
               ),
             ),
           );
         }
 
-        // DragTarget Overlay
+        //  منطق الـ DragTarget
         for (var target in widget.question.targets) {
-          final targetPos = Offset(
-            containerSize.width * target.position.dx,
-            containerSize.height * target.position.dy,
-          );
-          final targetSize = Size(
-            containerSize.width * target.size.width,
-            containerSize.height * target.size.height,
-          );
-
           stackChildren.add(
             Positioned(
-              left: targetPos.dx,
-              top: targetPos.dy,
-              width: targetSize.width,
-              height: targetSize.height,
+              left: containerSize.width * target.position.dx,
+              top: containerSize.height * target.position.dy,
+              width: containerSize.width * target.size.width,
+              height: containerSize.height * target.size.height,
               child: DragTarget<String>(
-                // 1. التعديل هنا: استخدام onWillAcceptWithDetails
-                onWillAcceptWithDetails: (details) => true,
-
-                // 2. التعديل هنا: استخدام onAcceptWithDetails
+                onWillAcceptWithDetails: (details) {
+                  if (widget.isExamMode) {
+                    return true;
+                  } else {
+                    return target.acceptedItemIds.contains(details.data);
+                  }
+                },
                 onAcceptWithDetails: (details) {
                   setState(() {
-                    // الوصول للقيمة المسحوبة عن طريق details.data
                     final itemId = details.data;
-
-                    final oldItemId = targetOccupied[target.id];
-                    if (oldItemId != null) {
-                      initialPositions[oldItemId] =
-                          widget.question.items
-                              .firstWhere((i) => i.id == oldItemId)
-                              .startPosition;
-                    }
-
                     targetOccupied[target.id] = itemId;
                     _updateAnswers();
                   });

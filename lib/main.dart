@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-            home: SenseLearningScreen(type: SenseType.ears),
+            home: SenseLearningScreen(type: SenseType.eyes),
           ),
         );
       },

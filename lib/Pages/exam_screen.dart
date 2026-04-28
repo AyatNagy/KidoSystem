@@ -352,6 +352,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                         ? DragDropQuestionWidget(
                           key: ValueKey("dragDrop_$currentIndex"),
                           question: examQuestion.data,
+                          isExamMode: true,
                           onAnswered: (answers) {
                             setState(() => dragAnswers = answers);
                           },
