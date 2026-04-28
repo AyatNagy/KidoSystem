@@ -22,7 +22,7 @@ class NextButton extends StatelessWidget{
     return KidoActionButton(
       heroTag: 'next_button',
        icon: Icons.play_arrow_rounded,
-       color: Colors.green[700]!,
+       color:color,
        shadowColor: shadowColor,
        onPressed: onPressed,
       size: r.buttonHeight,

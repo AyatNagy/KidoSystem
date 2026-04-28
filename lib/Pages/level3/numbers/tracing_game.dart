@@ -3,11 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/level3/numbers/tracing_numbers.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:kido/Widgets/next_button.dart';
+import 'package:kido/Widgets/replay_button.dart';
 import 'package:lottie/lottie.dart';
 
 class TracingGame extends StatefulWidget {
   final TracingQuestion question;
-  const TracingGame({super.key, required this.question});
+  final VoidCallback onComplete;
+  const TracingGame({super.key, required this.question, required this.onComplete});
 
   @override
   State<TracingGame> createState() => _TracingGameState();
@@ -46,9 +49,7 @@ class _TracingGameState extends State<TracingGame> {
   }
 
   void goToNextNumber() {
-    // Use your app's navigation logic here
-    // For example: Navigator.push(...) or a callback
-    debugPrint("Moving to next number!");
+  widget.onComplete();
   }
 
   Future<void> playAudio() async {
@@ -57,34 +58,6 @@ class _TracingGameState extends State<TracingGame> {
     } catch (error) {
       debugPrint("error in playing audio $error");
     }
-  }
-
-  Widget _buildRoundButton({
-    required IconData icon,
-    required Color color,
-    required VoidCallback onPressed,
-    required String heroTag,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.4),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: FloatingActionButton(
-        heroTag: heroTag,
-        onPressed: onPressed,
-        backgroundColor: color,
-        elevation: 0,
-        shape: const CircleBorder(),
-        child: Icon(icon, color: Colors.white, size: 30),
-      ),
-    );
   }
 
   Offset _getClosestPointOnPath(
@@ -249,21 +222,12 @@ class _TracingGameState extends State<TracingGame> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // --- ROUND RETRY BUTTON ---
-                          _buildRoundButton(
-                            icon: Icons.refresh_rounded,
+                          ReplayButton(
                             color: Colors.orangeAccent,
-                            onPressed: resetTracing,
-                            heroTag: "retry",
-                          ),
-
-                          // --- ROUND NEXT BUTTON ---
-                          _buildRoundButton(
-                            icon: Icons.arrow_forward_ios_rounded,
+                             onPressed: resetTracing),
+                          NextButton(
                             color: Colors.greenAccent[700]!,
-                            onPressed: goToNextNumber,
-                            heroTag: "next",
-                          ),
+                             onPressed: goToNextNumber),
                         ],
                       ),
                     ),
