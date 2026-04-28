@@ -4,6 +4,7 @@ class LetterJourney {
   final dynamic letterData;
   final dynamic dragData;
   final String? charName;
+  final dynamic tracingData;
 
   LetterJourney({
     required this.image,
@@ -11,5 +12,6 @@ class LetterJourney {
     this.letterData,
     this.dragData,
     this.charName = '',
+    this.tracingData,
   });
 }
