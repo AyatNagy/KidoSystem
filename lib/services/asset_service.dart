@@ -19,7 +19,7 @@ class Images{
   String get trainBackgroundPath=>'$commonBasePath/train_background.png';
   String getNumbersPath(TrainLessonLanguage language)=> language==TrainLessonLanguage.arabic
                                                       ?'$basePath/arabicNumbers'
-                                                      :'$basePath/englihNumsbers';
+                                                      :'$basePath/englishNumbers';
  
   List<String> carRange(int count,TrainLessonLanguage language){
     return List.generate(count, (index)=>car(language,index+1),);

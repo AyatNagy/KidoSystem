@@ -85,7 +85,7 @@ class _NumbersLanguageSelectionPageState extends State<NumbersLanguageSelectionP
                     _buildLanguageCard(
                       title: "English",
                       imagePath: 'assets/images/en-letters.png',
-                      cardColor: AppColors.kidoGreen,
+                      cardColor: AppColors.kidoYellow,
                       photoWidthFactor: 1,
                       delay: math.pi,
                       onTap: () {

@@ -91,6 +91,8 @@ flutter:
     - assets/images/fruits/
     - assets/images/senses/
     - assets/images/arabicNumbers/
+    - assets/images/englishNumbers/
+    - assets/images/common/
     - assets/lottie/
     - assets/audio/
     - assets/audio/numeric_en/

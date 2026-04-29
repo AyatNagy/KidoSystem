@@ -243,7 +243,7 @@ class _TracingGameState extends State<TracingGame> {
   void _handleStageClear(BoxConstraints constraints) async {
     if (isTransitioning) return;
     isTransitioning = true;
-    audioPlayer.play(AssetSource('audio/success.mp3'));
+    audioPlayer.play(AssetSource('audio/yaay.mp3'));
 
     setState(() {
       isVisible = false;

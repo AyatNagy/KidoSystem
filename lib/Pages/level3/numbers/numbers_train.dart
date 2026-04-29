@@ -189,7 +189,10 @@ Future playSong() async{
                     children: [
                       ReplayButton(color: const Color.fromARGB(255, 27, 24, 20), onPressed: startTrip),
                       const SizedBox(width: 60),
-                      NextButton(color: Colors.greenAccent[700]!, onPressed: (){})
+                      NextButton(color: Colors.greenAccent[700]!, onPressed: (){
+                        Navigator.of(context).pop(true);
+                        },
+                        )
                     ],
                   )
                   :PlayButton(
