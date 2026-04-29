@@ -60,4 +60,20 @@ final List<LetterJourney> journeyAr = [
     letterData: arletters[2],
     dragData: arLetter[2],
   ),
+
+  LetterJourney(
+    image: "assets/images/arabicletters/logoث.png",
+    isLocked: true,
+    charName: 'ث',
+    letterData: arletters[3],
+    dragData: arLetter[3],
+  ),
+
+  LetterJourney(
+    image: "assets/images/arabicletters/logoج.png",
+    isLocked: true,
+    charName: 'ج',
+    letterData: arletters[4],
+    dragData: arLetter[4],
+  ),
 ];
