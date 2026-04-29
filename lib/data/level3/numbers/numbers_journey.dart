@@ -12,12 +12,13 @@ final List<LetterJourney> journeyNumArab =[
       charName: '١',
       isLocked: false,
       letterData: NumbersArabicLessonRepo.numbersArablessons[0],
+      tracingData: tracingNumberOneArab,
       
       ),
       LetterJourney(
       image:'assets/images/arabicNumbers/num2_map.png',
       charName: '٢',
-      isLocked: false,
+      isLocked: true,
       letterData: NumbersArabicLessonRepo.numbersArablessons[1],
       tracingData: tracingNumberTwoArab,
       ),
@@ -38,9 +39,14 @@ final List<LetterJourney> journeyNumArab =[
       LetterJourney(
       image:'assets/images/arabicNumbers/num5_map.png',
       charName: '٥',
-      isLocked: true,
+      isLocked: false,
       letterData: NumbersArabicLessonRepo.numbersArablessons[4],
       tracingData: tracingNumberFiveArab,
+      ),
+      LetterJourney(
+      image:'assets/images/train_engine.png',
+      charName: 'train_phase1',
+      isLocked: true,
       ),
       LetterJourney(
       image:'assets/images/arabicNumbers/num1_map.png',
@@ -65,6 +71,11 @@ final List<LetterJourney> journeyNumArab =[
       charName: '٩',
       isLocked: true,
       letterData: NumbersArabicLessonRepo.numbersArablessons[8]
+      ),
+      LetterJourney(
+      image:'assets/images/common/train_engine.png',
+      charName: 'train_phase2',
+      isLocked: true,
       ),
 
 ];
@@ -106,6 +117,11 @@ final List<LetterJourney> journeyNumEng =[
       tracingData: tracingNumberFive,
       ),
       LetterJourney(
+      image:'assets/images/common/train_engine.png',
+      charName: 'train_phase1',
+      isLocked: true,
+      ),
+      LetterJourney(
       image: NumbersEnglishLessonRepo.numbersEnglessons[5].numberImagePath,
       charName: '6',
       isLocked: true,
@@ -129,8 +145,13 @@ final List<LetterJourney> journeyNumEng =[
       LetterJourney(
       image: NumbersEnglishLessonRepo.numbersEnglessons[8].numberImagePath,
       charName: '9',
-      isLocked: true,
+      isLocked: false,
       letterData: NumbersEnglishLessonRepo.numbersEnglessons[8],
       tracingData:tracingNumberNine
+      ),
+      LetterJourney(
+      image:'assets/images/common/train_engine.png',
+      charName: 'train_phase2',
+      isLocked: true,
       ),
 ];

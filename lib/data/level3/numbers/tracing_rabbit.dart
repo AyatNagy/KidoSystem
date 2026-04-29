@@ -1,6 +1,31 @@
 import 'package:flutter/material.dart';
 import'package:kido/Models/level3/numbers/tracing_numbers.dart';
 
+ final tracingNumberOneArab = TracingQuestion(
+  id: 'arabic_two',
+  audioPath: 'audio/numeric_ar/kid-1.mp3',
+  characterImage: 'assets/images/rabbit_tracing.png',
+  backgroundImage1: 'assets/images/arabicNumbers/seed_curved_one.png', // Start (Soil & Seed)
+  backgroundImage2: 'assets/images/arabicNumbers/seed_one.png',        // Mid (Sprouting)
+  backgroundImage3: 'assets/images/arabicNumbers/half_blooming_one.png', // Half Bloom
+  backgroundImage4: 'assets/images/arabicNumbers/full_blooming_one.png', // Full Garden
+  
+  startPosition: const Offset(0.55, 0.15), 
+  
+  midTarget: const Offset(0.55, 0.50),
+  
+  endTarget: const Offset(0.55, 0.85),
+  
+  pathPoints: [
+    const Offset(0.55, 0.15), // Top
+    const Offset(0.55, 0.35), // Moving down
+    const Offset(0.55, 0.50), // Middle (MidTarget)
+    const Offset(0.55, 0.70), // Near the bottom
+    const Offset(0.55, 0.85), // Final Carrot (EndTarget)
+  ],
+);
+
+
  final tracingNumberTwoArab = TracingQuestion(
   id: 'arabic_two',
   audioPath: 'audio/numeric_ar/kid-2.mp3',
