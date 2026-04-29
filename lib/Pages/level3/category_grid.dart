@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Pages/level3/family/Family_map_screen.dart';
 import 'package:kido/Pages/level3/vegetables/vegetable_map_screen.dart';
 import 'package:kido/Pages/level3/numbers/choose_numbers.dart';
 import 'package:kido/Widgets/animated_3d_letter_a.dart';
@@ -46,7 +47,9 @@ class CategoryGrid extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => NumbersLanguageSelectionPage()),
+              MaterialPageRoute(
+                builder: (context) => NumbersLanguageSelectionPage(),
+              ),
             );
           },
         ),
@@ -84,7 +87,12 @@ class CategoryGrid extends StatelessWidget {
           title: "Family",
           gradient: AppColors.puzzleGrad,
           graphic: Center(child: AnimatedFamilyIcon(size: 80)),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FamilyMapScreen()),
+            );
+          },
         ),
       ],
     );

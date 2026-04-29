@@ -4,7 +4,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:kido/Pages/content/senses/sense_tap_practice_page.dart';
 //import 'package:kido/Pages/content/senses/sense_learning_page.dart';
 //import 'package:kido/Pages/level1/level1_home.dart';
-//import 'package:kido/Pages/level3/level3_home.dart';
+import 'package:kido/Pages/level3/level3_home.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/config/responsive_config.dart';
 import 'package:kido/enum/sense_type.dart';
@@ -29,7 +29,8 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-            home: SenseTapPracticeScreen(type: SenseType.ears),
+            home: Level3Home(childName: "Ayat"),
+            //SenseTapPracticeScreen(type: SenseType.ears),
           ),
         );
       },
