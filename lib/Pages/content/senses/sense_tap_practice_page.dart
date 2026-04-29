@@ -68,7 +68,7 @@ class _SenseTapPracticeScreenState extends State<SenseTapPracticeScreen> {
     final x = w * data.leftFactor;
     final y = h * data.topFactor;
     final size = w * data.widthFactor;
-    double extraWidth = size * 0.6;
+    double extraWidth = size * 0.3;
 
     return Rect.fromLTWH(x - (extraWidth / 2), y, size + extraWidth, size);
   }

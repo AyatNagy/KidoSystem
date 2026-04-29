@@ -39,10 +39,7 @@ class _DragDropWidgetState extends State<DragDropWidget>
     );
 
     _pulseAnimation = Tween<double>(begin: 1.0, end: 1.4).animate(
-      CurvedAnimation(
-        parent: _pulseController,
-        curve: Curves.easeInOut,
-      ),
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
   }
 
@@ -79,15 +76,29 @@ class _DragDropWidgetState extends State<DragDropWidget>
         }
 
         for (var target in widget.question.targets) {
+          // --- التعديل هنا لتوسيع منطقة الاستلام ---
+          // سنقوم بحساب حجم أكبر للـ DragTarget (مثلاً ضعف الحجم المطلوب)
+          // مع الحفاظ على موقعه في السنتر
+          double extraSizeMultiplier = 2.0; // زيادة مساحة القبول لضعف الحجم
+          double targetWidth = containerSize.width * target.size.width;
+          double targetHeight = containerSize.height * target.size.height;
+
           stackChildren.add(
             Positioned(
-              left: containerSize.width * target.position.dx,
-              top: containerSize.height * target.position.dy,
-              width: containerSize.width * target.size.width,
-              height: containerSize.height * target.size.height,
+              // نزيح الـ Positioned قليلاً للخلف ليعوض زيادة الحجم ويظل السنتر ثابت
+              left:
+                  (containerSize.width * target.position.dx) -
+                  (targetWidth * (extraSizeMultiplier - 1) / 2),
+              top:
+                  (containerSize.height * target.position.dy) -
+                  (targetHeight * (extraSizeMultiplier - 1) / 2),
+              width: targetWidth * extraSizeMultiplier,
+              height: targetHeight * extraSizeMultiplier,
               child: DragTarget<String>(
                 onWillAcceptWithDetails: (details) {
-                  final isCorrect = target.acceptedItemIds.contains(details.data);
+                  final isCorrect = target.acceptedItemIds.contains(
+                    details.data,
+                  );
                   if (!isCorrect) {
                     widget.onWrongDrop?.call();
                   }
@@ -107,22 +118,34 @@ class _DragDropWidgetState extends State<DragDropWidget>
                   bool isHoveringWrong = rejectedData.isNotEmpty;
                   bool isOccupied = targetOccupied[target.id] != null;
 
-                  return AnimatedOpacity(
-                    duration: const Duration(milliseconds: 300),
-                    opacity: isOccupied ? 0.0 : 1.0,
-                    child: SimpleShadow(
-                      color: isHoveringCorrect
-                          ? Colors.greenAccent
-                          : (isHoveringWrong ? Colors.redAccent : Colors.black),
-                      sigma: (isHoveringCorrect || isHoveringWrong) ? 10 : 2,
-                      child: Opacity(
-                        opacity: 0.3,
-                        child: Image.asset(
-                          target.image,
-                          color: isHoveringWrong
-                              ? Colors.red.withOpacity(0.5)
-                              : Colors.black,
-                          fit: BoxFit.contain,
+                  return Center(
+                    // لضمان بقاء الظل والصورة في المنتصف الحقيقي
+                    child: SizedBox(
+                      width: targetWidth, // نعود للحجم الأصلي للرسم
+                      height: targetHeight,
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 300),
+                        opacity: isOccupied ? 0.0 : 1.0,
+                        child: SimpleShadow(
+                          color:
+                              isHoveringCorrect
+                                  ? Colors.greenAccent
+                                  : (isHoveringWrong
+                                      ? Colors.redAccent
+                                      : Colors.black),
+                          sigma:
+                              (isHoveringCorrect || isHoveringWrong) ? 10 : 2,
+                          child: Opacity(
+                            opacity: 0.3,
+                            child: Image.asset(
+                              target.image,
+                              color:
+                                  isHoveringWrong
+                                      ? Colors.red.withOpacity(0.5)
+                                      : Colors.black,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -133,6 +156,7 @@ class _DragDropWidgetState extends State<DragDropWidget>
           );
         }
 
+        // --- كود الـ Items يبقى كما هو دون تغيير في حجم الظل الخاص بها ---
         for (int i = 0; i < widget.question.items.length; i++) {
           final item = widget.question.items[i];
           String? currentTargetId;
@@ -144,7 +168,7 @@ class _DragDropWidgetState extends State<DragDropWidget>
 
           if (currentTargetId != null) {
             final target = widget.question.targets.firstWhere(
-                  (t) => t.id == currentTargetId,
+              (t) => t.id == currentTargetId,
             );
             left = containerSize.width * target.position.dx;
             top = containerSize.height * target.position.dy;
