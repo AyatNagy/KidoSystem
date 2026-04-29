@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'map.dart';
 
@@ -42,37 +43,34 @@ class _JourneymapPageState extends State<JourneymapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // استخدمنا Stack لوضع الرسومات خلف الخريطة
       body: Stack(
         children: [
-          // 1. الخلفية المتدرجة (Gradient Background)
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0xFFE8F5E9), // أخضر فاتح جداً (مثل لون النعناع)
-                  Color(0xFFC8E6C9), // أخضر أغمق قليلاً
+                  widget.backgroundColor,
+                  widget.backgroundColor.withOpacity(0.3),
                 ],
               ),
             ),
           ),
 
-          // 2. رسومات الديكور (عناصر خلفية لإعطاء روح المزرعة)
           Positioned(
             top: 50,
             left: -30,
             child: Opacity(
-              opacity: 0.2,
+              opacity: 0.1,
               child: Icon(
                 Icons.bakery_dining_rounded,
                 size: 150,
-                color: Colors.green[300],
+                color: Colors.black,
               ),
-              // يمكنك استبدال الأيقونات بـ Image.asset لصور خضروات كرتونية باهتة
             ),
           ),
+
           Positioned(
             bottom: 100,
             right: -20,
@@ -81,16 +79,13 @@ class _JourneymapPageState extends State<JourneymapPage> {
               child: Icon(
                 Icons.eco_rounded,
                 size: 200,
-                color: Colors.green[400],
+                color: Colors.black,
               ),
             ),
           ),
 
-          // 3. الخريطة (الـ ListView)
           ListView.builder(
-            padding: const EdgeInsets.symmetric(
-              vertical: 120,
-            ), // مسافة كافية في البداية والنهاية
+            padding: const EdgeInsets.symmetric(vertical: 120),
             itemCount: widget.journeyData.length,
             itemBuilder: (context, index) {
               return MapNode(
@@ -103,15 +98,16 @@ class _JourneymapPageState extends State<JourneymapPage> {
             },
           ),
 
-          // 4. زر العودة العلوي (اختياري)
           Positioned(
             top: 50,
             left: 20,
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.green),
-                onPressed: () => Navigator.pop(context),
+            child: SafeArea(
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black87),
+                  onPressed: () => Navigator.pop(context),
+                ),
               ),
             ),
           ),
