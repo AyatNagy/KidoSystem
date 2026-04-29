@@ -200,10 +200,7 @@ class _FamilyTreeScreenState extends State<FamilyTreeScreen> {
 
           return Stack(
             children: [
-              // ── خلفية مرسومة ─────────────────────────────
               Positioned.fill(child: CustomPaint(painter: _RoomBgPainter())),
-
-              // ── الشجرة ───────────────────────────────────
               Positioned(
                 left: 0,
                 right: 0,
@@ -215,7 +212,6 @@ class _FamilyTreeScreenState extends State<FamilyTreeScreen> {
                 ),
               ),
 
-              // ── الدوائر فوق الشجرة ──────────────────────
               ..._members.map((member) {
                 final rx = _slotRx[member.id]!;
                 final ry = _slotRy[member.id]!;
@@ -657,8 +653,6 @@ class _RoomBgPainter extends CustomPainter {
             end: Alignment.bottomCenter,
           ).createShader(Rect.fromLTWH(0, 0, w, h));
     canvas.drawRect(Rect.fromLTWH(0, 0, w, h), wallPaint);
-
-    // ── أرضية ─────────────────────────────────────────
     final floorPaint =
         Paint()
           ..shader = LinearGradient(
@@ -674,8 +668,6 @@ class _RoomBgPainter extends CustomPainter {
       ),
       floorPaint,
     );
-
-    // خط الأرضية
     canvas.drawLine(
       Offset(0, h * 0.82),
       Offset(w, h * 0.82),
@@ -684,19 +676,12 @@ class _RoomBgPainter extends CustomPainter {
         ..strokeWidth = 2,
     );
 
-    // ── نافذة يمين ────────────────────────────────────
     _drawWindow(canvas, w * 0.70, h * 0.12, w * 0.25, h * 0.20);
-
-    // ── رف كتب يسار ───────────────────────────────────
     _drawBookshelf(canvas, w * 0.01, h * 0.22, w * 0.15, h * 0.42);
 
-    // ── مكعبات ألوان يسار أسفل ─────────────────────────
     _drawBlocks(canvas, w * 0.03, h * 0.76);
-
-    // ── نجوم ونقاط زخرفية ────────────────────────────
     _drawStars(canvas, w, h);
 
-    // ── سجادة ─────────────────────────────────────────
     final rugPaint = Paint()..color = const Color(0xFFE8C97A).withOpacity(0.4);
     canvas.drawOval(
       Rect.fromCenter(
@@ -709,7 +694,6 @@ class _RoomBgPainter extends CustomPainter {
   }
 
   void _drawWindow(Canvas c, double x, double y, double ww, double wh) {
-    // إطار النافذة
     final framePaint =
         Paint()
           ..color = const Color(0xFFD4A96A)
@@ -738,12 +722,8 @@ class _RoomBgPainter extends CustomPainter {
       ),
       framePaint,
     );
-
-    // خطوط النافذة
     c.drawLine(Offset(x + ww / 2, y), Offset(x + ww / 2, y + wh), framePaint);
     c.drawLine(Offset(x, y + wh / 2), Offset(x + ww, y + wh / 2), framePaint);
-
-    // شجرة صغيرة خارج النافذة
     final treePaint = Paint()..color = const Color(0xFF66BB6A);
     c.drawCircle(Offset(x + ww * 0.35, y + wh * 0.4), ww * 0.12, treePaint);
     c.drawCircle(Offset(x + ww * 0.65, y + wh * 0.45), ww * 0.10, treePaint);
@@ -757,7 +737,6 @@ class _RoomBgPainter extends CustomPainter {
       trunkP,
     );
 
-    // ستارة
     final curtainPaint =
         Paint()..color = const Color(0xFFF8BBD0).withOpacity(0.7);
     final lCurtain =
@@ -779,17 +758,12 @@ class _RoomBgPainter extends CustomPainter {
   }
 
   void _drawBookshelf(Canvas c, double x, double y, double sw, double sh) {
-    // الرف
     final shelfPaint = Paint()..color = const Color(0xFFD4A96A);
-    // ألواح الرف
     for (int i = 0; i <= 3; i++) {
       c.drawRect(Rect.fromLTWH(x, y + sh * i / 3, sw, 4), shelfPaint);
     }
-    // جانبا الرف
     c.drawRect(Rect.fromLTWH(x, y, 4, sh), shelfPaint);
     c.drawRect(Rect.fromLTWH(x + sw - 4, y, 4, sh), shelfPaint);
-
-    // كتب
     final bookColors = [
       const Color(0xFFEF5350),
       const Color(0xFF42A5F5),
@@ -824,7 +798,6 @@ class _RoomBgPainter extends CustomPainter {
       const Color(0xFFFFCA28),
     ];
     final size = 18.0;
-    // مكعبات مرتبة
     for (int i = 0; i < 4; i++) {
       c.drawRRect(
         RRect.fromRectAndRadius(
@@ -833,7 +806,6 @@ class _RoomBgPainter extends CustomPainter {
         ),
         Paint()..color = colors[i],
       );
-      // حرف على كل مكعب
       final tp = TextPainter(
         text: TextSpan(
           text: ['A', 'B', 'C', '!'][i],

@@ -28,9 +28,7 @@ class FamilyQuestion {
   FamilyQuestion(this.answer);
 }
 
-// تعديل القائمة لتبدأ من الجد مباشرة لتتوافق مع الـ index في الشاشات
 List<FamilyModel> familyList() => [
-  // تم حذف My Family من هنا
   const FamilyModel(
     image: familyGrandfather,
     nameEn: 'Grandfather',
@@ -69,7 +67,6 @@ List<FamilyModel> familyList() => [
   ),
 ];
 
-// أسئلة الكويز (تبقى كما هي لأنها تعتمد على الصور مباشرة)
 List<FamilyQuestion> familyQuizQuestions = [
   FamilyQuestion({
     familyGrandfather: true,
@@ -109,7 +106,6 @@ List<FamilyQuestion> familyQuizQuestions = [
   }),
 ];
 
-// أسئلة الأغنية (تبقى كما هي)
 List<FamilyQuestion> familySongQuestions = [
   FamilyQuestion({
     familyGrandfather: true,

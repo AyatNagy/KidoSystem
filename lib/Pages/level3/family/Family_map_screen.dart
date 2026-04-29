@@ -14,18 +14,15 @@ class FamilyMapScreen extends StatefulWidget {
 }
 
 class _FamilyMapScreenState extends State<FamilyMapScreen> {
-  // استدعاء القائمة المعدلة التي تبدأ بالجد
   late final List<LetterJourney> journey = buildFamilyJourney();
 
   Widget _buildDestination(int index) {
-    // الترتيب الجديد بعد حذف أول عنصر
     switch (index) {
-      case 6: // كانت 7 سابقاً (صفحة الأغنية)
+      case 6:
         return const FamilySongScreen();
-      case 7: // كانت 8 سابقاً (شجرة العائلة)
+      case 7:
         return const FamilyTreeScreen();
       default:
-        // باقي العناصر (من 0 إلى 5) تفتح دروس النطق
         return FamilySoundScreen(index);
     }
   }

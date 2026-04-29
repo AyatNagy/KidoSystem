@@ -68,7 +68,6 @@ class _FamilySoundScreenState extends State<FamilySoundScreen>
 
   _MemberTheme get _theme => _themes[_index % _themes.length];
 
-  // تأكدي أن هذه الدالة familyList() في ملف Family_model ترجع القائمة تبدأ بالجد أيضاً
   final List<FamilyModel> _list = familyList();
 
   @override
@@ -91,7 +90,7 @@ class _FamilySoundScreenState extends State<FamilySoundScreen>
 
   Future<void> _speak() async {
     if (_isSpeaking) return;
-    if (_index >= _list.length) return; // حماية من الـ Index Out of Bounds
+    if (_index >= _list.length) return;
 
     setState(() => _isSpeaking = true);
     HapticFeedback.mediumImpact();
@@ -125,7 +124,6 @@ class _FamilySoundScreenState extends State<FamilySoundScreen>
 
   @override
   Widget build(BuildContext context) {
-    // التأكد من أن الـ index لا يتخطى حجم القائمة الجديدة
     final member = _index < _list.length ? _list[_index] : _list.last;
     final theme = _theme;
     final grad = theme.gradient;
@@ -187,7 +185,6 @@ class _FamilySoundScreenState extends State<FamilySoundScreen>
     );
   }
 
-  // الـ Widgets المساعدة (نفس الكود السابق مع التأكد من الألوان)
   Widget _buildBgBlobs(List<Color> grad, Size size) {
     return Stack(
       children: [
@@ -466,7 +463,6 @@ class _FamilySoundScreenState extends State<FamilySoundScreen>
   }
 }
 
-// تعديل بسيط في زر التنقل للتوافق مع الترتيب الجديد
 class _NavBtn extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
