@@ -1,6 +1,4 @@
-import 'dart:ui';
-
-import 'package:flutter/material.dart' show Colors;
+import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import '../discovery.dart';
 

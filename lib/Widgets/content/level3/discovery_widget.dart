@@ -1,11 +1,11 @@
 // ignore_for_file: deprecated_member_use
-
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kido/Widgets/kido_action_button.dart';
+import 'package:kido/Widgets/next_button.dart';
 import '../../../Models/level3/discovery.dart';
-import '../../../Widgets/puls_button.dart';
-import '../../../constants.dart';
+import '../../../services/audio_service.dart';
+import '../../responsive_provider.dart';
 
 class DiscoveryPage extends StatefulWidget {
   final DiscoveryItem model;
@@ -22,50 +22,42 @@ class DiscoveryPage extends StatefulWidget {
 }
 
 class _DiscoveryPageState extends State<DiscoveryPage> {
-  bool _isTapped = false;
   bool _showNextButton = false;
-  late AudioPlayer _audioPlayer;
-
-  @override
-  void initState() {
-    super.initState();
-    _audioPlayer = AudioPlayer();
-  }
-
-  Future<void> _playSound() async {
-    try {
-      String path = widget.model.soundPath.replaceFirst('assets/', '');
-      await _audioPlayer.stop();
-      await _audioPlayer.play(AssetSource(path));
-    } catch (e) {
-      debugPrint("Audio Error: $e");
-    }
-  }
-
-  @override
-  void dispose() {
-    _audioPlayer.dispose();
-    super.dispose();
-  }
+  double _scale = 1.0;
+  double _imageRotation = 0.0;
 
   void _handleInteraction() {
-    HapticFeedback.heavyImpact();
-    _playSound();
-    if (!_isTapped) {
-      setState(() {
-        _isTapped = true;
-        _showNextButton = true;
-      });
-    }
+    HapticFeedback.mediumImpact();
+
+    final String fileName = widget.model.soundPath
+        .replaceFirst('assets/audio/', '')
+        .replaceFirst('audio/', '');
+
+    AudioService.play(fileName: fileName);
+
+    setState(() {
+      _showNextButton = true;
+      _scale = 1.15;
+      _imageRotation = 0.1;
+    });
+
+    Future.delayed(const Duration(milliseconds: 150), () {
+      if (mounted) {
+        setState(() {
+          _scale = 1.0;
+          _imageRotation = 0.0;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final model = widget.model;
+    final res = ResponsiveProvider.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.bgColor,
+      backgroundColor: model.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -74,35 +66,49 @@ class _DiscoveryPageState extends State<DiscoveryPage> {
               child: Center(
                 child: GestureDetector(
                   onTap: _handleInteraction,
-                  child: AnimatedScale(
-                    scale: _isTapped ? 1.1 : 1.0,
-                    duration: const Duration(milliseconds: 400),
+                  child: TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 500),
                     curve: Curves.elasticOut,
-                    child: Container(
-                      height: size.height * 0.35,
-                      width: size.width * 0.75,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(40),
-                        border: Border.all(
-                          color: _isTapped ? model.primaryColor : Colors.white,
-                          width: 8,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: model.primaryColor.withOpacity(0.1),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
+                    tween: Tween(begin: 1.0, end: _scale),
+                    builder: (context, value, child) {
+                      return Transform.scale(
+                        scale: value,
+                        child: Container(
+                          height: res.localHeight * 0.35,
+                          width: res.localWidth * 0.8,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(
+                              color: _showNextButton ? model.primaryColor : Colors.white,
+                              width: 8,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: model.primaryColor.withOpacity(0.15),
+                                blurRadius: 25 * value,
+                                offset: Offset(0, 10 * value),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(35.0),
-                        child: Image.asset(
-                          model.mainImage,
-                          fit: BoxFit.contain,
+                          child: child,
                         ),
-                      ),
+                      );
+                    },
+                    child: TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 600),
+                      curve: Curves.elasticOut,
+                      tween: Tween(begin: 0.0, end: _imageRotation),
+                      builder: (context, rotation, imageChild) {
+                        return Transform.rotate(
+                          angle: rotation,
+                          child: Padding(
+                            padding: EdgeInsets.all(res.isTablet ? 50.0 : 30.0),
+                            child: imageChild,
+                          ),
+                        );
+                      },
+                      child: Image.asset(model.mainImage, fit: BoxFit.contain),
                     ),
                   ),
                 ),
@@ -117,17 +123,15 @@ class _DiscoveryPageState extends State<DiscoveryPage> {
                   children: [
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 500),
-                      width: size.width * 0.45,
+                      width: res.imageWidth(0.45),
                       decoration: BoxDecoration(
-                        color: model.primaryColor.withOpacity(
-                          _isTapped ? 0.2 : 0.05,
-                        ),
+                        color: model.primaryColor.withOpacity(_showNextButton ? 0.2 : 0.05),
                         shape: BoxShape.circle,
                       ),
                     ),
                     Image.asset(
                       model.extraImage!,
-                      height: size.height * 0.2,
+                      height: res.localHeight * 0.2,
                       fit: BoxFit.contain,
                     ),
                   ],
@@ -136,41 +140,23 @@ class _DiscoveryPageState extends State<DiscoveryPage> {
             else
               const Spacer(),
 
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: _handleInteraction,
-                      icon: Container(
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: model.primaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.volume_up_rounded,
-                          size: 40,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    if (_showNextButton)
-                      PulseButton(
-                        onPressed: widget.onNextPressed,
-                        child: Icon(
-                          Icons.play_circle_fill_rounded,
-                          size: 90,
-                          color: widget.model.primaryColor,
-                        ),
-                      )
-                    else
-                      const SizedBox(width: 90),
-                  ],
-                ),
+            Padding(
+              padding: res.pagePadding.copyWith(top: 0, bottom: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  KidoActionButton(
+                    heroTag: "replay_button",
+                    icon: Icons.refresh_rounded,
+                    color: model.primaryColor,
+                    onPressed: _handleInteraction,
+                  ),
+                  if (_showNextButton)
+                    NextButton(
+                      color: model.primaryColor,
+                      onPressed: widget.onNextPressed,
+                    )
+                ],
               ),
             ),
           ],
