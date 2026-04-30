@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'Vegetablemodel.dart';
+
+List<Numbermodel> vegetablelist = vegetable1();
 
 class VegetableSound extends StatefulWidget {
   int index;
@@ -11,47 +14,67 @@ class VegetableSound extends StatefulWidget {
   State<VegetableSound> createState() => _VegetableSoundState();
 }
 
-List<Numbermodel> vegetablelist = vegetable1();
-
 class _VegetableSoundState extends State<VegetableSound>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final FlutterTts flutterTts = FlutterTts();
   bool _isSpeaking = false;
   late AnimationController _pulseController;
+  late AnimationController _bgController;
 
-  final List<List<Color>> _gradients = [
-    [const Color(0xFF43A047), const Color(0xFF66BB6A)], // broccoli
-    [const Color(0xFFEF5350), const Color(0xFFE57373)], // carrot
-    [const Color(0xFFE91E63), const Color(0xFFF06292)], // chili
-    [const Color(0xFF5C6BC0), const Color(0xFF7986CB)], // onion
-    [const Color(0xFF1E88E5), const Color(0xFF42A5F5)], // tomato
+  static const _themes = [
+    _VegTheme(
+      colors: [Color(0xFF2E7D32), Color(0xFF66BB6A), Color(0xFFA5D6A7)],
+      emoji: ['🥦', '🌿', '✨'],
+    ),
+    _VegTheme(
+      colors: [Color(0xFFE65100), Color(0xFFFF8F00), Color(0xFFFFCC80)],
+      emoji: ['🥕', '🌟', '🍊'],
+    ),
+    _VegTheme(
+      colors: [Color(0xFFB71C1C), Color(0xFFE53935), Color(0xFFEF9A9A)],
+      emoji: ['🌶️', '🔥', '✨'],
+    ),
+    _VegTheme(
+      colors: [Color(0xFF4A148C), Color(0xFF7B1FA2), Color(0xFFCE93D8)],
+      emoji: ['🧅', '💜', '🌙'],
+    ),
+    _VegTheme(
+      colors: [Color(0xFFC62828), Color(0xFFEF5350), Color(0xFFFFCDD2)],
+      emoji: ['🍅', '❤️', '🌿'],
+    ),
   ];
 
-  List<Color> get _currentGradient =>
-      _gradients[widget.index % _gradients.length];
+  _VegTheme get _theme => _themes[widget.index % _themes.length];
 
   @override
   void initState() {
     super.initState();
     _pulseController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 900),
     );
+    _bgController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    )..repeat(reverse: true);
     _speak();
   }
 
   @override
   void dispose() {
     _pulseController.dispose();
+    _bgController.dispose();
     flutterTts.stop();
     super.dispose();
   }
 
   Future _speak() async {
+    if (_isSpeaking) return;
     setState(() => _isSpeaking = true);
+    HapticFeedback.mediumImpact();
     _pulseController.repeat(reverse: true);
     await flutterTts.setLanguage("en-US");
-    await flutterTts.setPitch(1.0);
+    await flutterTts.setPitch(1.1);
     await flutterTts.setVolume(1.0);
     await flutterTts.speak(vegetablelist[widget.index].Text);
     await Future.delayed(const Duration(seconds: 2));
@@ -79,232 +102,282 @@ class _VegetableSoundState extends State<VegetableSound>
   @override
   Widget build(BuildContext context) {
     final veggie = vegetablelist[widget.index];
-    final isFirst = widget.index == 0;
-    final isLast = widget.index == vegetablelist.length - 1;
-    final grad = _currentGradient;
+    final grad = _theme.colors;
+    final emojis = _theme.emoji;
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [grad[0].withOpacity(0.1), Colors.white, Colors.white],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // ── Header (Back & Title) ──────────────────────────────
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildRoundBtn(
-                      Icons.arrow_back_ios_new,
-                      () => Navigator.pop(context),
-                      grad[0],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          'Vegetable Lesson',
-                          style: TextStyle(
-                            color: grad[0],
-                            fontFamily: "arlrdbd",
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          '${widget.index + 1} of ${vegetablelist.length}',
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12,
-                          ),
-                        ),
+      body: Stack(
+        children: [
+          // ── خلفية متحركة ─────────────────────────────────
+          AnimatedBuilder(
+            animation: _bgController,
+            builder:
+                (_, __) => Container(
+                  decoration: BoxDecoration(
+                    gradient: RadialGradient(
+                      center: Alignment(
+                        -0.3 + _bgController.value * 0.6,
+                        -0.4 + _bgController.value * 0.4,
+                      ),
+                      radius: 1.4,
+                      colors: [
+                        grad[0].withOpacity(0.85),
+                        grad[1].withOpacity(0.70),
+                        grad[2].withOpacity(0.45),
+                        Colors.white.withOpacity(0.88),
                       ],
+                      stops: const [0.0, 0.35, 0.65, 1.0],
                     ),
-                    const SizedBox(width: 45), // للتوازن
-                  ],
+                  ),
                 ),
-              ),
+          ),
 
-              Expanded(
-                child: Center(
-                  child: Container(
-                    width: 220,
-                    height: 350,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(110),
-                      boxShadow: [
-                        BoxShadow(
-                          color: grad[0].withOpacity(0.15),
-                          blurRadius: 30,
-                          offset: const Offset(0, 15),
+          // ── دوائر زخرفية ─────────────────────────────────
+          Positioned(
+            top: -80,
+            left: -80,
+            child: _Blob(color: grad[0], size: 260),
+          ),
+          Positioned(
+            bottom: -60,
+            right: -60,
+            child: _Blob(color: grad[1], size: 220),
+          ),
+          Positioned(
+            top: size.height * 0.4,
+            left: -40,
+            child: _Blob(color: grad[2], size: 120),
+          ),
+
+          // ── ايموجيات عائمة ───────────────────────────────
+          for (int i = 0; i < emojis.length; i++)
+            Positioned(
+              left: [0.07, 0.82, 0.88][i] * size.width,
+              top: [0.28, 0.14, 0.58][i] * size.height,
+              child: Text(emojis[i], style: const TextStyle(fontSize: 28))
+                  .animate(onPlay: (c) => c.repeat(reverse: true))
+                  .moveY(begin: 0, end: -16, duration: (1400 + i * 350).ms)
+                  .fadeIn(delay: (200 * i).ms),
+            ),
+
+          // ── واجهة ────────────────────────────────────────
+          SafeArea(
+            child: Column(
+              children: [
+                // زر الرجوع
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: grad[0].withOpacity(0.2),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                      ],
-                      border: Border.all(
-                        color: grad[0].withOpacity(0.1),
-                        width: 2,
+                        child: Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: grad[0],
+                          size: 20,
+                        ),
                       ),
                     ),
-                    child: Center(
+                  ),
+                ),
+
+                // ── GIF كبير يملأ الشاشة ─────────────────
+                Expanded(
+                  child: Center(
+                    child: AnimatedSwitcher(
+                      duration: 500.ms,
+                      transitionBuilder:
+                          (child, anim) => FadeTransition(
+                            opacity: anim,
+                            child: ScaleTransition(scale: anim, child: child),
+                          ),
                       child: Image.asset(
                             veggie.image,
-                            height: 180,
+                            key: ValueKey(widget.index),
+                            width: size.width * 0.88,
+                            height: size.height * 0.68,
                             fit: BoxFit.contain,
+                            errorBuilder:
+                                (_, __, ___) => Icon(
+                                  Icons.eco,
+                                  size: 200,
+                                  color: Colors.white,
+                                ),
                           )
                           .animate(onPlay: (c) => c.repeat(reverse: true))
+                          .scale(
+                            begin: const Offset(0.90, 0.90),
+                            end: const Offset(1.0, 1.0),
+                            duration: 2.seconds,
+                            curve: Curves.easeInOut,
+                          )
                           .moveY(
-                            begin: 0,
-                            end: -15,
-                            duration: 1500.ms,
+                            begin: 6,
+                            end: -6,
+                            duration: 2.seconds,
                             curve: Curves.easeInOut,
                           ),
                     ),
                   ),
                 ),
-              ),
 
-              // ── النصوص (إنجليزي وعربي) ─────────────────────────────
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Column(
-                  children: [
-                    Text(
-                      veggie.Text, // English
-                      style: TextStyle(
-                        fontSize: 42,
-                        fontFamily: "arlrdbd",
-                        color: grad[0],
-                        fontWeight: FontWeight.bold,
+                // ── صف الأزرار ───────────────────────────
+                Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 30,
+                    left: 36,
+                    right: 36,
+                    top: 6,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // زر السابق
+                      _NavBtn(
+                        icon: Icons.arrow_back_ios_rounded,
+                        onTap: widget.index == 0 ? null : _prev,
+                        grad: grad,
                       ),
-                    ),
-                    Text(
-                      veggie.textAr, // Arabic
-                      style: const TextStyle(
-                        fontSize: 26,
-                        fontFamily: "arlrdbd",
-                        color: Colors.black45,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
 
-              AnimatedBuilder(
-                animation: _pulseController,
-                builder: (context, child) {
-                  final scale =
-                      1.0 + (_isSpeaking ? _pulseController.value * 0.15 : 0);
-                  return Transform.scale(scale: scale, child: child);
-                },
-                child: GestureDetector(
-                  onTap: _speak,
-                  child: Container(
-                    width: 85,
-                    height: 85,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: grad),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: grad[0].withOpacity(0.4),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
+                      // زر الصوت
+                      ScaleTransition(
+                        scale: Tween(begin: 1.0, end: 1.18).animate(
+                          CurvedAnimation(
+                            parent: _pulseController,
+                            curve: Curves.elasticOut,
+                          ),
                         ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.volume_up_rounded,
-                      color: Colors.white,
-                      size: 40,
-                    ),
+                        child: GestureDetector(
+                          onTap: _speak,
+                          child: Container(
+                            width: 76,
+                            height: 76,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: [grad[0], grad[1]],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: grad[0].withOpacity(0.45),
+                                  blurRadius: 22,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.volume_up_rounded,
+                              color: Colors.white,
+                              size: 38,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // زر التالي
+                      _NavBtn(
+                        icon: Icons.arrow_forward_ios_rounded,
+                        onTap:
+                            widget.index == vegetablelist.length - 1
+                                ? null
+                                : _next,
+                        grad: grad,
+                      ),
+                    ],
                   ),
                 ),
-              ),
-
-              const SizedBox(height: 30),
-
-              Padding(
-                padding: const EdgeInsets.only(bottom: 40, left: 40, right: 40),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildNavBtn(
-                      Icons.arrow_back_ios_rounded,
-                      isFirst ? null : _prev,
-                      grad,
-                      isFirst,
-                    ),
-                    _buildNavBtn(
-                      Icons.arrow_forward_ios_rounded,
-                      isLast ? null : _next,
-                      grad,
-                      isLast,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
+}
 
-  Widget _buildRoundBtn(IconData icon, VoidCallback onTap, Color color) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 45,
-        height: 45,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          border: Border.all(color: color.withOpacity(0.2)),
-        ),
-        child: Icon(icon, color: color, size: 20),
-      ),
-    );
-  }
+// ── Blob ─────────────────────────────────────────────────────
+class _Blob extends StatelessWidget {
+  final Color color;
+  final double size;
+  const _Blob({required this.color, required this.size});
+  @override
+  Widget build(BuildContext context) => Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: color.withOpacity(0.18),
+    ),
+  );
+}
 
-  Widget _buildNavBtn(
-    IconData icon,
-    VoidCallback? onTap,
-    List<Color> grad,
-    bool disabled,
-  ) {
+// ── زر تنقل ──────────────────────────────────────────────────
+class _NavBtn extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback? onTap;
+  final List<Color> grad;
+  const _NavBtn({required this.icon, this.onTap, required this.grad});
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onTap != null;
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 60,
-        height: 60,
-        decoration: BoxDecoration(
-          color: disabled ? Colors.grey.shade200 : Colors.white,
-          shape: BoxShape.circle,
-          boxShadow: [
-            if (!disabled)
-              BoxShadow(
-                color: grad[0].withOpacity(0.2),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-          ],
-          border: Border.all(
-            color: disabled ? Colors.transparent : grad[0].withOpacity(0.3),
-            width: 2,
+      onTap: () {
+        if (enabled) {
+          HapticFeedback.lightImpact();
+          onTap!();
+        }
+      },
+      child: AnimatedOpacity(
+        duration: 250.ms,
+        opacity: enabled ? 1.0 : 0.28,
+        child: Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: enabled ? Colors.white : Colors.grey.shade200,
+            shape: BoxShape.circle,
+            boxShadow:
+                enabled
+                    ? [
+                      BoxShadow(
+                        color: grad[0].withOpacity(0.25),
+                        blurRadius: 14,
+                        offset: const Offset(0, 5),
+                      ),
+                    ]
+                    : [],
           ),
-        ),
-        child: Icon(
-          icon,
-          color: disabled ? Colors.grey.shade400 : grad[0],
-          size: 26,
+          child: Icon(icon, color: enabled ? grad[0] : Colors.grey, size: 24),
         ),
       ),
     );
   }
+}
+
+// ── Theme ─────────────────────────────────────────────────────
+class _VegTheme {
+  final List<Color> colors;
+  final List<String> emoji;
+  const _VegTheme({required this.colors, required this.emoji});
 }

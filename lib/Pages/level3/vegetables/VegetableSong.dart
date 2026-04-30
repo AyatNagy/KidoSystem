@@ -1,7 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:motion_toast/motion_toast.dart';
-import 'package:audioplayers/audioplayers.dart'; // مكتبة تشغيل الأصوات
+import 'package:lottie/lottie.dart';
 import 'Vegetablemodel.dart';
 
 class VegetableSong extends StatefulWidget {
@@ -11,259 +13,435 @@ class VegetableSong extends StatefulWidget {
   State<VegetableSong> createState() => _VegetableSongState();
 }
 
-class _VegetableSongState extends State<VegetableSong> {
+class _VegetableSongState extends State<VegetableSong>
+    with SingleTickerProviderStateMixin {
   final FlutterTts flutterTts = FlutterTts();
-  final AudioPlayer audioPlayer = AudioPlayer(); // لتشغيل الملفات المسجلة
-  final PageController _controller = PageController(initialPage: 0);
+  final PageController _pageCtrl = PageController();
 
+  int _page = 0;
   bool isPressed = false;
-  int score = 0;
+  bool showSuccess = false;
+  bool isLocked = false;
+  List<String> wrongSelections = [];
+  Timer? _hintTimer;
 
-  // ألوان مبهجة ومريحة للطفل
-  final Color primaryColor = const Color(0xFFFF9800); // برتقالي دافئ
-  final Color backgroundColor = const Color(0xFFFDFCF0); // كريمي فاتح جداً
+  late AnimationController _glowCtrl;
+  late Animation<double> _glowAnim;
+
+  final List<Numbermodel> _list = vegetable1();
+
+  @override
+  void initState() {
+    super.initState();
+    _glowCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
+    _glowAnim = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _glowCtrl, curve: Curves.easeInOut));
+    _startPage(0);
+  }
 
   @override
   void dispose() {
-    _controller.dispose();
-    audioPlayer.dispose();
+    _hintTimer?.cancel();
+    _glowCtrl.dispose();
+    flutterTts.stop();
+    _pageCtrl.dispose();
     super.dispose();
   }
 
-  // دالة تشغيل الصوت المسجل
-  void playVoice(String path) async {
-    await audioPlayer.play(AssetSource(path));
+  // ── نطق اسم الخضرة ──────────────────────────────────────
+  Future<void> _speak(String text) async {
+    await flutterTts.setLanguage('en-US');
+    await flutterTts.setPitch(1.1);
+    await flutterTts.speak(text);
+  }
+
+  // ── إعداد كل صفحة ────────────────────────────────────────
+  void _startPage(int page) {
+    _hintTimer?.cancel();
+    showSuccess = false;
+    isPressed = false;
+    isLocked = false;
+    wrongSelections = [];
+
+    // نطق تلقائي عند الدخول
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted) _speak(_list[page].Text);
+    });
+
+    // تكرار النطق كل 7 ثوان إذا لم يختر الطفل
+    _hintTimer = Timer.periodic(const Duration(seconds: 7), (_) {
+      if (!isPressed && mounted) _speak(_list[page].Text);
+    });
+
+    // وميض بعد 5 ثوان للإشارة للإجابة الصحيحة
+    Future.delayed(const Duration(seconds: 5), () {
+      if (mounted && !showSuccess) {
+        _glowCtrl.repeat(reverse: true);
+      }
+    });
+  }
+
+  // ── التعامل مع الاختيار ──────────────────────────────────
+  void _handleTap(String key, bool isCorrect) async {
+    if (isLocked || wrongSelections.contains(key)) return;
+
+    setState(() {
+      isLocked = true;
+      isPressed = true;
+    });
+
+    if (isCorrect) {
+      _hintTimer?.cancel();
+      _glowCtrl.stop();
+      _glowCtrl.reset();
+      await Future.delayed(const Duration(milliseconds: 300));
+      if (mounted) setState(() => showSuccess = true);
+      await _speak(_list[_page].Text);
+    } else {
+      await Future.delayed(const Duration(milliseconds: 400));
+      if (mounted) {
+        setState(() {
+          isLocked = false;
+          isPressed = false;
+          wrongSelections.add(key);
+        });
+        if (!_glowCtrl.isAnimating) _glowCtrl.repeat(reverse: true);
+      }
+    }
+  }
+
+  // ── التالي ───────────────────────────────────────────────
+  void _nextPage() {
+    if (_page + 1 < vegitablesongs2.length) {
+      setState(() {
+        _page++;
+        _startPage(_page);
+      });
+      _pageCtrl.nextPage(
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  // ── السابق ───────────────────────────────────────────────
+  void _prevPage() {
+    if (_page > 0) {
+      setState(() {
+        _page--;
+        _startPage(_page);
+      });
+      _pageCtrl.previousPage(
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Numbermodel> vegetablelist = vegetable1();
-
     return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        title: const Text(
-          'لعبة الخضروات',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-      ),
+      backgroundColor: Colors.white,
       body: PageView.builder(
-        controller: _controller,
-        onPageChanged: (page) => setState(() => isPressed = false),
+        controller: _pageCtrl,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: vegitablesongs2.length,
-        itemBuilder: (context, index) {
-          var currentQuestion = vegitablesongs2[index];
-          var currentVeg = vegetablelist[index];
+        itemBuilder: (ctx, pageIndex) {
+          final q = vegitablesongs2[pageIndex];
+          final veg = _list[pageIndex];
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                // كارت السؤال العلوي
-                Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 10,
-                        offset: Offset(0, 5),
-                      ),
-                    ],
-                    border: Border.all(
-                      color: primaryColor.withOpacity(0.3),
-                      width: 2,
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        currentVeg.textAr,
-                        style: TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          color: primaryColor,
-                        ),
-                      ),
-                      Text(
-                        currentVeg.Text,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const Spacer(),
-
-                // منطقة الاختيارات (الصور)
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 25,
-                    mainAxisSpacing: 25,
-                    childAspectRatio: 1,
-                  ),
-                  itemCount: currentQuestion.answer.length,
-                  itemBuilder: (context, i) {
-                    String imagePath = currentQuestion.answer.keys.elementAt(i);
-                    bool isCorrect = currentQuestion.answer.values.elementAt(i);
-
-                    return InkWell(
-                      onTap:
-                          isPressed
-                              ? null
-                              : () {
-                                setState(() {
-                                  isPressed = true;
-                                  if (isCorrect) {
-                                    score++;
-                                    // تشغيل صوت "صح" (سيتم شرح التركيب بالأسفل)
-                                    // playVoice('sounds/correct.mp3');
-                                    MotionToast.success(
-                                      description: const Text("ممتاز يا بطل!"),
-                                    ).show(context);
-                                  } else {
-                                    // playVoice('sounds/wrong.mp3');
-                                    MotionToast.error(
-                                      description: const Text("حاول مرة أخرى"),
-                                    ).show(context);
-                                  }
-                                });
-                              },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(
-                            color:
-                                isPressed
-                                    ? (isCorrect ? Colors.green : Colors.red)
-                                    : Colors.grey.withOpacity(0.2),
-                            width: 4,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  isPressed
-                                      ? (isCorrect
-                                          ? Colors.green.withOpacity(0.3)
-                                          : Colors.red.withOpacity(0.3))
-                                      : Colors.black.withOpacity(0.05),
-                              blurRadius: 10,
-                              spreadRadius: 2,
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Image.asset(imagePath, fit: BoxFit.contain),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-
-                const Spacer(),
-
-                // أزرار التحكم السفلية
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 40),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildNavButton(
-                        icon: Icons.arrow_back_rounded,
-                        onTap:
-                            index == 0
-                                ? null
-                                : () => _controller.previousPage(
-                                  duration: Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut,
-                                ),
-                      ),
-
-                      // زر الصوت الكبير
-                      GestureDetector(
-                        onTap: () {
-                          // هنا تشغلي صوتك المسجل بدلاً من الـ TTS
-                          // playVoice(currentVeg.voicePath);
-                          flutterTts.speak(currentVeg.Text);
-                        },
-                        child: Container(
-                          height: 80,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            color: primaryColor,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: primaryColor.withOpacity(0.4),
-                                blurRadius: 15,
-                                spreadRadius: 5,
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.volume_up_rounded,
-                            color: Colors.white,
-                            size: 45,
-                          ),
-                        ),
-                      ),
-
-                      _buildNavButton(
-                        icon: Icons.arrow_forward_rounded,
-                        onTap:
-                            !isPressed
-                                ? null
-                                : () {
-                                  if (index + 1 < vegitablesongs2.length) {
-                                    _controller.nextPage(
-                                      duration: Duration(milliseconds: 300),
-                                      curve: Curves.easeInOut,
-                                    );
-                                  }
-                                },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
+          return showSuccess ? _buildSuccess(veg) : _buildQuestion(ctx, q, veg);
         },
       ),
     );
   }
 
-  Widget _buildNavButton({required IconData icon, VoidCallback? onTap}) {
-    return CircleAvatar(
-      radius: 28,
-      backgroundColor: onTap == null ? Colors.grey[300] : Colors.white,
-      child: IconButton(
-        icon: Icon(
-          icon,
-          color: onTap == null ? Colors.grey : primaryColor,
-          size: 30,
+  // ── شاشة السؤال ──────────────────────────────────────────
+  Widget _buildQuestion(BuildContext ctx, QuestionModel q, Numbermodel veg) {
+    return SafeArea(
+      child: Column(
+        children: [
+          // ── AppBar بسيط ──────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // زر الرجوع
+                _CircleBtn(
+                  icon: Icons.arrow_back_ios_new_rounded,
+                  onTap: () => Navigator.pop(ctx),
+                  bg: Colors.grey.shade100,
+                  iconColor: Colors.black54,
+                ),
+                // اسم الخضرة كعنوان
+                Column(
+                  children: [
+                    Text(
+                      veg.Text,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFE65100),
+                        fontFamily: 'arlrdbd',
+                      ),
+                    ),
+                    Text(
+                      veg.textAr,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.black45,
+                        fontFamily: 'arlrdbd',
+                      ),
+                    ),
+                  ],
+                ),
+                // زر الصوت
+                _CircleBtn(
+                  icon: Icons.volume_up_rounded,
+                  onTap: () => _speak(veg.Text),
+                  bg: const Color(0xFFE65100),
+                  iconColor: Colors.white,
+                ),
+              ],
+            ),
+          ),
+
+          // ── الصورتان جنب بعض ─────────────────────────────
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children:
+                  q.answer.entries.map((e) {
+                    final key = e.key;
+                    final isCorrect = e.value;
+                    return _buildOption(key, isCorrect);
+                  }).toList(),
+            ),
+          ),
+
+          // ── أزرار التنقل ─────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 32,
+              left: 40,
+              right: 40,
+              top: 8,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _CircleBtn(
+                  icon: Icons.arrow_back_ios_rounded,
+                  onTap: _page == 0 ? null : _prevPage,
+                  bg: _page == 0 ? Colors.grey.shade200 : Colors.white,
+                  iconColor: _page == 0 ? Colors.grey : const Color(0xFFE65100),
+                  shadow: _page != 0,
+                ),
+                _CircleBtn(
+                  icon: Icons.arrow_forward_ios_rounded,
+                  onTap: isPressed ? _nextPage : null,
+                  bg:
+                      isPressed
+                          ? const Color(0xFFE65100)
+                          : Colors.grey.shade200,
+                  iconColor: isPressed ? Colors.white : Colors.grey,
+                  shadow: isPressed,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── بناء خيار واحد ───────────────────────────────────────
+  Widget _buildOption(String imgPath, bool isCorrect) {
+    final faded = wrongSelections.contains(imgPath);
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => _handleTap(imgPath, isCorrect),
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 400),
+          opacity: faded ? 0.25 : 1.0,
+          child: AnimatedBuilder(
+            animation: _glowAnim,
+            builder: (_, child) {
+              final glowing = isCorrect && !showSuccess;
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  // هالة وميض للإجابة الصحيحة
+                  if (glowing && _glowCtrl.isAnimating)
+                    Container(
+                      width: 140,
+                      height: 140,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.orange.withOpacity(
+                              0.5 * _glowAnim.value,
+                            ),
+                            blurRadius: 40 * _glowAnim.value,
+                            spreadRadius: 12 * _glowAnim.value,
+                          ),
+                        ],
+                      ),
+                    ),
+                  child!,
+                ],
+              );
+            },
+            child: Image.asset(
+              imgPath,
+              height: isCorrect ? 280 : 160,
+              fit: BoxFit.contain,
+              errorBuilder:
+                  (_, __, ___) =>
+                      const Icon(Icons.eco, size: 100, color: Colors.green),
+            ),
+          ),
         ),
-        onPressed: onTap,
+      ),
+    );
+  }
+
+  // ── شاشة النجاح ──────────────────────────────────────────
+  Widget _buildSuccess(Numbermodel veg) {
+    return Stack(
+      children: [
+        // كونفيتي
+        Positioned.fill(
+          child: Lottie.asset('assets/lottie/CONFETTI.json', fit: BoxFit.cover),
+        ),
+        // المحتوى
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.6, end: 1.0),
+                duration: const Duration(milliseconds: 800),
+                curve: Curves.elasticOut,
+                builder:
+                    (_, v, child) => Transform.scale(scale: v, child: child),
+                child: Image.asset(veg.image, height: 260, fit: BoxFit.contain),
+              ),
+              const SizedBox(height: 30),
+              Text(
+                veg.Text,
+                style: const TextStyle(
+                  fontSize: 42,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFE65100),
+                  fontFamily: 'arlrdbd',
+                ),
+              ),
+              Text(
+                veg.textAr,
+                style: const TextStyle(
+                  fontSize: 26,
+                  color: Colors.black45,
+                  fontFamily: 'arlrdbd',
+                ),
+              ),
+              const SizedBox(height: 40),
+              // زر التالي
+              if (_page + 1 < vegitablesongs2.length)
+                GestureDetector(
+                  onTap: _nextPage,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 36,
+                      vertical: 14,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE65100),
+                      borderRadius: BorderRadius.circular(32),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFE65100).withOpacity(0.35),
+                          blurRadius: 16,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'التالي',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontFamily: 'arlrdbd',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ── زر دائري مساعد ───────────────────────────────────────────
+class _CircleBtn extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback? onTap;
+  final Color bg;
+  final Color iconColor;
+  final bool shadow;
+
+  const _CircleBtn({
+    required this.icon,
+    this.onTap,
+    required this.bg,
+    required this.iconColor,
+    this.shadow = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          color: bg,
+          shape: BoxShape.circle,
+          boxShadow:
+              shadow
+                  ? [
+                    BoxShadow(
+                      color: iconColor.withOpacity(0.25),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                  : [],
+        ),
+        child: Icon(icon, color: iconColor, size: 22),
       ),
     );
   }

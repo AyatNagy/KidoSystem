@@ -5,7 +5,6 @@ const String familySongIcon = 'assets/images/family/song_icon.png';
 const String familyTreeIcon = 'assets/images/family/tree_icon.png';
 
 List<LetterJourney> buildFamilyJourney() => [
-  // تم حذف My Family لتبدأ الرحلة من الجد مباشرة
   LetterJourney(
     image: familyGrandfather,
     isLocked: false,

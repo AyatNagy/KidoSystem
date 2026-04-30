@@ -34,34 +34,6 @@ class _VegetableMapScreenState extends State<VegetableMapScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF6FBF4),
 
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFF6FBF4),
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black87),
-        centerTitle: true,
-        title: Column(
-          children: const [
-            Text(
-              '🥦 Vegetables',
-              style: TextStyle(
-                color: Color(0xFF3A7D44),
-                fontFamily: 'arlrdbd',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              'الخضروات',
-              style: TextStyle(
-                color: Colors.black38,
-                fontFamily: 'arlrdbd',
-                fontSize: 13,
-              ),
-            ),
-          ],
-        ),
-      ),
-
       body: JourneymapPage(
         journeyData: journey,
         backgroundColor: const Color(0xFFF6FBF4),

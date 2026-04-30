@@ -6,7 +6,7 @@ import 'package:kido/Pages/level3/level3_home.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 
 class ChildLevelSelectResult {
-  final int level; 
+  final int level;
 
   const ChildLevelSelectResult({required this.level});
 }
@@ -43,7 +43,7 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => Level1Home(childName: widget.childName)
+            builder: (_) => Level1Home(childName: widget.childName),
           ),
         );
         break;
@@ -51,9 +51,7 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => const Scaffold(
-              body: Center(child: Text("Level 2 - Coming Soon")),
-            ),
+            builder: (_) => Level1Home(childName: widget.childName),
           ),
         );
         break;
