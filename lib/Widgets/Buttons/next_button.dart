@@ -1,5 +1,5 @@
 import'package:flutter/material.dart';
-import 'package:kido/Widgets/kido_action_button.dart';
+import 'package:kido/Widgets/Buttons/kido_action_button.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 
 class NextButton extends StatelessWidget{

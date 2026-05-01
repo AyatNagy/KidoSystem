@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Models/dailog_model.dart';
 import 'package:kido/Pages/Auth/reset_password_page.dart';
-import 'package:kido/Widgets/custom_app_button.dart';
+import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import 'package:kido/Widgets/dialog_widget.dart';
 import 'package:kido/Widgets/otp_field.dart';
 import '../../bloc/verify_code/verify_code_cubit.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:lottie/lottie.dart';
 import '../../../Widgets/content/level1/no3/moving_car.dart';
-import '../../../Widgets/road_widget.dart';
+import '../../../Widgets/content/level1/road_widget.dart';
 import '../../../constants.dart';
 import '../../../services/audio_service.dart';
 

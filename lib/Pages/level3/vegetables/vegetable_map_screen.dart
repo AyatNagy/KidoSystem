@@ -3,7 +3,7 @@ import 'package:kido/Models/level3/letters/letter_map.dart';
 import 'vegetable_journey_data.dart';
 import 'VegetableQuiz.dart';
 import 'VegetableSong.dart';
-import 'VegetableSound.dart';
+import 'vegetable_sound.dart';
 import 'package:kido/Widgets/journey_map.dart';
 
 class VegetableMapScreen extends StatefulWidget {

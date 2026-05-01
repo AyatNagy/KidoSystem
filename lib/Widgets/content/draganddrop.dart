@@ -76,16 +76,12 @@ class _DragDropWidgetState extends State<DragDropWidget>
         }
 
         for (var target in widget.question.targets) {
-          // --- التعديل هنا لتوسيع منطقة الاستلام ---
-          // سنقوم بحساب حجم أكبر للـ DragTarget (مثلاً ضعف الحجم المطلوب)
-          // مع الحفاظ على موقعه في السنتر
-          double extraSizeMultiplier = 2.0; // زيادة مساحة القبول لضعف الحجم
+          double extraSizeMultiplier = 2.0;
           double targetWidth = containerSize.width * target.size.width;
           double targetHeight = containerSize.height * target.size.height;
 
           stackChildren.add(
             Positioned(
-              // نزيح الـ Positioned قليلاً للخلف ليعوض زيادة الحجم ويظل السنتر ثابت
               left:
                   (containerSize.width * target.position.dx) -
                   (targetWidth * (extraSizeMultiplier - 1) / 2),
@@ -119,9 +115,8 @@ class _DragDropWidgetState extends State<DragDropWidget>
                   bool isOccupied = targetOccupied[target.id] != null;
 
                   return Center(
-                    // لضمان بقاء الظل والصورة في المنتصف الحقيقي
                     child: SizedBox(
-                      width: targetWidth, // نعود للحجم الأصلي للرسم
+                      width: targetWidth,
                       height: targetHeight,
                       child: AnimatedOpacity(
                         duration: const Duration(milliseconds: 300),
@@ -156,7 +151,6 @@ class _DragDropWidgetState extends State<DragDropWidget>
           );
         }
 
-        // --- كود الـ Items يبقى كما هو دون تغيير في حجم الظل الخاص بها ---
         for (int i = 0; i < widget.question.items.length; i++) {
           final item = widget.question.items[i];
           String? currentTargetId;

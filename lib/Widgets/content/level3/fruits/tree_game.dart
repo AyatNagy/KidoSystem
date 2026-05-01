@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:kido/Widgets/puls_button.dart';
+import 'package:kido/Widgets/Buttons/puls_button.dart';
 import 'package:kido/constants.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../Models/level3/pixel.dart';

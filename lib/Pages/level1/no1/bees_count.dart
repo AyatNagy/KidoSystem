@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:kido/Widgets/puls_button.dart';
+import 'package:kido/Widgets/Buttons/puls_button.dart';
 import 'package:kido/constants.dart';
 import '../../../../services/audio_service.dart';
 import '../../../Widgets/content/level1/background_colors.dart';

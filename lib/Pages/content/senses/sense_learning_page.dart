@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kido/Models/sense_data.dart';
 import 'package:kido/Pages/content/senses/sense_tap_practice_page.dart';
 import 'package:kido/Widgets/content/level1/sense_face_view.dart';
-import 'package:kido/Widgets/next_button.dart';
+import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/data/sense_mapper.dart';
 import 'package:kido/enum/sense_type.dart';

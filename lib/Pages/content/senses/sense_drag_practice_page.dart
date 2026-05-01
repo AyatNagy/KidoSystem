@@ -4,7 +4,7 @@ import 'package:kido/Models/draganddrop_question.dart';
 import 'package:kido/Models/dragable_item.dart';
 import 'package:kido/Models/sense_data.dart';
 import 'package:kido/Models/targets_item.dart';
-import 'package:kido/Widgets/draganddrop.dart';
+import 'package:kido/Widgets/content/draganddrop.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/data/sense_mapper.dart';
 import 'package:kido/enum/sense_type.dart';

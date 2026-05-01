@@ -3,12 +3,11 @@ import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:kido/constants.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../Models/level3/bubble_model.dart';
 import '../../../../Widgets/content/bubble.dart';
-import '../../../puls_button.dart';
+import '../../../Buttons/puls_button.dart';
 
 class BubblePopGame extends StatefulWidget {
   final String targetLetter;
@@ -71,10 +70,8 @@ class _BubblePopGameState extends State<BubblePopGame> {
     setState(() {
       _bubbles.removeWhere((b) => b.id == id);
       if (isTapped) {
-        HapticFeedback.lightImpact();
         String path = widget.audioPath.replaceAll('assets/', '');
         _audioPlayer.play(AssetSource(path));
-
         _score++;
         if (_score >= widget.goalScore) _handleWin();
       }
@@ -82,9 +79,7 @@ class _BubblePopGameState extends State<BubblePopGame> {
   }
 
   void _handleWin() {
-    HapticFeedback.mediumImpact();
     _audioPlayer.play(AssetSource('audio/yaay.mp3'));
-
     setState(() {
       _hasWon = true;
       _bubbles.clear();
@@ -184,7 +179,11 @@ class _BubblePopGameState extends State<BubblePopGame> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text("⭐", style: TextStyle(fontSize: 20)),
+                const Icon(
+                  Icons.star,
+                  color: AppColors.kidoYellow,
+                  size: 30,
+                ),
                 const SizedBox(width: 10),
                 Text(
                   "$_score / ${widget.goalScore}",

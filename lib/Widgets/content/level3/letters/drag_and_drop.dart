@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../Models/draganddrop_question.dart';
 import '../../../curcle_painter.dart';
-import '../../../draganddrop.dart';
-import '../../../puls_button.dart';
+import '../../draganddrop.dart';
+import '../../../Buttons/puls_button.dart';
 
 class DragDropLessonPage extends StatefulWidget {
   final DragDropQuestion questionData;

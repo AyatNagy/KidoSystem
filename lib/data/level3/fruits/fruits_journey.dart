@@ -11,6 +11,13 @@ final List<LetterJourney> journeyFruits = [
   ),
 
   LetterJourney(
+      image: "assets/images/fruits/watermelon.png",
+      isLocked: true,
+      letterData: fruitsDiscovery[5],
+      dragData: fruits[5]
+  ),
+
+  LetterJourney(
     image: "assets/images/fruits/banana.png",
     isLocked: true,
     letterData: fruitsDiscovery[2],

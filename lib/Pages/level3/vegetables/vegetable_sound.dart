@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -7,8 +8,8 @@ import 'Vegetablemodel.dart';
 List<Numbermodel> vegetablelist = vegetable1();
 
 class VegetableSound extends StatefulWidget {
-  int index;
-  VegetableSound(this.index, {super.key});
+  final int index;
+  const VegetableSound(this.index, {super.key});
 
   @override
   State<VegetableSound> createState() => _VegetableSoundState();
@@ -17,7 +18,9 @@ class VegetableSound extends StatefulWidget {
 class _VegetableSoundState extends State<VegetableSound>
     with TickerProviderStateMixin {
   final FlutterTts flutterTts = FlutterTts();
+  late int currentIndex;
   bool _isSpeaking = false;
+
   late AnimationController _pulseController;
   late AnimationController _bgController;
 
@@ -44,11 +47,13 @@ class _VegetableSoundState extends State<VegetableSound>
     ),
   ];
 
-  _VegTheme get _theme => _themes[widget.index % _themes.length];
+  _VegTheme get _theme => _themes[currentIndex % _themes.length];
 
   @override
   void initState() {
     super.initState();
+    currentIndex = widget.index;
+
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 900),
@@ -57,6 +62,7 @@ class _VegetableSoundState extends State<VegetableSound>
       vsync: this,
       duration: const Duration(seconds: 4),
     )..repeat(reverse: true);
+
     _speak();
   }
 
@@ -69,39 +75,41 @@ class _VegetableSoundState extends State<VegetableSound>
   }
 
   Future _speak() async {
-    if (_isSpeaking) return;
+    await flutterTts.stop();
     setState(() => _isSpeaking = true);
     HapticFeedback.mediumImpact();
     _pulseController.repeat(reverse: true);
     await flutterTts.setLanguage("en-US");
     await flutterTts.setPitch(1.1);
     await flutterTts.setVolume(1.0);
-    await flutterTts.speak(vegetablelist[widget.index].Text);
-    await Future.delayed(const Duration(seconds: 2));
-    if (mounted) {
-      setState(() => _isSpeaking = false);
-      _pulseController.stop();
-      _pulseController.reset();
-    }
+    await flutterTts.speak(vegetablelist[currentIndex].Text);
+
+    flutterTts.setCompletionHandler(() {
+      if (mounted) {
+        setState(() => _isSpeaking = false);
+        _pulseController.stop();
+        _pulseController.reset();
+      }
+    });
   }
 
   void _next() {
-    if (widget.index < vegetablelist.length - 1) {
-      setState(() => widget.index++);
+    if (currentIndex < vegetablelist.length - 1) {
+      setState(() => currentIndex++);
       _speak();
     }
   }
 
   void _prev() {
-    if (widget.index > 0) {
-      setState(() => widget.index--);
+    if (currentIndex > 0) {
+      setState(() => currentIndex--);
       _speak();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final veggie = vegetablelist[widget.index];
+    final veggie = vegetablelist[currentIndex];
     final grad = _theme.colors;
     final emojis = _theme.emoji;
     final size = MediaQuery.of(context).size;
@@ -109,48 +117,32 @@ class _VegetableSoundState extends State<VegetableSound>
     return Scaffold(
       body: Stack(
         children: [
-          // ── خلفية متحركة ─────────────────────────────────
           AnimatedBuilder(
             animation: _bgController,
-            builder:
-                (_, __) => Container(
-                  decoration: BoxDecoration(
-                    gradient: RadialGradient(
-                      center: Alignment(
-                        -0.3 + _bgController.value * 0.6,
-                        -0.4 + _bgController.value * 0.4,
-                      ),
-                      radius: 1.4,
-                      colors: [
-                        grad[0].withOpacity(0.85),
-                        grad[1].withOpacity(0.70),
-                        grad[2].withOpacity(0.45),
-                        Colors.white.withOpacity(0.88),
-                      ],
-                      stops: const [0.0, 0.35, 0.65, 1.0],
-                    ),
+            builder: (_, __) => Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment(
+                    -0.3 + _bgController.value * 0.6,
+                    -0.4 + _bgController.value * 0.4,
                   ),
+                  radius: 1.4,
+                  colors: [
+                    grad[0].withOpacity(0.85),
+                    grad[1].withOpacity(0.70),
+                    grad[2].withOpacity(0.45),
+                    Colors.white.withOpacity(0.88),
+                  ],
+                  stops: const [0.0, 0.35, 0.65, 1.0],
                 ),
+              ),
+            ),
           ),
 
-          // ── دوائر زخرفية ─────────────────────────────────
-          Positioned(
-            top: -80,
-            left: -80,
-            child: _Blob(color: grad[0], size: 260),
-          ),
-          Positioned(
-            bottom: -60,
-            right: -60,
-            child: _Blob(color: grad[1], size: 220),
-          ),
-          Positioned(
-            top: size.height * 0.4,
-            left: -40,
-            child: _Blob(color: grad[2], size: 120),
-          ),
+          Positioned(top: -80, left: -80, child: Blob(color: grad[0], size: 260)),
+          Positioned(bottom: -60, right: -60, child: Blob(color: grad[1], size: 220)),
+          Positioned(top: size.height * 0.4, left: -40, child: Blob(color: grad[2], size: 120)),
 
-          // ── ايموجيات عائمة ───────────────────────────────
           for (int i = 0; i < emojis.length; i++)
             Positioned(
               left: [0.07, 0.82, 0.88][i] * size.width,
@@ -161,16 +153,11 @@ class _VegetableSoundState extends State<VegetableSound>
                   .fadeIn(delay: (200 * i).ms),
             ),
 
-          // ── واجهة ────────────────────────────────────────
           SafeArea(
             child: Column(
               children: [
-                // زر الرجوع
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: GestureDetector(
@@ -189,75 +176,59 @@ class _VegetableSoundState extends State<VegetableSound>
                             ),
                           ],
                         ),
-                        child: Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: grad[0],
-                          size: 20,
-                        ),
+                        child: Icon(Icons.arrow_back_ios_new_rounded, color: grad[0], size: 20),
                       ),
                     ),
                   ),
                 ),
 
-                // ── GIF كبير يملأ الشاشة ─────────────────
                 Expanded(
                   child: Center(
                     child: AnimatedSwitcher(
                       duration: 500.ms,
-                      transitionBuilder:
-                          (child, anim) => FadeTransition(
-                            opacity: anim,
-                            child: ScaleTransition(scale: anim, child: child),
-                          ),
+                      transitionBuilder: (child, anim) => FadeTransition(
+                        opacity: anim,
+                        child: ScaleTransition(scale: anim, child: child),
+                      ),
                       child: Image.asset(
-                            veggie.image,
-                            key: ValueKey(widget.index),
-                            width: size.width * 0.88,
-                            height: size.height * 0.68,
-                            fit: BoxFit.contain,
-                            errorBuilder:
-                                (_, __, ___) => Icon(
-                                  Icons.eco,
-                                  size: 200,
-                                  color: Colors.white,
-                                ),
-                          )
+                        veggie.image,
+                        key: ValueKey(currentIndex),
+                        width: size.width * 0.88,
+                        height: size.height * 0.68,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.eco,
+                          size: 200,
+                          color: Colors.white,
+                        ),
+                      )
                           .animate(onPlay: (c) => c.repeat(reverse: true))
                           .scale(
-                            begin: const Offset(0.90, 0.90),
-                            end: const Offset(1.0, 1.0),
-                            duration: 2.seconds,
-                            curve: Curves.easeInOut,
-                          )
+                        begin: const Offset(0.90, 0.90),
+                        end: const Offset(1.0, 1.0),
+                        duration: 2.seconds,
+                        curve: Curves.easeInOut,
+                      )
                           .moveY(
-                            begin: 6,
-                            end: -6,
-                            duration: 2.seconds,
-                            curve: Curves.easeInOut,
-                          ),
+                        begin: 6,
+                        end: -6,
+                        duration: 2.seconds,
+                        curve: Curves.easeInOut,
+                      ),
                     ),
                   ),
                 ),
 
-                // ── صف الأزرار ───────────────────────────
                 Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 30,
-                    left: 36,
-                    right: 36,
-                    top: 6,
-                  ),
+                  padding: const EdgeInsets.only(bottom: 30, left: 36, right: 36, top: 6),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // زر السابق
                       _NavBtn(
                         icon: Icons.arrow_back_ios_rounded,
-                        onTap: widget.index == 0 ? null : _prev,
+                        onTap: currentIndex == 0 ? null : _prev,
                         grad: grad,
                       ),
-
-                      // زر الصوت
                       ScaleTransition(
                         scale: Tween(begin: 1.0, end: 1.18).animate(
                           CurvedAnimation(
@@ -285,22 +256,13 @@ class _VegetableSoundState extends State<VegetableSound>
                                 ),
                               ],
                             ),
-                            child: const Icon(
-                              Icons.volume_up_rounded,
-                              color: Colors.white,
-                              size: 38,
-                            ),
+                            child: const Icon(Icons.volume_up_rounded, color: Colors.white, size: 38),
                           ),
                         ),
                       ),
-
-                      // زر التالي
                       _NavBtn(
                         icon: Icons.arrow_forward_ios_rounded,
-                        onTap:
-                            widget.index == vegetablelist.length - 1
-                                ? null
-                                : _next,
+                        onTap: currentIndex == vegetablelist.length - 1 ? null : _next,
                         grad: grad,
                       ),
                     ],
@@ -315,11 +277,11 @@ class _VegetableSoundState extends State<VegetableSound>
   }
 }
 
-// ── Blob ─────────────────────────────────────────────────────
-class _Blob extends StatelessWidget {
+class Blob extends StatelessWidget {
   final Color color;
   final double size;
-  const _Blob({required this.color, required this.size});
+  const Blob({super.key, required this.color, required this.size});
+
   @override
   Widget build(BuildContext context) => Container(
     width: size,
@@ -331,7 +293,6 @@ class _Blob extends StatelessWidget {
   );
 }
 
-// ── زر تنقل ──────────────────────────────────────────────────
 class _NavBtn extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
@@ -357,16 +318,15 @@ class _NavBtn extends StatelessWidget {
           decoration: BoxDecoration(
             color: enabled ? Colors.white : Colors.grey.shade200,
             shape: BoxShape.circle,
-            boxShadow:
-                enabled
-                    ? [
-                      BoxShadow(
-                        color: grad[0].withOpacity(0.25),
-                        blurRadius: 14,
-                        offset: const Offset(0, 5),
-                      ),
-                    ]
-                    : [],
+            boxShadow: enabled
+                ? [
+              BoxShadow(
+                color: grad[0].withOpacity(0.25),
+                blurRadius: 14,
+                offset: const Offset(0, 5),
+              ),
+            ]
+                : [],
           ),
           child: Icon(icon, color: enabled ? grad[0] : Colors.grey, size: 24),
         ),
@@ -375,7 +335,6 @@ class _NavBtn extends StatelessWidget {
   }
 }
 
-// ── Theme ─────────────────────────────────────────────────────
 class _VegTheme {
   final List<Color> colors;
   final List<String> emoji;

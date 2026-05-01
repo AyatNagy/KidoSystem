@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/body_parts_model.dart';
-import 'package:kido/Widgets/next_button.dart';
+import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/data/body_parts.dart';
 import 'package:kido/utils/stars_progress.dart';
 import 'package:lottie/lottie.dart';
 import 'package:video_player/video_player.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-import '../../../Widgets/next_button.dart';
+import '../../../Widgets/Buttons/next_button.dart';
 
 /// Stateful widget to fetch and then display video content.
 class BodyPartsScreen extends StatefulWidget {
