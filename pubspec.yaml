@@ -55,6 +55,8 @@ dependencies:
   motion_toast: ^2.9.1
   rive: ^0.14.3
   video_player: ^2.8.1
+  camera: ^0.10.5+9
+  animate_do: ^3.3.4
 
 
 dev_dependencies:
@@ -89,19 +91,22 @@ flutter:
     - assets/images/letters/
     - assets/images/sizes/
     - assets/images/fruits/
+    - assets/images/senses/
+    - assets/images/arabicNumbers/
+    - assets/images/englishNumbers/
+    - assets/images/common/
     - assets/lottie/
     - assets/audio/
     - assets/audio/numeric_en/
     - assets/audio/numeric_ar/
     - assets/audio/fruits/
+    - assets/audio/senses/
     - assets/audio/alphabet_ar/
     - assets/audio/alphabet_en/
     - assets/videos/
     - assets/videos/Body_parts/
     - assets/images/cartoonVegetable/
     - assets/gif/
-    - assets/images/family/
-    - assets/images/familyIcons/
 
      
 
