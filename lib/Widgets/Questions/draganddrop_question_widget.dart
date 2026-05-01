@@ -4,7 +4,6 @@ import 'package:kido/Models/draganddrop_question.dart';
 class DragDropQuestionWidget extends StatefulWidget {
   final DragDropQuestion question;
   final void Function(Map<String, String?> answers)? onAnswered;
-  // الإضافة الجديدة هنا
   final bool isExamMode;
 
   const DragDropQuestionWidget({
@@ -19,7 +18,8 @@ class DragDropQuestionWidget extends StatefulWidget {
 }
 
 class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
-  late Map<String, String?> targetOccupied;
+  // التعديل: القيمة أصبحت List لاستيعاب أكثر من عنصر في السلة
+  late Map<String, List<String>> targetOccupied;
   late Map<String, Offset> initialPositions;
 
   @override
@@ -35,8 +35,8 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
 
   void _updateAnswers() {
     Map<String, String?> currentAnswers = {};
-    targetOccupied.forEach((targetId, itemId) {
-      if (itemId != null) {
+    targetOccupied.forEach((targetId, itemIds) {
+      for (var itemId in itemIds) {
         currentAnswers[itemId] = targetId;
       }
     });
@@ -51,6 +51,7 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
         List<Widget> stackChildren = [];
         final bool isPuzzle = widget.question.backgroundImage != null;
 
+        // 1. رسم الخلفية (إذا وجدت)
         if (isPuzzle) {
           stackChildren.add(
             Positioned.fill(
@@ -65,6 +66,7 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
           );
         }
 
+        // 2. رسم الأهداف (مثل السلال أو الحيوانات)
         for (var target in widget.question.targets) {
           if (target.image.isEmpty) continue;
           stackChildren.add(
@@ -78,50 +80,72 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
           );
         }
 
-        targetOccupied.forEach((targetId, itemId) {
-          if (itemId == null) return;
+        // 3. رسم العناصر التي تم إسقاطها داخل الأهداف (التفاح داخل السلة)
+        targetOccupied.forEach((targetId, itemIds) {
+          if (itemIds.isEmpty) return;
+
           final target = widget.question.targets.firstWhere(
             (t) => t.id == targetId,
           );
-          final item = widget.question.items.firstWhere((i) => i.id == itemId);
-          final double scale = isPuzzle ? 1.0 : 0.5;
 
-          stackChildren.add(
-            Positioned(
-              left:
-                  (containerSize.width * target.position.dx) +
-                  (containerSize.width * target.size.width * (1 - scale)) / 2,
-              top:
-                  (containerSize.height * target.position.dy) +
-                  (containerSize.height * target.size.height * (1 - scale)) / 2,
-              width: containerSize.width * target.size.width * scale,
-              height: containerSize.height * target.size.height * scale,
-              child: Draggable<String>(
-                data: item.id,
-                feedback: Material(
-                  color: Colors.transparent,
-                  child: Image.asset(
-                    item.image,
-                    width: containerSize.width * target.size.width * scale,
-                    fit: BoxFit.contain,
+          for (int i = 0; i < itemIds.length; i++) {
+            final itemId = itemIds[i];
+            final item = widget.question.items.firstWhere(
+              (it) => it.id == itemId,
+            );
+            final double scale = isPuzzle ? 1.0 : 0.5;
+
+            // إضافة إزاحة بسيطة (Offset) لكي لا يتراكم التفاح فوق بعضه تماماً
+            double xOffset = i * 8.0;
+            double yOffset = i * 4.0;
+
+            stackChildren.add(
+              Positioned(
+                left:
+                    (containerSize.width * target.position.dx) +
+                    (containerSize.width * target.size.width * (1 - scale)) /
+                        2 +
+                    xOffset,
+                top:
+                    (containerSize.height * target.position.dy) +
+                    (containerSize.height * target.size.height * (1 - scale)) /
+                        2 +
+                    yOffset,
+                width: containerSize.width * target.size.width * scale,
+                height: containerSize.height * target.size.height * scale,
+                child: Draggable<String>(
+                  data: item.id,
+                  feedback: Material(
+                    color: Colors.transparent,
+                    child: Image.asset(
+                      item.image,
+                      width: 60,
+                      fit: BoxFit.contain,
+                    ),
                   ),
+                  child: Image.asset(item.image, fit: BoxFit.contain),
+                  onDragEnd: (details) {
+                    if (!details.wasAccepted) {
+                      setState(() {
+                        targetOccupied[targetId]!.remove(itemId);
+                        _updateAnswers();
+                      });
+                    }
+                  },
                 ),
-                child: Image.asset(item.image, fit: BoxFit.contain),
-                onDragEnd: (details) {
-                  if (!details.wasAccepted) {
-                    setState(() {
-                      targetOccupied.remove(targetId);
-                      _updateAnswers();
-                    });
-                  }
-                },
               ),
-            ),
-          );
+            );
+          }
         });
 
+        // 4. رسم العناصر المتاحة للسحب (التي لا تزال على الرف)
         for (var item in widget.question.items) {
-          if (targetOccupied.containsValue(item.id)) continue;
+          bool isPlaced = false;
+          targetOccupied.values.forEach((list) {
+            if (list.contains(item.id)) isPlaced = true;
+          });
+          if (isPlaced) continue;
+
           final itemSize = Size(
             containerSize.width * item.size.width,
             containerSize.height * item.size.height,
@@ -140,29 +164,20 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
                   child: Image.asset(
                     item.image,
                     width: itemSize.width,
-                    height: itemSize.height,
                     fit: BoxFit.contain,
                   ),
                 ),
                 childWhenDragging: Opacity(
                   opacity: 0.3,
-                  child: Image.asset(
-                    item.image,
-                    width: itemSize.width,
-                    fit: BoxFit.contain,
-                  ),
+                  child: Image.asset(item.image, fit: BoxFit.contain),
                 ),
-                child: Image.asset(
-                  item.image,
-                  width: itemSize.width,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(item.image, fit: BoxFit.contain),
               ),
             ),
           );
         }
 
-        //  منطق الـ DragTarget
+        // 5. منطق استقبال السحب (Drag Targets) الشفاف
         for (var target in widget.question.targets) {
           stackChildren.add(
             Positioned(
@@ -172,16 +187,21 @@ class _DragDropQuestionWidgetState extends State<DragDropQuestionWidget> {
               height: containerSize.height * target.size.height,
               child: DragTarget<String>(
                 onWillAcceptWithDetails: (details) {
-                  if (widget.isExamMode) {
-                    return true;
-                  } else {
-                    return target.acceptedItemIds.contains(details.data);
-                  }
+                  if (widget.isExamMode) return true;
+                  return target.acceptedItemIds.contains(details.data);
                 },
                 onAcceptWithDetails: (details) {
                   setState(() {
                     final itemId = details.data;
-                    targetOccupied[target.id] = itemId;
+                    targetOccupied.putIfAbsent(target.id, () => []);
+
+                    if (widget.isExamMode) {
+                      targetOccupied[target.id] = [itemId];
+                    } else {
+                      if (!targetOccupied[target.id]!.contains(itemId)) {
+                        targetOccupied[target.id]!.add(itemId);
+                      }
+                    }
                     _updateAnswers();
                   });
                 },

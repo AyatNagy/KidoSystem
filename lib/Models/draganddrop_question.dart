@@ -252,4 +252,48 @@ final List<DragDropQuestion> allDragDropQuestions = [
       ),
     ],
   ),
+
+  DragDropQuestion(
+    examId: ['game1'],
+    questionText: "اجمع كل التفاح في السلة",
+    items: [
+      DragItem(
+        id: "apple_1",
+        image: "assets/images/apple.png",
+        startPosition: const Offset(0.1, 0.7), // الرف لليسار
+        size: const Size(0.2, 0.2),
+      ),
+      DragItem(
+        id: "apple_2",
+        image: "assets/images/apple.png",
+        startPosition: const Offset(0.4, 0.7), // الرف في الوسط
+        size: const Size(0.2, 0.2),
+      ),
+      DragItem(
+        id: "apple_3",
+        image: "assets/images/apple.png",
+        startPosition: const Offset(0.7, 0.7), // الرف لليمين
+        size: const Size(0.2, 0.2),
+      ),
+      DragItem(
+        id: "banana",
+        image: "assets/images/banana.png",
+        startPosition: const Offset(0.4, 0.85),
+        size: const Size(0.2, 0.2),
+      ),
+    ],
+    targets: [
+      DragTargetZone(
+        id: "main_basket",
+        acceptedItemIds: [
+          "apple_1",
+          "apple_2",
+          "apple_3",
+        ], // السلة تقبل التفاح فقط
+        position: const Offset(0.3, 0.1), // السلة في الأعلى
+        size: const Size(0.4, 0.4),
+        image: "assets/images/basket.png",
+      ),
+    ],
+  ),
 ];

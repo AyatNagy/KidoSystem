@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:kido/Pages/level3/fruits/fridge_game_page.dart';
+import 'package:kido/Pages/level3/level3_home.dart';
 //import 'package:kido/Pages/content/senses/sense_drag_practice_page.dart';
 //import 'package:kido/Pages/content/senses/sense_tap_practice_page.dart';
 //import 'package:kido/Pages/level3/level3_home.dart';
