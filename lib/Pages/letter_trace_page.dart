@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:kido/Models/letter_step.dart';
 import 'package:kido/Pages/Painter/letter_path_painter.dart';
@@ -22,32 +23,42 @@ class LetterTracePage extends StatefulWidget {
 
 class _LetterTracePageState extends State<LetterTracePage>
     with TickerProviderStateMixin {
-  // ── رسم ──────────────────────────────────────────
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  Future<void> _playSuccessSound() async {
+    try {
+      await _audioPlayer.stop();
+      await _audioPlayer.play(AssetSource('audio/yaay.mp3'));
+    } catch (e) {
+      debugPrint("Error playing sound: $e");
+    }
+  }
+
   List<List<Offset>> pointsList = [];
   List<Color> colorsList = [];
   Color selectedColor = Colors.redAccent;
 
-  // ── خطوات الحرف ──────────────────────────────────
   List<LetterStep> _steps = const [];
   int _currentStep = 0;
 
-  // ── تقييم ─────────────────────────────────────────
   int _stars = 0;
   List<Offset> _pathSamplePoints = [];
 
-  // ── يد متحركة ─────────────────────────────────────
   bool _showHand = true;
-
   bool _lockedAfterSuccess = false;
 
-  // ── مسار الحرف (للتقييم) ──────────────────────────
   Path _letterPath = Path();
-
   Size? _lastCanvasSize;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
   }
 
   void _ensureLetterDataForCanvas(Size canvasSize) {
@@ -77,8 +88,8 @@ class _LetterTracePageState extends State<LetterTracePage>
     return pts;
   }
 
-  // ── احتفال ─────────────────────────────────────────
   void _showCelebration() {
+    _playSuccessSound();
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -88,17 +99,13 @@ class _LetterTracePageState extends State<LetterTracePage>
             stars: _stars,
             letter: widget.letter,
             onContinue: () {
+              _audioPlayer.stop();
               Navigator.of(context).pop();
               if (widget.onComplete != null) {
                 widget.onComplete!();
               } else {
                 Navigator.of(context).pop(true);
               }
-              //_resetAll();
-              // هنا تقدر تروح للحرف الجاي
-              // Navigator.pushReplacement(context, MaterialPageRoute(
-              //   builder: (_) => LetterTracePage(letter: nextLetter),
-              // ));
             },
           ),
     );
@@ -115,13 +122,11 @@ class _LetterTracePageState extends State<LetterTracePage>
     });
   }
 
-  // ── UI ────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // خلفية
           Positioned.fill(
             child: Container(
               decoration: const BoxDecoration(
@@ -133,7 +138,6 @@ class _LetterTracePageState extends State<LetterTracePage>
               ),
             ),
           ),
-
           SafeArea(
             child: Column(
               children: [
@@ -141,7 +145,6 @@ class _LetterTracePageState extends State<LetterTracePage>
                 Expanded(
                   child: Row(
                     children: [
-                      // لوحة الرسم
                       Expanded(
                         flex: 5,
                         child: Container(
@@ -149,7 +152,7 @@ class _LetterTracePageState extends State<LetterTracePage>
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.92),
                             borderRadius: BorderRadius.circular(30),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(color: Colors.black12, blurRadius: 12),
                             ],
                           ),
@@ -165,7 +168,6 @@ class _LetterTracePageState extends State<LetterTracePage>
                                 borderRadius: BorderRadius.circular(30),
                                 child: Stack(
                                   children: [
-                                    // الحرف كـ Stroke (نفس مسار التتبع) عشان يبقى مظبوط 100%
                                     CustomPaint(
                                       painter: LetterPathPainter(
                                         path: _letterPath,
@@ -174,8 +176,6 @@ class _LetterTracePageState extends State<LetterTracePage>
                                       ),
                                       size: Size.infinite,
                                     ),
-
-                                    // عند النجاح: إظهار نسخة نظيفة من نفس المسار + قفل الرسم
                                     if (_lockedAfterSuccess)
                                       TweenAnimationBuilder<double>(
                                         tween: Tween(begin: 0.0, end: 1.0),
@@ -196,8 +196,6 @@ class _LetterTracePageState extends State<LetterTracePage>
                                           );
                                         },
                                       ),
-
-                                    // الخطوات (أرقام + أسهم + خطوط متقطعة)
                                     CustomPaint(
                                       painter: StepsPainter(
                                         steps: _steps,
@@ -205,15 +203,12 @@ class _LetterTracePageState extends State<LetterTracePage>
                                       ),
                                       size: Size.infinite,
                                     ),
-
-                                    // منطقة الرسم
                                     GestureDetector(
                                       onPanDown: (details) {
                                         if (_lockedAfterSuccess) return;
                                         if (_steps.isEmpty) return;
-                                        if (_currentStep >= _steps.length) {
+                                        if (_currentStep >= _steps.length)
                                           return;
-                                        }
 
                                         final start =
                                             _steps[_currentStep].startPoint;
@@ -236,8 +231,6 @@ class _LetterTracePageState extends State<LetterTracePage>
                                           pointsList.last.add(
                                             details.localPosition,
                                           );
-
-                                          // حساب النجوم لحظياً
                                           final coverage =
                                               TracingScore.calculateCoverage(
                                                 pathPoints: _pathSamplePoints,
@@ -256,15 +249,11 @@ class _LetterTracePageState extends State<LetterTracePage>
                                             _showHand = true;
                                             return;
                                           }
-
-                                          // آخر خطوة: لو نجح (3 نجوم) اقفل الرسم واظهر الشكل النضيف
                                           if (_stars >= 3) {
                                             _lockedAfterSuccess = true;
                                             _showCelebration();
                                             return;
                                           }
-
-                                          // لو لسه مش 3 نجوم: سيبه يحاول تاني بدون ما يقفل الرسم
                                           _showHand = true;
                                         });
                                       },
@@ -276,8 +265,6 @@ class _LetterTracePageState extends State<LetterTracePage>
                                         size: Size.infinite,
                                       ),
                                     ),
-
-                                    // اليد المتحركة
                                     AnimatedHandWidget(
                                       steps: _steps,
                                       currentStep: _currentStep,
@@ -290,8 +277,6 @@ class _LetterTracePageState extends State<LetterTracePage>
                           ),
                         ),
                       ),
-
-                      // عمود الألوان
                       SizedBox(width: 76, child: _buildSideColors()),
                     ],
                   ),
@@ -304,7 +289,6 @@ class _LetterTracePageState extends State<LetterTracePage>
     );
   }
 
-  // ── AppBar ─────────────────────────────────────────
   Widget _buildKidoAppBar() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -324,11 +308,12 @@ class _LetterTracePageState extends State<LetterTracePage>
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
+                boxShadow: const [
+                  BoxShadow(color: Colors.black12, blurRadius: 8),
+                ],
               ),
               child: const FittedBox(
                 fit: BoxFit.scaleDown,
-                alignment: Alignment.center,
                 child: Row(
                   children: [
                     Icon(Icons.rocket_launch, color: Colors.orange),
@@ -353,7 +338,6 @@ class _LetterTracePageState extends State<LetterTracePage>
     );
   }
 
-  // ── ألوان جانبية ───────────────────────────────────
   Widget _buildSideColors() {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
@@ -371,7 +355,7 @@ class _LetterTracePageState extends State<LetterTracePage>
             child: Container(
               width: 54,
               height: 54,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
                 boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
