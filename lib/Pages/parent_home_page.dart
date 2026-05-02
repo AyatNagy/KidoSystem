@@ -36,8 +36,6 @@ class _ParentHomePageState extends State<ParentHomePage> {
     await ChildrenStore.save(childrenList);
   }
 
-  // الأم بتضغط على كارت الطفل → بيفتح صفحة اختيار الليفل
-  // ChildLevelSelectPage هي اللي بتتحكم في فتح صفحة الليفل المناسبة
   void _openChildDashboard(Map<String, dynamic> child) {
     Navigator.push(
       context,
@@ -51,7 +49,6 @@ class _ParentHomePageState extends State<ParentHomePage> {
     );
   }
 
-  // ✅ Edit يظهر بس لما المستخدم يضغط طويل على الكارت
   Future<void> _editChild(Map<String, dynamic> child) async {
     final setup = await Navigator.push<ChildProfileSetupResult>(
       context,
@@ -88,7 +85,6 @@ class _ParentHomePageState extends State<ParentHomePage> {
     );
 
     if (result != null && result is Map<String, dynamic>) {
-      // ✅ FIX: نتأكد إن score موجود وبقيمة صحيحة
       final newChild = {
         'name': result['name'] ?? '',
         'avatar': result['avatar'],
@@ -153,10 +149,6 @@ class _ParentHomePageState extends State<ParentHomePage> {
                   ),
                 ),
                 SizedBox(height: config.localHeight * 0.02),
-
-                // ✅ FIX: childrenList بتتعرض صح
-                // Tap → يفتح Dashboard الطفل
-                // Long press → يفتح صفحة التعديل
                 if (childrenList.isEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
@@ -173,7 +165,6 @@ class _ParentHomePageState extends State<ParentHomePage> {
                   )
                 else
                   ...childrenList.map((child) {
-                    // ✅ FIX: score safe cast — يمنع null error
                     final double score =
                         (child['score'] as num?)?.toDouble() ?? 0.0;
                     final int level = (child['level'] as int?) ?? 1;
@@ -181,9 +172,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 15),
                       child: GestureDetector(
-                        // Tap → يفتح الـ dashboard
                         onTap: () => _openChildDashboard(child),
-                        // Long press → يفتح التعديل
                         onLongPress: () => _editChild(child),
                         child: _buildChildCard(
                           config,
@@ -213,15 +202,14 @@ class _ParentHomePageState extends State<ParentHomePage> {
     );
   }
 
-  // ✅ Helper: كل level ليه لون مختلف
   Color _levelColor(int level) {
     switch (level) {
       case 1:
-        return const Color(0xFF2C8FF9); // أزرق
+        return const Color(0xFF2C8FF9);
       case 2:
-        return const Color(0xFFFF8A65); // برتقالي
+        return const Color(0xFFFF8A65);
       case 3:
-        return const Color(0xFFF06292); // وردي
+        return const Color(0xFFF06292);
       default:
         return const Color(0xFF2C8FF9);
     }
@@ -257,7 +245,6 @@ class _ParentHomePageState extends State<ParentHomePage> {
     );
   }
 
-  // ✅ FIX: استخدام named parameters بدل positional لمنع الـ errors
   Widget _buildChildCard(
     dynamic config, {
     required String name,
@@ -336,7 +323,6 @@ class _ParentHomePageState extends State<ParentHomePage> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: color),
               ),
               const SizedBox(height: 4),
-              // ✅ تلميح للمستخدم إن Long Press بيفتح التعديل
               Text(
                 "Hold to edit",
                 style: TextStyle(
