@@ -74,10 +74,10 @@ class _NumberLessonWidgetState extends State<NumberLessonWidget> with TickerProv
 
    _idleController = AnimationController(
   vsync: this,
-  duration: const Duration(seconds: 1), // Speed of the floating
-)..repeat(reverse: true); // Back and forth
+  duration: const Duration(seconds: 1), 
+)..repeat(reverse: true); 
 
-  _idleOffset = Tween<double>(begin: 0, end: -15).animate( // Moves up by 15 pixels
+  _idleOffset = Tween<double>(begin: 0, end: -15).animate( 
   CurvedAnimation(parent: _idleController, curve: Curves.easeInOut),
 );
   }
@@ -93,7 +93,7 @@ class _NumberLessonWidgetState extends State<NumberLessonWidget> with TickerProv
   }
 
   void _startIdleTimer() {
-  _idleTimer?.cancel(); // Cancel any existing timer
+  _idleTimer?.cancel(); 
   _idleTimer = Timer(const Duration(seconds: 2), () {
     if (mounted && !_idleController.isAnimating) {
       _idleController.repeat(reverse: true); 
@@ -114,7 +114,7 @@ class _NumberLessonWidgetState extends State<NumberLessonWidget> with TickerProv
 
   @override
   Widget build(BuildContext context) {
-     final Color buttonColor=widget.isEnglish?widget.data.primaryColor:const Color.fromARGB(255, 2, 56, 122);
+     final Color buttonColor=widget.data.primaryColor;
     return Scaffold(
       backgroundColor:Colors.blue[100],
       body:SafeArea(
@@ -123,7 +123,7 @@ class _NumberLessonWidgetState extends State<NumberLessonWidget> with TickerProv
           
             // Number Image
             Expanded(
-              flex: 3,
+              flex: 5,
               child: 
                SlideTransition(
               position: _slideAnimation,
@@ -136,17 +136,19 @@ class _NumberLessonWidgetState extends State<NumberLessonWidget> with TickerProv
             child: child,
           );
         },
-             
+           child:FractionallySizedBox( 
+            widthFactor:0.85, 
            child:GestureDetector(
                 onTap: _playLesson,
                 child: ScaleTransition(
                   scale: _pulseAnimation,
                   child: Image.asset(
                     widget.data.numberImagePath,
-                    fit: BoxFit.contain, // Ensures it fits available space
+                    fit: BoxFit.contain, 
                   ),
                 ),
               ),
+           ),
             ),
                ),
                ),

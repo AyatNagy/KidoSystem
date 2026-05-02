@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import'package:kido/Models/level3/numbers/tracing_numbers.dart';
 
  final tracingNumberOneArab = TracingQuestion(
-  id: 'arabic_two',
+  id: 'arabic_one',
+  numberValue: 1,
   audioPath: 'audio/numeric_ar/kid-1.mp3',
   characterImage: 'assets/images/rabbit_tracing.png',
   backgroundImage1: 'assets/images/arabicNumbers/seed_curved_one.png', // Start (Soil & Seed)
@@ -28,6 +29,7 @@ import'package:kido/Models/level3/numbers/tracing_numbers.dart';
 
  final tracingNumberTwoArab = TracingQuestion(
   id: 'arabic_two',
+  numberValue: 2,
   audioPath: 'audio/numeric_ar/kid-2.mp3',
   characterImage: 'assets/images/rabbit_tracing.png',
   backgroundImage1: 'assets/images/arabicNumbers/seed_curved_two.png', // Start (Soil & Seed)
@@ -57,6 +59,7 @@ import'package:kido/Models/level3/numbers/tracing_numbers.dart';
 
 final tracingNumberThreeArab = TracingQuestion(
   id: 'arabic_three',
+  numberValue: 3,
   audioPath: 'audio/numeric_ar/kid-3.mp3',
    characterImage: 'assets/images/rabbit_tracing.png',
   backgroundImage1: 'assets/images/arabicNumbers/seed_curved_three.png',   // Initial state
@@ -88,6 +91,7 @@ final tracingNumberThreeArab = TracingQuestion(
 
 final tracingNumberFourArab = TracingQuestion(
   id: 'arabic_four',
+  numberValue: 4,
   audioPath: 'audio/numeric_ar/kid-4.mp3',
   characterImage: 'assets/images/rabbit_tracing.png',
   backgroundImage1: 'assets/images/arabicNumbers/seed_curved_four.png',   // Initial state
@@ -120,6 +124,7 @@ final tracingNumberFourArab = TracingQuestion(
 
 final tracingNumberFiveArab = TracingQuestion(
   id: 'arabic_five',
+  numberValue: 5,
   audioPath: 'audio/numeric_ar/kid-5.mp3',
   characterImage: 'assets/images/rabbit_tracing.png',
   backgroundImage1: 'assets/images/arabicNumbers/seed_curved_five.png',   // Initial state

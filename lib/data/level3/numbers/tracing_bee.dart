@@ -3,7 +3,8 @@ import 'package:kido/Models/level3/numbers/tracing_numbers.dart';
 
 final tracingNumberOne = TracingQuestion(
   id: "number_1",
-  audioPath:"audio/numeric_en/kid-1.mp3",
+  numberValue: 1,
+  audioPath:"numeric_en/kid-1.mp3",
   characterImage: 'assets/images/bee.png',
   backgroundImage1: "assets/images/seed_curved_one.png",
   backgroundImage2: "assets/images/seed_one.png",
@@ -22,7 +23,8 @@ final tracingNumberOne = TracingQuestion(
 
 final tracingNumberTwo = TracingQuestion(
   id: "number_2",
-  audioPath:"audio/numeric_en/kid-2.mp3",
+  numberValue: 2,
+  audioPath:"numeric_en/kid-2.mp3",
    characterImage: 'assets/images/bee.png',
   backgroundImage1: "assets/images/seed_curved_two.png",
   backgroundImage2: "assets/images/seed_two.png",
@@ -46,7 +48,8 @@ final tracingNumberTwo = TracingQuestion(
 
   final tracingNumberThree = TracingQuestion(
   id: "number_3",
-  audioPath:"audio/numeric_en/kid-3.mp3",
+  numberValue: 3,
+  audioPath:"numeric_en/kid-3.mp3",
   characterImage: 'assets/images/bee.png',
   backgroundImage1: "assets/images/seed_curved_three.png",
   backgroundImage2: "assets/images/seed_three.png",
@@ -77,7 +80,8 @@ final tracingNumberTwo = TracingQuestion(
 
 final tracingNumberFour = TracingQuestion(
   id: "number_4",
-  audioPath:"audio/numeric_en/kid-4.mp3",
+  numberValue: 4,
+  audioPath:"numeric_en/kid-4.mp3",
   characterImage: 'assets/images/bee.png',
   backgroundImage1: "assets/images/seed_curved_four.png",
   backgroundImage2: "assets/images/seed_four.png",
@@ -100,14 +104,15 @@ final tracingNumberFour = TracingQuestion(
 
 final tracingNumberFive = TracingQuestion(
   id: "number_5",
-  audioPath:"audio/numeric_en/kid-5.mp3",
+  numberValue: 5,
+  audioPath:"numeric_en/kid-5.mp3",
   characterImage: 'assets/images/bee.png',
   backgroundImage1:"assets/images/seed_curved_five.png",
   backgroundImage2:"assets/images/seed_five.png",
   backgroundImage3:"assets/images/half_blooming_five.png",
   backgroundImage4:"assets/images/full_blooming_five.png",
   startPosition:const Offset(0.70, 0.10), 
-  midTarget:const Offset(0.30, 0.40),      
+  midTarget:const Offset(0.30, 0.45),      
   endTarget:const Offset(0.30, 0.85),      
   pathPoints:[
    const Offset(0.70, 0.10), 
@@ -123,21 +128,22 @@ final tracingNumberFive = TracingQuestion(
 
 final tracingNumberSix= TracingQuestion(
   id: "number_6",
-  audioPath:"audio/numeric_en/kid-6.mp3",
+  numberValue: 6,
+  audioPath:"numeric_en/kid-6.mp3",
   characterImage: 'assets/images/bee.png',
   backgroundImage1:"assets/images/seed_curved_six.png",
   backgroundImage2:"assets/images/seed_six.png",
   backgroundImage3:"assets/images/half_blooming_six.png",
   backgroundImage4:"assets/images/full_blooming_six.png",
   startPosition:const Offset(0.75, 0.15), 
-  midTarget:const Offset(0.28, 0.60),      
+  midTarget:const Offset(0.28, 0.70),      
   endTarget:const Offset(0.50, 0.60),      
   pathPoints:[
    const Offset(0.70, 0.15),
    const Offset(0.55, 0.00), 
    const Offset(0.35, 0.10),
     
-    const Offset(0.28, 0.50),
+    const Offset(0.28, 0.70),
     const Offset(0.35, 0.85), 
     const Offset(0.65, 0.85), 
     const Offset(0.78, 0.55), 
@@ -151,7 +157,8 @@ final tracingNumberSix= TracingQuestion(
 
 final tracingNumberSeven= TracingQuestion(
   id: "number_7",
-  audioPath:"audio/numeric_en/kid-7.mp3",
+  numberValue: 7,
+  audioPath:"numeric_en/kid-7.mp3",
   characterImage: 'assets/images/bee.png',
   backgroundImage1:"assets/images/seed_curved_seven.png",
   backgroundImage2:"assets/images/seed_seven.png",
@@ -173,25 +180,26 @@ final tracingNumberSeven= TracingQuestion(
 
 final tracingNumberEight= TracingQuestion(
   id: "number_8",
-  audioPath:"audio/numeric_en/kid-8.mp3",
+  numberValue: 8,
+  audioPath:"numeric_en/kid-8.mp3",
   characterImage: 'assets/images/bee.png',
   backgroundImage1:"assets/images/seed_curved_eight.png",
   backgroundImage2:"assets/images/seed_eight.png",
   backgroundImage3:"assets/images/half_blooming_eight.png",
   backgroundImage4:"assets/images/full_blooming_eight.png",
   startPosition: const Offset(0.50, 0.10), 
-  midTarget: const Offset(0.32, 0.75),      
+  midTarget: const Offset(0.30, 0.75),      
   endTarget: const Offset(0.38, 0.12),   
   pathPoints:[
        
     const Offset(0.50, 0.10),
     const Offset(0.68, 0.20), 
     const Offset(0.72, 0.35), 
-    const Offset(0.50, 0.48), 
+    const Offset(0.50, 0.48),
+    const Offset(0.35, 0.48), 
+    const Offset(0.30, 0.75),
     const Offset(0.30, 0.60), 
     const Offset(0.28, 0.72), 
-
-    
     const Offset(0.45, 0.85), 
     const Offset(0.68, 0.78), 
     const Offset(0.78, 0.72), 
@@ -205,7 +213,8 @@ final tracingNumberEight= TracingQuestion(
 
 final tracingNumberNine= TracingQuestion(
   id: "number_9",
-  audioPath:"audio/numeric_en/kid-9.mp3",
+  numberValue: 9,
+  audioPath:"numeric_en/kid-9.mp3",
   characterImage: 'assets/images/bee.png',
   backgroundImage1:"assets/images/seed_curved_nine.png",
   backgroundImage2:"assets/images/seed_nine.png",

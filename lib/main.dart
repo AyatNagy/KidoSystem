@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:kido/Pages/content/feelings/emotion_page_view.dart';
 import 'package:kido/Pages/content/senses/sense_learning_page.dart';
+import 'package:kido/Pages/level3/level3_home.dart';
 //import 'package:kido/Pages/level1/level1_home.dart';
 //import 'package:kido/Pages/level3/level3_home.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-            home: SenseLearningScreen(type: SenseType.mouth),
+            home: Level3Home(childName: "Arwa",),
           ),
         );
       },

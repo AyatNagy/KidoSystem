@@ -1,5 +1,3 @@
-
-
 import 'package:kido/Models/level3/letters/letter_map.dart';
 import 'package:kido/data/level3/numbers/number_lesson_arabic_data.dart';
 import 'package:kido/data/level3/numbers/number_lesson_english_data.dart';
@@ -18,21 +16,21 @@ final List<LetterJourney> journeyNumArab =[
       LetterJourney(
       image:'assets/images/arabicNumbers/num2_map.png',
       charName: '٢',
-      isLocked: true,
+      isLocked: false,
       letterData: NumbersArabicLessonRepo.numbersArablessons[1],
       tracingData: tracingNumberTwoArab,
       ),
       LetterJourney(
       image:'assets/images/arabicNumbers/num3_map.png',
       charName: '٣',
-      isLocked: true,
+      isLocked: false,
       letterData: NumbersArabicLessonRepo.numbersArablessons[2],
       tracingData: tracingNumberThreeArab,
       ),
       LetterJourney(
       image: 'assets/images/arabicNumbers/num4_map.png',
       charName: '٤',
-      isLocked: true,
+      isLocked: false,
       letterData: NumbersArabicLessonRepo.numbersArablessons[3],
       tracingData: tracingNumberFourArab
       ),
@@ -46,36 +44,36 @@ final List<LetterJourney> journeyNumArab =[
       LetterJourney(
       image:'assets/images/train_engine.png',
       charName: 'train_phase1',
-      isLocked: true,
+      isLocked: false,
       ),
       LetterJourney(
       image:'assets/images/arabicNumbers/num1_map.png',
       charName: '٦',
-      isLocked: true,
+      isLocked: false,
       letterData: NumbersArabicLessonRepo.numbersArablessons[5]
       ),
       LetterJourney(
       image: 'assets/images/arabicNumbers/num1_map.png',
       charName: '٧',
-      isLocked: true,
+      isLocked: false,
       letterData: NumbersArabicLessonRepo.numbersArablessons[6]
       ),
       LetterJourney(
       image: 'assets/images/arabicNumbers/num1_map.png',
       charName: '٨',
-      isLocked: true,
+      isLocked: false,
       letterData: NumbersArabicLessonRepo.numbersArablessons[7]
       ),
       LetterJourney(
       image: 'assets/images/arabicNumbers/num1_map.png',
       charName: '٩',
-      isLocked: true,
+      isLocked: false,
       letterData: NumbersArabicLessonRepo.numbersArablessons[8]
       ),
       LetterJourney(
       image:'assets/images/common/train_engine.png',
       charName: 'train_phase2',
-      isLocked: true,
+      isLocked: false,
       ),
 
 ];
@@ -145,7 +143,7 @@ final List<LetterJourney> journeyNumEng =[
       LetterJourney(
       image: NumbersEnglishLessonRepo.numbersEnglessons[8].numberImagePath,
       charName: '9',
-      isLocked: false,
+      isLocked: true,
       letterData: NumbersEnglishLessonRepo.numbersEnglessons[8],
       tracingData:tracingNumberNine
       ),
