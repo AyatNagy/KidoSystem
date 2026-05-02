@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Models/level3/numbers/number_lesson_model.dart';
+import 'package:kido/Models/level3/numbers/learning_item.dart';
 import 'package:kido/data/level3/numbers/number_lesson_english_data.dart';
 import 'package:kido/Widgets/content/level3/numbers/number_lesson_widget.dart'; // Make sure you have this widget
 
@@ -16,7 +16,7 @@ class _EnglishNumberLessonState extends State<EnglishNumberLesson> {
   @override
   Widget build(BuildContext context) {
     // We call the list from our Repository class
-    final List<NumberLessonData> lessons =
+    final List<LearningItem> lessons =
         NumbersEnglishLessonRepo.numbersEnglessons;
 
     return Scaffold(
@@ -25,7 +25,7 @@ class _EnglishNumberLessonState extends State<EnglishNumberLesson> {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: lessons.length,
         itemBuilder: (context, index) {
-          return NumberLessonWidget(
+          return LearningItemWidget(
             data: lessons[index],
             isEnglish: true,
             onNext: () {

@@ -23,7 +23,7 @@ class _ArabicNumberLessonState extends State<ArabicNumberLesson> {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: lessons.length,
         itemBuilder: (context, index) {
-          return NumberLessonWidget(
+          return LearningItemWidget(
             data: lessons[index],
             isEnglish: false,
             onNext: () {

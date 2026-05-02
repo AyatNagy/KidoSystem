@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
-import 'package:kido/Models/level3/numbers/tracing_numbers.dart';
-import 'package:kido/Widgets/content/level3/numbers/number_guide_hand.dart';
+import 'package:kido/Models/level3/numbers/tracing_question.dart';
+import 'package:kido/Widgets/content/level3/numbers/guide_hand.dart';
 import 'package:kido/services/audio_service.dart';
 import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Widgets/Buttons/replay_button.dart';
@@ -10,7 +10,11 @@ import 'package:lottie/lottie.dart';
 class TracingGame extends StatefulWidget {
   final TracingQuestion question;
   final VoidCallback onComplete;
-  const TracingGame({super.key, required this.question, required this.onComplete});
+  const TracingGame({
+    super.key,
+    required this.question,
+    required this.onComplete,
+  });
 
   @override
   State<TracingGame> createState() => _TracingGameState();
@@ -24,7 +28,6 @@ class _TracingGameState extends State<TracingGame> {
   Offset? startOfDragPosition;
   bool initialized = false;
   bool showConfettie = false;
-
 
   String _getBackgroundImage() {
     switch (gameStage) {
@@ -49,8 +52,9 @@ class _TracingGameState extends State<TracingGame> {
   }
 
   void goToNextNumber() {
-  widget.onComplete();
+    widget.onComplete();
   }
+
   Offset _getClosestPointOnPath(
     Offset currentPos,
     List<Offset> points,
@@ -118,33 +122,41 @@ class _TracingGameState extends State<TracingGame> {
                   ),
                 ),
               ),
-               if(gameStage<4&&!isTransitioning)
-               Builder(
-                builder: (context){
-               //path point of hand
-               List<Offset> activePath;
-               int midIndex = widget.question.pathPoints.indexOf(widget.question.midTarget);
-                  if(gameStage == 1) {
-                     //start to midTarget 
-         activePath = midIndex != -1 
-        ? widget.question.pathPoints.sublist(0, midIndex + 1)
-        : widget.question.pathPoints.sublist(0, (widget.question.pathPoints.length / 2).ceil());
-  } else if(gameStage==2) {
-    activePath = midIndex != -1 
-        ? widget.question.pathPoints.sublist(midIndex)
-        : widget.question.pathPoints;
-  }else{
-    activePath=widget.question.pathPoints;
-
-  } 
-     return NumberAnimatedHand(
-        pathPoints: activePath,
-        constraints: constraints,
-        pxConverter: _getPx,
-  );
-}),
-
- 
+              if (gameStage < 4 && !isTransitioning)
+                Builder(
+                  builder: (context) {
+                    //path point of hand
+                    List<Offset> activePath;
+                    int midIndex = widget.question.pathPoints.indexOf(
+                      widget.question.midTarget,
+                    );
+                    if (gameStage == 1) {
+                      //start to midTarget
+                      activePath =
+                          midIndex != -1
+                              ? widget.question.pathPoints.sublist(
+                                0,
+                                midIndex + 1,
+                              )
+                              : widget.question.pathPoints.sublist(
+                                0,
+                                (widget.question.pathPoints.length / 2).ceil(),
+                              );
+                    } else if (gameStage == 2) {
+                      activePath =
+                          midIndex != -1
+                              ? widget.question.pathPoints.sublist(midIndex)
+                              : widget.question.pathPoints;
+                    } else {
+                      activePath = widget.question.pathPoints;
+                    }
+                    return NumberAnimatedHand(
+                      pathPoints: activePath,
+                      constraints: constraints,
+                      pxConverter: _getPx,
+                    );
+                  },
+                ),
 
               if (beePosition != null && gameStage < 4)
                 AnimatedPositioned(
@@ -242,10 +254,12 @@ class _TracingGameState extends State<TracingGame> {
                         children: [
                           ReplayButton(
                             color: Colors.orangeAccent,
-                             onPressed: resetTracing),
+                            onPressed: resetTracing,
+                          ),
                           NextButton(
                             color: Colors.greenAccent[700]!,
-                             onPressed: goToNextNumber),
+                            onPressed: goToNextNumber,
+                          ),
                         ],
                       ),
                     ),
@@ -261,7 +275,7 @@ class _TracingGameState extends State<TracingGame> {
   void _handleStageClear(BoxConstraints constraints) async {
     if (isTransitioning) return;
     isTransitioning = true;
-    AudioService.play(fileName:'yaay.mp3');
+    AudioService.play(fileName: 'yaay.mp3');
 
     setState(() {
       isVisible = false;
@@ -281,7 +295,7 @@ class _TracingGameState extends State<TracingGame> {
         beePosition = _getPx(widget.question.startPosition, constraints);
       } else {
         gameStage = 4;
-        AudioService.play(fileName:widget.question.audioPath);
+        AudioService.play(fileName: widget.question.audioPath);
       }
 
       isVisible = (gameStage < 4);

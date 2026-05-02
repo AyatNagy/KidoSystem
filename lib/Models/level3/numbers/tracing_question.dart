@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 
-class TracingQuestion{
+class TracingQuestion {
+  final String id;
+  final String label;
 
-   final String id;
-   final int numberValue;
   final String audioPath;
   final String characterImage;
-  final String backgroundImage1; 
-  final String backgroundImage2; 
-  final String backgroundImage3; 
-  final String backgroundImage4; 
-  final Offset startPosition;    
-  final Offset midTarget;        
-  final Offset endTarget;        
-  final List <Offset> pathPoints;
 
-  TracingQuestion({
+  final String backgroundImage1;
+  final String backgroundImage2;
+  final String backgroundImage3;
+  final String backgroundImage4;
 
+  final Offset startPosition;
+  final Offset midTarget;
+  final Offset endTarget;
+
+  final List<Offset> pathPoints;
+
+  const TracingQuestion({
     required this.id,
-    required this.numberValue,
+    required this.label,
     required this.audioPath,
     required this.characterImage,
     required this.backgroundImage1,
@@ -29,7 +31,5 @@ class TracingQuestion{
     required this.midTarget,
     required this.endTarget,
     required this.pathPoints,
-
   });
-
 }

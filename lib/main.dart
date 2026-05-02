@@ -26,8 +26,8 @@ class MyApp extends StatelessWidget {
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
             home: Level3Home(childName: "habiba"),
-            //SenseTapPracticeScreen(type: SenseType.ears),
 
+            //SenseTapPracticeScreen(type: SenseType.ears),
           ),
         );
       },

@@ -3,7 +3,7 @@ import 'package:kido/data/level3/numbers/number_lesson_arabic_data.dart';
 import 'package:kido/data/level3/numbers/number_lesson_english_data.dart';
 import 'package:kido/data/level3/numbers/tracing_bee.dart';
 import 'package:kido/data/level3/numbers/tracing_rabbit.dart';
-     
+
 final List<LetterJourney> journeyNumArab = [
   LetterJourney(
     image: 'assets/images/arabicNumbers/num1_map.png',
@@ -74,82 +74,80 @@ final List<LetterJourney> journeyNumArab = [
     charName: 'train_phase2',
     isLocked: true,
   ),
-
 ];
 
 final List<LetterJourney> journeyNumEng = [
   LetterJourney(
-      image: NumbersEnglishLessonRepo.numbersEnglessons[0].numberImagePath,
-      charName: '1',
-      isLocked: false,
-      letterData: NumbersEnglishLessonRepo.numbersEnglessons[0],
-      tracingData: tracingNumberOne
-      ),
-       LetterJourney(
-      image: NumbersEnglishLessonRepo.numbersEnglessons[1].numberImagePath,
-      charName: '2',
-      isLocked: true,
-      letterData: NumbersEnglishLessonRepo.numbersEnglessons[1],
-      tracingData:tracingNumberTwo,
-      ),
-      LetterJourney(
-      image: NumbersEnglishLessonRepo.numbersEnglessons[2].numberImagePath,
-      charName: '3',
-      isLocked: true,
-      letterData: NumbersEnglishLessonRepo.numbersEnglessons[2],
-      tracingData: tracingNumberThree,
-      ),
-      LetterJourney(
-      image: NumbersEnglishLessonRepo.numbersEnglessons[3].numberImagePath,
-      charName: '4',
-      isLocked: true,
-      letterData: NumbersEnglishLessonRepo.numbersEnglessons[3],
-      tracingData: tracingNumberFour,
-      ),
-      LetterJourney(
-      image: NumbersEnglishLessonRepo.numbersEnglessons[4].numberImagePath,
-      charName: '5',
-      isLocked: true,
-      letterData: NumbersEnglishLessonRepo.numbersEnglessons[4],
-      tracingData: tracingNumberFive,
-      ),
-      LetterJourney(
-      image:'assets/images/common/train_engine.png',
-      charName: 'train_phase1',
-      isLocked: true,
-      ),
-      LetterJourney(
-      image: NumbersEnglishLessonRepo.numbersEnglessons[5].numberImagePath,
-      charName: '6',
-      isLocked: true,
-      letterData: NumbersEnglishLessonRepo.numbersEnglessons[5],
-      tracingData: tracingNumberSix,
-      ),
-      LetterJourney(
-      image: NumbersEnglishLessonRepo.numbersEnglessons[6].numberImagePath,
-      charName: '7',
-      isLocked: true,
-      letterData: NumbersEnglishLessonRepo.numbersEnglessons[6],
-      tracingData:tracingNumberSeven,
-      ),
-      LetterJourney(
-      image: NumbersEnglishLessonRepo.numbersEnglessons[7].numberImagePath,
-      charName: '8',
-      isLocked: true,
-      letterData: NumbersEnglishLessonRepo.numbersEnglessons[7],
-      tracingData: tracingNumberEight,
-      ),
-      LetterJourney(
-      image: NumbersEnglishLessonRepo.numbersEnglessons[8].numberImagePath,
-      charName: '9',
-      isLocked: true,
-      letterData: NumbersEnglishLessonRepo.numbersEnglessons[8],
-      tracingData:tracingNumberNine
-      ),
-      LetterJourney(
-      image:'assets/images/common/train_engine.png',
-      charName: 'train_phase2',
-      isLocked: true,
-      ),
+    image: NumbersEnglishLessonRepo.numbersEnglessons[0].imagePath,
+    charName: '1',
+    isLocked: false,
+    letterData: NumbersEnglishLessonRepo.numbersEnglessons[0],
+    tracingData: tracingNumberOne,
+  ),
+  LetterJourney(
+    image: NumbersEnglishLessonRepo.numbersEnglessons[1].imagePath,
+    charName: '2',
+    isLocked: true,
+    letterData: NumbersEnglishLessonRepo.numbersEnglessons[1],
+    tracingData: tracingNumberTwo,
+  ),
+  LetterJourney(
+    image: NumbersEnglishLessonRepo.numbersEnglessons[2].imagePath,
+    charName: '3',
+    isLocked: true,
+    letterData: NumbersEnglishLessonRepo.numbersEnglessons[2],
+    tracingData: tracingNumberThree,
+  ),
+  LetterJourney(
+    image: NumbersEnglishLessonRepo.numbersEnglessons[3].imagePath,
+    charName: '4',
+    isLocked: true,
+    letterData: NumbersEnglishLessonRepo.numbersEnglessons[3],
+    tracingData: tracingNumberFour,
+  ),
+  LetterJourney(
+    image: NumbersEnglishLessonRepo.numbersEnglessons[4].imagePath,
+    charName: '5',
+    isLocked: true,
+    letterData: NumbersEnglishLessonRepo.numbersEnglessons[4],
+    tracingData: tracingNumberFive,
+  ),
+  LetterJourney(
+    image: 'assets/images/common/train_engine.png',
+    charName: 'train_phase1',
+    isLocked: true,
+  ),
+  LetterJourney(
+    image: NumbersEnglishLessonRepo.numbersEnglessons[5].imagePath,
+    charName: '6',
+    isLocked: true,
+    letterData: NumbersEnglishLessonRepo.numbersEnglessons[5],
+    tracingData: tracingNumberSix,
+  ),
+  LetterJourney(
+    image: NumbersEnglishLessonRepo.numbersEnglessons[6].imagePath,
+    charName: '7',
+    isLocked: true,
+    letterData: NumbersEnglishLessonRepo.numbersEnglessons[6],
+    tracingData: tracingNumberSeven,
+  ),
+  LetterJourney(
+    image: NumbersEnglishLessonRepo.numbersEnglessons[7].imagePath,
+    charName: '8',
+    isLocked: true,
+    letterData: NumbersEnglishLessonRepo.numbersEnglessons[7],
+    tracingData: tracingNumberEight,
+  ),
+  LetterJourney(
+    image: NumbersEnglishLessonRepo.numbersEnglessons[8].imagePath,
+    charName: '9',
+    isLocked: true,
+    letterData: NumbersEnglishLessonRepo.numbersEnglessons[8],
+    tracingData: tracingNumberNine,
+  ),
+  LetterJourney(
+    image: 'assets/images/common/train_engine.png',
+    charName: 'train_phase2',
+    isLocked: true,
+  ),
 ];
-

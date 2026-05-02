@@ -1,6 +1,6 @@
-import'package:flutter/material.dart';
-class NumberLessonData{
+/*import 'package:flutter/material.dart';
 
+class NumberLessonData {
   final int number;
   final String numberImagePath;
   final String audioPath;
@@ -12,8 +12,9 @@ class NumberLessonData{
     required this.numberImagePath,
     required this.audioPath,
     this.characterImagePath,
-    this.primaryColor= const Color.fromARGB(255, 2, 56, 122),
-
+    this.primaryColor = const Color.fromARGB(255, 2, 56, 122),
   });
-
 }
+*/
+
+// ده عايز يتمسح ونستخدم بداله learning item  اللى فوقيه
