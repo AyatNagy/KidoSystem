@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/level3/numbers/tracing_game.dart';
 import 'package:kido/Widgets/content/level3/numbers/number_lesson_widget.dart';
-import 'package:kido/data/level3/shapes/shape_lessons.dart';
-import 'package:kido/data/level3/shapes/tracing_shapes.dart';
+import 'package:kido/data/level3/shapes/shape_lessons_data.dart';
+import 'package:kido/data/level3/shapes/shapes_journy_data.dart';
+import 'package:kido/data/level3/shapes/tracing_shapes_data.dart';
 
 class ShapesLearningPage extends StatefulWidget {
   const ShapesLearningPage({super.key});
@@ -27,13 +28,14 @@ class _ShapesLearningPageState extends State<ShapesLearningPage> {
           return LearningItemWidget(
             data: items[index],
             isEnglish: true,
-            onNext: () {
+            oonNext: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder:
                       (_) => TracingGame(
-                        question: tracingCircle, // غيري حسب الشكل
+                        // هنجيب بيانات التتبع من الـ List اللي إنتِ معرفاها (journeyShapes)
+                        question: journeyShapes[index].tracingData!,
                         onComplete: () {
                           Navigator.pop(context);
                           _controller.nextPage(

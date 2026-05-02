@@ -12,6 +12,13 @@ class TracingQuestion {
   final String backgroundImage3;
   final String backgroundImage4;
 
+  final String? backgroundImage5;
+  final String? backgroundImage6;
+  final String? backgroundImage7;
+  final String? backgroundImage8;
+  final String? backgroundImage9;
+  final String? backgroundImage10;
+
   final Offset startPosition;
   final Offset midTarget;
   final Offset endTarget;
@@ -27,6 +34,12 @@ class TracingQuestion {
     required this.backgroundImage2,
     required this.backgroundImage3,
     required this.backgroundImage4,
+    this.backgroundImage5,
+    this.backgroundImage6,
+    this.backgroundImage7,
+    this.backgroundImage8,
+    this.backgroundImage9,
+    this.backgroundImage10,
     required this.startPosition,
     required this.midTarget,
     required this.endTarget,
