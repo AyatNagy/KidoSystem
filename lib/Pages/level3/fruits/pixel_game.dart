@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../Models/level3/fruits/pixel_fruits.dart';
 import '../../../Widgets/content/level3/pixel_widget.dart';
-import '../../../Widgets/puls_button.dart';
+import '../../../Widgets/Buttons/puls_button.dart';
 import '../../../constants.dart';
 
 class FruitGamePage extends StatefulWidget {

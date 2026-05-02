@@ -1,7 +1,5 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:kido/Widgets/kido_action_button.dart';
+import 'package:kido/Widgets/Buttons/kido_action_button.dart';
 
 class ReplayButton extends StatelessWidget{
   final Color color;
@@ -18,8 +16,9 @@ class ReplayButton extends StatelessWidget{
     return KidoActionButton(
       heroTag: 'replay_button',
        icon: Icons.refresh_rounded,
-       color: Colors.orangeAccent,
-        onPressed: onPressed);
+       color: color,
+        onPressed: onPressed
+    );
   }
 
 }

@@ -48,4 +48,17 @@ final List<PixelFruitModel> fruits = [
     fruitShapeIndices: [11, 12, 18, 19, 20, 21, 26, 27, 28, 29, 35, 36, 44],
   ),
 
+  PixelFruitModel(
+    name: "Watermelon",
+    image: "assets/images/fruits/watermelon.png",
+    sound: "assets/audio/fruits/بطيخ.mp3",
+    fruitColor: const Color(0xFF00C853),
+    gridSize: 8,
+    fruitShapeIndices: [
+      17, 18, 19, 20, 21, 22,
+      25, 26, 27, 28, 29, 30,
+      34, 35, 36, 37,
+      43, 44
+    ],
+  ),
 ];

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kido/Models/size_lesson_data.dart';
 import 'package:kido/Pages/content/sizes/size_practice_page.dart';
 import 'package:kido/Widgets/content/content_app_bar.dart';
-import 'package:kido/Widgets/custom_app_button.dart';
+import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import 'package:kido/enum/size_goal.dart';
 import 'package:kido/services/audio_service.dart';
 

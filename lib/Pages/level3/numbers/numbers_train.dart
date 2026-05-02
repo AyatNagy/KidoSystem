@@ -1,7 +1,7 @@
 import'package:flutter/material.dart';
-import 'package:kido/Widgets/next_button.dart';
-import 'package:kido/Widgets/play_button.dart';
-import 'package:kido/Widgets/replay_button.dart';
+import 'package:kido/Widgets/Buttons/next_button.dart';
+import 'package:kido/Widgets/Buttons/play_button.dart';
+import 'package:kido/Widgets/Buttons/replay_button.dart';
 import 'package:kido/services/asset_service.dart';
 import 'package:kido/services/audio_service.dart';
 import'dart:async';

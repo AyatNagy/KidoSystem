@@ -1,11 +1,14 @@
 // ignore_for_file: deprecated_member_use
-
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:kido/Widgets/Buttons/next_button.dart';
+import 'package:kido/Widgets/Buttons/replay_button.dart';
+import 'package:kido/constants.dart';
 import '../../../Models/level3/discovery.dart';
-import '../../../Widgets/puls_button.dart';
-import '../../../constants.dart';
+import '../../../Pages/level3/vegetables/vegetable_sound.dart';
+import '../../../services/audio_service.dart';
+import '../../responsive_provider.dart';
 
 class DiscoveryPage extends StatefulWidget {
   final DiscoveryItem model;
@@ -21,160 +24,174 @@ class DiscoveryPage extends StatefulWidget {
   State<DiscoveryPage> createState() => _DiscoveryPageState();
 }
 
-class _DiscoveryPageState extends State<DiscoveryPage> {
-  bool _isTapped = false;
-  bool _showNextButton = false;
-  late AudioPlayer _audioPlayer;
+class _DiscoveryPageState extends State<DiscoveryPage> with TickerProviderStateMixin {
+  late AnimationController _pulseController;
+  late AnimationController _bgController;
+  bool _isSpeaking = false;
+
+  List<Color> get _grad => [
+    widget.model.primaryColor,
+    widget.model.primaryColor.withOpacity(0.7),
+    widget.model.background,
+  ];
 
   @override
   void initState() {
     super.initState();
-    _audioPlayer = AudioPlayer();
-  }
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
+    _bgController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    )..repeat(reverse: true);
 
-  Future<void> _playSound() async {
-    try {
-      String path = widget.model.soundPath.replaceFirst('assets/', '');
-      await _audioPlayer.stop();
-      await _audioPlayer.play(AssetSource(path));
-    } catch (e) {
-      debugPrint("Audio Error: $e");
-    }
+    _handleInteraction();
   }
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    _pulseController.dispose();
+    _bgController.dispose();
     super.dispose();
   }
 
   void _handleInteraction() {
-    HapticFeedback.heavyImpact();
-    _playSound();
-    if (!_isTapped) {
-      setState(() {
-        _isTapped = true;
-        _showNextButton = true;
-      });
-    }
+    if (_isSpeaking) return;
+
+    setState(() => _isSpeaking = true);
+    HapticFeedback.mediumImpact();
+    _pulseController.repeat(reverse: true);
+
+    final String fileName = widget.model.soundPath
+        .replaceFirst('assets/audio/', '')
+        .replaceFirst('audio/', '');
+
+    AudioService.play(fileName: fileName);
+
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() => _isSpeaking = false);
+        _pulseController.stop();
+        _pulseController.reset();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final model = widget.model;
+    final res = ResponsiveProvider.of(context);
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: AppColors.bgColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              flex: 5,
-              child: Center(
-                child: GestureDetector(
-                  onTap: _handleInteraction,
-                  child: AnimatedScale(
-                    scale: _isTapped ? 1.1 : 1.0,
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.elasticOut,
-                    child: Container(
-                      height: size.height * 0.35,
-                      width: size.width * 0.75,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(40),
-                        border: Border.all(
-                          color: _isTapped ? model.primaryColor : Colors.white,
-                          width: 8,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: model.primaryColor.withOpacity(0.1),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(35.0),
-                        child: Image.asset(
-                          model.mainImage,
-                          fit: BoxFit.contain,
-                        ),
+      body: Stack(
+        children: [
+          AnimatedBuilder(
+            animation: _bgController,
+            builder: (_, __) => Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment(
+                    -0.3 + _bgController.value * 0.6,
+                    -0.4 + _bgController.value * 0.4,
+                  ),
+                  radius: 1.4,
+                  colors: [
+                    _grad[0].withOpacity(0.4),
+                    _grad[1].withOpacity(0.3),
+                    _grad[2].withOpacity(0.8),
+                    AppColors.bgColor,
+                  ],
+                  stops: const [0.0, 0.35, 0.65, 1.0],
+                ),
+              ),
+            ),
+          ),
+
+          Positioned(top: -80, left: -80, child: Blob(color: _grad[0], size: 260)),
+          Positioned(bottom: -60, right: -60, child: Blob(color: _grad[1], size: 220)),
+
+          if (model.extraImage != null)
+            Positioned(
+              left: 0.75 * size.width,
+              top: 0.20 * size.height,
+              child: Image.asset(
+                model.extraImage!,
+                width: 100,
+                height: 100,
+                fit: BoxFit.contain,
+              )
+                  .animate(onPlay: (c) => c.repeat(reverse: true))
+                  .moveY(begin: 0, end: -30, duration: 2.seconds, curve: Curves.easeInOut,)
+                  .rotate(begin: -0.05, end: 0.05, duration: 3.seconds,)
+                  .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.1, 1.1), duration: 2.seconds,),
+            ),
+          SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        width: 44, height: 44,
+                        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                        child: Icon(Icons.arrow_back_ios_new_rounded, color: _grad[0], size: 20),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
 
-            if (model.extraImage != null)
-              Expanded(
-                flex: 3,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 500),
-                      width: size.width * 0.45,
-                      decoration: BoxDecoration(
-                        color: model.primaryColor.withOpacity(
-                          _isTapped ? 0.2 : 0.05,
-                        ),
-                        shape: BoxShape.circle,
+                Expanded(
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: _handleInteraction,
+                      child: AnimatedSwitcher(
+                        duration: 500.ms,
+                        child: Image.asset(
+                          model.mainImage,
+                          key: ValueKey(model.mainImage),
+                          width: size.width * 0.8,
+                          fit: BoxFit.contain,
+                        )
+                            .animate(onPlay: (c) => c.repeat(reverse: true))
+                            .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.0, 1.0), duration: 2.seconds)
+                            .moveY(begin: 8, end: -8, duration: 2.seconds),
                       ),
                     ),
-                    Image.asset(
-                      model.extraImage!,
-                      height: size.height * 0.2,
-                      fit: BoxFit.contain,
-                    ),
-                  ],
+                  ),
                 ),
-              )
-            else
-              const Spacer(),
 
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: _handleInteraction,
-                      icon: Container(
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: model.primaryColor,
-                          shape: BoxShape.circle,
+                Padding(
+                  padding: res.pagePadding.copyWith(top: 0, bottom: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ScaleTransition(
+                        scale: Tween(begin: 1.0, end: 1.2).animate(
+                          CurvedAnimation(parent: _pulseController, curve: Curves.elasticOut),
                         ),
-                        child: const Icon(
-                          Icons.volume_up_rounded,
-                          size: 40,
-                          color: Colors.white,
+                        child: ReplayButton(
+                            color: model.primaryColor,
+                            onPressed: _handleInteraction
                         ),
                       ),
-                    ),
-                    if (_showNextButton)
-                      PulseButton(
+                      NextButton(
+                        color: model.primaryColor,
+                        shadowColor: model.primaryColor.withOpacity(0.9),
                         onPressed: widget.onNextPressed,
-                        child: Icon(
-                          Icons.play_circle_fill_rounded,
-                          size: 90,
-                          color: widget.model.primaryColor,
-                        ),
                       )
-                    else
-                      const SizedBox(width: 90),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

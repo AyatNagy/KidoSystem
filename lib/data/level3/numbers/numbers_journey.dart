@@ -3,82 +3,81 @@ import 'package:kido/data/level3/numbers/number_lesson_arabic_data.dart';
 import 'package:kido/data/level3/numbers/number_lesson_english_data.dart';
 import 'package:kido/data/level3/numbers/tracing_bee.dart';
 import 'package:kido/data/level3/numbers/tracing_rabbit.dart';
-
-final List<LetterJourney> journeyNumArab =[
-    LetterJourney(
-      image: 'assets/images/arabicNumbers/num1_map.png',
-      charName: '١',
-      isLocked: false,
-      letterData: NumbersArabicLessonRepo.numbersArablessons[0],
-      tracingData: tracingNumberOneArab,
-      
-      ),
-      LetterJourney(
-      image:'assets/images/arabicNumbers/num2_map.png',
-      charName: '٢',
-      isLocked: false,
-      letterData: NumbersArabicLessonRepo.numbersArablessons[1],
-      tracingData: tracingNumberTwoArab,
-      ),
-      LetterJourney(
-      image:'assets/images/arabicNumbers/num3_map.png',
-      charName: '٣',
-      isLocked: false,
-      letterData: NumbersArabicLessonRepo.numbersArablessons[2],
-      tracingData: tracingNumberThreeArab,
-      ),
-      LetterJourney(
-      image: 'assets/images/arabicNumbers/num4_map.png',
-      charName: '٤',
-      isLocked: false,
-      letterData: NumbersArabicLessonRepo.numbersArablessons[3],
-      tracingData: tracingNumberFourArab
-      ),
-      LetterJourney(
-      image:'assets/images/arabicNumbers/num5_map.png',
-      charName: '٥',
-      isLocked: false,
-      letterData: NumbersArabicLessonRepo.numbersArablessons[4],
-      tracingData: tracingNumberFiveArab,
-      ),
-      LetterJourney(
-      image:'assets/images/train_engine.png',
-      charName: 'train_phase1',
-      isLocked: false,
-      ),
-      LetterJourney(
-      image:'assets/images/arabicNumbers/num1_map.png',
-      charName: '٦',
-      isLocked: false,
-      letterData: NumbersArabicLessonRepo.numbersArablessons[5]
-      ),
-      LetterJourney(
-      image: 'assets/images/arabicNumbers/num1_map.png',
-      charName: '٧',
-      isLocked: false,
-      letterData: NumbersArabicLessonRepo.numbersArablessons[6]
-      ),
-      LetterJourney(
-      image: 'assets/images/arabicNumbers/num1_map.png',
-      charName: '٨',
-      isLocked: false,
-      letterData: NumbersArabicLessonRepo.numbersArablessons[7]
-      ),
-      LetterJourney(
-      image: 'assets/images/arabicNumbers/num1_map.png',
-      charName: '٩',
-      isLocked: false,
-      letterData: NumbersArabicLessonRepo.numbersArablessons[8]
-      ),
-      LetterJourney(
-      image:'assets/images/common/train_engine.png',
-      charName: 'train_phase2',
-      isLocked: false,
-      ),
+     
+final List<LetterJourney> journeyNumArab = [
+  LetterJourney(
+    image: 'assets/images/arabicNumbers/num1_map.png',
+    charName: '١',
+    isLocked: false,
+    letterData: NumbersArabicLessonRepo.numbersArablessons[0],
+    tracingData: tracingNumberOneArab,
+  ),
+  LetterJourney(
+    image: 'assets/images/arabicNumbers/num2_map.png',
+    charName: '٢',
+    isLocked: true,
+    letterData: NumbersArabicLessonRepo.numbersArablessons[1],
+    tracingData: tracingNumberTwoArab,
+  ),
+  LetterJourney(
+    image: 'assets/images/arabicNumbers/num3_map.png',
+    charName: '٣',
+    isLocked: true,
+    letterData: NumbersArabicLessonRepo.numbersArablessons[2],
+    tracingData: tracingNumberThreeArab,
+  ),
+  LetterJourney(
+    image: 'assets/images/arabicNumbers/num4_map.png',
+    charName: '٤',
+    isLocked: true,
+    letterData: NumbersArabicLessonRepo.numbersArablessons[3],
+    tracingData: tracingNumberFourArab,
+  ),
+  LetterJourney(
+    image: 'assets/images/arabicNumbers/num5_map.png',
+    charName: '٥',
+    isLocked: false,
+    letterData: NumbersArabicLessonRepo.numbersArablessons[4],
+    tracingData: tracingNumberFiveArab,
+  ),
+  LetterJourney(
+    image: 'assets/images/train_engine.png',
+    charName: 'train_phase1',
+    isLocked: true,
+  ),
+  LetterJourney(
+    image: 'assets/images/arabicNumbers/num1_map.png',
+    charName: '٦',
+    isLocked: true,
+    letterData: NumbersArabicLessonRepo.numbersArablessons[5],
+  ),
+  LetterJourney(
+    image: 'assets/images/arabicNumbers/num1_map.png',
+    charName: '٧',
+    isLocked: true,
+    letterData: NumbersArabicLessonRepo.numbersArablessons[6],
+  ),
+  LetterJourney(
+    image: 'assets/images/arabicNumbers/num1_map.png',
+    charName: '٨',
+    isLocked: true,
+    letterData: NumbersArabicLessonRepo.numbersArablessons[7],
+  ),
+  LetterJourney(
+    image: 'assets/images/arabicNumbers/num1_map.png',
+    charName: '٩',
+    isLocked: true,
+    letterData: NumbersArabicLessonRepo.numbersArablessons[8],
+  ),
+  LetterJourney(
+    image: 'assets/images/common/train_engine.png',
+    charName: 'train_phase2',
+    isLocked: true,
+  ),
 
 ];
 
-final List<LetterJourney> journeyNumEng =[
+final List<LetterJourney> journeyNumEng = [
   LetterJourney(
       image: NumbersEnglishLessonRepo.numbersEnglessons[0].numberImagePath,
       charName: '1',
@@ -153,3 +152,4 @@ final List<LetterJourney> journeyNumEng =[
       isLocked: true,
       ),
 ];
+

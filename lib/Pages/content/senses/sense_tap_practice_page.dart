@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kido/Models/sense_data.dart';
 import 'package:kido/Pages/content/senses/sense_drag_practice_page.dart';
 import 'package:kido/Widgets/content/level1/sense_face_view.dart';
-import 'package:kido/Widgets/next_button.dart';
+import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/data/sense_mapper.dart';
 import 'package:kido/enum/sense_type.dart';
@@ -68,7 +68,7 @@ class _SenseTapPracticeScreenState extends State<SenseTapPracticeScreen> {
     final x = w * data.leftFactor;
     final y = h * data.topFactor;
     final size = w * data.widthFactor;
-    double extraWidth = size * 0.6;
+    double extraWidth = size * 0.3;
 
     return Rect.fromLTWH(x - (extraWidth / 2), y, size + extraWidth, size);
   }

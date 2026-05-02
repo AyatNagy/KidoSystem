@@ -6,6 +6,8 @@ final List<LetterModel> arletters = [
     letterPath: 'assets/images/arabicLetters/letterأ.png',
     animalPath: 'assets/images/arabicLetters/rabbit.png',
     audioName: 'audio/alphabet_ar/ا.mp3',
+    activeBorder: AppColors.kidoRed,
+    bgColor: AppColors.kidoColors[6]
   ),
 
   LetterModel(
@@ -16,8 +18,20 @@ final List<LetterModel> arletters = [
 
   LetterModel(
     letterPath: 'assets/images/arabicLetters/letterت.png',
-    animalPath: 'assets/images/apple.png',
+    animalPath: 'assets/images/arabicLetters/crocodile.png',
     audioName: 'audio/alphabet_ar/ت.mp3',
+  ),
+
+  LetterModel(
+    letterPath: 'assets/images/arabicLetters/letterث.png',
+    animalPath: 'assets/images/arabicLetters/fox.png',
+    audioName: 'audio/alphabet_ar/ث.mp3',
+  ),
+
+  LetterModel(
+    letterPath: 'assets/images/arabicLetters/letterج.png',
+    animalPath: 'assets/images/arabicLetters/bell.png',
+    audioName: 'audio/alphabet_ar/ج.mp3',
   ),
 ];
 

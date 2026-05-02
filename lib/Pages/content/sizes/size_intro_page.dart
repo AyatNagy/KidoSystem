@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/size_lesson_data.dart';
 import 'package:kido/Pages/content/sizes/size_lesson_page.dart';
-import 'package:kido/Widgets/custom_app_button.dart';
+import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import 'package:kido/enum/size_goal.dart';
 
 class SizeIntroPage extends StatefulWidget {

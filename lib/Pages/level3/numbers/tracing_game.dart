@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/level3/numbers/tracing_numbers.dart';
 import 'package:kido/Widgets/content/level3/numbers/number_guide_hand.dart';
-import 'package:kido/Widgets/next_button.dart';
-import 'package:kido/Widgets/replay_button.dart';
 import 'package:kido/services/audio_service.dart';
+import 'package:kido/Widgets/Buttons/next_button.dart';
+import 'package:kido/Widgets/Buttons/replay_button.dart';
 import 'package:lottie/lottie.dart';
 
 class TracingGame extends StatefulWidget {

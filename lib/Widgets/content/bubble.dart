@@ -1,7 +1,5 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
-
 import '../../Models/level3/bubble_model.dart';
 
 class BubbleWidget extends StatefulWidget {

@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import'package:flutter/material.dart';
 
 class SoundButton extends StatelessWidget{
@@ -30,7 +31,7 @@ class SoundButton extends StatelessWidget{
               spreadRadius: 5,
               offset: const Offset(0, 0)
             )
-            
+
           )
           ]
         ),

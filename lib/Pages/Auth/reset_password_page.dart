@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/parent_login_screen.dart';
 import 'package:kido/Widgets/password_strength_turtle%20.dart';
 import 'package:kido/Widgets/text_field_item.dart';
-import 'package:kido/Widgets/custom_app_button.dart';
+import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import 'package:kido/utils/validators.dart';
 import '../../bloc/reset_password/reset_password_cubit.dart';
 

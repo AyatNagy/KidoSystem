@@ -10,7 +10,7 @@ import 'package:kido/Widgets/Questions/draw_question_widget.dart';
 import 'package:kido/Widgets/Questions/draganddrop_question_widget.dart';
 import 'package:kido/Widgets/Questions/speak_question_widget.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import 'package:kido/Widgets/custom_app_button.dart';
+import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 
 enum QuestionType { choice, drawing, dragDrop, speak }
 

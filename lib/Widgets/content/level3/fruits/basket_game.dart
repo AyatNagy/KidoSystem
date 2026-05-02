@@ -4,7 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
-import '../../../puls_button.dart';
+import '../../../Buttons/puls_button.dart';
 import '../../../../Models/level3/pixel.dart';
 
 class FruitCollectorPage extends StatefulWidget {
