@@ -12,7 +12,7 @@ class NumberLessonData{
     required this.numberImagePath,
     required this.audioPath,
     this.characterImagePath,
-    this.primaryColor= const Color(0xFF6A4BB1),
+    this.primaryColor= const Color.fromARGB(255, 2, 56, 122),
 
   });
 

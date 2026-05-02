@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class TracingQuestion{
 
    final String id;
+   final int numberValue;
   final String audioPath;
   final String characterImage;
   final String backgroundImage1; 
@@ -17,6 +18,7 @@ class TracingQuestion{
   TracingQuestion({
 
     required this.id,
+    required this.numberValue,
     required this.audioPath,
     required this.characterImage,
     required this.backgroundImage1,

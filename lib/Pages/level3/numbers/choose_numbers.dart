@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/level3/numbers/numbers_map.dart';
 import 'dart:math' as math;
-
 import 'package:kido/constants.dart';
 
 
@@ -68,7 +67,7 @@ class _NumbersLanguageSelectionPageState extends State<NumbersLanguageSelectionP
                   children: [
                     _buildLanguageCard(
                       title: "العربية",
-                      imagePath: 'assets/images/ar-logo.png',
+                      imagePath: 'assets/images/arabicNumbers/choose_language.jpeg',
                       cardColor: AppColors.kidoYellow,
                       photoWidthFactor: 1,
                       delay: 0,
@@ -84,7 +83,7 @@ class _NumbersLanguageSelectionPageState extends State<NumbersLanguageSelectionP
                     const SizedBox(width: 20),
                     _buildLanguageCard(
                       title: "English",
-                      imagePath: 'assets/images/en-letters.png',
+                      imagePath: 'assets/images/englishNumbers.jpeg',
                       cardColor: AppColors.kidoYellow,
                       photoWidthFactor: 1,
                       delay: math.pi,

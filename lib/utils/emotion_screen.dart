@@ -7,7 +7,7 @@ class EmotionScreen extends StatelessWidget {
   final Color color;
   final String title;
   final String background;
-  final String character;
+  final Widget characterWidget;
   final EmotionEffect effect;
 
   const EmotionScreen({
@@ -15,7 +15,7 @@ class EmotionScreen extends StatelessWidget {
     required this.color,
     required this.title,
     required this.background,
-    required this.character,
+    required this.characterWidget,
     this.effect = EmotionEffect.none,
   });
 
@@ -155,13 +155,10 @@ class EmotionScreen extends StatelessWidget {
               scale: 1,
               duration: const Duration(milliseconds: 600),
               curve: Curves.easeOutBack,
-              child: Image.asset(
-                character,
-                height: screenHeight * 0.5,
-                errorBuilder:
-                    (context, error, stackTrace) =>
-                        const Icon(Icons.person, size: 100),
-              ),
+              child: SizedBox(
+                height: screenHeight*0.5,
+                child: characterWidget,
+              )
             ),
           ),
           Positioned(
