@@ -102,6 +102,8 @@ flutter:
     - assets/gif/
     - assets/images/family/
     - assets/images/familyIcons/
+    - assets/images/arabicNumbers/
+    - assets/images/englishNumbers/
 
      
 
