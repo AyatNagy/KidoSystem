@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/level3/family/Family_map_screen.dart';
 import 'package:kido/Pages/level3/family_members/BackgroundPage.dart';
 import 'package:kido/Pages/level3/vegetables/vegetable_map_screen.dart';
 import 'package:kido/Pages/level3/numbers/choose_numbers.dart';
@@ -91,7 +90,7 @@ class CategoryGrid extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => BackgroundPage()),
+              MaterialPageRoute(builder: (context) => FamilyBackGround()),
             );
           },
         ),
