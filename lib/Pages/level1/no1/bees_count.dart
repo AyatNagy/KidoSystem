@@ -116,10 +116,10 @@ class _BeeCountingPageState extends State<BeeCountingPage> with TickerProviderSt
               child: GestureDetector(
                 onTap: _handleTap,
                 child: SizedBox(
-                  width: responsive.imageWidth(0.50),
-                  height: responsive.imageHeight(0.25),
+                  width: responsive.imageWidth(0.85),
+                  height: responsive.imageHeight(0.55),
                   child: Image.asset(
-                      "assets/images/bee-house.png",
+                      "assets/images/bee-house.gif",
                       fit: BoxFit.contain
                   ),
                 ),
