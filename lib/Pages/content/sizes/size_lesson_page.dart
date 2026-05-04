@@ -3,6 +3,7 @@ import 'package:kido/Models/size_lesson_data.dart';
 import 'package:kido/Pages/content/sizes/size_practice_page.dart';
 import 'package:kido/Widgets/content/content_app_bar.dart';
 import 'package:kido/Widgets/Buttons/custom_app_button.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/enum/size_goal.dart';
 import 'package:kido/services/audio_service.dart';
 
@@ -98,76 +99,91 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
 
   @override
   Widget build(BuildContext context) {
+    final config = ResponsiveProvider.of(context);
+    double baseTranslate =
+        config.isDesktop
+            ? -100
+            : config.isTablet
+            ? -80
+            : -50;
     double scaleX = 1.0;
     double scaleY = 1.0;
     double translateY = 0.0;
 
     if (isFirstHighlighted) {
       switch (widget.goal) {
-        case SizeGoal.longShort:
-          scaleX = 0.85; // يرفع
-          scaleY = 1.6; // يطول جداً
-          translateY = -50; // يطلع لفوق عشان م يخبطش تحت
+        case SizeGoal.tall:
+          scaleX = 0.85;
+          scaleY = 1.6;
+          translateY = baseTranslate;
           break;
-        case SizeGoal.thickThin:
-          scaleX = 1.6; // يعرض جداً (سميك)
-          scaleY = 0.9; // يقصر سنة عشان يبان "مكبب"
-          translateY = 0;
+        case SizeGoal.short:
+          scaleX = 1.1;
+          scaleY = 0.7;
+          translateY = 20; // بيكبسها لتحت عشان تبان قصيرة
           break;
-        case SizeGoal.bigSmall:
-          scaleX = 1.4; // يكبر عرض
-          scaleY = 1.4; // يكبر طول
-          translateY = -20;
+        case SizeGoal.fat:
+          scaleX = 1.6;
+          scaleY = 0.9;
+          translateY = 5;
+          break;
+        case SizeGoal.thin:
+          scaleX = 0.4;
+          scaleY = 1.1;
+          translateY = -5; // بيخليها رفيعة جداً
+          break;
+        case SizeGoal.big:
+          scaleX = 1.5;
+          scaleY = 1.5;
+          translateY = -15;
+          break;
+        case SizeGoal.small:
+          scaleX = 0.6;
+          scaleY = 0.6;
+          translateY = 0; // بيصغرها خالص
           break;
       }
     }
+
     return Scaffold(
-      backgroundColor: Colors.white, // خلفية بيضاء للتركيز
-      appBar: ContentAppBar(title: data.title), // العنوان بيج وهادئ
+      backgroundColor: Colors.white,
+      appBar: ContentAppBar(title: data.title),
       body: Column(
         children: [
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // 1. العنصر المستهدف (الذي يتم شرحه)
                 Expanded(
                   flex: 3,
                   child: Center(
                     child: GestureDetector(
                       onTap: repeatAudio,
                       child: AnimatedContainer(
-                        duration: const Duration(
-                          milliseconds: 1200,
-                        ), // زودنا الوقت عشان يبقى ناعم وسلس
-                        curve:
-                            Curves
-                                .easeInOutBack, // الحركة تبقى أهدى وشكلها طفولي أكتر
+                        duration: const Duration(milliseconds: 1200),
+                        curve: Curves.easeInOutBack,
                         transform:
                             Matrix4.identity()
                               ..translate(0.0, translateY)
                               ..scale(scaleX, scaleY),
-
                         transformAlignment: Alignment.center,
                         child: Image.asset(
                           data.correctImage,
-                          height: 400, // حجم كبير وثابت من الأول
+                          height: config.imageHeight(0.4), // 40% من الشاشة
                           fit: BoxFit.contain,
                         ),
                       ),
                     ),
                   ),
                 ),
-
-                // 2. العنصر المقارن (الصغير / القصير / الرفيع)
                 Expanded(
                   flex: 2,
                   child: Center(
                     child: Opacity(
-                      opacity: 0.6, // خليه باهت شوية عشان الطفل ميتشتتش
+                      opacity: 0.6,
                       child: Image.asset(
                         data.secondImage,
-                        height: 150, // دايماً صغير مقارنة بالتاني
+                        height: config.imageHeight(0.2), // 20% من الشاشة
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -176,15 +192,12 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
               ],
             ),
           ),
-
-          // زرار الانتقال للعب
           if (showPracticeButton)
             Padding(
-              padding: const EdgeInsets.all(30.0),
+              padding: config.pagePadding,
               child: CustomGradientButton(
                 title: "يلا نلعب 🎮",
                 onPressed: () {
-                  // نوقف أي صوت قبل ما ننتقل للصفحة الجديدة
                   AudioService.stop();
                   Navigator.push(
                     context,

@@ -4,7 +4,7 @@ class SizeLessonData {
   final String title;
   final String audio;
   final String questionAudio;
-  final String correctAudio;
+  //final String correctAudio;
   final String correctImage;
   final String secondImage;
 
@@ -12,7 +12,7 @@ class SizeLessonData {
     required this.title,
     required this.audio,
     required this.questionAudio,
-    required this.correctAudio,
+    //required this.correctAudio,
     required this.correctImage,
     required this.secondImage,
   });
@@ -21,34 +21,63 @@ class SizeLessonData {
 class SizeLessonMapper {
   static SizeLessonData get(SizeGoal goal) {
     switch (goal) {
-      case SizeGoal.longShort:
+      case SizeGoal.tall:
         return SizeLessonData(
           title: "طويل",
-          audio: "tall.wav",
-          questionAudio: "where_tall.wav",
-          correctAudio: "tall_correct.wav",
-          correctImage: "assets/images/sizes/tallcandel.png",
-          secondImage: "assets/images/sizes/shortcandel.png",
+          audio: "sizes/tall.mp3",
+          questionAudio: "sizes/where_tall.mp3",
+          //correctAudio: "sizes/tall_correct.mp3",
+          correctImage: "assets/images/sizes/tall.png",
+          secondImage: "assets/images/sizes/short.png",
         );
 
-      case SizeGoal.thickThin:
+      case SizeGoal.short:
         return SizeLessonData(
-          title: "سميك",
-          audio: "thick.wav",
-          questionAudio: "where_thick.wav",
-          correctAudio: "thick_correct.wav",
-          correctImage: "assets/images/sizes/thick.png",
+          title: "قصير",
+          audio: "sizes/short.mp3",
+          questionAudio: "sizes/where_short.mp3",
+          //correctAudio: "sizes/short_correct.mp3",
+          correctImage: "assets/images/sizes/short.png",
+          secondImage: "assets/images/sizes/tall.png",
+        );
+
+      case SizeGoal.fat:
+        return SizeLessonData(
+          title: "تخين",
+          audio: "sizes/fat.mp3",
+          questionAudio: "sizes/where_fat.mp3",
+          //correctAudio: "sizes/fat_correct.mp3",
+          correctImage: "assets/images/sizes/fat.png",
           secondImage: "assets/images/sizes/thin.png",
         );
+      case SizeGoal.thin:
+        return SizeLessonData(
+          title: "رفيع",
+          audio: "sizes/thin.mp3",
+          questionAudio: "sizes/where_thin.mp3",
+          //correctAudio: "sizes/thin_correct.mp3",
+          correctImage: "assets/images/sizes/thin.png",
+          secondImage: "assets/images/sizes/fat.png",
+        );
 
-      case SizeGoal.bigSmall:
+      case SizeGoal.big:
         return SizeLessonData(
           title: "كبير",
-          audio: "big.wav",
-          questionAudio: "where_big.wav",
-          correctAudio: "big_correct.wav",
+          audio: "sizes/big.mp3",
+          questionAudio: "sizes/where_big.mp3",
+          //correctAudio: "sizes/big_correct.mp3",
           correctImage: "assets/images/sizes/big.png",
           secondImage: "assets/images/sizes/small.png",
+        );
+
+      case SizeGoal.small:
+        return SizeLessonData(
+          title: "صغير",
+          audio: "sizes/small.mp3",
+          questionAudio: "sizes/where_small.mp3",
+          //correctAudio: "sizes/small_correctmp3",
+          correctImage: "assets/images/sizes/small.png",
+          secondImage: "assets/images/sizes/big.png",
         );
     }
   }

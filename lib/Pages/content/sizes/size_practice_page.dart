@@ -5,6 +5,7 @@ import 'package:kido/Models/size_lesson_data.dart';
 import 'package:kido/Widgets/content/choise_item_widget.dart';
 import 'package:kido/Widgets/content/content_app_bar.dart';
 import 'package:kido/Widgets/content/success_overlay_widget.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/enum/size_goal.dart';
 import 'package:kido/services/audio_service.dart';
 
@@ -109,7 +110,7 @@ class _SizePracticePageState extends State<SizePracticePage>
 
       // تسلسل الأصوات بعد النجاح
       await Future.delayed(const Duration(milliseconds: 2000));
-      await AudioService.play(fileName: data.correctAudio);
+      //await AudioService.play(fileName: data.correctAudio);
       await Future.delayed(const Duration(seconds: 1));
       await AudioService.play(fileName: data.audio);
     } else {
@@ -124,28 +125,60 @@ class _SizePracticePageState extends State<SizePracticePage>
     }
   }
 
-  // ميثود لتحديد نوع التحريك بناءً على الهدف (طويل، تخين، كبير)
   Matrix4 _getStepTransform(double val) {
+    final config = ResponsiveProvider.of(context);
+
     double scaleX = 1.0;
     double scaleY = 1.0;
     double translateY = 0.0;
 
+    double responsiveJump =
+        config.isDesktop
+            ? -60
+            : config.isTablet
+            ? -40
+            : -30;
+
     switch (widget.goal) {
-      case SizeGoal.longShort:
-        scaleX = 1.0 - (0.2 * val);
-        scaleY = 1.0 + (1.2 * val);
-        translateY = -80 * val;
+      case SizeGoal.tall:
+        scaleX = 1.0 - (0.1 * val); // تنحيف بسيط
+        scaleY = 1.0 + (0.4 * val); // تطويل للأعلى
+        translateY = responsiveJump * val;
         break;
-      case SizeGoal.thickThin:
-        scaleX = 1.0 + (0.6 * val);
-        scaleY = 1.0 - (0.1 * val);
+
+      case SizeGoal.short:
+        // الحل: بنقلل الـ Scale بدل ما نزوده
+        scaleX = 1.0 + (0.1 * val); // بيعرض شوية
+        scaleY = 1.0 - (0.3 * val); // بيكبس لتحت (يقصر)
+        translateY = (responsiveJump.abs() * 0.2) * val; // حركة خفيفة لتحت
         break;
-      case SizeGoal.bigSmall:
-        scaleX = 1.0 + (0.4 * val);
-        scaleY = 1.0 + (0.4 * val);
-        translateY = -20 * val;
+
+      case SizeGoal.fat:
+        scaleX = 1.0 + (0.5 * val); // بيعرض
+        scaleY = 1.0 - (0.1 * val); // بيكبس
+        break;
+
+      case SizeGoal.thin:
+        scaleX = 1.0 - (0.5 * val); // بيرفع جداً
+        scaleY = 1.0 + (0.1 * val);
+        break;
+
+      case SizeGoal.big:
+        // الحل: تقليل القيم عشان ما يخرجش بره الشاشة
+        // جربي 1.2 أو 1.3 كحد أقصى بدل 1.5
+        scaleX = 1.0 + (0.25 * val);
+        scaleY = 1.0 + (0.25 * val);
+        translateY = (responsiveJump * 0.2) * val;
+        break;
+
+      case SizeGoal.small:
+        // الحل: تصغير (Scale down)
+        scaleX = 1.0 - (0.4 * val); // بيصغر لـ 60% من حجمه
+        scaleY = 1.0 - (0.4 * val);
+        translateY = 0.0;
         break;
     }
+
     return Matrix4.identity()
       ..translate(0.0, translateY)
       ..scale(scaleX, scaleY);
@@ -153,49 +186,59 @@ class _SizePracticePageState extends State<SizePracticePage>
 
   @override
   Widget build(BuildContext context) {
+    final config = ResponsiveProvider.of(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar:
           showSuccess
               ? null
               : PreferredSize(
-                preferredSize: const Size.fromHeight(kToolbarHeight),
+                preferredSize: Size.fromHeight(AppBar().preferredSize.height),
                 child: ContentAppBar(title: "فين الـ ${data.title}"),
               ),
-      body: Center(
-        child:
-            showSuccess
-                ? SuccessOverlay(
-                  image: data.correctImage,
-                  title: data.title,
-                  transform: _getStepTransform(1.0), // الحالة النهائية للتحويل
-                )
-                : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    // اختيار الصورة الخطأ
-                    ChoiceItem(
-                      image: data.secondImage,
-                      isWrong: wrongSelections.contains("wrong"),
-                      canAnimate: false,
-                      animation: stretchAnimation,
-                      onTap: () => handleTap(false),
-                      transform: Matrix4.identity(),
-                      height: 150,
+      body: SafeArea(
+        child: Center(
+          child:
+              showSuccess
+                  ? SuccessOverlay(
+                    image: data.correctImage,
+                    title: data.title,
+                    transform: _getStepTransform(1.0),
+                  )
+                  : Padding(
+                    padding: config.pagePadding,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ChoiceItem(
+                          image: data.secondImage,
+                          isWrong: wrongSelections.contains("wrong"),
+                          canAnimate: false,
+                          animation: stretchAnimation,
+                          onTap: () => handleTap(false),
+                          transform: Matrix4.identity(),
+                          height: config.imageHeight(0.2), // ريسبونسف
+                        ),
+                        AnimatedBuilder(
+                          animation: stretchAnimation,
+                          builder: (context, child) {
+                            return ChoiceItem(
+                              image: data.correctImage,
+                              isWrong: false,
+                              canAnimate: canAnimate,
+                              animation: stretchAnimation,
+                              onTap: () => handleTap(true),
+                              transform: _getStepTransform(
+                                stretchAnimation.value,
+                              ),
+                              height: config.imageHeight(0.4), // ريسبونسف
+                            );
+                          },
+                        ),
+                      ],
                     ),
-
-                    // اختيار الصورة الصح
-                    ChoiceItem(
-                      image: data.correctImage,
-                      isWrong: false,
-                      canAnimate: canAnimate,
-                      animation: stretchAnimation,
-                      onTap: () => handleTap(true),
-                      transform: _getStepTransform(stretchAnimation.value),
-                      height: 300,
-                    ),
-                  ],
-                ),
+                  ),
+        ),
       ),
     );
   }

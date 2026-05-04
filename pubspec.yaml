@@ -94,6 +94,7 @@ flutter:
     - assets/audio/numeric_en/
     - assets/audio/numeric_ar/
     - assets/audio/fruits/
+    - assets/audio/sizes/
     - assets/audio/alphabet_ar/
     - assets/audio/alphabet_en/
     - assets/videos/

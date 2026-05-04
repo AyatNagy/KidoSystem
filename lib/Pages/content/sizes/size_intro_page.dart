@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:kido/Models/size_lesson_data.dart';
 import 'package:kido/Pages/content/sizes/size_lesson_page.dart';
 import 'package:kido/Widgets/Buttons/custom_app_button.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/enum/size_goal.dart';
 
 class SizeIntroPage extends StatefulWidget {
   final SizeGoal goal;
-
   const SizeIntroPage({super.key, required this.goal});
 
   @override
@@ -17,15 +17,12 @@ class _SizeIntroPageState extends State<SizeIntroPage>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> scale;
-
   late SizeLessonData data;
 
   @override
   void initState() {
     super.initState();
-
     data = SizeLessonMapper.get(widget.goal);
-
     controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -45,35 +42,41 @@ class _SizeIntroPageState extends State<SizeIntroPage>
 
   @override
   Widget build(BuildContext context) {
+    // استدعاء الكونفج
+    final config = ResponsiveProvider.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFFDF6F0),
-
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AnimatedBuilder(
-              animation: scale,
-              builder:
-                  (_, child) =>
-                      Transform.scale(scale: scale.value, child: child),
-              child: Image.asset(data.correctImage, height: 250),
-            ),
-
-            const SizedBox(height: 30),
-
-            Text(
-              data.title,
-              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-            ),
-
-            const SizedBox(height: 40),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: CustomGradientButton(
+        child: Padding(
+          padding: config.pagePadding, // استخدام بادينج متجاوب
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedBuilder(
+                animation: scale,
+                builder:
+                    (_, child) =>
+                        Transform.scale(scale: scale.value, child: child),
+                child: Image.asset(
+                  data.correctImage,
+                  // استخدام نسبة من طول الشاشة (مثلا 30%)
+                  height: config.imageHeight(0.3),
+                ),
+              ),
+              SizedBox(height: config.localHeight * 0.04), // مسافة متجاوبة
+              Text(
+                data.title,
+                style: TextStyle(
+                  fontSize: config.headline, // خط متجاوب
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: config.localHeight * 0.05),
+              CustomGradientButton(
                 title: "ابدأ",
                 width: double.infinity,
+                // يمكنك إضافة height: config.buttonHeight لو الزرار بيقبل
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -83,8 +86,8 @@ class _SizeIntroPageState extends State<SizeIntroPage>
                   );
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
