@@ -7,7 +7,7 @@ import 'package:kido/config/responsive_config.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
-import '../../../../data/level1/countToys.dart';
+import '../../../../data/level1/count_toys.dart';
 import '../../../Widgets/content/level1/no6/lesson1.dart';
 import '../../../Widgets/Buttons/kido_action_button.dart';
 

@@ -1,0 +1,123 @@
+// ignore_for_file: deprecated_member_use
+import 'package:flutter/material.dart';
+import 'package:kido/Pages/level1/no3/moving_car.dart';
+import 'package:kido/Widgets/Buttons/next_button.dart';
+import 'package:kido/Widgets/Buttons/replay_button.dart';
+import 'package:kido/constants.dart';
+import 'package:lottie/lottie.dart';
+import '../../../Widgets/animated_hand_widget.dart';
+import '../../../Widgets/content/draganddrop.dart';
+import '../../../data/level1/cubes.dart';
+import '../../../services/audio_service.dart';
+import '../../../Widgets/responsive_provider.dart';
+import '../../../config/responsive_config.dart';
+
+class CubesLesson extends StatefulWidget {
+  const CubesLesson({super.key});
+
+  @override
+  State<CubesLesson> createState() => _CubesLessonState();
+}
+
+class _CubesLessonState extends State<CubesLesson> {
+  bool _isFinished = false;
+  bool _showTutorial = true;
+  int _currentStep = 0;
+  Key _dragDropKey = UniqueKey();
+  final stackingQuestion = StackingLessonsData.cubes;
+
+  void _handleSuccess(Map<String, String?> answers) async {
+    setState(() {
+      _currentStep = answers.length;
+      _showTutorial = false;
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        if (mounted && !_isFinished) setState(() => _showTutorial = true);
+      });
+    });
+
+    if (answers.length == 3) {
+      setState(() {
+        _isFinished = true;
+        _showTutorial = false;
+      });
+      await AudioService.play(fileName: 'yaay.mp3');
+    }
+  }
+  void _replayLesson() {
+    setState(() {
+      _isFinished = false;
+      _currentStep = 0;
+      _showTutorial = true;
+      _dragDropKey = UniqueKey();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ResponsiveConfig responsive = ResponsiveProvider.of(context);
+    final sw = responsive.localWidth;
+    final sh = responsive.localHeight;
+    final tutorialSteps = StackingLessonsData.getStackingSteps(sw, sh);
+
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            colors: [Color(0xFFFFFDE7), Color(0xFFFFF9C4)],
+            center: Alignment.center,
+            radius: 1.2,
+          ),
+        ),
+        child: Stack(
+          children: [
+            DragDropWidget(
+              key: _dragDropKey,
+              question: stackingQuestion,
+              onDragStart: () {
+                AudioService.play(fileName: 'pop.mp3');
+                setState(() => _showTutorial = false);
+              },
+              onWrongDrop: () {
+                setState(() => _showTutorial = true);
+              },
+              onAnswered: _handleSuccess,
+            ),
+            AnimatedHandWidget(
+              visible: _showTutorial && !_isFinished && _currentStep < tutorialSteps.length,
+              currentStep: _currentStep,
+              steps: tutorialSteps,
+            ),
+          if (_isFinished) ...[
+            Positioned.fill(
+              child: Lottie.asset(
+                'assets/lottie/confetti.json',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned(
+              bottom: sh * 0.05,
+              right: sw * 0.05,
+              child: NextButton(
+                color: AppColors.kidoOrange,
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const MovingCarPage()),
+                  );
+                },
+              ),
+            ),
+            Positioned(
+              bottom: sh * 0.05,
+              left: sw * 0.05,
+              child: ReplayButton(
+                color: AppColors.kidoOrange,
+                onPressed: _replayLesson,
+              ),
+            ),
+          ],
+          ]
+        ),
+      ),
+    );
+  }
+}
