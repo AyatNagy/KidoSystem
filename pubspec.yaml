@@ -105,6 +105,7 @@ flutter:
     - assets/images/familyIcons/
     - assets/images/arabicNumbers/
     - assets/images/englishNumbers/
+    - assets/images/common/
     - assets/images/family_members/
     - assets/audio/family/
     - assets/images/level1/

@@ -67,7 +67,7 @@ class _NumbersLanguageSelectionPageState extends State<NumbersLanguageSelectionP
                   children: [
                     _buildLanguageCard(
                       title: "العربية",
-                      imagePath: 'assets/images/arabicNumbers/choose_language.jpeg',
+                      imagePath: 'assets/images/arabicNumbers/choose_language.png',
                       cardColor: AppColors.kidoYellow,
                       photoWidthFactor: 1,
                       delay: 0,
@@ -83,7 +83,7 @@ class _NumbersLanguageSelectionPageState extends State<NumbersLanguageSelectionP
                     const SizedBox(width: 20),
                     _buildLanguageCard(
                       title: "English",
-                      imagePath: 'assets/images/englishNumbers.jpeg',
+                      imagePath: 'assets/images/englishNumbers/choose_language.png',
                       cardColor: AppColors.kidoYellow,
                       photoWidthFactor: 1,
                       delay: math.pi,
