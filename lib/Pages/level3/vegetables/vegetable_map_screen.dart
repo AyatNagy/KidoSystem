@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Models/level3/letters/letter_map.dart';
 import 'vegetable_journey_data.dart';
-import 'VegetableQuiz.dart';
-import 'VegetableSong.dart';
+import 'vegetable_quiz.dart';
+import 'vegetable_song.dart';
 import 'vegetable_sound.dart';
 import 'package:kido/Widgets/journey_map.dart';
 

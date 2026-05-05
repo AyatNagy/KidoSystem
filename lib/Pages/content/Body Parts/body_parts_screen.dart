@@ -7,9 +7,6 @@ import 'package:lottie/lottie.dart';
 import 'package:video_player/video_player.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-import '../../../Widgets/Buttons/next_button.dart';
-
-/// Stateful widget to fetch and then display video content.
 class BodyPartsScreen extends StatefulWidget {
   final int index;
   const BodyPartsScreen({super.key, required this.index});

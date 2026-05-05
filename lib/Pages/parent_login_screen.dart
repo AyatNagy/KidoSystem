@@ -4,7 +4,7 @@ import 'package:kido/Pages/Auth/forgot_by_email_pagel.dart';
 import 'package:kido/Pages/parent_home_page.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import '../Models/dailog_model.dart';
-import '../Widgets/appBar.dart';
+import '../Widgets/app_bar.dart';
 import '../Widgets/dialog_widget.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';

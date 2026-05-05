@@ -5,7 +5,7 @@ import 'package:kido/Widgets/password_strength_turtle%20.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/api_service/api_services.dart';
 import '../Models/dailog_model.dart';
-import '../Widgets/appBar.dart';
+import '../Widgets/app_bar.dart';
 import '../Widgets/dialog_widget.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';

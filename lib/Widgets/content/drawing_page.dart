@@ -1,14 +1,24 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
+import 'package:kido/constants.dart';
 
 class Drawing extends StatefulWidget {
   final String? instructionText;
   final List<Offset>? guidePoints;
+  final VoidCallback? onFinish;
+  final int pointsPerStep;
+  final double validationThreshold;
 
-  const Drawing({super.key, this.instructionText, this.guidePoints});
+  const Drawing({
+    super.key,
+    this.instructionText,
+    this.guidePoints,
+    this.onFinish,
+    this.pointsPerStep = 1,
+    this.validationThreshold = 40.0,
+  });
 
   @override
   State<Drawing> createState() => _DrawingState();
@@ -19,6 +29,9 @@ class _DrawingState extends State<Drawing> {
   Color selectedColor = Colors.blue;
   final AudioPlayer _player = AudioPlayer();
   bool _isSounding = false;
+
+  final Set<int> _hitPoints = {};
+  int _completedSteps = 0;
 
   @override
   void initState() {
@@ -43,19 +56,21 @@ class _DrawingState extends State<Drawing> {
     }
   }
 
-  void _handlePanUpdate(
-    DragUpdateDetails details,
-    List<Offset>? actualGuidePoints,
-    RenderBox renderBox,
-  ) {
-    Offset touchPosition = renderBox.globalToLocal(details.globalPosition);
-    Offset positionToDraw = touchPosition;
+  void _handlePanUpdate(DragUpdateDetails details, List<Offset>? actualPoints, RenderBox box) {
+    Offset touchPos = box.globalToLocal(details.globalPosition);
+    Offset positionToDraw = touchPos;
 
-    if (actualGuidePoints != null) {
-      for (var guidePoint in actualGuidePoints) {
-        double distance = (touchPosition - guidePoint).distance;
-        if (distance < 35) {
-          positionToDraw = guidePoint;
+    if (actualPoints != null) {
+      for (int i = 0; i < actualPoints.length; i++) {
+        double distance = (touchPos - actualPoints[i]).distance;
+        if (distance < widget.validationThreshold) {
+          positionToDraw = actualPoints[i];
+          _hitPoints.add(i);
+          break;
+        }
+        if (distance < widget.validationThreshold) {
+          positionToDraw = actualPoints[i];
+          _hitPoints.add(i);
           break;
         }
       }
@@ -66,28 +81,34 @@ class _DrawingState extends State<Drawing> {
     });
   }
 
+  void _checkCompletion() {
+    if (widget.guidePoints == null) return;
+
+    int currentlyFinishedSteps = _hitPoints.length ~/ widget.pointsPerStep;
+
+    if (currentlyFinishedSteps > _completedSteps) {
+      _completedSteps = currentlyFinishedSteps;
+      widget.onFinish?.call();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
-
-    List<Offset>? actualGuidePoints;
-    if (widget.guidePoints != null) {
-      actualGuidePoints =
-          widget.guidePoints!.map((p) {
-            return Offset(p.dx * config.localWidth, p.dy * config.localHeight);
-          }).toList();
-    }
+    final List<Offset>? scaledPoints = widget.guidePoints?.map((p) =>
+        Offset(p.dx * config.localWidth, p.dy * config.localHeight)
+    ).toList();
 
     return Stack(
       children: [
         GestureDetector(
           onPanStart: (_) => _toggleSound(true),
-          onPanUpdate: (details) {
-            RenderBox renderBox = context.findRenderObject() as RenderBox;
-            _handlePanUpdate(details, actualGuidePoints, renderBox);
-          },
+          onPanUpdate: (details) => _handlePanUpdate(
+              details, scaledPoints, context.findRenderObject() as RenderBox
+          ),
           onPanEnd: (_) {
             _toggleSound(false);
+            _checkCompletion();
             setState(() => points.add(null));
           },
           child: CustomPaint(
@@ -95,7 +116,7 @@ class _DrawingState extends State<Drawing> {
               points,
               selectedColor,
               config.isTablet ? 18 : 14,
-              actualGuidePoints,
+              scaledPoints,
             ),
             size: Size.infinite,
           ),
@@ -110,9 +131,7 @@ class _DrawingState extends State<Drawing> {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.9),
               borderRadius: BorderRadius.circular(40),
-              boxShadow: const [
-                BoxShadow(color: Colors.black12, blurRadius: 10),
-              ],
+              boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
             ),
             child: Center(
               child: Row(
@@ -121,45 +140,33 @@ class _DrawingState extends State<Drawing> {
                   ...[Colors.red, Colors.green, Colors.blue].map((color) {
                     bool isSelected = selectedColor == color;
                     double btnSize = config.isTablet ? 55 : 40;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: GestureDetector(
-                        onTap: () => setState(() => selectedColor = color),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: isSelected ? btnSize : btnSize * 0.75,
-                          height: isSelected ? btnSize : btnSize * 0.75,
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                            boxShadow:
-                                isSelected
-                                    ? [
-                                      BoxShadow(
-                                        color: color.withOpacity(0.5),
-                                        blurRadius: 12,
-                                        spreadRadius: 4,
-                                      ),
-                                    ]
-                                    : [],
-                          ),
+                    return GestureDetector(
+                      onTap: () => setState(() => selectedColor = color),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        width: isSelected ? btnSize : btnSize * 0.75,
+                        height: isSelected ? btnSize : btnSize * 0.75,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                          boxShadow: isSelected
+                              ? [BoxShadow(color: color.withOpacity(0.5), blurRadius: 12, spreadRadius: 4)]
+                              : [],
                         ),
                       ),
                     );
                   }),
-                  const VerticalDivider(
-                    indent: 15,
-                    endIndent: 15,
-                    color: Colors.black12,
-                  ),
+                  const VerticalDivider(indent: 15, endIndent: 15, color: Colors.black12),
                   IconButton(
-                    icon: Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                      size: config.localHeight * 0.04,
-                    ),
-                    onPressed: () => setState(() => points.clear()),
+                    icon: Icon(Icons.delete, color: AppColors.kidoRed, size: config.localHeight * 0.04),
+                    onPressed: () {
+                      setState(() {
+                        points.clear();
+                        _hitPoints.clear();
+                        _completedSteps = 0;
+                      });
+                    },
                   ),
                 ],
               ),
@@ -173,25 +180,15 @@ class _DrawingState extends State<Drawing> {
             right: config.localWidth * 0.1,
             child: Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.bgColor,
                   borderRadius: BorderRadius.circular(30),
-                  border: Border.all(
-                    color: selectedColor.withOpacity(0.3),
-                    width: 2,
-                  ),
+                  border: Border.all(color: selectedColor.withOpacity(0.3), width: 2),
                 ),
                 child: Text(
                   widget.instructionText!,
-                  style: TextStyle(
-                    fontSize: config.title,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
+                  style: TextStyle(fontSize: config.title, fontWeight: FontWeight.bold, color: AppColors.textDark),
                 ),
               ),
             ),
@@ -212,21 +209,18 @@ class SimplePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (guidePoints != null) {
-      Paint guidePaint =
-          Paint()
-            ..color = Colors.black12
-            ..style = PaintingStyle.fill;
-
+      Paint guidePaint = Paint()
+        ..color = Colors.black12
+        ..style = PaintingStyle.fill;
       for (var dot in guidePoints!) {
         canvas.drawCircle(dot, width * 0.6, guidePaint);
       }
     }
 
-    Paint paint =
-        Paint()
-          ..color = color
-          ..strokeCap = StrokeCap.round
-          ..strokeWidth = width;
+    Paint paint = Paint()
+      ..color = color
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = width;
 
     for (int i = 0; i < points.length - 1; i++) {
       if (points[i] != null && points[i + 1] != null) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 
-import '../Widgets/appBar.dart';
+import '../Widgets/app_bar.dart';
 import 'onboard_page.dart';
 import 'package:kido/Pages/parent_home_page.dart';
 import 'package:kido/Pages/parent_login_screen.dart';

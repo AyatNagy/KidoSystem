@@ -1,10 +1,9 @@
 // ignore_for_file: deprecated_member_use
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lottie/lottie.dart';
-import 'Vegetablemodel.dart';
+import 'vegetable_model.dart';
 
 class VegetableSong extends StatefulWidget {
   const VegetableSong({super.key});
@@ -60,7 +59,6 @@ class _VegetableSongState extends State<VegetableSong>
     await flutterTts.speak(text);
   }
 
-  // ── إعداد كل صفحة ────────────────────────────────────────
   void _startPage(int page) {
     _hintTimer?.cancel();
     showSuccess = false;
@@ -68,14 +66,12 @@ class _VegetableSongState extends State<VegetableSong>
     isLocked = false;
     wrongSelections = [];
 
-    // نطق تلقائي عند الدخول
     Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) _speak(_list[page].Text);
+      if (mounted) _speak(_list[page].text);
     });
 
-    // تكرار النطق كل 7 ثوان إذا لم يختر الطفل
     _hintTimer = Timer.periodic(const Duration(seconds: 7), (_) {
-      if (!isPressed && mounted) _speak(_list[page].Text);
+      if (!isPressed && mounted) _speak(_list[page].text);
     });
 
     // وميض بعد 5 ثوان للإشارة للإجابة الصحيحة
@@ -86,7 +82,6 @@ class _VegetableSongState extends State<VegetableSong>
     });
   }
 
-  // ── التعامل مع الاختيار ──────────────────────────────────
   void _handleTap(String key, bool isCorrect) async {
     if (isLocked || wrongSelections.contains(key)) return;
 
@@ -101,7 +96,7 @@ class _VegetableSongState extends State<VegetableSong>
       _glowCtrl.reset();
       await Future.delayed(const Duration(milliseconds: 300));
       if (mounted) setState(() => showSuccess = true);
-      await _speak(_list[_page].Text);
+      await _speak(_list[_page].text);
     } else {
       await Future.delayed(const Duration(milliseconds: 400));
       if (mounted) {
@@ -129,7 +124,6 @@ class _VegetableSongState extends State<VegetableSong>
     }
   }
 
-  // ── السابق ───────────────────────────────────────────────
   void _prevPage() {
     if (_page > 0) {
       setState(() {
@@ -179,11 +173,10 @@ class _VegetableSongState extends State<VegetableSong>
                   bg: Colors.grey.shade100,
                   iconColor: Colors.black54,
                 ),
-                // اسم الخضرة كعنوان
                 Column(
                   children: [
                     Text(
-                      veg.Text,
+                      veg.text,
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -201,18 +194,15 @@ class _VegetableSongState extends State<VegetableSong>
                     ),
                   ],
                 ),
-                // زر الصوت
                 _CircleBtn(
                   icon: Icons.volume_up_rounded,
-                  onTap: () => _speak(veg.Text),
+                  onTap: () => _speak(veg.text),
                   bg: const Color(0xFFE65100),
                   iconColor: Colors.white,
                 ),
               ],
             ),
           ),
-
-          // ── الصورتان جنب بعض ─────────────────────────────
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -337,7 +327,7 @@ class _VegetableSongState extends State<VegetableSong>
               ),
               const SizedBox(height: 30),
               Text(
-                veg.Text,
+                veg.text,
                 style: const TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.bold,

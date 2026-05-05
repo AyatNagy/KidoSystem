@@ -6,9 +6,9 @@ const String vTomato = "assets/gif/tomato.gif";
 
 class Numbermodel {
   String image;
-  String Text;
+  String text;
   String textAr;
-  Numbermodel({required this.image, required this.Text, required this.textAr});
+  Numbermodel({required this.image, required this.text, required this.textAr});
 }
 
 class QuestionModel {
@@ -18,11 +18,11 @@ class QuestionModel {
 
 List<Numbermodel> vegetable1() {
   return [
-    Numbermodel(image: vBroccoli, Text: "Broccoli", textAr: "بروكلي"),
-    Numbermodel(image: vCarrot, Text: "Carrot", textAr: "جزر"),
-    Numbermodel(image: vChili, Text: "Chili pepper", textAr: "فلفل حار"),
-    Numbermodel(image: vOnion, Text: "Onion", textAr: "بصل"),
-    Numbermodel(image: vTomato, Text: "Tomato", textAr: "طماطم"),
+    Numbermodel(image: vBroccoli, text: "Broccoli", textAr: "بروكلي"),
+    Numbermodel(image: vCarrot, text: "Carrot", textAr: "جزر"),
+    Numbermodel(image: vChili, text: "Chili pepper", textAr: "فلفل حار"),
+    Numbermodel(image: vOnion, text: "Onion", textAr: "بصل"),
+    Numbermodel(image: vTomato, text: "Tomato", textAr: "طماطم"),
   ];
 }
 

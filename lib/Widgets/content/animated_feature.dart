@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AnimatedFeature extends StatefulWidget {
   final String image;
   final double width;
-  final bool isPlaying; // أضفنا ده عشان نتحكم في الحركة مع الصوت
+  final bool isPlaying;
 
   const AnimatedFeature({
     super.key,
@@ -24,8 +24,7 @@ class _AnimatedFeatureState extends State<AnimatedFeature>
   @override
   void initState() {
     super.initState();
-    // مدة 1000ms (ثانية) بتخلي الحركة هادية وماشية مع ريتم الكلام
-    _controller = AnimationController(
+   _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     );
@@ -34,12 +33,10 @@ class _AnimatedFeatureState extends State<AnimatedFeature>
       CurvedAnimation(
         parent: _controller,
         curve:
-            Curves
-                .easeInOut, // حركة انسيابية جداً (تبدأ ببطء وتسرع في النص وتنهي ببطء)
+            Curves.easeInOut,
       ),
     );
 
-    // لو بدأنا والصوت شغال، خلي الأنيميشن يبدأ
     if (widget.isPlaying) {
       _controller.repeat(reverse: true);
     }
@@ -48,11 +45,10 @@ class _AnimatedFeatureState extends State<AnimatedFeature>
   @override
   void didUpdateWidget(AnimatedFeature oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // دي أهم حتة: لو الصوت بدأ يشتغل، الأنيميشن يتحرك. لو وقف، الأنيميشن يرجع لحجمه الطبيعي
     if (widget.isPlaying) {
       _controller.repeat(reverse: true);
     } else {
-      _controller.reverse(); // يرجع للحجم الأصلي بنعومة بدل ما يقف فجأة
+      _controller.reverse();
     }
   }
 

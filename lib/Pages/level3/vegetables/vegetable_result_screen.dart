@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -6,10 +7,10 @@ class VegetableResultScreen extends StatefulWidget {
   final int total;
 
   const VegetableResultScreen({
-    Key? key,
+    super.key,
     required this.score,
     required this.total,
-  }) : super(key: key);
+  });
 
   @override
   State<VegetableResultScreen> createState() => _VegetableResultScreenState();

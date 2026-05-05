@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class VegetableQuiz extends StatelessWidget {
+  const VegetableQuiz({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,8 +23,7 @@ class VegetableQuiz extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // صورة تعبيرية (ممكن تستخدمي أي صورة كرتونية عندك)
-              Container(
+               Container(
                 height: 250,
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -34,7 +35,6 @@ class VegetableQuiz extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 40),
-              // نص التشويق
               Text(
                 "Coming Soon!",
                 style: TextStyle(

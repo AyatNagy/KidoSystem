@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-// --- 1. الرسام (The Painter) ---
 class ThreeDLetterAPainter extends CustomPainter {
   final Color primaryColor;
   final Color depthColor;
 
   ThreeDLetterAPainter({
-    this.primaryColor = const Color(0xFFFFD54F), // اللون الأصفر
-    this.depthColor = const Color(0xFFFBC02D), // اللون الغامق للعمق
+    this.primaryColor = const Color(0xFFFFD54F),
+    this.depthColor = const Color(0xFFFBC02D),
   });
 
   @override
@@ -25,7 +24,6 @@ class ThreeDLetterAPainter extends CustomPainter {
           ..color = depthColor
           ..style = PaintingStyle.fill;
 
-    // رسم العمق أولاً (الظل الجانبي)
     Path pathDepth = Path();
     pathDepth.moveTo(width * 0.15 + depthOffset, height * 0.9 + depthOffset);
     pathDepth.lineTo(width * 0.45 + depthOffset, height * 0.1 + depthOffset);
@@ -34,7 +32,6 @@ class ThreeDLetterAPainter extends CustomPainter {
     pathDepth.close();
     canvas.drawPath(pathDepth, paintDepth);
 
-    // رسم الوجه الأمامي
     Path pathFront = Path();
     pathFront.moveTo(width * 0.15, height * 0.9);
     pathFront.lineTo(width * 0.45, height * 0.1);
@@ -45,7 +42,6 @@ class ThreeDLetterAPainter extends CustomPainter {
     pathFront.lineTo(width * 0.30, height * 0.9);
     pathFront.close();
 
-    // رسم الشرطة اللي في نص حرف الـ A
     pathFront.moveTo(width * 0.37, height * 0.65);
     pathFront.lineTo(width * 0.63, height * 0.65);
     pathFront.lineTo(width * 0.59, height * 0.55);
@@ -59,7 +55,6 @@ class ThreeDLetterAPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-// --- 2. الـ Widget المتحرك (The Animated Widget) ---
 class AnimatedThreeDLetterA extends StatefulWidget {
   final double size;
 
@@ -96,9 +91,7 @@ class _AnimatedThreeDLetterAState extends State<AnimatedThreeDLetterA>
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
-        // تأثير الصعود والنزول
         double verticalOffset = _animation.value * -15.0;
-        // تأثير الميلان (المرجحة)
         double rotationAngle = (_animation.value - 0.5) * 0.2;
 
         return Column(
@@ -114,13 +107,11 @@ class _AnimatedThreeDLetterAState extends State<AnimatedThreeDLetterA>
                 width: widget.size,
                 height: widget.size,
                 child: CustomPaint(
-                  // هنا تم استدعاء الـ Painter المعرف فوق في نفس الملف
-                  painter: ThreeDLetterAPainter(),
+                   painter: ThreeDLetterAPainter(),
                 ),
               ),
             ),
             const SizedBox(height: 10),
-            // الظل التفاعلي
             Opacity(
               opacity: 0.2 - (_animation.value * 0.1),
               child: Transform.scale(

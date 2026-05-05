@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'Vegetablemodel.dart';
+import 'vegetable_model.dart';
 
 List<Numbermodel> vegetablelist = vegetable1();
 
@@ -82,7 +82,7 @@ class _VegetableSoundState extends State<VegetableSound>
     await flutterTts.setLanguage("en-US");
     await flutterTts.setPitch(1.1);
     await flutterTts.setVolume(1.0);
-    await flutterTts.speak(vegetablelist[currentIndex].Text);
+    await flutterTts.speak(vegetablelist[currentIndex].text);
 
     flutterTts.setCompletionHandler(() {
       if (mounted) {

@@ -5,7 +5,7 @@ import 'package:kido/Pages/parent_home_page.dart';
 import 'package:kido/Pages/parent_login_screen.dart';
 import '../Widgets/custom_canditor.dart';
 import '../Widgets/gradient_button.dart';
-import '../Widgets/onboard.dart';
+import '../Widgets/on_board.dart';
 import '../config/responsive_config.dart';
 import '../config/app_launch.dart';
 
