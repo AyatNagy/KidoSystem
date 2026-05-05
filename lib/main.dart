@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:kido/Pages/level3/level3_home.dart';
+import 'package:kido/Pages/level3/numbers/numbers_train.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/config/responsive_config.dart';
 import 'package:kido/enum/sense_type.dart';
+import 'package:kido/services/asset_service.dart';
 //import 'Pages/Logo_Page.dart';
 
 import 'Widgets/info_widget.dart';
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-            home: Level3Home(childName: "habiba"),
+            home: Level3Home(childName:"Arwa"),
             //SenseTapPracticeScreen(type: SenseType.ears),
 
           ),
