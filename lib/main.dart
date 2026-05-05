@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:kido/Pages/Logo_Page.dart';
+import 'package:kido/Widgets/responsive_provider.dart';
+import 'package:kido/config/responsive_config.dart';
+import 'package:kido/Widgets/info_widget.dart';
 
 void main() {
   runApp(
@@ -23,7 +27,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-
+            home: const Logo(),
           ),
         );
       },
