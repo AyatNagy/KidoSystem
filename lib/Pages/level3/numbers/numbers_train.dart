@@ -263,7 +263,7 @@ Future playSong() async{
                   ?Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ReplayButton(color: const Color.fromARGB(255, 182, 142, 90), onPressed: startTrip),
+                      ReplayButton(color:  Colors.orangeAccent, onPressed: startTrip),
                       const SizedBox(width: 60),
                       NextButton(color: Colors.greenAccent[700]!, 
                       onPressed: (){
