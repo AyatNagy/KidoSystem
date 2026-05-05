@@ -6,7 +6,8 @@ import 'package:kido/config/cache_helper.dart';
 
 class ApiService {
   // static const String baseUrl = "http://localhost:3000/api";
-  static const String baseUrl = "https://kidosystem.duckdns.org/api";
+  //static const String baseUrl = "https://kidosystem.duckdns.org/api";
+  static const String baseUrl = "https://kido-backendd.vercel.app/api";
 
   static Future<bool> registerUser(User user) async {
     final dio = Dio();

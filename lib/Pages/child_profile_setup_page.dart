@@ -1,5 +1,7 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
+import 'package:kido/constants.dart';
 
 class ChildProfileSetupResult {
   final String childName;
@@ -22,12 +24,10 @@ class ChildProfileSetupPage extends StatefulWidget {
 
 class _ChildProfileSetupPageState extends State<ChildProfileSetupPage> {
   late final TextEditingController _nameController;
-
   final List<String> _avatars = const [
-    'assets/images/Characters/Boy.jpg',
-    'assets/images/Characters/Girl.jpg',
+    'assets/images/Characters/boy.gif',
+    'assets/images/Characters/girl.gif',
   ];
-
   int _selectedAvatarIndex = 0;
 
   @override
@@ -45,7 +45,6 @@ class _ChildProfileSetupPageState extends State<ChildProfileSetupPage> {
   void _submit() {
     final name = _nameController.text.trim();
     if (name.isEmpty) return;
-
     Navigator.of(context).pop(
       ChildProfileSetupResult(
         childName: name,
@@ -59,158 +58,160 @@ class _ChildProfileSetupPageState extends State<ChildProfileSetupPage> {
     final config = ResponsiveProvider.of(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEAF3FF),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 520),
-            child: Padding(
-              padding: config.pagePadding,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IconButton(
-                    onPressed: () => Navigator.of(context).maybePop(),
-                    icon: const Icon(Icons.arrow_back_ios_new),
-                  ),
-                  SizedBox(height: config.localHeight * 0.01),
-                  Text(
-                    "Create Child Profile",
-                    style: TextStyle(
-                      fontSize: config.headline,
-                      fontWeight: FontWeight.w800,
-                      color: const Color(0xFF1F2A44),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    "Tell us about your little learner",
-                    style: TextStyle(
-                      fontSize: config.body,
-                      color: Colors.black54,
-                    ),
-                  ),
-                  SizedBox(height: config.localHeight * 0.03),
-
-                  Text(
-                    "Child's Name",
-                    style: TextStyle(
-                      fontSize: config.body,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1F2A44),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(18),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x14000000),
-                          blurRadius: 18,
-                          offset: Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: TextField(
-                      controller: _nameController,
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: (_) => _submit(),
-                      decoration: const InputDecoration(
-                        hintText: "Enter name",
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
+      backgroundColor: AppColors.bgColor,
+      body: Stack(
+        children: [
+          SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: config.pagePadding,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 60),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: ShaderMask(
+                        shaderCallback: (bounds) => LinearGradient(
+                          colors: [AppColors.textDark, AppColors.kidoBlue],
+                        ).createShader(bounds),
+                        child: Text(
+                          "Choose Your Buddy",
+                          style: TextStyle(
+                            fontSize: config.headline * 1.2,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.bgColor,
+                            letterSpacing: -0.5,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-
-                  SizedBox(height: config.localHeight * 0.03),
-                  Text(
-                    "Choose an Avatar",
-                    style: TextStyle(
-                      fontSize: config.body,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1F2A44),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: List.generate(_avatars.length, (i) {
-                      final selected = i == _selectedAvatarIndex;
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () => setState(() => _selectedAvatarIndex = i),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 180),
-                            margin: EdgeInsets.only(right: i == 0 ? 12 : 0),
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(18),
-                              border: Border.all(
-                                color:
-                                    selected
-                                        ? const Color(0xFF2C8FF9)
-                                        : const Color(0xFFE6EAF2),
-                                width: selected ? 3 : 2,
-                              ),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x12000000),
-                                  blurRadius: 16,
-                                  offset: Offset(0, 10),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      height: config.localHeight * 0.32,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(_avatars.length, (i) {
+                          final bool isSelected = i == _selectedAvatarIndex;
+                          return Flexible(
+                            child: GestureDetector(
+                              onTap: () => setState(() => _selectedAvatarIndex = i),
+                              child: AnimatedScale(
+                                scale: isSelected ? 1.1 : 0.85,
+                                duration: const Duration(milliseconds: 600),
+                                curve: Curves.elasticOut,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.bgColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: isSelected
+                                            ? AppColors.kidoYellow.withOpacity(0.6)
+                                            : Colors.black.withOpacity(0.05),
+                                        blurRadius: isSelected ? 40 : 15,
+                                        spreadRadius: isSelected ? 10 : 0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: config.localWidth * 0.16,
+                                    backgroundColor: Colors.transparent,
+                                    child: Image.asset(_avatars[i]),
+                                  ),
                                 ),
-                              ],
+                              ),
                             ),
-                            child: AspectRatio(
-                              aspectRatio: 1,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(14),
-                                child: Image.asset(
-                                  _avatars[i],
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                          );
+                        }),
+                      ),
+                    ),
+                    SizedBox(height: config.localHeight * 0.04),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+                      decoration: BoxDecoration(
+                        color: AppColors.bgColor,
+                        borderRadius: BorderRadius.circular(40),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.textDark.withOpacity(0.04),
+                            blurRadius: 30,
+                            offset: const Offset(0, 15),
+                          )
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            "YOUR ADVENTURER NAME",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 12,
+                              color: AppColors.kidoBlue.withOpacity(0.6),
+                              letterSpacing: 2.0,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: _nameController,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.textDark,
+                            ),
+                            decoration: const InputDecoration(
+                              hintText: "Nickname...",
+                              border: InputBorder.none,
+                            ),
+                          ),
+                          Container(
+                            height: 4,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color: AppColors.kidoYellow,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    GestureDetector(
+                      onTap: _submit,
+                      child: Container(
+                        width: double.infinity,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [AppColors.kidoRed, AppColors.kidoColors[6]],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            "START ADVENTURE!",
+                            style: TextStyle(
+                              color: AppColors.bgColor,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 2,
                             ),
                           ),
                         ),
-                      );
-                    }),
-                  ),
-
-                  const Spacer(),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2C8FF9),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        elevation: 8,
-                        shadowColor: const Color(0x552C8FF9),
-                      ),
-                      child: Text(
-                        "Create Profile",
-                        style: TextStyle(
-                          fontSize: config.title,
-                          fontWeight: FontWeight.w800,
-                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

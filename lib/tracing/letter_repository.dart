@@ -13,7 +13,6 @@ class LetterRepository {
   static TracingLetterData build(String letter, {required Size canvasSize}) {
     final strokes = _normalizedStrokes(letter);
     if (strokes == null || strokes.isEmpty) {
-      // Fallback: a simple vertical stroke.
       return _fromNormalizedStrokes([
         [const Offset(0.5, 0.1), const Offset(0.5, 0.9)],
       ], canvasSize: canvasSize);
@@ -25,11 +24,11 @@ class LetterRepository {
     List<List<Offset>> normalizedStrokes, {
     required Size canvasSize,
   }) {
-    // Fit strokes into a nice inner rect.
     final pad = math.max(
       18.0,
       math.min(canvasSize.width, canvasSize.height) * 0.06,
     );
+
     final bounds = Rect.fromLTWH(
       pad,
       pad,
@@ -49,6 +48,7 @@ class LetterRepository {
     for (final stroke in normalizedStrokes) {
       final pts = stroke.map(tx).toList(growable: false);
       if (pts.length < 2) continue;
+
       steps.add(
         LetterStep(
           number: stepNumber++,
@@ -76,6 +76,7 @@ class LetterRepository {
 
   static List<Offset> _poly(List<Offset> points, {int perSegment = 6}) {
     if (points.length < 2) return points;
+
     final out = <Offset>[];
     for (var i = 0; i < points.length - 1; i++) {
       final seg = _line(points[i], points[i + 1], count: perSegment);
@@ -85,13 +86,69 @@ class LetterRepository {
     return out;
   }
 
-  /// Normalized strokes in 0..1 space.
-  /// Each stroke is a polyline in writing order.
   static List<List<Offset>>? _normalizedStrokes(String letter) {
-    // Arabic (isolated) Alef: ا
-    if (letter == 'ا') {
+    if (letter == 'أ') {
       return [
-        _line(const Offset(0.52, 0.10), const Offset(0.52, 0.90), count: 14),
+        _line(const Offset(0.5, 0.3), const Offset(0.5, 0.85), count: 14),
+        _poly(const [
+          Offset(0.60, 0.10),
+          Offset(0.45, 0.15),
+          Offset(0.55, 0.20),
+          Offset(0.40, 0.25),
+        ]),
+      ];
+    }
+
+    if (letter == 'ب') {
+      return [
+        _poly(const [
+          Offset(0.85, 0.60),
+          Offset(0.85, 0.75),
+          Offset(0.50, 0.80),
+          Offset(0.15, 0.75),
+          Offset(0.15, 0.60),
+        ]),
+        _line(const Offset(0.50, 0.92), const Offset(0.50, 0.93), count: 1),
+      ];
+    }
+
+    if (letter == 'ت') {
+      return [
+        _poly(const [
+          Offset(0.85, 0.60),
+          Offset(0.85, 0.75),
+          Offset(0.50, 0.80),
+          Offset(0.15, 0.75),
+          Offset(0.15, 0.60),
+        ]),
+        _line(const Offset(0.42, 0.45), const Offset(0.43, 0.45), count: 1),
+        _line(const Offset(0.58, 0.45), const Offset(0.59, 0.45), count: 1),
+      ];
+    }
+
+    if (letter == 'ث') {
+      return [
+        _poly(const [
+          Offset(0.85, 0.60),
+          Offset(0.85, 0.75),
+          Offset(0.50, 0.80),
+          Offset(0.15, 0.75),
+          Offset(0.15, 0.60),
+        ]),
+        _line(const Offset(0.42, 0.45), const Offset(0.43, 0.45), count: 1),
+        _line(const Offset(0.58, 0.45), const Offset(0.59, 0.45), count: 1),
+        _line(const Offset(0.50, 0.35), const Offset(0.50, 0.36), count: 1),
+      ];
+    }
+
+    if (letter == 'د') {
+      return [
+        _poly(const [
+          Offset(0.70, 0.40),
+          Offset(0.40, 0.50),
+          Offset(0.35, 0.80),
+          Offset(0.75, 0.80),
+        ]),
       ];
     }
 

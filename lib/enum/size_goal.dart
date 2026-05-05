@@ -1,1 +1,1 @@
-enum SizeGoal { longShort, thickThin, bigSmall }
+enum SizeGoal { tall, short, big, small, thin, fat }
