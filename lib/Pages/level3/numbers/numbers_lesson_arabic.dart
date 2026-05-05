@@ -3,7 +3,7 @@ import 'package:kido/data/level3/numbers/number_lesson_arabic_data.dart';
 import 'package:kido/Widgets/content/level3/numbers/number_lesson_widget.dart'; // Make sure you have this widget
 
 class ArabicNumberLesson extends StatefulWidget {
-  const ArabicNumberLesson({super.key});
+  const ArabicNumberLesson({super.key, required Null Function() onNext});
 
   @override
   State<ArabicNumberLesson> createState() => _ArabicNumberLessonState();
