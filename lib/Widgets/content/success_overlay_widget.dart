@@ -19,11 +19,9 @@ class SuccessOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // الأنيميشن الخلفي
         Positioned.fill(
           child: Lottie.asset('assets/lottie/CONFETTI.json', fit: BoxFit.cover),
         ),
-        // المحتوى المركزي
         Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

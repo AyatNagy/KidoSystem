@@ -3,7 +3,7 @@ import 'package:kido/Pages/level3/family/Family_map_screen.dart';
 import 'package:kido/Pages/level3/family_members/BackgroundPage.dart';
 import 'package:kido/Pages/level3/vegetables/vegetable_map_screen.dart';
 import 'package:kido/Pages/level3/numbers/choose_numbers.dart';
-import 'package:kido/Widgets/animated_3d_letter_a.dart';
+import 'package:kido/Widgets/Animation/animated_3d_letter_a.dart';
 import 'package:kido/Widgets/category_card.dart';
 import 'package:kido/Widgets/family_painter.dart';
 import 'package:kido/Widgets/Animation/threed_apple_painter.dart';

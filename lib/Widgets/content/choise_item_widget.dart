@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 
 class ChoiceItem extends StatelessWidget {
@@ -31,7 +32,6 @@ class ChoiceItem extends StatelessWidget {
           child: AnimatedBuilder(
             animation: animation,
             builder: (context, child) {
-              // بنشغل الأنيميشن والـ Glow بس لو الإجابة مش غلط والتايمر سمح بالتحريك
               bool shouldShowEffect = canAnimate && !isWrong;
 
               return Stack(

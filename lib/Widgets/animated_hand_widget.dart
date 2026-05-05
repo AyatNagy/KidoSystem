@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
-
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:kido/Models/letter_step.dart';
+import 'package:kido/constants.dart';
 
 class AnimatedHandWidget extends StatefulWidget {
   final List<LetterStep> steps;
@@ -98,7 +98,6 @@ class _AnimatedHandWidgetState extends State<AnimatedHandWidget>
 
         return Stack(
           children: [
-            // نبض على نقطة البداية
             if (isAtStart)
               Positioned(
                 left:
@@ -121,7 +120,6 @@ class _AnimatedHandWidgetState extends State<AnimatedHandWidget>
                 ),
               ),
 
-            // اليد
             Positioned(
               left: pos.dx - 20,
               top: pos.dy - 10,
@@ -131,19 +129,18 @@ class _AnimatedHandWidgetState extends State<AnimatedHandWidget>
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.bgColor,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black26,
+                        color: AppColors.textDark,
                         blurRadius: 8,
                         offset: const Offset(2, 2),
                       ),
                     ],
                   ),
-                  child: const Center(
-                    child: Text('👆', style: TextStyle(fontSize: 26)),
-                  ),
+                  child: Center(
+                    child: Image.asset('assets/images/animated_hand-Photoroom.png')),
                 ),
               ),
             ),
