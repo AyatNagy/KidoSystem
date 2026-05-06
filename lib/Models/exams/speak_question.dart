@@ -1,4 +1,4 @@
-import 'package:kido/Models/question_model.dart';
+import 'package:kido/Models/exams/question_model.dart';
 
 class SpeakQuestion extends Question {
   final String image;

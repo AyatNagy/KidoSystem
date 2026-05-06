@@ -6,7 +6,7 @@ import '../../../../Models/level3/letters/letter_map.dart';
 import '../../../../Widgets/content/level3/discovery_widget.dart';
 import '../../../../Widgets/content/level3/fruits/basket_game.dart';
 import '../../../../Widgets/content/level3/fruits/tree_game.dart';
-import '../../../../Widgets/journey_map.dart';
+import '../../../../Widgets/content/journey_map.dart';
 import '../../../../data/level3/fruits/fruits_journey.dart';
 
 class FruitsMapPage extends StatefulWidget {

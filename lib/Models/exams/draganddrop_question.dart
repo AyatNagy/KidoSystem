@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:kido/Models/dragable_item.dart';
 import 'package:kido/Models/targets_item.dart';
-import 'package:kido/Models/question_model.dart';
+import 'package:kido/Models/exams/question_model.dart';
 
 class DragDropQuestion extends Question {
   final String? backgroundImage;

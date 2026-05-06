@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:kido/Models/user.dart';
 import 'package:kido/Models/child.dart';
-import 'package:kido/Models/placement_exam_model.dart';
+import 'package:kido/Models/exams/placement_exam_model.dart';
 import 'package:kido/config/cache_helper.dart';
 
 class ApiService {

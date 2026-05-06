@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:kido/Models/letter_step.dart';
+import 'package:kido/Models/level3/letter_step.dart';
 
 class LetterData {
   static Map<String, List<LetterStep>> steps = {

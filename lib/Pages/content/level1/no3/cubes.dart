@@ -5,7 +5,7 @@ import 'package:kido/Widgets/Buttons/replay_button.dart';
 import 'package:kido/constants.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../../Widgets/animated_hand_widget.dart';
+import '../../../../Widgets/Animation/animated_hand_widget.dart';
 import '../../../../Widgets/content/draganddrop.dart';
 import '../../../../Widgets/responsive_provider.dart';
 import '../../../../config/responsive_config.dart';

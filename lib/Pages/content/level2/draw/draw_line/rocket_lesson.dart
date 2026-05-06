@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/Buttons/next_button.dart';
-import 'package:kido/Models/letter_step.dart';
+import 'package:kido/Models/level3/letter_step.dart';
 import 'package:lottie/lottie.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 
-import '../../../../../Widgets/animated_hand_widget.dart';
+import '../../../../../Widgets/Animation/animated_hand_widget.dart';
 import '../../../../../Widgets/content/drawing_page.dart';
 
 class RocketLesson extends StatefulWidget {

@@ -1,6 +1,6 @@
 import'package:flutter/material.dart';
 import 'package:kido/Models/dragable_item.dart';
-import'package:kido/Models/draganddrop_question.dart';
+import'package:kido/Models/exams/draganddrop_question.dart';
 import 'package:kido/Models/level3/numbers/numbers_train_model.dart';
 import 'package:kido/Models/targets_item.dart';
 import 'package:kido/services/asset_service.dart';

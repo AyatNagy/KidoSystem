@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 
-import '../Widgets/app_bar.dart';
+import '../../Widgets/Layout/app_bar.dart';
 import 'onboard_page.dart';
 import 'package:kido/Pages/parent_content/parent_home_page.dart';
 import 'package:kido/Pages/Auth/parent_login_screen.dart';
-import '../config/app_launch.dart';
+import '../../config/app_launch.dart';
 
 class Start extends StatelessWidget {
   const Start({super.key});

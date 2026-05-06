@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:kido/Models/chioce_question.dart';
+import 'package:kido/Models/exams/chioce_question.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import '../../config/responsive_config.dart';
 
