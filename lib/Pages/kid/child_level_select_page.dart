@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import 'content/level1/level1_home.dart';
-import 'content/level3/level3_home.dart';
+import '../content/level1/level1_home.dart';
+import '../content/level3/level3_home.dart';
 
 class ChildLevelSelectResult {
   final int level;

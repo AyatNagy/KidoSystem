@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Models/draganddrop_question.dart';
+import 'package:kido/Models/exams/draganddrop_question.dart';
 
 class DragDropQuestionWidget extends StatefulWidget {
   final DragDropQuestion question;

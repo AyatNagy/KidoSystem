@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Widgets/category_card.dart';
+import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
 import '../../../Widgets/Animation/counting.dart';
 import '../../../Widgets/Animation/peg_board.dart';

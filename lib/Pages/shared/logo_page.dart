@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/start_page.dart';
+import 'package:kido/Pages/shared/start_page.dart';
 
 class Logo extends StatefulWidget {
   const Logo({super.key});

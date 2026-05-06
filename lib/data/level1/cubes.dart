@@ -1,6 +1,6 @@
 import 'dart:ui';
-import '../../../Models/letter_step.dart';
-import '../../../Models/draganddrop_question.dart';
+import '../../Models/level3/letter_step.dart';
+import '../../Models/exams/draganddrop_question.dart';
 import '../../../Models/dragable_item.dart';
 import '../../../Models/targets_item.dart';
 

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kido/Pages/child_level_select_page.dart';
-import 'package:kido/Pages/child_profile_setup_page.dart';
-import 'package:kido/Pages/exam_screen.dart';
-import '../../Widgets/app_bar.dart';
+import 'package:kido/Pages/kid/child_level_select_page.dart';
+import 'package:kido/Pages/kid/child_profile_setup_page.dart';
+import 'package:kido/Pages/kid/exam_screen.dart';
+import '../../Widgets/Layout/app_bar.dart';
 import '../../Widgets/responsive_provider.dart';
 import '../../Widgets/text_field_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/validators.dart';
-import '../../Widgets/dialog_widget.dart';
+import '../../Widgets/Dialogs/dialog_widget.dart';
 import '../../Models/dailog_model.dart';
 import '../../api_service/api_services.dart';
 import '../../Models/child.dart';
 import '../../config/cache_helper.dart';
-import 'package:kido/Widgets/password_errors_view.dart';
+import 'package:kido/Widgets/Auth/password_errors_view.dart';
 
 class StudentData extends StatefulWidget {
   const StudentData({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Models/question_model.dart';
+import 'package:kido/Models/exams/question_model.dart';
 
 class ChoiceQuestion extends Question {
   final List<String>? choices;

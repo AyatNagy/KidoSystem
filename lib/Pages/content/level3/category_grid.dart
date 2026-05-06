@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/content/level3/vegetables/vegetable_map_screen.dart';
 import 'package:kido/Widgets/Animation/animated_3d_letter_a.dart';
-import 'package:kido/Widgets/category_card.dart';
-import 'package:kido/Widgets/family_painter.dart';
+import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/Widgets/Animation/threed_apple_painter.dart';
 import 'package:kido/Widgets/Animation/threed_carrot_painter.dart';
 import 'package:kido/Widgets/Animation/threed_colors_palette_painter.dart';
 import 'package:kido/Widgets/Animation/threed_number1_painter.dart';
 import 'package:kido/constants.dart';
+import '../../../Widgets/Animation/animation_family_icon.dart';
 import 'choose_letters.dart';
 import 'family_members/BackgroundPage.dart';
 import 'fruits/fruits_map.dart';
