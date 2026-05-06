@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/Auth/verify_code_page.dart';
-import 'package:kido/Pages/parent_login_screen.dart';
+import 'package:kido/Pages/Auth/parent_login_screen.dart';
 import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import 'package:kido/Widgets/text_field_item.dart';
 import 'package:kido/utils/validators.dart';

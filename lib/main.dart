@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 
-import 'Pages/Logo_Page.dart';
+import 'Pages/logo_page.dart';
 import 'Widgets/info_widget.dart';
 import 'Widgets/responsive_provider.dart';
 import 'config/responsive_config.dart';
