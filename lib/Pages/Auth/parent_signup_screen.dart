@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/user.dart';
-import 'package:kido/Pages/verify_email_page.dart';
+import 'package:kido/Pages/Auth/verify_email_page.dart';
 import 'package:kido/Widgets/password_strength_turtle%20.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/api_service/api_services.dart';

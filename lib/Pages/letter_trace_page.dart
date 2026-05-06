@@ -1,16 +1,16 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:kido/Models/letter_step.dart';
-import 'package:kido/Pages/Painter/letter_path_painter.dart';
-import 'package:kido/Pages/Painter/my_painter.dart';
-import 'package:kido/Pages/Painter/steps_painter.dart';
 import 'package:kido/Widgets/animated_hand_widget.dart';
 import 'package:kido/Widgets/celebration_overlay.dart';
 import 'package:kido/Widgets/stars_widget.dart';
 import 'package:kido/tracing/letter_repository.dart';
 import 'package:kido/utils/tracing_score.dart';
+import '../Widgets/Painter/letter_path_painter.dart';
+import '../Widgets/Painter/my_painter.dart';
+import '../Widgets/Painter/steps_painter.dart';
+import '../constants.dart';
 
 class LetterTracePage extends StatefulWidget {
   final String letter;
@@ -207,8 +207,9 @@ class _LetterTracePageState extends State<LetterTracePage>
                                       onPanDown: (details) {
                                         if (_lockedAfterSuccess) return;
                                         if (_steps.isEmpty) return;
-                                        if (_currentStep >= _steps.length)
+                                        if (_currentStep >= _steps.length) {
                                           return;
+                                        }
 
                                         final start =
                                             _steps[_currentStep].startPoint;
@@ -298,7 +299,7 @@ class _LetterTracePageState extends State<LetterTracePage>
             onTap: () => Navigator.of(context).maybePop(),
             child: CircleAvatar(
               backgroundColor: Colors.blue.shade100,
-              child: const Icon(Icons.arrow_back_ios_new, color: Colors.blue),
+              child: const Icon(Icons.arrow_back_ios_new, color: AppColors.kidoBlue),
             ),
           ),
           const SizedBox(width: 12),
@@ -312,20 +313,11 @@ class _LetterTracePageState extends State<LetterTracePage>
                   BoxShadow(color: Colors.black12, blurRadius: 8),
                 ],
               ),
-              child: const FittedBox(
+              child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Row(
                   children: [
-                    Icon(Icons.rocket_launch, color: Colors.orange),
-                    SizedBox(width: 10),
-                    Text(
-                      'KIDO TRACE',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueGrey,
-                      ),
-                    ),
+                    Icon(Icons.rocket_launch, color: AppColors.kidoOrange),
                   ],
                 ),
               ),
@@ -344,11 +336,11 @@ class _LetterTracePageState extends State<LetterTracePage>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _colorCircle(Colors.redAccent),
-          _colorCircle(Colors.orange),
-          _colorCircle(Colors.green),
-          _colorCircle(Colors.blue),
-          _colorCircle(Colors.purple),
+          _colorCircle(AppColors.kidoRed),
+          _colorCircle(AppColors.kidoOrange),
+          _colorCircle(AppColors.kidoGreen),
+          _colorCircle(AppColors.kidoBlue),
+          _colorCircle(AppColors.purpleMain),
           const SizedBox(height: 16),
           GestureDetector(
             onTap: _resetAll,
@@ -362,7 +354,7 @@ class _LetterTracePageState extends State<LetterTracePage>
               ),
               child: const Icon(
                 Icons.delete_outline,
-                color: Colors.red,
+                color: AppColors.kidoRed,
                 size: 30,
               ),
             ),

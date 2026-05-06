@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/Auth/forgot_by_email_pagel.dart';
-import 'package:kido/Pages/parent_home_page.dart';
+import 'package:kido/Pages/parent_content/parent_home_page.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import '../../Models/dailog_model.dart';
 import '../../Widgets/app_bar.dart';

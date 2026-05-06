@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:kido/Models/letter_step.dart';
@@ -79,14 +78,11 @@ class StepsPainter extends CustomPainter {
     String label,
     bool isActive,
   ) {
-    // الدائرة
     canvas.drawCircle(
       center,
       14,
       Paint()..color = isActive ? Colors.grey.shade600 : color,
     );
-
-    // الرقم
     final tp = TextPainter(
       text: TextSpan(
         text: label,
