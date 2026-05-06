@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/controllers/unboarding_data.dart';
 import 'package:kido/Pages/parent_home_page.dart';
-import 'package:kido/Pages/parent_login_screen.dart';
+import 'package:kido/Pages/Auth/parent_login_screen.dart';
 import '../Widgets/custom_canditor.dart';
 import '../Widgets/gradient_button.dart';
 import '../Widgets/on_board.dart';

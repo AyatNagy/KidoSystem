@@ -6,7 +6,7 @@ import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Widgets/Buttons/replay_button.dart';
 import 'package:kido/constants.dart';
 import '../../../Models/level3/discovery.dart';
-import '../../../Pages/level3/vegetables/vegetable_sound.dart';
+import '../../../Pages/content/level3/vegetables/vegetable_sound.dart';
 import '../../../services/audio_service.dart';
 import '../../responsive_provider.dart';
 
