@@ -3,15 +3,16 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/constants.dart';
+import '../drawing_page.dart';
 
-class Drawing extends StatefulWidget {
+class DrawingShapes extends StatefulWidget {
   final String? instructionText;
   final List<Offset>? guidePoints;
   final VoidCallback? onFinish;
   final int pointsPerStep;
   final double validationThreshold;
 
-  const Drawing({
+  const DrawingShapes({
     super.key,
     this.instructionText,
     this.guidePoints,
@@ -21,10 +22,10 @@ class Drawing extends StatefulWidget {
   });
 
   @override
-  State<Drawing> createState() => _DrawingState();
+  State<DrawingShapes> createState() => _DrawingState();
 }
 
-class _DrawingState extends State<Drawing> {
+class _DrawingState extends State<DrawingShapes> {
   List<Offset?> points = [];
   Color selectedColor = Colors.blue;
   final AudioPlayer _player = AudioPlayer();
@@ -58,18 +59,17 @@ class _DrawingState extends State<Drawing> {
   void _handlePanUpdate(DragUpdateDetails details, List<Offset>? actualPoints, RenderBox box) {
     Offset touchPos = box.globalToLocal(details.globalPosition);
     Offset positionToDraw = touchPos;
-
     if (actualPoints != null) {
-      for (int i = 0; i < actualPoints.length; i++) {
-        double distance = (touchPos - actualPoints[i]).distance;
+      int nextPointIndex = _hitPoints.length;
+      if (nextPointIndex < actualPoints.length) {
+        double distance = (touchPos - actualPoints[nextPointIndex]).distance;
         if (distance < widget.validationThreshold) {
-          positionToDraw = actualPoints[i];
-          _hitPoints.add(i);
-          break;
+          positionToDraw = actualPoints[nextPointIndex];
+          _hitPoints.add(nextPointIndex);
+          _checkCompletion();
         }
       }
     }
-
     setState(() {
       points.add(positionToDraw);
     });
@@ -188,37 +188,4 @@ class _DrawingState extends State<Drawing> {
       ],
     );
   }
-}
-
-class SimplePainter extends CustomPainter {
-  final List<Offset?> points;
-  final Color color;
-  final double width;
-  final List<Offset>? guidePoints;
-
-  SimplePainter(this.points, this.color, this.width, this.guidePoints);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (guidePoints != null) {
-      Paint guidePaint = Paint()
-        ..color = Colors.black12
-        ..style = PaintingStyle.fill;
-      for (var dot in guidePoints!) {
-        canvas.drawCircle(dot, width * 0.6, guidePaint);
-      }
-    }
-    Paint paint = Paint()
-      ..color = color
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = width;
-    for (int i = 0; i < points.length - 1; i++) {
-      if (points[i] != null && points[i + 1] != null) {
-        canvas.drawLine(points[i]!, points[i + 1]!, paint);
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
