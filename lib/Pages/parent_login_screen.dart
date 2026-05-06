@@ -9,7 +9,7 @@ import '../Widgets/dialog_widget.dart';
 import '../Widgets/text_field_item.dart';
 import '../utils/validators.dart';
 import 'parent_signup_screen.dart';
-import 'student_data_screen.dart';
+import 'parent_content/student_data_screen.dart';
 import '../bloc/login/login_cubit.dart';
 import '../bloc/google_auth/google_auth_cubit.dart';
 

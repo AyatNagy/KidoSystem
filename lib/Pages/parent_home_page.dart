@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/child_level_select_page.dart';
 import 'package:kido/Pages/child_profile_setup_page.dart';
-import 'package:kido/Pages/student_data_screen.dart';
+import 'package:kido/Pages/parent_content/student_data_screen.dart';
 import 'package:kido/config/children_store.dart';
 import '../Widgets/responsive_provider.dart';
 import 'profile_page.dart';
