@@ -29,8 +29,6 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
     data = SizeLessonMapper.get(widget.goal);
     startLesson();
   }
-
-  // 🛑 إيقاف الصوت لو الطفل خرج من الصفحة فجأة
   @override
   void dispose() {
     AudioService.stop();
@@ -47,11 +45,8 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
 
     for (int i = 0; i < 3; i++) {
       if (!mounted) return;
-
-      // 1. شغل الأنيميشن (Highlight)
       setState(() => isFirstHighlighted = true);
 
-      // 2. ابدأ الصوت واستني ثانية بسيطة عشان التزامن البصري
       await Future.delayed(const Duration(milliseconds: 200));
       await AudioService.play(fileName: data.audio);
 
