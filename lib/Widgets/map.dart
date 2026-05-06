@@ -136,7 +136,8 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
                             width: 6,
                           ),
                         ),
-                        child: Center(
+                        // ✅ الصورة داخل ClipOval تملا الدايرة بالظبط
+                        child: ClipOval(
                           child:
                               widget.lesson.isLocked
                                   ? const Icon(
@@ -144,7 +145,12 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
                                     color: Colors.white,
                                     size: 50,
                                   )
-                                  : Image.asset(widget.lesson.image, width: 70),
+                                  : Image.asset(
+                                    widget.lesson.image,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    fit: BoxFit.cover,
+                                  ),
                         ),
                       ),
                     ),
