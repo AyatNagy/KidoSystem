@@ -7,7 +7,10 @@ import 'category_grid.dart';
 class Level3Home extends StatelessWidget {
   final String childName;
   final String? avatarAsset;
-  const Level3Home({super.key, required this.childName, this.avatarAsset});
+  const Level3Home({
+    super.key,
+    required this.childName,
+    this.avatarAsset});
 
   @override
   Widget build(BuildContext context) {
