@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {
-  final String title;
   final List<Color> gradient;
   final Widget graphic;
   final double? progress;
@@ -11,7 +10,6 @@ class CategoryCard extends StatelessWidget {
 
   const CategoryCard({
     super.key,
-    required this.title,
     required this.gradient,
     required this.graphic,
     this.progress,
@@ -116,16 +114,6 @@ class CategoryCard extends StatelessWidget {
                     ),
                 ],
               ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF2D3436),
-              fontSize: 15,
-              letterSpacing: 0.3,
             ),
           ),
         ],

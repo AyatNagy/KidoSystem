@@ -29,7 +29,6 @@ class CategoryGrid extends StatelessWidget {
       ),
       children: [
         CategoryCard(
-          title: "Alphabets",
           gradient: AppColors.alphabetGrad,
           graphic: Center(child: AnimatedThreeDLetterA(size: 80)),
           onTap: () {
@@ -41,7 +40,6 @@ class CategoryGrid extends StatelessWidget {
         ),
 
         CategoryCard(
-          title: "Numbers",
           gradient: AppColors.numbersGrad,
           graphic: Center(child: AnimatedThreeDNumberOne(size: 80)),
           onTap: () {
@@ -55,14 +53,12 @@ class CategoryGrid extends StatelessWidget {
         ),
 
         CategoryCard(
-          title: "Colors",
           gradient: AppColors.colorsGrad,
           graphic: Center(child: AnimatedColorsPalette(size: 80)),
           onTap: () {},
         ),
 
         CategoryCard(
-          title: "Fruit",
           gradient: AppColors.puzzleGrad,
           graphic: Center(child: AnimatedCuteApple(size: 80)),
           onTap: () {
@@ -73,7 +69,6 @@ class CategoryGrid extends StatelessWidget {
           },
         ),
         CategoryCard(
-          title: "Vegetables",
           gradient: AppColors.vegetablesGrad,
           graphic: Center(child: AnimatedCarrot(size: 80)),
           onTap: () {
@@ -84,7 +79,6 @@ class CategoryGrid extends StatelessWidget {
           },
         ),
         CategoryCard(
-          title: "Family",
           gradient: AppColors.puzzleGrad,
           graphic: Center(child: AnimatedFamilyIcon(size: 80)),
           onTap: () {
