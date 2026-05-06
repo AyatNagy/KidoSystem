@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
-import '../../../Widgets/content/draganddrop.dart';
-import '../../../data/level1/bunny_feed.dart';
+
+import '../../../../Widgets/content/draganddrop.dart';
+import '../../../../data/level1/bunny_feed.dart';
 
 class BunnyFeedingGame extends StatefulWidget {
   const BunnyFeedingGame({super.key});

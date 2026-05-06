@@ -5,9 +5,9 @@ import 'package:lottie/lottie.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:kido/Widgets/Buttons/puls_button.dart';
 import 'package:kido/constants.dart';
+import '../../../../Widgets/responsive_provider.dart';
+import '../../../../config/responsive_config.dart';
 import '../../../../services/audio_service.dart';
-import '../../../Widgets/responsive_provider.dart';
-import '../../../config/responsive_config.dart';
 
 class MonkeyCountingPage extends StatefulWidget {
   final VoidCallback? onNext;
