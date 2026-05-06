@@ -5,6 +5,7 @@ import 'package:kido/Widgets/Buttons/replay_button.dart';
 import 'package:kido/constants.dart';
 import 'package:lottie/lottie.dart';
 
+// Ensure these paths match your new folder structure in kido – level3_home.dart 5_6_2026 5_46_23 PM.jpg
 import '../../../../Widgets/Animation/animated_hand_widget.dart';
 import '../../../../Widgets/content/draganddrop.dart';
 import '../../../../Widgets/responsive_provider.dart';
@@ -14,7 +15,9 @@ import '../../../../services/audio_service.dart';
 import 'moving_car.dart';
 
 class CubesLesson extends StatefulWidget {
-  const CubesLesson({super.key});
+  final VoidCallback? onNext; // Fixed: Capitalized VoidCallback
+
+  const CubesLesson({super.key, this.onNext}); // Pass to constructor
 
   @override
   State<CubesLesson> createState() => _CubesLessonState();
@@ -44,6 +47,7 @@ class _CubesLessonState extends State<CubesLesson> {
       await AudioService.play(fileName: 'yaay.mp3');
     }
   }
+
   void _replayLesson() {
     setState(() {
       _isFinished = false;
@@ -88,35 +92,41 @@ class _CubesLessonState extends State<CubesLesson> {
               currentStep: _currentStep,
               steps: tutorialSteps,
             ),
-          if (_isFinished) ...[
-            Positioned.fill(
-              child: Lottie.asset(
-                'assets/lottie/confetti.json',
-                fit: BoxFit.cover,
+            if (_isFinished) ...[
+              Positioned.fill(
+                child: Lottie.asset(
+                  'assets/lottie/confetti.json',
+                  fit: BoxFit.cover,
+                  repeat: false,
+                ),
               ),
-            ),
-            Positioned(
-              bottom: sh * 0.05,
-              right: sw * 0.05,
-              child: NextButton(
-                color: AppColors.kidoOrange,
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const MovingCarPage()),
-                  );
-                },
+              Positioned(
+                bottom: sh * 0.05,
+                right: sw * 0.05,
+                child: NextButton(
+                  color: AppColors.kidoOrange,
+                  onPressed: () {
+                    // Logic: Use callback if provided, otherwise default navigation
+                    if (widget.onNext != null) {
+                      widget.onNext!();
+                    } else {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => const MovingCarPage()),
+                      );
+                    }
+                  },
+                ),
               ),
-            ),
-            Positioned(
-              bottom: sh * 0.05,
-              left: sw * 0.05,
-              child: ReplayButton(
-                color: AppColors.kidoOrange,
-                onPressed: _replayLesson,
+              Positioned(
+                bottom: sh * 0.05,
+                left: sw * 0.05,
+                child: ReplayButton(
+                  color: AppColors.kidoOrange,
+                  onPressed: _replayLesson,
+                ),
               ),
-            ),
+            ],
           ],
-          ]
         ),
       ),
     );

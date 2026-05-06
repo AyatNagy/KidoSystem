@@ -21,7 +21,7 @@ class DragDropQuestion extends Question {
 
 final List<DragDropQuestion> allDragDropQuestions = [
   DragDropQuestion(
-    examId: ['exam1'],
+    examId: ['exam2'],
     questionText: "حط الأكل المناسب لكل حيوان",
     items: [
       DragItem(
@@ -69,7 +69,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
   ),
 
   DragDropQuestion(
-    examId: ['exam1'],
+    examId: ['exam2'],
     questionText: "مكانه في الغرفة ولا المطبخ",
     items: [
       DragItem(
@@ -104,7 +104,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
   ),
 
   DragDropQuestion(
-    examId: ['exam1'],
+    examId: ['exam2'],
     questionText: "مين الطويل ومين القصير",
     items: [
       DragItem(
@@ -139,7 +139,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
   ),
 
   DragDropQuestion(
-    examId: ['exam1'],
+    examId: ['exam2'],
     questionText: "كمل شكل العربية",
     backgroundImage: "assets/images/targethalfcar.png",
     items: [
@@ -162,7 +162,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
   ),
 
   DragDropQuestion(
-    examId: ['exam1'],
+    examId: ['exam2'],
     questionText: "ركب باقي البطة",
     backgroundImage: "assets/images/puzzle_duck.png",
     items: [
@@ -185,7 +185,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
   ),
 
   DragDropQuestion(
-    examId: ['exam2'],
+    examId: ['exam1'],
     questionText: "فين اللون الأحمر",
     items: [
       DragItem(
@@ -219,7 +219,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
   ),
 
   DragDropQuestion(
-    examId: ['exam2'],
+    examId: ['exam1'],
     questionText: "حط اللبس في المكان الصح",
     items: [
       DragItem(

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
-
-import 'Pages/content/level3/level3_home.dart';
 import 'Pages/shared/logo_page.dart';
 import 'Widgets/info_widget.dart';
 import 'Widgets/responsive_provider.dart';
@@ -29,7 +27,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-            home: const Level3Home(childName: 'habiba',),
+            home: const Logo(),
           ),
         );
       },

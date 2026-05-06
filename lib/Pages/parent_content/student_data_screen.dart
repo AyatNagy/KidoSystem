@@ -127,7 +127,7 @@ class _StudentDataState extends State<StudentData> {
             );
           } else {
             String examId =
-                (childAge >= 3 && childAge <= 5) ? 'exam2' : 'exam1';
+                (childAge >= 3 && childAge <= 5) ? 'exam1' : 'exam2';
             if (!mounted) return;
             customDialog(
               context,

@@ -16,6 +16,6 @@ class Exam {
 }
 
 final exams = [
-  Exam(id: 'exam1', title: '6 year Exam', allQuestions: allChoiceQuestions),
-  Exam(id: 'exam2', title: '3 year Exam', allQuestions: allChoiceQuestions),
+  Exam(id: 'exam2', title: '6 year Exam', allQuestions: allChoiceQuestions),
+  Exam(id: 'exam1', title: '3 year Exam', allQuestions: allChoiceQuestions),
 ];
