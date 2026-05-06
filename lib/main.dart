@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:kido/Pages/content/Self_cleaning/cleaning_map.dart';
-
-import 'Pages/logo_page.dart';
+import 'Pages/shared/logo_page.dart';
 import 'Widgets/info_widget.dart';
 import 'Widgets/responsive_provider.dart';
 import 'config/responsive_config.dart';
@@ -24,7 +22,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-            home: const CleaningMap(),
+            home: const Logo(),
           ),
         );
       },

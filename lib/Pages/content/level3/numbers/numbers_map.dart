@@ -7,7 +7,7 @@ import 'package:kido/services/asset_service.dart';
 
 import '../../../../Models/level3/letters/letter_map.dart';
 import '../../../../Widgets/content/level3/letters/bubble_pop.dart';
-import '../../../../Widgets/journey_map.dart';
+import '../../../../Widgets/content/journey_map.dart';
 import 'numbers_train.dart';
 
 class NumbersMapPage extends StatefulWidget {

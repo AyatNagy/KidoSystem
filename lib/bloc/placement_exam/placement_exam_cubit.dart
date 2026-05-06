@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kido/Models/placement_exam_model.dart';
+import 'package:kido/Models/exams/placement_exam_model.dart';
 import 'package:kido/api_service/api_services.dart';
 
 part 'placement_exam_state.dart';

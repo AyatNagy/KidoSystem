@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import '../../Models/draw_question.dart';
+import '../../Models/exams/draw_question.dart';
 
 class DrawingPoint {
   Offset point;

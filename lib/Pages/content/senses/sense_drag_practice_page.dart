@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:kido/Models/draganddrop_question.dart';
+import 'package:kido/Models/exams/draganddrop_question.dart';
 import 'package:kido/Models/dragable_item.dart';
 import 'package:kido/Models/sense_data.dart';
 import 'package:kido/Models/targets_item.dart';

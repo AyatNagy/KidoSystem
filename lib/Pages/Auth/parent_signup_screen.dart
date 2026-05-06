@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/user.dart';
 import 'package:kido/Pages/Auth/verify_email_page.dart';
-import 'package:kido/Widgets/password_strength_turtle%20.dart';
+import 'package:kido/Widgets/Auth/password_strength_turtle%20.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/api_service/api_services.dart';
 import '../../Models/dailog_model.dart';
-import '../../Widgets/app_bar.dart';
-import '../../Widgets/dialog_widget.dart';
+import '../../Widgets/Layout/app_bar.dart';
+import '../../Widgets/Dialogs/dialog_widget.dart';
 import '../../Widgets/text_field_item.dart';
 import '../../utils/validators.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:kido/Widgets/password_errors_view.dart';
+import 'package:kido/Widgets/Auth/password_errors_view.dart';
 
 class ParentSignup extends StatefulWidget {
   const ParentSignup({super.key});

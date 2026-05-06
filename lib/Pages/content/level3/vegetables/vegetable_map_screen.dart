@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'vegetable_journey_data.dart';
+import '../../../../data/level3/vegetables/vegetable_journey_data.dart';
 import 'vegetable_quiz.dart';
 import 'vegetable_song.dart';
 import 'vegetable_sound.dart';
-import 'package:kido/Widgets/journey_map.dart';
+import 'package:kido/Widgets/content/journey_map.dart';
 
 class VegetableMapScreen extends StatefulWidget {
   const VegetableMapScreen({super.key});

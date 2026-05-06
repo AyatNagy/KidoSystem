@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../Widgets/responsive_provider.dart';
-import '../config/responsive_config.dart';
-import 'Auth/kid_login.dart';
-import 'Auth/parent_login_screen.dart';
+import '../../Widgets/responsive_provider.dart';
+import '../../config/responsive_config.dart';
+import '../Auth/kid_login.dart';
+import '../Auth/parent_login_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

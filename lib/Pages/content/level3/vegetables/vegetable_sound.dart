@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'vegetable_model.dart';
+import '../../../../Models/level3/vegetables/vegetable_model.dart';
 
 List<Numbermodel> vegetablelist = vegetable1();
 

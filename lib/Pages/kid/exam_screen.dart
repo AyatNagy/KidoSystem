@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:kido/Models/chioce_question.dart';
-import 'package:kido/Models/draw_question.dart';
-import 'package:kido/Models/draganddrop_question.dart';
-import 'package:kido/Models/speak_question.dart';
+import 'package:kido/Models/exams/chioce_question.dart';
+import 'package:kido/Models/exams/draw_question.dart';
+import 'package:kido/Models/exams/draganddrop_question.dart';
+import 'package:kido/Models/exams/speak_question.dart';
 import 'package:kido/Widgets/Questions/chioce_question_widget.dart';
 import 'package:kido/Widgets/Questions/draw_question_widget.dart';
 import 'package:kido/Widgets/Questions/draganddrop_question_widget.dart';

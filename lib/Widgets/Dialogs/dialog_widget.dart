@@ -3,7 +3,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import '../Models/dailog_model.dart';
+import '../../Models/dailog_model.dart';
 
 void customDialog(
   BuildContext context,

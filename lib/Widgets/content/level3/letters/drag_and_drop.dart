@@ -3,8 +3,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
-import '../../../../Models/draganddrop_question.dart';
-import '../../../curcle_painter.dart';
+import '../../../../Models/exams/draganddrop_question.dart';
+import '../../../Painter/curcle_painter.dart';
 import '../../draganddrop.dart';
 import '../../../Buttons/puls_button.dart';
 
