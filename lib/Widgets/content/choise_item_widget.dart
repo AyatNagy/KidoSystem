@@ -8,7 +8,7 @@ class ChoiceItem extends StatelessWidget {
   final Animation<double> animation;
   final VoidCallback onTap;
   final Matrix4 transform;
-  final double height;
+  final double? height;
 
   const ChoiceItem({
     super.key,
@@ -18,11 +18,12 @@ class ChoiceItem extends StatelessWidget {
     required this.animation,
     required this.onTap,
     required this.transform,
-    this.height = 150,
+    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
+    final double effectiveHeight=height??150;
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -39,15 +40,13 @@ class ChoiceItem extends StatelessWidget {
                 children: [
                   if (shouldShowEffect)
                     Container(
-                      width: height * 0.8,
-                      height: height * 0.8,
+                      width: effectiveHeight * 0.8,
+                      height: effectiveHeight * 0.8,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.yellowAccent.withOpacity(
-                              0.5 * animation.value,
-                            ),
+                            color: Colors.yellowAccent.withValues(alpha:0.5 * animation.value,),
                             blurRadius: 40 * animation.value,
                             spreadRadius: 15 * animation.value,
                           ),

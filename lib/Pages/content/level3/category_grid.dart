@@ -12,6 +12,8 @@ import 'choose_letters.dart';
 import 'family_members/BackgroundPage.dart';
 import 'fruits/fruits_map.dart';
 import 'numbers/choose_numbers.dart';
+import 'package:kido/Pages/level3/animals/animal_map.dart';
+
 
 class CategoryGrid extends StatelessWidget {
   const CategoryGrid({super.key});
@@ -85,6 +87,16 @@ class CategoryGrid extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => FamilyBackGround()),
+            );
+          },
+        ),
+        CategoryCard(
+          gradient: AppColors.puzzleGrad,
+          graphic: Center(child: AnimatedCuteApple(size: 80)),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AnimalMapPage()),
             );
           },
         ),
