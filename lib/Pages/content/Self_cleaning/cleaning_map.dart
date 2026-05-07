@@ -3,12 +3,14 @@ import 'package:kido/Pages/content/Self_cleaning/HandwashScreen.dart';
 import 'package:kido/Pages/content/Self_cleaning/TrashScreen.dart';
 import 'package:kido/Pages/content/Self_cleaning/teeth_game_screen.dart';
 import 'package:kido/Widgets/content/journey_map.dart';
+import 'package:kido/Models/exams/draganddrop_question.dart';
+import 'package:kido/Models/dragable_item.dart';
+import 'package:kido/Models/targets_item.dart';
 
 class HygieneItem {
   final String image;
   final String title;
   bool isLocked;
-
   HygieneItem({
     required this.image,
     required this.title,
@@ -24,22 +26,51 @@ class CleaningMap extends StatefulWidget {
 }
 
 class _CleaningMapState extends State<CleaningMap> {
+  final DragDropQuestion trashQuestionData = DragDropQuestion(
+    examId: ['clean_mission'],
+    questionText: "ارمي القمامة في السلة",
+    backgroundImage: 'assets/images/clean/Trash/TrashBackground.png',
+    targets: [
+      DragTargetZone(
+        id: 'bin',
+        image: 'assets/images/clean/Trash/closedBasket.png',
+        position: const Offset(0.35, 0.65),
+        size: const Size(0.3, 0.3),
+        acceptedItemIds: ['banana', 'bottle', 'paper'],
+      ),
+    ],
+    items: [
+      DragItem(
+        id: 'banana',
+        image: 'assets/images/clean/Trash/قشرة_موزة.png',
+        startPosition: const Offset(0.1, 0.4),
+        size: const Size(0.15, 0.1),
+      ),
+      DragItem(
+        id: 'bottle',
+        image: 'assets/images/clean/Trash/زجاجة_بلاستيك.png',
+        startPosition: const Offset(0.7, 0.5),
+        size: const Size(0.1, 0.18),
+      ),
+      DragItem(
+        id: 'paper',
+        image: 'assets/images/clean/Trash/ورقة_مجعدة.png',
+        startPosition: const Offset(0.4, 0.3),
+        size: const Size(0.12, 0.12),
+      ),
+    ],
+  );
+
   final List<HygieneItem> journey = [
     HygieneItem(
       title: 'اغسل إيديك',
       image: 'assets/images/clean/wash_hand.gif',
-      isLocked: false,
     ),
     HygieneItem(
       title: 'نظّف أسنانك',
       image: 'assets/images/clean/teeth_brush.gif',
-      isLocked: false,
     ),
-    HygieneItem(
-      title: 'ارمي القمامة',
-      image: 'assets/images/clean/trash.jpg',
-      isLocked: false,
-    ),
+    HygieneItem(title: 'ارمي القمامة', image: 'assets/images/clean/trash.jpg'),
   ];
 
   Widget _buildDestination(int index) {
@@ -49,7 +80,12 @@ class _CleaningMapState extends State<CleaningMap> {
       case 1:
         return TeethGameScreen();
       case 2:
-        return const TrashScreen();
+        return TrashGameWidget(
+          question: trashQuestionData,
+          onAnswered: (answers) {
+            if (answers.length == 3) debugPrint("تم بنجاح!");
+          },
+        );
       default:
         return const SizedBox();
     }
@@ -63,11 +99,10 @@ class _CleaningMapState extends State<CleaningMap> {
         child: Column(
           children: [
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              padding: EdgeInsets.all(16.0),
               child: Text(
-                '🧼',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 32),
+                '🧼 رحلة النظافة',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
             Expanded(
@@ -81,10 +116,6 @@ class _CleaningMapState extends State<CleaningMap> {
                   return _buildDestination(index);
                 },
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: Text('تعلم العادات الصحية ✨', textAlign: TextAlign.center),
             ),
           ],
         ),
