@@ -6,9 +6,12 @@ import '../../../Widgets/Animation/peg_board.dart';
 import '../../../Widgets/Animation/senses.dart';
 import '../../../Widgets/Animation/sorting_tower.dart';
 import '../../../enum/sense_type.dart';
+import '../feelings/feelings_levels.dart';
+import 'Self_cleaning/cleaning_map.dart';
 import 'draw.dart';
 import '../senses/sense_learning_page.dart';
 import 'level1_home.dart';
+import 'matching_practice_page.dart';
 import 'no1/banana_count.dart';
 import 'no1/bees_count.dart';
 import 'no1/toys_count.dart';
@@ -33,6 +36,7 @@ class Category extends StatelessWidget {
         childAspectRatio: 0.85,
       ),
       children: [
+        //counting
         CategoryCard(
           gradient: AppColors.alphabetGrad,
           graphic: Center(child: Counting()),
@@ -73,6 +77,7 @@ class Category extends StatelessWidget {
           },
         ),
 
+        //sorting
         CategoryCard(
           gradient: AppColors.numbersGrad,
           graphic: Center(child: SortingTower()),
@@ -95,6 +100,7 @@ class Category extends StatelessWidget {
           },
         ),
 
+        //pegboard
         CategoryCard(
           gradient: AppColors.colorsGrad,
           graphic: Center(child: PegboardLogo()),
@@ -135,6 +141,7 @@ class Category extends StatelessWidget {
           },
         ),
 
+        //senses
         CategoryCard(
           gradient: AppColors.fruitGrad,
           graphic: Center(child: FiveSensesLogo()),
@@ -150,18 +157,19 @@ class Category extends StatelessWidget {
 
         //matching
         CategoryCard(
-          gradient: AppColors.fruitGrad,
-          graphic: Center(child: FiveSensesLogo()),
+          gradient: [AppColors.kidoColors[5], AppColors.kidoOrange],
+          graphic: Center(child: Image.asset('assets/gif/match.gif')),
           onTap: () {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => SenseLearningScreen(type: SenseType.eyes,)
+                    builder: (context) => MatchingPracticePage()
                 )
             );
           },
         ),
 
+        //drawing
         CategoryCard(
           gradient: AppColors.puzzleGrad,
           graphic: Center(child: Image.asset('assets/images/drawing/draw.gif')),
@@ -170,6 +178,34 @@ class Category extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => Draw()
+                )
+            );
+          },
+        ),
+
+        //self-care
+        CategoryCard(
+          gradient: AppColors.vegetablesGrad,
+          graphic: Center(child: Image.asset('assets/gif/self-care.gif')),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CleaningMap()
+                )
+            );
+          },
+        ),
+
+        //feelings
+        CategoryCard(
+          gradient: [AppColors.kidoColors[6], AppColors.kidoRed],
+          graphic: Center(child: Image.asset('assets/gif/feelings.gif')),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TreehouseLevels()
                 )
             );
           },

@@ -9,7 +9,8 @@ import '../../../../Widgets/Animation/animated_hand_widget.dart';
 import '../../../../Widgets/content/drawing_page.dart';
 
 class PlusDrawingPage extends StatefulWidget {
-  const PlusDrawingPage({super.key});
+  final VoidCallback? onNext;
+  const PlusDrawingPage({super.key, this.onNext});
 
   @override
   State<PlusDrawingPage> createState() => _PlusDrawingPageState();
@@ -120,7 +121,7 @@ class _PlusDrawingPageState extends State<PlusDrawingPage> {
               child: NextButton(
                 color: AppColors.kidoGreen,
                 shadowColor: AppColors.kidoColors[4],
-                onPressed: () {},
+                onPressed: widget.onNext!,
               ),
             )
           ],

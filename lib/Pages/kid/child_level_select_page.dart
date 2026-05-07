@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import '../content/level1/level1_home.dart';
+import '../content/level2/level2home.dart';
 import '../content/level3/level3_home.dart';
 
 class ChildLevelSelectResult {
@@ -50,7 +51,7 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => Level1Home(childName: widget.childName),
+            builder: (_) => Level2Home(childName: widget.childName),
           ),
         );
         break;

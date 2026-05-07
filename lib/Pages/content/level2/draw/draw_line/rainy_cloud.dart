@@ -10,7 +10,8 @@ import '../../../../../Widgets/Animation/animated_hand_widget.dart';
 import '../../../../../Widgets/content/drawing_page.dart';
 
 class RainyCloud extends StatefulWidget {
-  const RainyCloud({super.key});
+  final VoidCallback? onNext;
+  const RainyCloud({super.key, this.onNext});
 
   @override
   State<RainyCloud> createState() => _RainyCloudState();
@@ -129,7 +130,7 @@ class _RainyCloudState extends State<RainyCloud> with TickerProviderStateMixin {
                   child: NextButton(
                     color: AppColors.kidoBlue,
                     shadowColor: AppColors.kidoColors[1],
-                    onPressed: () {},
+                    onPressed: widget.onNext!,
                   ),
                 )
               ],

@@ -88,14 +88,14 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
                 padding: EdgeInsets.only(left: xOffset),
                 child: ScaleTransition(
                   scale:
-                      widget.lesson.isLocked
-                          ? const AlwaysStoppedAnimation(1.0)
-                          : Tween(begin: 1.0, end: 1.1).animate(
-                            CurvedAnimation(
-                              parent: _pulseController,
-                              curve: Curves.easeInOut,
-                            ),
-                          ),
+                  widget.lesson.isLocked
+                      ? const AlwaysStoppedAnimation(1.0)
+                      : Tween(begin: 1.0, end: 1.1).animate(
+                    CurvedAnimation(
+                      parent: _pulseController,
+                      curve: Curves.easeInOut,
+                    ),
+                  ),
                   child: GestureDetector(
                     onTapDown: (_) {
                       HapticFeedback.heavyImpact();
@@ -111,9 +111,9 @@ class _MapNodeState extends State<MapNode> with SingleTickerProviderStateMixin {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color:
-                            widget.lesson.isLocked
-                                ? lockedColor
-                                : widget.buttonColor,
+                        widget.lesson.isLocked
+                            ? lockedColor
+                            : widget.buttonColor,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.2),
@@ -179,18 +179,18 @@ class _CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint =
-        Paint()
-          ..color = color
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 45
-          ..strokeCap = StrokeCap.round;
+    Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 45
+      ..strokeCap = StrokeCap.round;
 
     final borderPaint =
-        Paint()
-          ..color = Colors.black.withOpacity(0.05)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 52
-          ..strokeCap = StrokeCap.round;
+    Paint()
+      ..color = Colors.black.withOpacity(0.05)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 52
+      ..strokeCap = StrokeCap.round;
 
     final path = Path();
     path.moveTo(startX, 0);
