@@ -7,7 +7,7 @@ import '../../../../Widgets/content/level3/discovery_widget.dart';
 import '../../../../Widgets/content/level3/letters/bubble_pop.dart';
 import '../../../../Widgets/content/level3/letters/drag_and_drop.dart';
 import '../../../../Widgets/content/level3/letters/mystery_box.dart';
-import '../../../../Widgets/journey_map.dart';
+import '../../../../Widgets/content/journey_map.dart';
 import '../../../../data/level3/letters/journey_letters.dart';
 
 class ArLettersMapPage extends StatefulWidget {

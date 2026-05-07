@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/level3/letters/letter_map.dart';
-import 'package:kido/Widgets/journey_map.dart';
+import 'package:kido/Widgets/content/journey_map.dart';
 
 import 'FamilySongScreen.dart';
 import 'FamilyTreeScreen.dart';
