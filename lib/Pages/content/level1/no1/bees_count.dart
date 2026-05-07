@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:kido/Widgets/Buttons/puls_button.dart';
@@ -42,10 +41,9 @@ class _BeeCountingPageState extends State<BeeCountingPage> with TickerProviderSt
   }
 
   void _handleTap() async {
-    if (_isAnimating || _count >= 7) return;
+    if (_isAnimating || _count >= 4) return;
 
     setState(() => _isAnimating = true);
-    HapticFeedback.lightImpact();
     _moveController.reset();
     await _moveController.forward();
 
@@ -56,7 +54,7 @@ class _BeeCountingPageState extends State<BeeCountingPage> with TickerProviderSt
 
     await AudioService.play(fileName: 'numeric_ar/kid-$_count.mp3');
 
-    if (_count == 7) {
+    if (_count == 4) {
       setState(() => _hasWon = true);
       await Future.delayed(const Duration(milliseconds: 700));
       _effectPlayer.play(AssetSource('audio/yaay.mp3'));

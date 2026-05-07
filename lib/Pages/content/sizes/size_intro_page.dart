@@ -42,14 +42,13 @@ class _SizeIntroPageState extends State<SizeIntroPage>
 
   @override
   Widget build(BuildContext context) {
-    // استدعاء الكونفج
     final config = ResponsiveProvider.of(context);
 
     return Scaffold(
       backgroundColor: const Color(0xFFFDF6F0),
       body: SafeArea(
         child: Padding(
-          padding: config.pagePadding, // استخدام بادينج متجاوب
+          padding: config.pagePadding,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -60,15 +59,14 @@ class _SizeIntroPageState extends State<SizeIntroPage>
                         Transform.scale(scale: scale.value, child: child),
                 child: Image.asset(
                   data.correctImage,
-                  // استخدام نسبة من طول الشاشة (مثلا 30%)
                   height: config.imageHeight(0.3),
                 ),
               ),
-              SizedBox(height: config.localHeight * 0.04), // مسافة متجاوبة
+              SizedBox(height: config.localHeight * 0.04),
               Text(
                 data.title,
                 style: TextStyle(
-                  fontSize: config.headline, // خط متجاوب
+                  fontSize: config.headline,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -76,7 +74,6 @@ class _SizeIntroPageState extends State<SizeIntroPage>
               CustomGradientButton(
                 title: "ابدأ",
                 width: double.infinity,
-                // يمكنك إضافة height: config.buttonHeight لو الزرار بيقبل
                 onPressed: () {
                   Navigator.push(
                     context,

@@ -10,7 +10,8 @@ import '../../../../../Widgets/Animation/animated_hand_widget.dart';
 import '../../../../../Widgets/content/drawing_page.dart';
 
 class RocketLesson extends StatefulWidget {
-  const RocketLesson({super.key});
+  final VoidCallback? onNext;
+  const RocketLesson({super.key, this.onNext});
 
   @override
   State<RocketLesson> createState() => _RocketLessonState();
@@ -153,7 +154,7 @@ class _RocketLessonState extends State<RocketLesson> with TickerProviderStateMix
               child: NextButton(
                 color: AppColors.kidoBlue,
                 shadowColor: AppColors.kidoColors[1],
-                onPressed: () {},
+                onPressed: widget.onNext!,
               ),
             ),
           ],

@@ -85,11 +85,9 @@ class _MatchingPracticePageState extends State<MatchingPracticePage>
         currentIndex++;
         _loadLevel();
       } else {
-        // انتهت كل المستويات
         if (mounted) Navigator.pop(context);
       }
     } else {
-      // إجابة خاطئة
       setState(() {
         if (!wrongSelections.contains("wrong")) {
           wrongSelections.add("wrong");
@@ -110,7 +108,6 @@ class _MatchingPracticePageState extends State<MatchingPracticePage>
     return Scaffold(
       body: Stack(
         children: [
-          /// 🔥 الخلفية لكل ليفل
           Positioned.fill(
             child:
                 currentData.backgroundImage != null
@@ -120,8 +117,6 @@ class _MatchingPracticePageState extends State<MatchingPracticePage>
                     )
                     : Container(color: Colors.white),
           ),
-
-          /// 🔥 محتوى اللعبة
           Column(
             children: [
               const SizedBox(height: 60),
@@ -169,8 +164,6 @@ class _MatchingPracticePageState extends State<MatchingPracticePage>
               const SizedBox(height: 80),
             ],
           ),
-
-          /// 🎉 الكونفيتي
           if (isCelebrating)
             IgnorePointer(
               child: Lottie.asset(

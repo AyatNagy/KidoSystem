@@ -17,7 +17,7 @@ class ShapeData {
   ];
 
   static List<Offset> circle = [
-    Offset(0.5, 0.2),
+    Offset(0.5, 0.3),
     Offset(0.75, 0.35),
     Offset(0.8, 0.5),
     Offset(0.75, 0.65),
@@ -25,6 +25,6 @@ class ShapeData {
     Offset(0.25, 0.65),
     Offset(0.2, 0.5),
     Offset(0.25, 0.35),
-    Offset(0.5, 0.2),
+    Offset(0.5, 0.3),
   ];
 }

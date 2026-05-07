@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/content/Self_cleaning/HandwashScreen.dart';
-import 'package:kido/Pages/content/Self_cleaning/TrashScreen.dart';
-import 'package:kido/Pages/content/Self_cleaning/teeth_game_screen.dart';
+import 'package:kido/Pages/content/level1/Self_cleaning/teeth_game_screen.dart';
 import 'package:kido/Widgets/content/journey_map.dart';
+import 'HandwashScreen.dart';
+import 'TrashScreen.dart';
 
 class HygieneItem {
   final String image;

@@ -10,7 +10,8 @@ import '../../../../../Widgets/Animation/animated_hand_widget.dart';
 import '../../../../../Widgets/content/drawing_page.dart';
 
 class OctobusAndStar extends StatefulWidget {
-  const OctobusAndStar({super.key});
+  final VoidCallback? onNext;
+  const OctobusAndStar({super.key, this.onNext});
 
    @override
    State<OctobusAndStar> createState() => _OctobusAndStarState();
@@ -112,7 +113,7 @@ class _OctobusAndStarState extends State<OctobusAndStar> with TickerProviderStat
                child: NextButton(
                  color: AppColors.kidoPink,
                  shadowColor: AppColors.kidoColors[1],
-                 onPressed: () {},
+                 onPressed: widget.onNext!
                ),
              )
            ],

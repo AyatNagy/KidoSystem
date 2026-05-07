@@ -30,7 +30,6 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
     startLesson();
   }
 
-  // 🛑 إيقاف الصوت لو الطفل خرج من الصفحة فجأة
   @override
   void dispose() {
     AudioService.stop();
@@ -47,24 +46,12 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
 
     for (int i = 0; i < 3; i++) {
       if (!mounted) return;
-
-      // 1. شغل الأنيميشن (Highlight)
       setState(() => isFirstHighlighted = true);
-
-      // 2. ابدأ الصوت واستني ثانية بسيطة عشان التزامن البصري
       await Future.delayed(const Duration(milliseconds: 200));
       await AudioService.play(fileName: data.audio);
-
-      // 3. 🛑 هنا السر: استني وقت كافي عشان الكلمة تخلص (مثلاً 1.5 ثانية)
-      // لو الكلمة طويلة زودي الوقت ده
       await Future.delayed(const Duration(milliseconds: 1500));
-
       if (!mounted) return;
-
-      // 4. طفي الأنيميشن
       setState(() => isFirstHighlighted = false);
-
-      // 5. استراحة قصيرة بين كل مرة والتانية
       await Future.delayed(const Duration(milliseconds: 800));
     }
 
@@ -80,13 +67,10 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
     if (isPlaying) return;
 
     setState(() {
-      isPlaying = true; // نمنع الضغط المتكرر اللي بيبوظ الصوت
+      isPlaying = true;
       isFirstHighlighted = true;
     });
-
     await AudioService.play(fileName: data.audio);
-
-    // استني وقت الكلمة قبل ما تشيلي الـ Highlight وتسمحي بضغط جديد
     await Future.delayed(const Duration(milliseconds: 1500));
 
     if (!mounted) return;
@@ -120,7 +104,7 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
         case SizeGoal.short:
           scaleX = 1.1;
           scaleY = 0.7;
-          translateY = 20; // بيكبسها لتحت عشان تبان قصيرة
+          translateY = 20;
           break;
         case SizeGoal.fat:
           scaleX = 1.6;
@@ -130,7 +114,7 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
         case SizeGoal.thin:
           scaleX = 0.4;
           scaleY = 1.1;
-          translateY = -5; // بيخليها رفيعة جداً
+          translateY = -5;
           break;
         case SizeGoal.big:
           scaleX = 1.5;
@@ -140,7 +124,7 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
         case SizeGoal.small:
           scaleX = 0.6;
           scaleY = 0.6;
-          translateY = 0; // بيصغرها خالص
+          translateY = 0;
           break;
       }
     }
@@ -196,7 +180,7 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
             Padding(
               padding: config.pagePadding,
               child: CustomGradientButton(
-                title: "يلا نلعب 🎮",
+                title: "يلا نلعب ",
                 onPressed: () {
                   AudioService.stop();
                   Navigator.push(

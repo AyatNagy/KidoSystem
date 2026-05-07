@@ -108,7 +108,7 @@ class _MonkeyCountingPageState extends State<MonkeyCountingPage> {
     return Transform.scale(
       scale: scale,
       child: Image.asset(
-        "assets/images/fruits/banana.png",
+        "assets/images/fruits/banana.gif",
         width: responsive.imageWidth(0.15),
         height: responsive.imageHeight(0.1),
       ),
