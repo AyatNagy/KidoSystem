@@ -25,6 +25,10 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
   bool isSuccess = false;
   bool showHint = false;
   int currentLevelIndex = 0;
+
+  // 1. أضفنا متغير عشان نعرف إحنا بنشرح أنهي قطعة حالياً
+  int currentItemIndex = 0;
+
   Timer? _idleTimer;
 
   late AnimationController _glowController;
@@ -62,10 +66,12 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
     setState(() {
       stage = PuzzleStage.intro;
       isSuccess = false;
+      currentItemIndex = 0; // تصفير العداد مع كل ليفل جديد
     });
 
     AudioService.play(fileName: "look_full.mp3");
     await Future.delayed(const Duration(seconds: 3));
+
     if (!mounted) return;
     setState(() {
       stage = PuzzleStage.modeling;
@@ -73,7 +79,15 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
 
     AudioService.play(fileName: "watch_me.mp3");
     await Future.delayed(const Duration(seconds: 1));
+
     for (int i = 0; i < puzzleData.question.items.length; i++) {
+      if (!mounted) return;
+
+      // 2. تحديث الـ Index عشان الصورة تتغير مع حركة الإيد
+      setState(() {
+        currentItemIndex = i;
+      });
+
       _prepareHand(i);
       await _handController.forward(from: 0);
       await Future.delayed(const Duration(milliseconds: 500));
@@ -87,6 +101,7 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
     setState(() {
       stage = PuzzleStage.interaction;
       showHint = false;
+      currentItemIndex = 0; // نبدأ تلميحات من أول قطعة
     });
     AudioService.play(fileName: "yalla_puzzle.mp3");
 
@@ -172,15 +187,17 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          // الخلفية
           Center(
             child: Image.asset(
               stage == PuzzleStage.intro
                   ? (puzzleData.fullImage ??
-                  puzzleData.question.backgroundImage!)
+                      puzzleData.question.backgroundImage!)
                   : puzzleData.question.backgroundImage!,
             ),
           ),
 
+          // مرحلة الـ Modeling (الشرح)
           if (stage == PuzzleStage.modeling)
             AnimatedBuilder(
               animation: _handAnimation,
@@ -191,7 +208,8 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
                       left: w * _handAnimation.value.dx,
                       top: h * _handAnimation.value.dy,
                       child: Image.asset(
-                        puzzleData.question.items.first.image,
+                        // 3. التعديل هنا: نستخدم currentItemIndex بدل first
+                        puzzleData.question.items[currentItemIndex].image,
                         width: 80,
                       ),
                     ),
@@ -208,6 +226,7 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
               },
             ),
 
+          // مرحلة التفاعل
           if (stage == PuzzleStage.interaction)
             DragDropWidget(
               question: puzzleData.question,
@@ -216,42 +235,48 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
               onWrongDrop: () => _resetIdleTimer(),
             ),
 
+          // التلميحات (Hints)
           if (showHint && !isSuccess) ...[
             Positioned(
-              left: w * puzzleData.question.items.first.startPosition.dx,
-              top: h * puzzleData.question.items.first.startPosition.dy,
+              // نستخدم currentItemIndex للتلميح أيضاً
+              left:
+                  w *
+                  puzzleData.question.items[currentItemIndex].startPosition.dx,
+              top:
+                  h *
+                  puzzleData.question.items[currentItemIndex].startPosition.dy,
               child: AnimatedBuilder(
                 animation: _glowAnimation,
                 builder:
                     (context, child) => Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.yellow.withOpacity(
-                          _glowAnimation.value,
-                        ),
-                        blurRadius: 30,
-                        spreadRadius: 10,
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.yellow.withOpacity(
+                              _glowAnimation.value,
+                            ),
+                            blurRadius: 30,
+                            spreadRadius: 10,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
               ),
             ),
             AnimatedBuilder(
               animation: _handAnimation,
               builder:
                   (_, __) => Positioned(
-                left: w * _handAnimation.value.dx,
-                top: h * _handAnimation.value.dy,
-                child: Image.asset(
-                  "assets/images/animated_hand-Photoroom.png",
-                  width: 60,
-                ),
-              ),
+                    left: w * _handAnimation.value.dx,
+                    top: h * _handAnimation.value.dy,
+                    child: Image.asset(
+                      "assets/images/animated_hand-Photoroom.png",
+                      width: 60,
+                    ),
+                  ),
             ),
           ],
 
@@ -260,17 +285,13 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
               child: Lottie.asset('assets/lottie/CONFETTI.json', repeat: false),
             ),
 
+          // زر الرجوع
           Positioned(
             top: 40,
             left: 20,
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context)=> Level2Home(childName: 'hab')
-                )
-              ),
+              onPressed: () => Navigator.pop(context),
             ),
           ),
         ],
