@@ -161,13 +161,14 @@ final List<PuzzleData> cowLevels = [
         DragItem(
           id: "p1",
           image: "assets/images/puzzle/cow_p1.png",
-          startPosition: const Offset(0.35, 0.75),
+          startPosition: const Offset(0.65, 0.75),
           size: const Size(0.40, 0.40),
         ),
         DragItem(
           id: "p2",
           image: "assets/images/puzzle/cow_p2.png",
-          startPosition: const Offset(0.65, 0.75),
+          startPosition: const Offset(0.30, 0.75),
+
           size: const Size(0.32, 0.32),
         ),
       ],

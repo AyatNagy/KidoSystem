@@ -26,7 +26,6 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
   bool showHint = false;
   int currentLevelIndex = 0;
 
-  // 1. أضفنا متغير عشان نعرف إحنا بنشرح أنهي قطعة حالياً
   int currentItemIndex = 0;
 
   Timer? _idleTimer;
@@ -66,7 +65,7 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
     setState(() {
       stage = PuzzleStage.intro;
       isSuccess = false;
-      currentItemIndex = 0; // تصفير العداد مع كل ليفل جديد
+      currentItemIndex = 0;
     });
 
     AudioService.play(fileName: "look_full.mp3");
@@ -83,7 +82,6 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
     for (int i = 0; i < puzzleData.question.items.length; i++) {
       if (!mounted) return;
 
-      // 2. تحديث الـ Index عشان الصورة تتغير مع حركة الإيد
       setState(() {
         currentItemIndex = i;
       });
@@ -101,7 +99,7 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
     setState(() {
       stage = PuzzleStage.interaction;
       showHint = false;
-      currentItemIndex = 0; // نبدأ تلميحات من أول قطعة
+      currentItemIndex = 0;
     });
     AudioService.play(fileName: "yalla_puzzle.mp3");
 
@@ -197,7 +195,6 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
             ),
           ),
 
-          // مرحلة الـ Modeling (الشرح)
           if (stage == PuzzleStage.modeling)
             AnimatedBuilder(
               animation: _handAnimation,
@@ -208,7 +205,6 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
                       left: w * _handAnimation.value.dx,
                       top: h * _handAnimation.value.dy,
                       child: Image.asset(
-                        // 3. التعديل هنا: نستخدم currentItemIndex بدل first
                         puzzleData.question.items[currentItemIndex].image,
                         width: 80,
                       ),
@@ -226,7 +222,6 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
               },
             ),
 
-          // مرحلة التفاعل
           if (stage == PuzzleStage.interaction)
             DragDropWidget(
               question: puzzleData.question,
@@ -234,11 +229,8 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
               onDragStart: _stopUserAssistance,
               onWrongDrop: () => _resetIdleTimer(),
             ),
-
-          // التلميحات (Hints)
           if (showHint && !isSuccess) ...[
             Positioned(
-              // نستخدم currentItemIndex للتلميح أيضاً
               left:
                   w *
                   puzzleData.question.items[currentItemIndex].startPosition.dx,
@@ -291,7 +283,13 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
             left: 20,
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
-              onPressed: () => Navigator.pop(context),
+              onPressed:
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Level2Home(childName: 'hab'),
+                    ),
+                  ),
             ),
           ),
         ],
