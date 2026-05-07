@@ -11,6 +11,8 @@ import 'package:kido/Widgets/Questions/draganddrop_question_widget.dart';
 import 'package:kido/Widgets/Questions/speak_question_widget.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/Widgets/Buttons/custom_app_button.dart';
+import '../../config/progress.dart';
+import '../../constants.dart';
 
 enum QuestionType { choice, drawing, dragDrop, speak }
 
@@ -229,34 +231,126 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _finishExam() {
-    double finalScoreResult = score / examQuestions.length;
+  void _finishExam() async {
+    double percentage = score / examQuestions.length;
+    bool passed = percentage >= 0.50;
+
+    int nextLevelToUnlock = 1;
+    String unlockMessageText = "Keep practicing to unlock new levels!";
+    if (passed) {
+      if (widget.examId == "exam1") {
+        nextLevelToUnlock = 2;
+        unlockMessageText = "Level 1 & 2 are now UNLOCKED!";
+        await ProgressManager.unlockUpTo(2);
+      } else if (widget.examId == "exam2") {
+        nextLevelToUnlock = 3;
+        unlockMessageText = "Level 1, 2, & 3 are now UNLOCKED!";
+        await ProgressManager.unlockUpTo(3);
+      } else {
+        unlockMessageText = "You passed the exam!";
+      }
+    }
+
+    int stars = 0;
+    if (percentage >= 0.85) {
+      stars = 3;
+    } else if (percentage >= 0.70) {
+      stars = 2;
+    } else if (percentage >= 0.50) {
+      stars = 1;
+    }
 
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder:
-          (_) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            title: const Text("Exam Finished"),
-            content: Text(
-              "Great job ${widget.childName}!\nYour score is $score / ${examQuestions.length}",
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context, finalScoreResult);
-                },
-                child: const Text(
-                  "OK",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 180,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                  child: Image.asset(
+                    passed ? 'assets/gif/finish.gif' : 'assets/gif/not-finish.gif',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    if (passed)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(3, (index) => Icon(
+                          Icons.star_rounded,
+                          size: 45,
+                          color: index < stars ? Colors.orange : Colors.grey.shade300,
+                        )),
+                      ),
+                    const SizedBox(height: 15),
+                    Text(
+                      passed ? "AMAZING JOB!" : "NICE TRY!",
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      "You got $score / ${examQuestions.length}",
+                      style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: passed ? Colors.green.shade50 : Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: passed ? Colors.green.shade200 : Colors.grey.shade300),
+                      ),
+                      child: Text(
+                        unlockMessageText,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: passed ? AppColors.kidoGreen : AppColors.textGray,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context, nextLevelToUnlock);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.kidoPink,
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                        ),
+                        child: const Text(
+                          "DONE",
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
+        );
+      },
     );
   }
 

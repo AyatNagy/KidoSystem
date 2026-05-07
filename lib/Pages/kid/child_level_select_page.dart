@@ -1,68 +1,96 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
+import '../../config/progress.dart';
+import '../../constants.dart';
 import '../content/level1/level1_home.dart';
 import '../content/level2/level2home.dart';
 import '../content/level3/level3_home.dart';
 
 class ChildLevelSelectResult {
   final int level;
-
-  const ChildLevelSelectResult({required this.level});
+  ChildLevelSelectResult(this.level);
 }
 
 class ChildLevelSelectPage extends StatefulWidget {
   final String childName;
   final int? recommendedLevel;
+  final bool isRestrictedToLevel1;
+  final int? forcedUnlockedLevel;
 
   const ChildLevelSelectPage({
     super.key,
     required this.childName,
     this.recommendedLevel,
+    this.isRestrictedToLevel1 = false,
+    this.forcedUnlockedLevel,
   });
 
   @override
   State<ChildLevelSelectPage> createState() => _ChildLevelSelectPageState();
 }
 
-class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> {
+class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with TickerProviderStateMixin {
   int? _selectedLevel;
+  int _unlockedLevel = 1;
+  late AnimationController _floatingController;
 
   @override
   void initState() {
     super.initState();
-    _selectedLevel = widget.recommendedLevel;
+    _loadProgress();
+    _floatingController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _floatingController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadProgress() async {
+    if (widget.isRestrictedToLevel1) {
+      setState(() {
+        _unlockedLevel = 1;
+        _selectedLevel = 1;
+      });
+      return;
+    }
+
+    if (widget.forcedUnlockedLevel != null) {
+      setState(() {
+        _unlockedLevel = widget.forcedUnlockedLevel!;
+        _selectedLevel = widget.recommendedLevel ?? 1;
+      });
+    } else {
+      int level = await ProgressManager.getUnlockedLevel();
+      setState(() {
+        _unlockedLevel = level;
+        _selectedLevel = widget.recommendedLevel ?? 1;
+      });
+    }
   }
 
   void _submit() {
     final level = _selectedLevel;
     if (level == null) return;
 
+    Widget targetPage;
     switch (level) {
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => Level1Home(childName: widget.childName),
-          ),
-        );
-        break;
-      case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => Level2Home(childName: widget.childName),
-          ),
-        );
-        break;
-      case 3:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => Level3Home(childName: widget.childName),
-          ),
-        );
-        break;
+      case 1: targetPage = Level1Home(childName: widget.childName); break;
+      case 2: targetPage = Level2Home(childName: widget.childName); break;
+      case 3: targetPage = Level3Home(childName: widget.childName); break;
+      default: return;
+    }
+
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context, ChildLevelSelectResult(level));
+      Navigator.push(context, MaterialPageRoute(builder: (_) => targetPage));
+    } else {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => targetPage));
     }
   }
 
@@ -71,196 +99,218 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> {
     final config = ResponsiveProvider.of(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF7E6),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 640),
-            child: Padding(
-              padding: config.pagePadding,
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () => Navigator.of(context).maybePop(),
-                        icon: const Icon(Icons.arrow_back_ios_new),
-                      ),
-                      Expanded(
-                        child: Text(
-                          "Choose your level",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: config.title,
-                            fontWeight: FontWeight.w900,
-                            color: const Color(0xFF1F2A44),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 48),
-                    ],
-                  ),
-                  SizedBox(height: config.localHeight * 0.01),
-                  Text(
-                    widget.childName,
-                    style: TextStyle(
-                      fontSize: config.headline * 0.9,
-                      fontWeight: FontWeight.w800,
-                      color: const Color(0xFF2C8FF9),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Pick a level to start your journey",
-                    style: TextStyle(
-                      fontSize: config.body,
-                      color: Colors.black54,
-                    ),
-                  ),
-                  SizedBox(height: config.localHeight * 0.03),
-
-                  Expanded(
-                    child: ListView(
-                      physics: const BouncingScrollPhysics(),
-                      children: [
-                        _levelCard(
-                          config,
-                          level: 1,
-                          title: "Level 1",
-                          subtitle: "Easy start",
-                          color: const Color(0xFF2C8FF9),
-                          icon: Icons.rocket_launch,
-                        ),
-                        const SizedBox(height: 14),
-                        _levelCard(
-                          config,
-                          level: 2,
-                          title: "Level 2",
-                          subtitle: "Growing skills",
-                          color: const Color(0xFFFF8A65),
-                          icon: Icons.auto_awesome,
-                        ),
-                        const SizedBox(height: 14),
-                        _levelCard(
-                          config,
-                          level: 3,
-                          title: "Level 3",
-                          subtitle: "Challenge mode",
-                          color: const Color(0xFFF06292),
-                          icon: Icons.emoji_events,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _selectedLevel == null ? null : _submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1F2A44),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                      ),
-                      child: Text(
-                        "Start",
-                        style: TextStyle(
-                          fontSize: config.title,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFE0F7FA), Color(0xFFFFF9C4)],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _levelCard(
-    dynamic config, {
-    required int level,
-    required String title,
-    required String subtitle,
-    required Color color,
-    required IconData icon,
-  }) {
-    final selected = _selectedLevel == level;
-
-    return InkWell(
-      borderRadius: BorderRadius.circular(22),
-      onTap: () => setState(() => _selectedLevel = level),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding: EdgeInsets.all(config.localWidth * 0.045),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(
-            color: selected ? color : const Color(0xFFEAEAEA),
-            width: selected ? 3 : 2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: color.withOpacity(0.12),
-              blurRadius: 16,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Row(
+        child: Stack(
           children: [
-            Container(
-              width: 54,
-              height: 54,
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.12),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(icon, color: color, size: 30),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
+            _buildDecor(Alignment.topLeft, Icons.cloud, Colors.white.withOpacity(0.8), 60),
+            _buildDecor(Alignment.topRight, Icons.wb_sunny, Colors.orangeAccent.withOpacity(0.4), 80),
+            _buildDecor(Alignment.bottomLeft, Icons.star, Colors.yellow.withOpacity(0.5), 40),
+
+            SafeArea(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: config.body,
-                      fontWeight: FontWeight.w900,
-                      color: const Color(0xFF1F2A44),
+                  const SizedBox(height: 20),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        child: Column(
+                          children: [
+                            _buildLevelNode(
+                              config,
+                              level: 1,
+                              title: "Beginner Bay",
+                              color: AppColors.kidoBlue,
+                              icon: Icons.rocket_launch,
+                              alignment: Alignment.centerLeft,
+                            ),
+                            _buildPath(config, isRight: true),
+                            _buildLevelNode(
+                              config,
+                              level: 2,
+                              title: "Growth Grove",
+                              color: AppColors.kidoOrange,
+                              icon: Icons.auto_awesome,
+                              alignment: Alignment.centerRight,
+                            ),
+                            _buildPath(config, isRight: false),
+                            _buildLevelNode(
+                              config,
+                              level: 3,
+                              title: "Hero Heights",
+                              color: AppColors.kidoPink,
+                              icon: Icons.emoji_events,
+                              alignment: Alignment.centerLeft,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: config.body * 0.9,
-                      color: Colors.black54,
-                    ),
-                  ),
+                  _buildBottomBar(config),
                 ],
               ),
             ),
-            const SizedBox(width: 10),
-            if (selected)
-              Icon(Icons.check_circle, color: color, size: 28)
-            else
-              Icon(
-                Icons.circle_outlined,
-                color: Colors.grey.shade400,
-                size: 26,
-              ),
           ],
         ),
       ),
     );
   }
+
+  Widget _buildLevelNode(dynamic config, {required int level, required String title, required Color color, required IconData icon, required Alignment alignment}) {
+    final bool isLocked = level > _unlockedLevel;
+    final bool isSelected = _selectedLevel == level;
+
+    return AnimatedBuilder(
+      animation: _floatingController,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, isSelected ? _floatingController.value * -10 : 0),
+          child: child,
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        child: Align(
+          alignment: alignment,
+          child: GestureDetector(
+            onTap: isLocked ? null : () => setState(() => _selectedLevel = level),
+            child: Column(
+              children: [
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: isLocked ? Colors.grey[300] : (isSelected ? color : Colors.white),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: isLocked ? Colors.transparent : color.withOpacity(0.4),
+                            blurRadius: isSelected ? 20 : 10,
+                            spreadRadius: isSelected ? 5 : 0,
+                          )
+                        ],
+                        border: Border.all(
+                          color: isSelected ? Colors.white : (isLocked ? Colors.grey[400]! : color),
+                          width: 4,
+                        ),
+                      ),
+                      child: Icon(
+                        isLocked ? Icons.lock : icon,
+                        size: 45,
+                        color: isLocked ? Colors.grey[600] : (isSelected ? Colors.white : color),
+                      ),
+                    ),
+                    if (isSelected)
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                          child: const Icon(Icons.check_circle, color: Colors.green, size: 28),
+                        ),
+                      )
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    color: isLocked ? Colors.grey : const Color(0xFF1F2A44),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPath(dynamic config, {required bool isRight}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: CustomPaint(
+        size: const Size(200, 60),
+        painter: PathPainter(isRight: isRight),
+      ),
+    );
+  }
+
+  Widget _buildBottomBar(dynamic config) {
+    return Container(
+      padding: const EdgeInsets.all(25),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: _selectedLevel == null ? null : _submit,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF1F2A44),
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            elevation: 5,
+          ),
+          child: const Text(
+            "LET'S GO!",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: 2),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDecor(Alignment align, IconData icon, Color color, double size) {
+    return Align(
+      alignment: align,
+      child: Padding(
+        padding: const EdgeInsets.all(30),
+        child: Icon(icon, color: color, size: size),
+      ),
+    );
+  }
+}
+
+class PathPainter extends CustomPainter {
+  final bool isRight;
+  PathPainter({required this.isRight});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.blueGrey.withOpacity(0.2)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 6
+      ..strokeCap = StrokeCap.round;
+
+    final path = Path();
+    if (isRight) {
+      path.moveTo(size.width * 0.2, 0);
+      path.quadraticBezierTo(size.width * 0.8, size.height * 0.5, size.width * 0.8, size.height);
+    } else {
+      path.moveTo(size.width * 0.8, 0);
+      path.quadraticBezierTo(size.width * 0.2, size.height * 0.5, size.width * 0.2, size.height);
+    }
+    for (var i = 0; i < 10; i++) {
+      canvas.drawPath(path, paint);
+    }
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

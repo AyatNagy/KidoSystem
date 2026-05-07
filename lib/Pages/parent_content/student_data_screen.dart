@@ -7,6 +7,7 @@ import '../../Widgets/Layout/app_bar.dart';
 import '../../Widgets/responsive_provider.dart';
 import '../../Widgets/text_field_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../constants.dart';
 import '../../utils/validators.dart';
 import '../../Widgets/Dialogs/dialog_widget.dart';
 import '../../Models/dailog_model.dart';
@@ -30,16 +31,9 @@ class _StudentDataState extends State<StudentData> {
   String? nameError;
   String? usernameError;
   String? ageError;
-  //String? passwordError;
   bool isPasswordVisible = false;
   bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
-
-  int _recommendLevelFromScore(double scoreRatio) {
-    if (scoreRatio >= 0.80) return 3;
-    if (scoreRatio >= 0.50) return 2;
-    return 1;
-  }
 
   Future<void> handleAdd() async {
     if (_formKey.currentState!.validate()) {
@@ -47,7 +41,6 @@ class _StudentDataState extends State<StudentData> {
         nameError = Validators.validateName(nameController.text);
         usernameError = Validators.validateUsername(usernameController.text);
         ageError = Validators.validateAge(ageController.text);
-        //passwordError = Validators.validatePassword(passwordController.text);
       });
 
       if (nameError != null || usernameError != null || ageError != null) {
@@ -88,32 +81,28 @@ class _StudentDataState extends State<StudentData> {
               context,
               DailogModel(
                 title: "Level Assigned",
-                message:
-                    "Since $childName is under 3 years old, they will start at Level 1 to enjoy age-appropriate activities.",
+                message: "Since $childName is under 3 years old, they will start at Level 1 to enjoy age-appropriate activities.",
                 image: 'assets/images/exam.png',
                 buttonText: "Start Journey",
               ),
-              titleColor: const Color(0xff4CAF50),
+              titleColor: AppColors.kidoGreen,
               onNextPressed: () async {
                 final setup = await Navigator.push<ChildProfileSetupResult>(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => ChildProfileSetupPage(childName: childName),
-                  ),
+                  MaterialPageRoute(builder: (_) => ChildProfileSetupPage(childName: childName)),
                 );
                 if (!mounted || setup == null) return;
 
-                final pickedLevel =
-                    await Navigator.push<ChildLevelSelectResult>(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (_) => ChildLevelSelectPage(
-                              childName: setup.childName,
-                              recommendedLevel: 1,
-                            ),
-                      ),
-                    );
+                final pickedLevel = await Navigator.push<ChildLevelSelectResult>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ChildLevelSelectPage(
+                      childName: setup.childName,
+                      recommendedLevel: 1,
+                      isRestrictedToLevel1: true,
+                    ),
+                  ),
+                );
                 if (!mounted || pickedLevel == null) return;
 
                 Navigator.pop(context, {
@@ -126,62 +115,54 @@ class _StudentDataState extends State<StudentData> {
               },
             );
           } else {
-            String examId =
-                (childAge >= 3 && childAge <= 5) ? 'exam1' : 'exam2';
+            String examId = (childAge >= 3 && childAge <= 5) ? 'exam1' : 'exam2';
             if (!mounted) return;
             customDialog(
               context,
               DailogModel(
                 title: "Level Assessment",
-                message:
-                    "To provide the best experience for $childName, we need to perform a quick exam to determine their current level.",
+                message: "To provide the best experience for $childName, we need to perform a quick exam to determine their current level.",
                 image: 'assets/images/exam.png',
               ),
-              titleColor: const Color(0xfff06292),
+              titleColor: AppColors.kidoPink,
               onNextPressed: () async {
-                final double? scoreResult = await Navigator.push<double>(
+                final dynamic examResult = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder:
-                        (_) => ExamSkeletonScreen(
-                          examId: examId,
-                          childName: childName,
-                        ),
+                    builder: (_) => ExamSkeletonScreen(
+                      examId: examId,
+                      childName: childName,
+                    ),
                   ),
                 );
 
-                if (mounted && scoreResult != null) {
-                  // Child-facing profile setup
+                if (mounted && examResult != null) {
+                  int forcedLevel = (examResult is int) ? examResult : 1;
+
                   final setup = await Navigator.push<ChildProfileSetupResult>(
                     context,
-                    MaterialPageRoute(
-                      builder:
-                          (_) => ChildProfileSetupPage(childName: childName),
-                    ),
+                    MaterialPageRoute(builder: (_) => ChildProfileSetupPage(childName: childName)),
                   );
 
                   if (!mounted || setup == null) return;
 
-                  final recommendedLevel = _recommendLevelFromScore(
-                    scoreResult,
+                  final pickedLevel = await Navigator.push<ChildLevelSelectResult>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChildLevelSelectPage(
+                        childName: setup.childName,
+                        recommendedLevel: 1,
+                        forcedUnlockedLevel: forcedLevel,
+                        isRestrictedToLevel1: false,
+                      ),
+                    ),
                   );
-                  final pickedLevel =
-                      await Navigator.push<ChildLevelSelectResult>(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (_) => ChildLevelSelectPage(
-                                childName: setup.childName,
-                                recommendedLevel: recommendedLevel,
-                              ),
-                        ),
-                      );
 
                   if (!mounted || pickedLevel == null) return;
 
                   Navigator.pop(context, {
                     'name': setup.childName,
-                    'score': scoreResult,
+                    'score': 1.0,
                     'childId': registerResponse['child']['id'],
                     'level': pickedLevel.level,
                     'avatar': setup.avatarAsset,
@@ -195,7 +176,7 @@ class _StudentDataState extends State<StudentData> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('فشل في تسجيل الطفل. الرجاء المحاولة مجدداً.'),
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.kidoRed,
               ),
             );
           }
@@ -203,7 +184,7 @@ class _StudentDataState extends State<StudentData> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('حدث خطأ: $e'), backgroundColor: Colors.red),
+            SnackBar(content: Text('حدث خطأ: $e'), backgroundColor: AppColors.kidoRed),
           );
         }
       } finally {
@@ -219,7 +200,7 @@ class _StudentDataState extends State<StudentData> {
     final config = ResponsiveProvider.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bgColor,
       appBar: const KidoAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -228,10 +209,7 @@ class _StudentDataState extends State<StudentData> {
             children: [
               Text(
                 "Bring kid onboard",
-                style: TextStyle(
-                  fontSize: config.headline,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: config.headline, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: config.localHeight * 0.02),
               Image.asset(
@@ -259,13 +237,7 @@ class _StudentDataState extends State<StudentData> {
                     if (nameError != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
-                        child: Text(
-                          nameError!,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
-                        ),
+                        child: Text(nameError!, style: const TextStyle(color: Colors.red, fontSize: 12)),
                       ),
                     SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
@@ -282,13 +254,7 @@ class _StudentDataState extends State<StudentData> {
                     if (usernameError != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
-                        child: Text(
-                          usernameError!,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
-                        ),
+                        child: Text(usernameError!, style: const TextStyle(color: AppColors.kidoRed, fontSize: 12)),
                       ),
                     SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
@@ -307,13 +273,7 @@ class _StudentDataState extends State<StudentData> {
                     if (ageError != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
-                        child: Text(
-                          ageError!,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
-                        ),
+                        child: Text(ageError!, style: const TextStyle(color: AppColors.kidoRed, fontSize: 12)),
                       ),
                     SizedBox(height: config.localHeight * 0.02),
                     CustomTextField(
@@ -321,45 +281,21 @@ class _StudentDataState extends State<StudentData> {
                       fieldIcon: const Icon(Icons.lock),
                       fieldLabel: "Child's Password",
                       fieldObscure: !isPasswordVisible,
-                      onChanged: (value) {
-                        setState(() {
-                          //passwordError = Validators.validatePassword(value);
-                        });
-                      },
                       suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(
-                            () => isPasswordVisible = !isPasswordVisible,
-                          );
-                        },
-                        icon: Icon(
-                          isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: const Color(0xff837F7F),
-                        ),
+                        onPressed: () => setState(() => isPasswordVisible = !isPasswordVisible),
+                        icon: Icon(isPasswordVisible ? Icons.visibility : Icons.visibility_off, color: const Color(0xff837F7F)),
                       ),
                     ),
-
                     const SizedBox(height: 3),
-
                     SizedBox(
                       width: double.infinity,
-                      child: PasswordErrorsView(
-                        password: passwordController.text,
-                      ),
+                      child: PasswordErrorsView(password: passwordController.text),
                     ),
                     SizedBox(height: config.localHeight * 0.04),
                     Container(
                       width: config.localWidth * 0.6,
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color(0xffffB74D),
-                            Color(0xffff8A65),
-                            Color(0xfff06292),
-                          ],
-                        ),
+                        gradient: const LinearGradient(colors: [Color(0xffffB74D), Color(0xffff8A65), Color(0xfff06292)]),
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: ElevatedButton(
@@ -367,33 +303,12 @@ class _StudentDataState extends State<StudentData> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
-                          padding: EdgeInsets.symmetric(
-                            vertical: config.localHeight * 0.02,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
+                          padding: EdgeInsets.symmetric(vertical: config.localHeight * 0.02),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                         ),
-                        child:
-                            isLoading
-                                ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                                : Text(
-                                  "Add My Little Star",
-                                  style: TextStyle(
-                                    fontSize: config.title,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                        child: isLoading
+                            ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white), strokeWidth: 2))
+                            : Text("Add My Little Star", style: TextStyle(fontSize: config.title, color: Colors.white, fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ],

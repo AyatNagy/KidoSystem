@@ -31,63 +31,43 @@ class Category2 extends StatelessWidget {
         //drawing line
         CategoryCard(
           gradient: AppColors.alphabetGrad,
-          graphic: Center(
-            child: Image.asset('assets/images/drawing/draw-line.gif'),
-          ),
+          graphic: Center(child: Image.asset('assets/images/drawing/draw-line.gif')),
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder:
-                    (context) => OctobusAndStar(
-                      onNext: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => RainyCloud(
-                                  onNext: () {
-                                    Navigator.push(
+              MaterialPageRoute(builder: (context) => OctobusAndStar(
+                onNext: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RainyCloud(
+                        onNext: (){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => RocketLesson(
+                                onNext: (){
+                                  Navigator.push(
                                       context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => RocketLesson(
-                                              onNext: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder:
-                                                        (
-                                                          context,
-                                                        ) => PlusDrawingPage(
-                                                          onNext: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (
-                                                                      context,
-                                                                    ) => Level2Home(
-                                                                      childName:
-                                                                          'Habiba',
-                                                                    ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                          ),
-                        );
-                      },
-                    ),
-              ),
+                                      MaterialPageRoute(builder: (context) => PlusDrawingPage(
+                                        onNext: (){
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => Level2Home(childName: 'Habiba')
+                                              )
+                                          );
+                                        },
+                                      )
+                                      )
+                                  );
+                                },
+                              )
+                              )
+                          );
+                        },
+                      )
+                      )
+                  );
+                }
+              )),
             );
           },
         ),
@@ -98,10 +78,9 @@ class Category2 extends StatelessWidget {
           graphic: Center(child: SortingTower()),
           onTap: () {
             Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SizeIntroPage(goal: SizeGoal.big),
-              ),
+                context,
+                MaterialPageRoute(builder: (context) => SizeIntroPage(goal: SizeGoal.big,)
+                )
             );
           },
         ),
@@ -112,10 +91,9 @@ class Category2 extends StatelessWidget {
           graphic: Center(child: SortingTower()),
           onTap: () {
             Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SizeIntroPage(goal: SizeGoal.small),
-              ),
+                context,
+                MaterialPageRoute(builder: (context) => SizeIntroPage(goal: SizeGoal.small,)
+                )
             );
           },
         ),
@@ -126,10 +104,9 @@ class Category2 extends StatelessWidget {
           graphic: Center(child: SortingTower()),
           onTap: () {
             Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SizeIntroPage(goal: SizeGoal.tall),
-              ),
+                context,
+                MaterialPageRoute(builder: (context) => SizeIntroPage(goal: SizeGoal.tall,)
+                )
             );
           },
         ),
@@ -140,10 +117,9 @@ class Category2 extends StatelessWidget {
           graphic: Center(child: SortingTower()),
           onTap: () {
             Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SizeIntroPage(goal: SizeGoal.short),
-              ),
+                context,
+                MaterialPageRoute(builder: (context) => SizeIntroPage(goal: SizeGoal.short,)
+                )
             );
           },
         ),
@@ -154,10 +130,9 @@ class Category2 extends StatelessWidget {
           graphic: Center(child: SortingTower()),
           onTap: () {
             Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SizeIntroPage(goal: SizeGoal.thin),
-              ),
+                context,
+                MaterialPageRoute(builder: (context) => SizeIntroPage(goal: SizeGoal.thin,)
+                )
             );
           },
         ),
@@ -168,8 +143,9 @@ class Category2 extends StatelessWidget {
           graphic: Center(child: Image.asset('assets/gif/shapes.gif')),
           onTap: () {
             Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CircleDrawingPage()),
+                context,
+                MaterialPageRoute(builder: (context) => CircleDrawingPage()
+                )
             );
           },
         ),
@@ -180,10 +156,9 @@ class Category2 extends StatelessWidget {
           graphic: Center(child: Image.asset('assets/gif/puzzle.gif')),
           onTap: () {
             Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PuzzlePracticeScreen(levels: appleLevels),
-              ),
+                context,
+                MaterialPageRoute(builder: (context) => PuzzlePracticeScreen(levels: puzzleLevels)
+                )
             );
           },
         ),

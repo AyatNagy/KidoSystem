@@ -10,7 +10,6 @@ import '../feelings/feelings_levels.dart';
 import 'Self_cleaning/cleaning_map.dart';
 import 'draw.dart';
 import '../senses/sense_learning_page.dart';
-import 'level1_home.dart';
 import 'matching_practice_page.dart';
 import 'no1/banana_count.dart';
 import 'no1/bees_count.dart';
@@ -29,17 +28,17 @@ class Category extends StatelessWidget {
     return GridView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 180,
         mainAxisSpacing: 20,
         crossAxisSpacing: 20,
         childAspectRatio: 0.85,
       ),
       children: [
-        //counting
+        //  COUNTING
         CategoryCard(
           gradient: AppColors.alphabetGrad,
-          graphic: Center(child: Counting()),
+          graphic: const Center(child: Counting()),
           onTap: () {
             Navigator.push(
               context,
@@ -55,16 +54,11 @@ class Category extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ToyRewardPage(
-                                  onNext:() {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Level1Home(childName: 'hab',)
-                                        )
-                                    );
-                                }
-                              )
-                              )
+                                  onNext: () {
+                                    Navigator.popUntil(context, (route) => route.isFirst);
+                                  },
+                                ),
+                              ),
                             );
                           },
                         ),
@@ -77,145 +71,127 @@ class Category extends StatelessWidget {
           },
         ),
 
-        //sorting
+        // SORTING
         CategoryCard(
           gradient: AppColors.numbersGrad,
-          graphic: Center(child: SortingTower()),
+          graphic: const Center(child: SortingTower()),
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => CubesLesson(
-                    onNext: (){
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MovingCarPage(
-                                onNext: (){
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Level1Home(childName: 'hab',)
-                                      )
-                                  );
-                                },
-                              )
-                          )
-                      );
-                    }
-                  )
-              )
+                builder: (context) => CubesLesson(
+                  onNext: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MovingCarPage(
+                          onNext: () {
+                            Navigator.popUntil(context, (route) => route.isFirst);
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             );
           },
         ),
 
-        //pegboard
+        // PEGBOARD
         CategoryCard(
           gradient: AppColors.colorsGrad,
-          graphic: Center(child: PegboardLogo()),
+          graphic: const Center(child: PegboardLogo()),
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => BunnyFeedingGame(
-                      onNext: (){
-                        Navigator.push(
-                          context,
-                            MaterialPageRoute(
-                                builder: (context) => StakeDrag(
-                                  onNext: (){
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => StakesDrag(
-                                              onNext: (){
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) => Level1Home(childName: 'hab',)
-                                                    )
-                                                );
-                                              }
-                                            )
-                                        )
-                                    );
-                                  }
-                                )
-                            )
-                        );
-                      }
-                    )
-                )
+              context,
+              MaterialPageRoute(
+                builder: (context) => BunnyFeedingGame(
+                  onNext: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StakeDrag(
+                          onNext: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StakesDrag(
+                                  onNext: () {
+                                    Navigator.popUntil(context, (route) => route.isFirst);
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             );
           },
         ),
 
-        //senses
+        // SENSES
         CategoryCard(
           gradient: AppColors.fruitGrad,
-          graphic: Center(child: FiveSensesLogo()),
+          graphic: const Center(child: FiveSensesLogo()),
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SenseLearningScreen(type: SenseType.eyes,)
-                )
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SenseLearningScreen(type: SenseType.eyes),
+              ),
             );
           },
         ),
 
-        //matching
+        // MATCHING
         CategoryCard(
           gradient: [AppColors.kidoColors[5], AppColors.kidoOrange],
           graphic: Center(child: Image.asset('assets/gif/match.gif')),
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MatchingPracticePage()
-                )
+              context,
+              MaterialPageRoute(builder: (context) => const MatchingPracticePage()),
             );
           },
         ),
 
-        //drawing
+        // DRAWING
         CategoryCard(
           gradient: AppColors.puzzleGrad,
           graphic: Center(child: Image.asset('assets/images/drawing/draw.gif')),
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Draw()
-                )
+              context,
+              MaterialPageRoute(builder: (context) => const Draw()),
             );
           },
         ),
 
-        //self-care
+        //SELF-CARE
         CategoryCard(
           gradient: AppColors.vegetablesGrad,
           graphic: Center(child: Image.asset('assets/gif/self-care.gif')),
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CleaningMap()
-                )
+              context,
+              MaterialPageRoute(builder: (context) => const CleaningMap()),
             );
           },
         ),
 
-        //feelings
+        // FEELINGS
         CategoryCard(
           gradient: [AppColors.kidoColors[6], AppColors.kidoRed],
           graphic: Center(child: Image.asset('assets/gif/feelings.gif')),
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TreehouseLevels()
-                )
+              context,
+              MaterialPageRoute(builder: (context) => const TreehouseLevels()),
             );
           },
         ),
