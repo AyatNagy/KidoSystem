@@ -6,7 +6,7 @@ import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
-
+import '../../../../Widgets/Buttons/next_button.dart';
 import '../../../../Widgets/content/level1/stack_painter.dart';
 import '../../../../data/level1/stickes.dart';
 
@@ -118,8 +118,27 @@ class _StakesDragState extends State<StakeDrag> {
               ),
             ),
           ),
-          if (_hasWon) Positioned.fill(child: Lottie.asset('assets/lottie/confetti.json', fit: BoxFit.cover)),
-        ],
+          if (_hasWon) ...[
+            Positioned.fill(
+              child: Lottie.asset(
+                'assets/lottie/confetti.json',
+                fit: BoxFit.cover,
+                repeat: false,
+              ),
+            ),
+            Positioned(
+              bottom: sh * 0.05,
+              right: sw * 0.05,
+              child: NextButton(
+                color: AppColors.kidoOrange,
+                onPressed: () {
+                  if (widget.onNext != null) {
+                    widget.onNext!();
+                  }
+                },
+              ),
+            ),
+          ],],
       ),
     );
   }

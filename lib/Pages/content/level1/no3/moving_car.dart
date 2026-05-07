@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:lottie/lottie.dart';
-
 import '../../../../Widgets/content/level1/no3/moving_car.dart';
 import '../../../../Widgets/content/level1/road_widget.dart';
 import '../../../../constants.dart';
 import '../../../../services/audio_service.dart';
+import '../level1_home.dart';
 
 class MovingCarPage extends StatefulWidget {
   const MovingCarPage({super.key});
@@ -62,6 +62,20 @@ class _MovingCarPageState extends State<MovingCarPage>
     _carMovement = Tween<double>(begin: 400, end: -500).animate(
       CurvedAnimation(parent: _carController, curve: Curves.linear),
     );
+    _carController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Level1Home(childName: 'habiba',)
+                )
+            );
+            }
+        });
+      }
+    });
 
     _carController.duration = const Duration(seconds: 3);
     _carController.forward(from: 0);

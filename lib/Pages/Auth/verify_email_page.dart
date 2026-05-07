@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/Auth/parent_login_screen.dart';
-import 'package:kido/Widgets/otp_input_widget.dart';
+import 'package:kido/Widgets/Auth/otp_input_widget.dart';
 import 'package:kido/bloc/verify_email/verify_email_cubit.dart';
 
 class VerifyEmailScreen extends StatefulWidget {

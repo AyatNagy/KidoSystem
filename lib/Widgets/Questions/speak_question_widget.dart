@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import '../../Models/speak_question.dart';
+import '../../Models/exams/speak_question.dart';
 import '../responsive_provider.dart';
 
 class SpeakQuestionWidget extends StatefulWidget {

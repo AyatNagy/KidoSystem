@@ -1,4 +1,4 @@
-import 'package:kido/Models/draganddrop_question.dart';
+import 'package:kido/Models/exams/draganddrop_question.dart';
 import 'package:kido/services/asset_service.dart';
 
 enum TrainMode{presenting,testing,finished}

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lottie/lottie.dart';
-import 'vegetable_model.dart';
+import '../../../../Models/level3/vegetables/vegetable_model.dart';
 
 class VegetableSong extends StatefulWidget {
   const VegetableSong({super.key});
@@ -52,7 +52,6 @@ class _VegetableSongState extends State<VegetableSong>
     super.dispose();
   }
 
-  // ── نطق اسم الخضرة ──────────────────────────────────────
   Future<void> _speak(String text) async {
     await flutterTts.setLanguage('en-US');
     await flutterTts.setPitch(1.1);
@@ -74,7 +73,6 @@ class _VegetableSongState extends State<VegetableSong>
       if (!isPressed && mounted) _speak(_list[page].text);
     });
 
-    // وميض بعد 5 ثوان للإشارة للإجابة الصحيحة
     Future.delayed(const Duration(seconds: 5), () {
       if (mounted && !showSuccess) {
         _glowCtrl.repeat(reverse: true);
@@ -155,18 +153,15 @@ class _VegetableSongState extends State<VegetableSong>
     );
   }
 
-  // ── شاشة السؤال ──────────────────────────────────────────
   Widget _buildQuestion(BuildContext ctx, QuestionModel q, Numbermodel veg) {
     return SafeArea(
       child: Column(
         children: [
-          // ── AppBar بسيط ──────────────────────────────────
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // زر الرجوع
                 _CircleBtn(
                   icon: Icons.arrow_back_ios_new_rounded,
                   onTap: () => Navigator.pop(ctx),
@@ -214,8 +209,6 @@ class _VegetableSongState extends State<VegetableSong>
                   }).toList(),
             ),
           ),
-
-          // ── أزرار التنقل ─────────────────────────────────
           Padding(
             padding: const EdgeInsets.only(
               bottom: 32,
@@ -250,9 +243,7 @@ class _VegetableSongState extends State<VegetableSong>
       ),
     );
   }
-
-  // ── بناء خيار واحد ───────────────────────────────────────
-  Widget _buildOption(String imgPath, bool isCorrect) {
+Widget _buildOption(String imgPath, bool isCorrect) {
     final faded = wrongSelections.contains(imgPath);
 
     return Expanded(
@@ -303,16 +294,12 @@ class _VegetableSongState extends State<VegetableSong>
       ),
     );
   }
-
-  // ── شاشة النجاح ──────────────────────────────────────────
-  Widget _buildSuccess(Numbermodel veg) {
+Widget _buildSuccess(Numbermodel veg) {
     return Stack(
       children: [
-        // كونفيتي
         Positioned.fill(
           child: Lottie.asset('assets/lottie/CONFETTI.json', fit: BoxFit.cover),
         ),
-        // المحتوى
         Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -344,7 +331,6 @@ class _VegetableSongState extends State<VegetableSong>
                 ),
               ),
               const SizedBox(height: 40),
-              // زر التالي
               if (_page + 1 < vegitablesongs2.length)
                 GestureDetector(
                   onTap: _nextPage,
@@ -394,7 +380,6 @@ class _VegetableSongState extends State<VegetableSong>
   }
 }
 
-// ── زر دائري مساعد ───────────────────────────────────────────
 class _CircleBtn extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;

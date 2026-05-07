@@ -1,16 +1,16 @@
 // ignore_for_file: deprecated_member_use
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:kido/Models/letter_step.dart';
-import 'package:kido/Widgets/animated_hand_widget.dart';
-import 'package:kido/Widgets/celebration_overlay.dart';
+import 'package:kido/Models/level3/letter_step.dart';
+import 'package:kido/Widgets/Animation/animated_hand_widget.dart';
+import 'package:kido/Widgets/Dialogs/celebration_overlay.dart';
 import 'package:kido/Widgets/stars_widget.dart';
-import 'package:kido/tracing/letter_repository.dart';
+import 'package:kido/data/level3/letters/letter_repository.dart';
 import 'package:kido/utils/tracing_score.dart';
-import '../Widgets/Painter/letter_path_painter.dart';
-import '../Widgets/Painter/my_painter.dart';
-import '../Widgets/Painter/steps_painter.dart';
-import '../constants.dart';
+import '../../../../Widgets/Painter/letter_path_painter.dart';
+import '../../../../Widgets/Painter/my_painter.dart';
+import '../../../../Widgets/Painter/steps_painter.dart';
+import '../../../../constants.dart';
 
 class LetterTracePage extends StatefulWidget {
   final String letter;

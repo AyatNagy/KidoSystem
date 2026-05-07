@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
-
+import '../../../../Widgets/Buttons/next_button.dart';
 import '../../../../Widgets/content/draganddrop.dart';
 import '../../../../data/level1/bunny_feed.dart';
 
 class BunnyFeedingGame extends StatefulWidget {
-  const BunnyFeedingGame({super.key});
+  final VoidCallback? onNext;
+  const BunnyFeedingGame({super.key, this.onNext});
 
   @override
   State<BunnyFeedingGame> createState() => _BunnyFeedingGameState();
@@ -20,7 +21,7 @@ class _BunnyFeedingGameState extends State<BunnyFeedingGame> {
 
   @override
   Widget build(BuildContext context) {
-
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       body: Stack(
@@ -48,13 +49,28 @@ class _BunnyFeedingGameState extends State<BunnyFeedingGame> {
               }
             },
           ),
-          if (isGameWon)
+          if (isGameWon) ...[
             Positioned.fill(
               child: Lottie.asset(
                 'assets/lottie/confetti.json',
                 fit: BoxFit.cover
               ),
             ),
+            Positioned(
+              bottom: size.height * 0.05,
+              right: size.width * 0.05,
+              child: NextButton(
+                color: AppColors.kidoOrange,
+                onPressed: () {
+                  if (widget.onNext != null) {
+                    widget.onNext!();
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+            ),
+          ]
         ],
       ),
     );

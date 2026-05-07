@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import '../utils/validators.dart';
+import '../../utils/validators.dart';
 
 class PasswordStrengthTurtle extends StatefulWidget {
   final String password;

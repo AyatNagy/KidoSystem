@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 
-import '../../../controllers/feelings_data.dart';
+import '../../../data/content/feelings_data.dart';
 
 class DraganddropFeelings extends StatefulWidget {
   const DraganddropFeelings({super.key});

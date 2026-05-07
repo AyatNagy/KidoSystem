@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Models/body_parts_model.dart';
+import 'package:kido/Models/level1/body_parts_model.dart';
 import 'package:kido/Widgets/Buttons/next_button.dart';
-import 'package:kido/data/body_parts.dart';
+import 'package:kido/data/level1/body_parts.dart';
 import 'package:kido/utils/stars_progress.dart';
 import 'package:lottie/lottie.dart';
 import 'package:video_player/video_player.dart';

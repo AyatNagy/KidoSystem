@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kido/Models/draganddrop_question.dart';
+import 'package:kido/Models/exams/draganddrop_question.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
 class DragDropWidget extends StatefulWidget {

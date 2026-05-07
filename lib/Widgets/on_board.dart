@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/onboard_model.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import 'app_bar.dart';
+import 'Layout/app_bar.dart';
 
 class OnboardPage extends StatelessWidget {
   final OnboardModel data;

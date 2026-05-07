@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:kido/Models/letter_step.dart';
+import 'package:kido/Models/level3/letter_step.dart';
 
 class StepsPainter extends CustomPainter {
   final List<LetterStep> steps;

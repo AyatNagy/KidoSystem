@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/letter_trace_page.dart';
+import 'package:kido/Pages/content/level3/letters/letter_trace_page.dart';
 import 'package:kido/constants.dart';
 import '../../../../Models/level3/letters/letter_map.dart';
 import '../../../../Widgets/content/level3/discovery_widget.dart';
