@@ -115,8 +115,7 @@ flutter:
     - assets/images/clean/
     - assets/images/clean/Trash/
     - assets/images/puzzle/
-     
-
+    - assets/images/matching/
    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
