@@ -95,6 +95,7 @@ flutter:
     - assets/audio/numeric_ar/
     - assets/audio/fruits/
     - assets/audio/sizes/
+    - assets/audio/senses/
     - assets/audio/alphabet_ar/
     - assets/audio/alphabet_en/
     - assets/videos/
@@ -113,6 +114,7 @@ flutter:
     - assets/images/senses/
     - assets/images/clean/
     - assets/images/clean/Trash/
+    - assets/images/puzzle/
      
 
    

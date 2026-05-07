@@ -4,10 +4,12 @@ import 'package:kido/Pages/content/level2/draw/draw_line/rainy_cloud.dart';
 import 'package:kido/Pages/content/level2/draw/draw_line/rocket_lesson.dart';
 import 'package:kido/Pages/content/level2/draw/plus.dart';
 import 'package:kido/Pages/content/level2/level2home.dart';
+import 'package:kido/Pages/content/level2/puzzle_practice.dart';
 import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/enum/size_goal.dart';
 import '../../../Widgets/Animation/sorting_tower.dart';
+import '../../../data/level2/puzzle_data.dart';
 import '../sizes/size_intro_page.dart';
 import 'draw/draw_line/octobus_and_star.dart';
 
@@ -143,6 +145,19 @@ class Category2 extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => CircleDrawingPage()
+                )
+            );
+          },
+        ),
+
+        //Puzzle
+        CategoryCard(
+          gradient: [AppColors.kidoPink, AppColors.bgColor],
+          graphic: Center(child: Image.asset('assets/gif/puzzle.gif')),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PuzzlePracticeScreen(levels: puzzleLevels)
                 )
             );
           },

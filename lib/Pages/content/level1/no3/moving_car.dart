@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
+import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../Widgets/content/level1/no3/moving_car.dart';
@@ -9,7 +10,9 @@ import '../../../../services/audio_service.dart';
 import '../level1_home.dart';
 
 class MovingCarPage extends StatefulWidget {
-  const MovingCarPage({super.key});
+  final VoidCallback? onNext;
+
+  const MovingCarPage({super.key, this.onNext});
 
   @override
   State<MovingCarPage> createState() => _MovingCarPageState();
@@ -179,13 +182,18 @@ class _MovingCarPageState extends State<MovingCarPage>
                 child: _buildCubeDock(r),
               ),
 
-            if (_isReadyToDrive)
+            if (_isReadyToDrive) ...[
               Positioned.fill(
                 child: Lottie.asset(
                   'assets/lottie/confetti.json',
                   fit: BoxFit.cover,
                 ),
               ),
+              NextButton(
+                  color: AppColors.kidoGreen,
+                  onPressed: widget.onNext!,
+              )
+            ]
           ],
         ),
       ),

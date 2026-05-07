@@ -90,7 +90,16 @@ class Category extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MovingCarPage()
+                              builder: (context) => MovingCarPage(
+                                onNext: (){
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Level1Home(childName: 'hab',)
+                                      )
+                                  );
+                                },
+                              )
                           )
                       );
                     }

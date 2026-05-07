@@ -20,7 +20,6 @@ class SenseLearningScreen extends StatefulWidget {
 class _SenseLearningScreenState extends State<SenseLearningScreen> {
   late final SenseData data;
 
-  bool isStarted = false;
   bool isPlaying = false;
   bool isLoopFinished = false;
 
@@ -28,17 +27,19 @@ class _SenseLearningScreenState extends State<SenseLearningScreen> {
   void initState() {
     super.initState();
     data = SenseMapper.get(widget.type);
-  }
 
-  void _startLesson() {
-    setState(() => isStarted = true);
-    _playLoop();
+    // Automatically start the audio loop once the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _playLoop();
+    });
   }
 
   Future<void> _playLoop() async {
+    // Loop the sound 5 times as per your original logic
     for (int i = 0; i < 5; i++) {
       if (!mounted) return;
       await _playSound();
+      // Brief pause between loops
       await Future.delayed(const Duration(seconds: 1));
     }
 
@@ -50,10 +51,11 @@ class _SenseLearningScreenState extends State<SenseLearningScreen> {
   Future<void> _playSound() async {
     if (isPlaying) return;
 
-    setState(() => isPlaying = true);
+    if (mounted) setState(() => isPlaying = true);
 
     await AudioService.play(fileName: data.audio);
 
+    // Wait for the audio duration (assumed 2 seconds) before allowing another play
     await Future.delayed(const Duration(seconds: 2));
 
     if (mounted) setState(() => isPlaying = false);
@@ -70,8 +72,9 @@ class _SenseLearningScreenState extends State<SenseLearningScreen> {
           height: config.localHeight,
           child: Stack(
             children: [
+              // Main interaction area
               GestureDetector(
-                onTap: isStarted ? _playSound : null,
+                onTap: _playSound,
                 child: SenseFaceView(
                   data: data,
                   width: config.localWidth,
@@ -80,7 +83,6 @@ class _SenseLearningScreenState extends State<SenseLearningScreen> {
                   isPlaying: isPlaying,
                 ),
               ),
-
               if (isLoopFinished)
                 Positioned(
                   bottom: 40,
@@ -96,20 +98,6 @@ class _SenseLearningScreenState extends State<SenseLearningScreen> {
                         ),
                       );
                     },
-                  ),
-                ),
-
-              if (!isStarted)
-                GestureDetector(
-                  onTap: _startLesson,
-                  child: Container(
-                    color: Colors.black.withValues(alpha: 0.5),
-                    alignment: Alignment.center,
-                    child: const Icon(
-                      Icons.play_circle_fill,
-                      size: 100,
-                      color: Colors.white,
-                    ),
                   ),
                 ),
             ],

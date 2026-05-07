@@ -88,11 +88,6 @@ class CategoryGrid extends StatelessWidget {
             );
           },
         ),
-        CategoryCard(
-          gradient: [AppColors.kidoColors[3], AppColors.kidoColors[3]],
-          graphic: Center(child: Image.asset('assets/gif/animals.gif')),
-          onTap: () {},
-        ),
       ],
     );
   }
