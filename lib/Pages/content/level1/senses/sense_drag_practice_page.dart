@@ -2,11 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kido/Models/exams/draganddrop_question.dart';
 import 'package:kido/Models/dragable_item.dart';
-import 'package:kido/Models/sense_data.dart';
+import 'package:kido/Models/level1/sense_model.dart';
 import 'package:kido/Models/targets_item.dart';
 import 'package:kido/Widgets/content/draganddrop.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import 'package:kido/data/sense_mapper.dart';
+import 'package:kido/data/level1/senses/sense_data.dart';
 import 'package:kido/enum/sense_type.dart';
 import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
@@ -36,8 +36,6 @@ class _SenseDragPracticeScreenState extends State<SenseDragPracticeScreen>
   void initState() {
     super.initState();
     senseData = SenseMapper.get(widget.type);
-
-    // إعداد أنيميشن الوميض (Hint)
     _glowController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -48,29 +46,19 @@ class _SenseDragPracticeScreenState extends State<SenseDragPracticeScreen>
     );
 
     _prepareDragDropData();
-
-    // تشغيل السؤال لأول مرة عند فتح الصفحة
     WidgetsBinding.instance.addPostFrameCallback((_) => _runSystemSequence());
   }
 
-  // --- المنطق الرئيسي للنظام ---
-
   void _runSystemSequence({bool triggerHint = false}) async {
     if (isSuccess || !mounted) return;
-
-    // 1. تنظيف أي عمليات سابقة
     _stopAllActions();
 
-    // 2. تفعيل التلميح إذا كان مطلوباً (في حالة التأخير أو الخطأ)
     if (triggerHint) {
       setState(() => showHint = true);
       _glowController.repeat(reverse: true);
     }
-
-    // 3. تشغيل صوت السؤال
     await AudioService.play(fileName: senseData.questionAudio);
 
-    // 4. بدء تايمر الانتظار (إذا لم يحرك الطفل شيئاً خلال 7 ثواني يعيد التنبيه)
     _startIdleTimer();
   }
 
@@ -84,36 +72,37 @@ class _SenseDragPracticeScreenState extends State<SenseDragPracticeScreen>
   void _startIdleTimer() {
     _idleTimer?.cancel();
     _idleTimer = Timer(const Duration(seconds: 7), () {
-      _runSystemSequence(triggerHint: true); // إعادة السؤال مع تفعيل التلميح
+      _runSystemSequence(triggerHint: true);
     });
   }
-
-  // --- أحداث اللعبة ---
 
   void _onAnswerUpdate(Map<String, String?> answers) async {
     if (answers.containsKey("correct_part")) {
       if (isSuccess) return;
 
-      _stopAllActions(); // إيقاف كل شيء عند النجاح
+      _stopAllActions();
       setState(() => isSuccess = true);
 
       await AudioService.play(fileName: "yaay.mp3");
       await Future.delayed(const Duration(milliseconds: 1500));
       await AudioService.play(fileName: senseData.audio);
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context, true);
+        }
+      });
     }
   }
 
   void _onUserStartedDragging() {
-    // بمجرد ما الطفل يمسك القطعة، نوقف الصوت والتايمر عشان نركز في الحركة
     _stopAllActions();
   }
 
   void _onUserMadeMistake() {
-    // لو وضع القطعة في مكان غلط، نعيد له السؤال فوراً مع التلميح
     _runSystemSequence(triggerHint: true);
   }
-
-  // --- بناء البيانات والواجهة ---
 
   void _prepareDragDropData() {
     final wrongSenseData = _getWrongOptionData();
@@ -176,7 +165,6 @@ class _SenseDragPracticeScreenState extends State<SenseDragPracticeScreen>
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // 1. ويدجت اللعب الأساسية
           DragDropWidget(
             question: dragDropData,
             onAnswered: _onAnswerUpdate,
@@ -218,7 +206,6 @@ class _SenseDragPracticeScreenState extends State<SenseDragPracticeScreen>
               ),
             ),
 
-          // 3. طبقة الاحتفال عند النجاح
           if (isSuccess)
             Positioned.fill(
               child: Lottie.asset(
@@ -228,7 +215,6 @@ class _SenseDragPracticeScreenState extends State<SenseDragPracticeScreen>
               ),
             ),
 
-          // 4. زر الرجوع
           Positioned(
             top: 40,
             left: 20,

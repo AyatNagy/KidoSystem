@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Models/sense_data.dart';
+import 'package:kido/Models/level1/sense_model.dart';
 import 'package:kido/Widgets/content/animated_feature.dart';
 
 class SenseFaceView extends StatelessWidget {

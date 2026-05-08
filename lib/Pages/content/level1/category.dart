@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Pages/content/level1/senses/senses_map.dart';
 import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
 import '../../../Widgets/Animation/counting.dart';
 import '../../../Widgets/Animation/peg_board.dart';
 import '../../../Widgets/Animation/senses.dart';
 import '../../../Widgets/Animation/sorting_tower.dart';
-import '../../../enum/sense_type.dart';
 import '../feelings/feelings_levels.dart';
 import 'Self_cleaning/cleaning_map.dart';
 import 'draw.dart';
-import '../senses/sense_learning_page.dart';
 import 'matching_practice_page.dart';
 import 'no1/banana_count.dart';
 import 'no1/bees_count.dart';
@@ -43,29 +42,35 @@ class Category extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MonkeyCountingPage(
-                  onNext: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BeeCountingPage(
-                          onNext: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ToyRewardPage(
+                builder:
+                    (context) => MonkeyCountingPage(
+                      onNext: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => BeeCountingPage(
                                   onNext: () {
-                                    Navigator.popUntil(context, (route) => route.isFirst);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => ToyRewardPage(
+                                              onNext: () {
+                                                Navigator.popUntil(
+                                                  context,
+                                                  (route) => route.isFirst,
+                                                );
+                                              },
+                                            ),
+                                      ),
+                                    );
                                   },
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                          ),
+                        );
+                      },
+                    ),
               ),
             );
           },
@@ -79,20 +84,25 @@ class Category extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CubesLesson(
-                  onNext: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MovingCarPage(
-                          onNext: () {
-                            Navigator.popUntil(context, (route) => route.isFirst);
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                builder:
+                    (context) => CubesLesson(
+                      onNext: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => MovingCarPage(
+                                  onNext: () {
+                                    Navigator.popUntil(
+                                      context,
+                                      (route) => route.isFirst,
+                                    );
+                                  },
+                                ),
+                          ),
+                        );
+                      },
+                    ),
               ),
             );
           },
@@ -106,29 +116,35 @@ class Category extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BunnyFeedingGame(
-                  onNext: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StakeDrag(
-                          onNext: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StakesDrag(
+                builder:
+                    (context) => BunnyFeedingGame(
+                      onNext: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => StakeDrag(
                                   onNext: () {
-                                    Navigator.popUntil(context, (route) => route.isFirst);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => StakesDrag(
+                                              onNext: () {
+                                                Navigator.popUntil(
+                                                  context,
+                                                  (route) => route.isFirst,
+                                                );
+                                              },
+                                            ),
+                                      ),
+                                    );
                                   },
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                          ),
+                        );
+                      },
+                    ),
               ),
             );
           },
@@ -141,9 +157,7 @@ class Category extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => const SenseLearningScreen(type: SenseType.eyes),
-              ),
+              MaterialPageRoute(builder: (context) => SensesMapPage()),
             );
           },
         ),
@@ -155,7 +169,9 @@ class Category extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const MatchingPracticePage()),
+              MaterialPageRoute(
+                builder: (context) => const MatchingPracticePage(),
+              ),
             );
           },
         ),

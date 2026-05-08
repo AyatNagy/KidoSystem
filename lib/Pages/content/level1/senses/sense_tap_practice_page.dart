@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:kido/Models/sense_data.dart';
-import 'package:kido/Pages/content/senses/sense_drag_practice_page.dart';
+import 'package:kido/Models/level1/sense_model.dart';
+import 'package:kido/Pages/content/level1/senses/sense_drag_practice_page.dart';
 import 'package:kido/Widgets/content/level1/sense_face_view.dart';
 import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import 'package:kido/data/sense_mapper.dart';
+import 'package:kido/data/level1/senses/sense_data.dart';
 import 'package:kido/enum/sense_type.dart';
 import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
