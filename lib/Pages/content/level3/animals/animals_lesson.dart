@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Widgets/content/level3/discovery_widget.dart';
 import 'package:kido/data/level3/animals/animals_data.dart';
-import '../../../Widgets/content/level3/discovery_widget.dart';
+
 
 
 class AnimalsDiscoveryScreen extends StatefulWidget {
