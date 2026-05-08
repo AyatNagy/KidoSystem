@@ -1,1 +1,1 @@
-enum PuzzleStage { intro, playing }
+enum PuzzleStage { intro, modeling, interaction }

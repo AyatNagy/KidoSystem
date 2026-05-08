@@ -5,10 +5,9 @@ import 'package:kido/Pages/content/level2/level2home.dart';
 import 'package:kido/Widgets/content/draganddrop.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/data/level2/puzzle_data.dart';
+import 'package:kido/enum/puzzle_flow.dart';
 import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
-
-enum PuzzleStage { intro, modeling, interaction }
 
 class PuzzlePracticeScreen extends StatefulWidget {
   final List<PuzzleData> levels;
