@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
             locale: DevicePreview.locale(context),
             home: const Logo(),
           )
+           
         );
       },
     );

@@ -116,6 +116,9 @@ flutter:
     - assets/images/clean/Trash/
     - assets/images/puzzle/
     - assets/images/matching/
+    - assets/images/animals/
+    - assets/audio/animals/
+     
    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
