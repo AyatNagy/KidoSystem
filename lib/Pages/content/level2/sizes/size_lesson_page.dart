@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Models/size_lesson_data.dart';
-import 'package:kido/Pages/content/sizes/size_practice_page.dart';
+import 'package:kido/Models/level2/size_model.dart';
+import 'package:kido/Pages/content/level2/sizes/size_practice_page.dart';
 import 'package:kido/Widgets/content/content_app_bar.dart';
 import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
+import 'package:kido/data/level2/size/size_data.dart';
 import 'package:kido/enum/size_goal.dart';
 import 'package:kido/services/audio_service.dart';
 
@@ -102,9 +103,9 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
           translateY = baseTranslate;
           break;
         case SizeGoal.short:
-          scaleX = 1.1;
+          scaleX = 0.95;
           scaleY = 0.7;
-          translateY = 20;
+          translateY = 10;
           break;
         case SizeGoal.fat:
           scaleX = 1.6;
@@ -122,8 +123,8 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
           translateY = -15;
           break;
         case SizeGoal.small:
-          scaleX = 0.6;
-          scaleY = 0.6;
+          scaleX = 0.5;
+          scaleY = 0.5;
           translateY = 0;
           break;
       }
@@ -153,7 +154,11 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
                         transformAlignment: Alignment.center,
                         child: Image.asset(
                           data.correctImage,
-                          height: config.imageHeight(0.4), // 40% من الشاشة
+                          height:
+                              (widget.goal == SizeGoal.small ||
+                                      widget.goal == SizeGoal.short)
+                                  ? config.imageHeight(0.15)
+                                  : config.imageHeight(0.4),
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -167,7 +172,7 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
                       opacity: 0.6,
                       child: Image.asset(
                         data.secondImage,
-                        height: config.imageHeight(0.2), // 20% من الشاشة
+                        height: config.imageHeight(0.2),
                         fit: BoxFit.contain,
                       ),
                     ),

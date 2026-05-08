@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/content/level1/senses/senses_map.dart';
+import 'package:kido/Pages/content/level1/senses/senses_map_page.dart';
 import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
 import '../../../Widgets/Animation/counting.dart';

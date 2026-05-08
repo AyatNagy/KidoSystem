@@ -1,11 +1,12 @@
 // ignore_for_file: deprecated_member_use
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:kido/Models/size_lesson_data.dart';
+import 'package:kido/Models/level2/size_model.dart';
 import 'package:kido/Widgets/content/choise_item_widget.dart';
 import 'package:kido/Widgets/content/content_app_bar.dart';
 import 'package:kido/Widgets/content/success_overlay_widget.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
+import 'package:kido/data/level2/size/size_data.dart';
 import 'package:kido/enum/size_goal.dart';
 import 'package:kido/services/audio_service.dart';
 
@@ -49,14 +50,12 @@ class _SizePracticePageState extends State<SizePracticePage>
   }
 
   void _setupInitialFlow() {
-    // تشغيل صوت السؤال بعد ثانية
     Future.delayed(const Duration(seconds: 1), () {
       if (mounted && !showSuccess) {
         AudioService.play(fileName: data.questionAudio);
       }
     });
 
-    // تأخير البدء في تحريك العنصر الصحيح (Hint)
     startDelayTimer = Timer(const Duration(seconds: 5), () {
       if (mounted && !showSuccess) {
         setState(() => canAnimate = true);
@@ -95,7 +94,6 @@ class _SizePracticePageState extends State<SizePracticePage>
       startDelayTimer?.cancel();
       AudioService.stop();
 
-      // إيقاف الأنيميشن عند الضغط الصحيح
       if (stretchController.isAnimating) {
         await stretchController.animateTo(
           0,
@@ -108,13 +106,18 @@ class _SizePracticePageState extends State<SizePracticePage>
         AudioService.play(fileName: "yaay.mp3");
       }
 
-      // تسلسل الأصوات بعد النجاح
       await Future.delayed(const Duration(milliseconds: 2000));
       //await AudioService.play(fileName: data.correctAudio);
       await Future.delayed(const Duration(seconds: 1));
       await AudioService.play(fileName: data.audio);
+
+      await Future.delayed(const Duration(seconds: 2));
+      if (mounted) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
+      }
     } else {
-      // التعامل مع الإجابة الخاطئة
       if (mounted) {
         setState(() {
           if (!wrongSelections.contains("wrong")) {
@@ -141,40 +144,36 @@ class _SizePracticePageState extends State<SizePracticePage>
 
     switch (widget.goal) {
       case SizeGoal.tall:
-        scaleX = 1.0 - (0.1 * val); // تنحيف بسيط
-        scaleY = 1.0 + (0.4 * val); // تطويل للأعلى
+        scaleX = 1.0 - (0.1 * val);
+        scaleY = 1.0 + (0.4 * val);
         translateY = responsiveJump * val;
         break;
 
       case SizeGoal.short:
-        // الحل: بنقلل الـ Scale بدل ما نزوده
-        scaleX = 1.0 + (0.1 * val); // بيعرض شوية
-        scaleY = 1.0 - (0.3 * val); // بيكبس لتحت (يقصر)
-        translateY = (responsiveJump.abs() * 0.2) * val; // حركة خفيفة لتحت
+        scaleX = 1.0 - (0.05 * val);
+        scaleY = 1.0 - (0.2 * val);
+        translateY = 0.0;
         break;
 
       case SizeGoal.fat:
-        scaleX = 1.0 + (0.5 * val); // بيعرض
-        scaleY = 1.0 - (0.1 * val); // بيكبس
+        scaleX = 1.0 + (0.5 * val);
+        scaleY = 1.0 - (0.1 * val);
         break;
 
       case SizeGoal.thin:
-        scaleX = 1.0 - (0.5 * val); // بيرفع جداً
+        scaleX = 1.0 - (0.5 * val);
         scaleY = 1.0 + (0.1 * val);
         break;
 
       case SizeGoal.big:
-        // الحل: تقليل القيم عشان ما يخرجش بره الشاشة
-        // جربي 1.2 أو 1.3 كحد أقصى بدل 1.5
         scaleX = 1.0 + (0.25 * val);
         scaleY = 1.0 + (0.25 * val);
         translateY = (responsiveJump * 0.2) * val;
         break;
 
       case SizeGoal.small:
-        // الحل: تصغير (Scale down)
-        scaleX = 1.0 - (0.4 * val); // بيصغر لـ 60% من حجمه
-        scaleY = 1.0 - (0.4 * val);
+        scaleX = 1.0 - (0.3 * val);
+        scaleY = 1.0 - (0.3 * val);
         translateY = 0.0;
         break;
     }
@@ -217,7 +216,7 @@ class _SizePracticePageState extends State<SizePracticePage>
                           animation: stretchAnimation,
                           onTap: () => handleTap(false),
                           transform: Matrix4.identity(),
-                          height: config.imageHeight(0.2), // ريسبونسف
+                          height: config.imageHeight(0.2),
                         ),
                         AnimatedBuilder(
                           animation: stretchAnimation,
@@ -231,7 +230,11 @@ class _SizePracticePageState extends State<SizePracticePage>
                               transform: _getStepTransform(
                                 stretchAnimation.value,
                               ),
-                              height: config.imageHeight(0.4), // ريسبونسف
+                              height:
+                                  (widget.goal == SizeGoal.small ||
+                                          widget.goal == SizeGoal.short)
+                                      ? config.imageHeight(0.15)
+                                      : config.imageHeight(0.4),
                             );
                           },
                         ),

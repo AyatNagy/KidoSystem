@@ -5,12 +5,13 @@ import 'package:kido/Pages/content/level2/draw/draw_line/rocket_lesson.dart';
 import 'package:kido/Pages/content/level2/draw/plus.dart';
 import 'package:kido/Pages/content/level2/level2home.dart';
 import 'package:kido/Pages/content/level2/puzzle_practice.dart';
+import 'package:kido/Pages/content/level2/sizes/sizes_map_page.dart';
 import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/enum/size_goal.dart';
 import '../../../Widgets/Animation/sorting_tower.dart';
 import '../../../data/level2/puzzle_data.dart';
-import '../sizes/size_intro_page.dart';
+import 'sizes/size_intro_page.dart';
 import 'draw/draw_line/octobus_and_star.dart';
 
 class Category2 extends StatelessWidget {
@@ -127,9 +128,7 @@ class Category2 extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => SizeIntroPage(goal: SizeGoal.tall),
-              ),
+              MaterialPageRoute(builder: (context) => SizesMapPage()),
             );
           },
         ),

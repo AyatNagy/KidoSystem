@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/level3/letters/letter_map.dart';
 import 'package:kido/Pages/content/level1/senses/sense_learning_page.dart';
-import 'package:kido/data/level1/senses/senses_journy.dart';
+import 'package:kido/data/level1/senses/senses_journy_data.dart';
 import 'package:kido/enum/sense_type.dart';
 import '../../../../Widgets/content/journey_map.dart';
 
