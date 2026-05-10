@@ -55,6 +55,7 @@ dependencies:
   motion_toast: ^2.9.1
   rive: ^0.14.3
   video_player: ^2.8.1
+  image_picker: ^1.2.2
 
 
 dev_dependencies:
