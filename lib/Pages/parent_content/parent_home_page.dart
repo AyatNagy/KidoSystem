@@ -118,7 +118,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
       _buildHomeContent(config),
       const Scaffold(body: Center(child: Text("Dashboard"))),
       const Scaffold(body: Center(child: Text("Learn"))),
-      const ProfilePage(),
+      // const ProfilePage(),
     ];
 
     return Scaffold(

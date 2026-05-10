@@ -1,6 +1,7 @@
-// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
+import 'package:flutter/services.dart';
 import '../../../Widgets/responsive_provider.dart';
 import '../../../constants.dart';
 
@@ -16,18 +17,23 @@ class _FiveSensesLogoState extends State<FiveSensesLogo>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late List<Animation<double>> _senseAnimations;
+  List<ui.Image?> _loadedImages = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _loadAllImages();
+
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 4),
     )..repeat();
 
-    _senseAnimations = List.generate(5, (index) {
-      double start = index * 0.15;
-      double end = start + 0.25;
+    // توزيع الأنيميشن على 4 حواس
+    _senseAnimations = List.generate(4, (index) {
+      double start = index * 0.2;
+      double end = start + 0.3;
       return Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
           parent: _controller,
@@ -35,6 +41,37 @@ class _FiveSensesLogoState extends State<FiveSensesLogo>
         ),
       );
     });
+  }
+
+  // تحميل الصور مسبقاً لتحويلها إلى تنسيق يفهمه الـ Canvas
+  Future<void> _loadAllImages() async {
+    final List<String> assetPaths = [
+      'assets/images/senses/eye_c.png', // تأكد من وجود الصور بهذه المسارات
+      'assets/images/senses/nose.png',
+      'assets/images/senses/mouth_map.png',
+      'assets/images/senses/ear_c.png',
+    ];
+
+    List<ui.Image?> images = [];
+    for (String path in assetPaths) {
+      try {
+        final data = await rootBundle.load(path);
+        final bytes = data.buffer.asUint8List();
+        final codec = await ui.instantiateImageCodec(bytes);
+        final frame = await codec.getNextFrame();
+        images.add(frame.image);
+      } catch (e) {
+        debugPrint("خطأ في تحميل الصورة $path: $e");
+        images.add(null);
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _loadedImages = images;
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -45,6 +82,11 @@ class _FiveSensesLogoState extends State<FiveSensesLogo>
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const SizedBox.shrink(); // أو لودنج بسيط
+    }
+
+    // استخدام الـ ResponsiveProvider الخاص بك لتحديد الحجم الكلي للرسمة
     final responsive = ResponsiveProvider.of(context);
     final double logoSize = responsive.imageWidth(widget.sizeMultiplier);
 
@@ -57,12 +99,13 @@ class _FiveSensesLogoState extends State<FiveSensesLogo>
           child: CustomPaint(
             painter: SensesPainter(
               animations: _senseAnimations.map((a) => a.value).toList(),
+              images: _loadedImages,
+              // ألوان الفقاعات (يمكنك تغييرها من AppColors)
               colors: [
                 AppColors.kidoRed,
                 AppColors.kidoOrange,
                 AppColors.kidoGreen,
                 AppColors.kidoBlue,
-                AppColors.purpleMain,
               ],
             ),
           ),
@@ -74,92 +117,105 @@ class _FiveSensesLogoState extends State<FiveSensesLogo>
 
 class SensesPainter extends CustomPainter {
   final List<double> animations;
+  final List<ui.Image?> images;
   final List<Color> colors;
 
-  SensesPainter({required this.animations, required this.colors});
+  SensesPainter({
+    required this.animations,
+    required this.images,
+    required this.colors,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final double centerX = size.width / 2;
     final double centerY = size.height / 2;
-    final double headRadius = size.width * 0.22;
 
-    final headPaint = Paint()
-      ..color = Colors.white.withOpacity(0.12)
-      ..style = PaintingStyle.fill;
+    // المسافة التي تدور فيها الصور حول المركز
+    final double orbitRadius = size.width * 0.35;
+    // حجم الدائرة الملونة خلف كل صورة
+    final double bubbleRadius = size.width * 0.15;
 
-    canvas.drawCircle(Offset(centerX, centerY), headRadius, headPaint);
-    _drawSimpleFace(canvas, Offset(centerX, centerY), headRadius);
-    final double orbitRadius = headRadius * 1.8;
-    final List<IconData> senseIcons = [
-      Icons.visibility,
-      Icons.hearing,
-      Icons.spa,
-      Icons.touch_app,
-      Icons.sentiment_satisfied_alt,
-    ];
+    for (int i = 0; i < images.length; i++) {
+      if (images[i] == null) continue;
 
-    for (int i = 0; i < 5; i++) {
-      double angle = (i * (360 / 5) - 90) * (math.pi / 180);
+      // حساب الزاوية (توزيع 4 عناصر كل 90 درجة)
+      double angle = (i * 90 - 90) * (math.pi / 180);
       double x = centerX + orbitRadius * math.cos(angle);
       double y = centerY + orbitRadius * math.sin(angle);
 
-      _drawSenseBubble(
-          canvas,
-          Offset(x, y),
-          headRadius * 0.5,
-          colors[i],
-          animations[i],
-          senseIcons[i]
+      _drawSenseItem(
+        canvas,
+        Offset(x, y),
+        bubbleRadius,
+        colors[i],
+        animations[i],
+        images[i]!,
       );
     }
   }
 
-  void _drawSimpleFace(Canvas canvas, Offset center, double radius) {
-    final paint = Paint()..color = Colors.white.withOpacity(0.5);
-    canvas.drawCircle(Offset(center.dx - radius * 0.3, center.dy - radius * 0.1), radius * 0.08, paint);
-    canvas.drawCircle(Offset(center.dx + radius * 0.3, center.dy - radius * 0.1), radius * 0.08, paint);
-
-    final mouthPaint = Paint()
-      ..color = Colors.white.withOpacity(0.5)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3
-      ..strokeCap = StrokeCap.round;
-    canvas.drawArc(Rect.fromCircle(center: center, radius: radius * 0.4), 0.2, math.pi - 0.4, false, mouthPaint);
-  }
-
-  void _drawSenseBubble(Canvas canvas, Offset pos, double radius, Color color, double anim, IconData icon) {
+  void _drawSenseItem(
+    Canvas canvas,
+    Offset pos,
+    double radius,
+    Color color,
+    double anim,
+    ui.Image img,
+  ) {
     if (anim <= 0.05) return;
 
     double currentRadius = radius * anim;
-    final bubblePaint = Paint()
-      ..color = color.withOpacity(0.9)
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, (1 - anim) * 5 + 1);
+
+    // 1. رسم الفقاعة الخلفية
+    final bubblePaint =
+        Paint()
+          ..color = color.withOpacity(0.85)
+          ..style = PaintingStyle.fill;
+
     canvas.drawCircle(pos, currentRadius, bubblePaint);
+
+    // إضافة تأثير لمعة خفيفة
+    final shinePaint = Paint()..color = Colors.white.withOpacity(0.2 * anim);
     canvas.drawCircle(
-        Offset(pos.dx - currentRadius * 0.3, pos.dy - currentRadius * 0.3),
-        currentRadius * 0.2,
-        Paint()..color = Colors.white.withOpacity(0.3 * anim)
+      Offset(pos.dx - currentRadius * 0.3, pos.dy - currentRadius * 0.3),
+      currentRadius * 0.2,
+      shinePaint,
     );
-    if (anim > 0.5) {
-      TextPainter textPainter = TextPainter(textDirection: TextDirection.ltr);
-      textPainter.text = TextSpan(
-        text: String.fromCharCode(icon.codePoint),
-        style: TextStyle(
-          fontSize: currentRadius * 1.2,
-          fontFamily: icon.fontFamily,
-          package: icon.fontPackage,
-          color: Colors.white.withOpacity(anim),
-        ),
+
+    // 2. رسم الصورة فوق الفقاعة
+    if (anim > 0.4) {
+      // مقاس الصورة داخل الفقاعة
+      double imgSize = currentRadius * 1.3;
+
+      final paint = Paint()..color = Colors.white.withOpacity(anim);
+
+      // حساب أبعاد الصورة للحفاظ على التناسب (Aspect Ratio)
+      final Size imageSize = Size(img.width.toDouble(), img.height.toDouble());
+      final Rect destRect = Rect.fromCenter(
+        center: pos,
+        width: imgSize,
+        height: imgSize,
       );
-      textPainter.layout();
-      textPainter.paint(
-          canvas,
-          Offset(pos.dx - textPainter.width / 2, pos.dy - textPainter.height / 2)
+
+      final FittedSizes sizes = applyBoxFit(
+        BoxFit.contain,
+        imageSize,
+        destRect.size,
       );
+      final Rect inputSubrect = Alignment.center.inscribe(
+        sizes.source,
+        Offset.zero & imageSize,
+      );
+      final Rect outputSubrect = Alignment.center.inscribe(
+        sizes.destination,
+        destRect,
+      );
+
+      canvas.drawImageRect(img, inputSubrect, outputSubrect, paint);
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant SensesPainter oldDelegate) => true;
 }

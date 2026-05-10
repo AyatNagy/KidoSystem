@@ -57,7 +57,7 @@ class _MatchingPracticePageState extends State<MatchingPracticePage>
     });
 
     hintTimer?.cancel();
-    hintTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+    hintTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (!isCelebrating && !isLocked) {
         AudioService.play(fileName: currentData.questionAudio);
       } else {

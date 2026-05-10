@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:kido/Widgets/Buttons/puls_button.dart';
 import 'package:kido/constants.dart';
 import '../../../../Widgets/content/level1/background_colors.dart';
@@ -16,11 +15,11 @@ class ToyRewardPage extends StatefulWidget {
   State<ToyRewardPage> createState() => _ToyRewardPageState();
 }
 
-class _ToyRewardPageState extends State<ToyRewardPage> with TickerProviderStateMixin {
+class _ToyRewardPageState extends State<ToyRewardPage>
+    with TickerProviderStateMixin {
   late final AnimationController _boxController;
   int _toyCount = 0;
   bool _isOpening = false;
-  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -30,12 +29,13 @@ class _ToyRewardPageState extends State<ToyRewardPage> with TickerProviderStateM
       duration: const Duration(milliseconds: 1500),
     );
     _boxController.value = 0;
+
+    AudioService.play(fileName: 'level1/open_the_box.mp3');
   }
 
   @override
   void dispose() {
     _boxController.dispose();
-    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -49,14 +49,12 @@ class _ToyRewardPageState extends State<ToyRewardPage> with TickerProviderStateM
       _toyCount++;
       _isOpening = false;
     });
+
     await AudioService.play(fileName: 'numeric_ar/kid-$_toyCount.mp3');
+
     if (_toyCount == 3) {
-      try {
-        await Future.delayed(const Duration(milliseconds: 500));
-        await _audioPlayer.play(AssetSource('audio/yaay.mp3'));
-      } catch (e) {
-        debugPrint("Celebration audio failed: $e");
-      }
+      await Future.delayed(const Duration(milliseconds: 500));
+      await AudioService.play(fileName: 'yaay.mp3');
     }
   }
 
@@ -80,41 +78,38 @@ class _ToyRewardPageState extends State<ToyRewardPage> with TickerProviderStateM
                 width: responsive.imageWidth(0.6),
                 onLoaded: (comp) {
                   _boxController.duration = comp.duration;
-                  _boxController.forward(from: 0).then((_) => _boxController.stop());
+                  _boxController
+                      .forward(from: 0)
+                      .then((_) => _boxController.stop());
                 },
               ),
             ),
           ),
-
           for (int i = 0; i < _toyCount; i++)
             Positioned(
               left: positions[i].dx - (responsive.imageWidth(0.25) / 2),
               top: positions[i].dy,
               child: TweenAnimationBuilder(
-                  duration: const Duration(milliseconds: 600),
-                  tween: Tween<double>(begin: 0.0, end: 1.0),
-                  curve: Curves.elasticOut,
-                  builder: (context, double value, child) {
-                    return Transform.scale(
-                      scale: value,
-                      child: child,
-                    );
-                  },
-                  child: Image.asset(
-                    "assets/images/bear-toy.png",
-                    width: responsive.imageWidth(0.25),
-                    height: responsive.imageHeight(0.15),
-                    fit: BoxFit.contain,
-                  )
+                duration: const Duration(milliseconds: 600),
+                tween: Tween<double>(begin: 0.0, end: 1.0),
+                curve: Curves.elasticOut,
+                builder: (context, double value, child) {
+                  return Transform.scale(scale: value, child: child);
+                },
+                child: Image.asset(
+                  "assets/images/bear-toy.png",
+                  width: responsive.imageWidth(0.25),
+                  height: responsive.imageHeight(0.15),
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
-
           if (_toyCount == 3)
             Positioned.fill(
-                child: Lottie.asset(
-                  'assets/lottie/confetti.json',
-                  fit: BoxFit.cover,
-                ),
+              child: Lottie.asset(
+                'assets/lottie/confetti.json',
+                fit: BoxFit.cover,
+              ),
             ),
           if (_toyCount == 3)
             Positioned(
@@ -133,7 +128,7 @@ class _ToyRewardPageState extends State<ToyRewardPage> with TickerProviderStateM
                 ),
               ),
             ),
-          ],
+        ],
       ),
     );
   }

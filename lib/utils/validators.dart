@@ -2,14 +2,7 @@ import 'package:kido/utils/password_rules.dart';
 
 class Validators {
   static final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-  // static final passwordRegex = RegExp(
-  //   r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$',
-  // );
   final nameRegex = RegExp(r'^[a-zA-Z\s]+$');
-
-  // static bool isValid(String password) {
-  //   return passwordRegex.hasMatch(password);
-  // }
 
   static int getPasswordStrength(String password) {
     int c = 0;
@@ -21,8 +14,6 @@ class Validators {
 
     return c;
   }
-
-  //final phoneRegex=RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$');
 
   static String? validateEmail(String? email) {
     final trimmedEmail = email?.trim();

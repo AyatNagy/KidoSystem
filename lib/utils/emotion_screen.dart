@@ -43,18 +43,17 @@ class EmotionScreen extends StatelessWidget {
               child: Lottie.asset('assets/lottie/rain_drop.json', repeat: true),
             ),
 
-            // Small bottom-right rain
             Positioned(
               bottom: 0,
               right: 0,
               width: 150,
               height: 200,
               child: Lottie.asset('assets/lottie/rain_drop.json', repeat: true),
-            ), // 🌧 Small random rain drops
+            ),
             ...List.generate(15, (index) {
               return Positioned(
-                top: (index * 50) % 600, // vertical spacing
-                left: (index * 70) % 350, // horizontal spacing
+                top: (index * 50) % 600,
+                left: (index * 70) % 350,
                 child: SizedBox(
                   width: 80,
                   height: 120,
@@ -72,7 +71,6 @@ class EmotionScreen extends StatelessWidget {
       case EmotionEffect.storm:
         return Stack(
           children: [
-            // Small bottom-right storm
             Positioned(
               bottom: 0,
               right: 0,
@@ -80,11 +78,11 @@ class EmotionScreen extends StatelessWidget {
               height: 200,
               child: Lottie.asset('assets/lottie/storm.json', repeat: true),
             ),
-            // 🌧 Small random storm
+
             ...List.generate(15, (index) {
               return Positioned(
-                top: (index * 50) % 600, // vertical spacing
-                left: (index * 70) % 350, // horizontal spacing
+                top: (index * 50) % 600,
+                left: (index * 70) % 350,
                 child: SizedBox(
                   width: 80,
                   height: 120,
@@ -98,7 +96,6 @@ class EmotionScreen extends StatelessWidget {
       case EmotionEffect.happy:
         return Stack(
           children: [
-            // Small bottom-right storm
             Positioned(
               bottom: 0,
               right: 0,
@@ -109,8 +106,8 @@ class EmotionScreen extends StatelessWidget {
             // 🌧 Small random storm
             ...List.generate(15, (index) {
               return Positioned(
-                top: (index * 50) % 600, // vertical spacing
-                left: (index * 70) % 350, // horizontal spacing
+                top: (index * 50) % 600,
+                left: (index * 70) % 350,
                 child: SizedBox(
                   width: 80,
                   height: 120,
@@ -156,9 +153,9 @@ class EmotionScreen extends StatelessWidget {
               duration: const Duration(milliseconds: 600),
               curve: Curves.easeOutBack,
               child: SizedBox(
-                height: screenHeight*0.5,
+                height: screenHeight * 0.5,
                 child: characterWidget,
-              )
+              ),
             ),
           ),
           Positioned(

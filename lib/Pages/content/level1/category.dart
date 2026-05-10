@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kido/Pages/content/level1/senses/senses_map_page.dart';
 import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
-import '../../../Widgets/Animation/counting.dart';
-import '../../../Widgets/Animation/peg_board.dart';
 import '../../../Widgets/Animation/senses.dart';
-import '../../../Widgets/Animation/sorting_tower.dart';
 import '../feelings/feelings_levels.dart';
 import 'Self_cleaning/cleaning_map.dart';
 import 'draw.dart';
@@ -37,7 +34,12 @@ class Category extends StatelessWidget {
         //  COUNTING
         CategoryCard(
           gradient: AppColors.alphabetGrad,
-          graphic: const Center(child: Counting()),
+          graphic: Center(
+            child: Image.asset(
+              'assets/images/level1/counting.gif',
+              fit: BoxFit.cover,
+            ),
+          ),
           onTap: () {
             Navigator.push(
               context,
@@ -79,7 +81,12 @@ class Category extends StatelessWidget {
         // SORTING
         CategoryCard(
           gradient: AppColors.numbersGrad,
-          graphic: const Center(child: SortingTower()),
+          graphic: Center(
+            child: Image.asset(
+              'assets/images/level1/sort.png',
+              fit: BoxFit.cover,
+            ),
+          ),
           onTap: () {
             Navigator.push(
               context,
@@ -111,7 +118,12 @@ class Category extends StatelessWidget {
         // PEGBOARD
         CategoryCard(
           gradient: AppColors.colorsGrad,
-          graphic: const Center(child: PegboardLogo()),
+          graphic: Center(
+            child: Image.asset(
+              'assets/images/level1/sticks-c.png',
+              fit: BoxFit.cover,
+            ),
+          ),
           onTap: () {
             Navigator.push(
               context,
