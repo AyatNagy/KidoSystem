@@ -26,7 +26,6 @@ class _MonkeyCountingPageState extends State<MonkeyCountingPage> {
   @override
   void initState() {
     super.initState();
-    // تشغيل صوت أول ما الصفحة تفتح
     _playWelcomeAudio();
   }
 

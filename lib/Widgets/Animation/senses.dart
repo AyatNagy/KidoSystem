@@ -29,8 +29,6 @@ class _FiveSensesLogoState extends State<FiveSensesLogo>
       vsync: this,
       duration: const Duration(seconds: 4),
     )..repeat();
-
-    // توزيع الأنيميشن على 4 حواس
     _senseAnimations = List.generate(4, (index) {
       double start = index * 0.2;
       double end = start + 0.3;
@@ -43,10 +41,9 @@ class _FiveSensesLogoState extends State<FiveSensesLogo>
     });
   }
 
-  // تحميل الصور مسبقاً لتحويلها إلى تنسيق يفهمه الـ Canvas
   Future<void> _loadAllImages() async {
     final List<String> assetPaths = [
-      'assets/images/senses/eye_c.png', // تأكد من وجود الصور بهذه المسارات
+      'assets/images/senses/eye_c.png',
       'assets/images/senses/nose.png',
       'assets/images/senses/mouth_map.png',
       'assets/images/senses/ear_c.png',
@@ -83,10 +80,8 @@ class _FiveSensesLogoState extends State<FiveSensesLogo>
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const SizedBox.shrink(); // أو لودنج بسيط
+      return const SizedBox.shrink();
     }
-
-    // استخدام الـ ResponsiveProvider الخاص بك لتحديد الحجم الكلي للرسمة
     final responsive = ResponsiveProvider.of(context);
     final double logoSize = responsive.imageWidth(widget.sizeMultiplier);
 
@@ -100,7 +95,6 @@ class _FiveSensesLogoState extends State<FiveSensesLogo>
             painter: SensesPainter(
               animations: _senseAnimations.map((a) => a.value).toList(),
               images: _loadedImages,
-              // ألوان الفقاعات (يمكنك تغييرها من AppColors)
               colors: [
                 AppColors.kidoRed,
                 AppColors.kidoOrange,
@@ -130,16 +124,11 @@ class SensesPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final double centerX = size.width / 2;
     final double centerY = size.height / 2;
-
-    // المسافة التي تدور فيها الصور حول المركز
     final double orbitRadius = size.width * 0.35;
-    // حجم الدائرة الملونة خلف كل صورة
     final double bubbleRadius = size.width * 0.15;
 
     for (int i = 0; i < images.length; i++) {
       if (images[i] == null) continue;
-
-      // حساب الزاوية (توزيع 4 عناصر كل 90 درجة)
       double angle = (i * 90 - 90) * (math.pi / 180);
       double x = centerX + orbitRadius * math.cos(angle);
       double y = centerY + orbitRadius * math.sin(angle);
@@ -167,15 +156,12 @@ class SensesPainter extends CustomPainter {
 
     double currentRadius = radius * anim;
 
-    // 1. رسم الفقاعة الخلفية
     final bubblePaint =
         Paint()
           ..color = color.withOpacity(0.85)
           ..style = PaintingStyle.fill;
 
     canvas.drawCircle(pos, currentRadius, bubblePaint);
-
-    // إضافة تأثير لمعة خفيفة
     final shinePaint = Paint()..color = Colors.white.withOpacity(0.2 * anim);
     canvas.drawCircle(
       Offset(pos.dx - currentRadius * 0.3, pos.dy - currentRadius * 0.3),
@@ -183,14 +169,10 @@ class SensesPainter extends CustomPainter {
       shinePaint,
     );
 
-    // 2. رسم الصورة فوق الفقاعة
     if (anim > 0.4) {
-      // مقاس الصورة داخل الفقاعة
       double imgSize = currentRadius * 1.3;
 
       final paint = Paint()..color = Colors.white.withOpacity(anim);
-
-      // حساب أبعاد الصورة للحفاظ على التناسب (Aspect Ratio)
       final Size imageSize = Size(img.width.toDouble(), img.height.toDouble());
       final Rect destRect = Rect.fromCenter(
         center: pos,

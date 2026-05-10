@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-// ─────────────────────────────────────────────────────────────
-// TEETH GAME SCREEN
-// الطفل يحرك الفرشاة على الأسنان — بعد 5 حركات تظهر الأسنان النضيفة
-// ─────────────────────────────────────────────────────────────
 class TeethGameScreen extends StatefulWidget {
   const TeethGameScreen({super.key});
 
@@ -12,7 +8,6 @@ class TeethGameScreen extends StatefulWidget {
 }
 
 class _TeethGameScreenState extends State<TeethGameScreen> {
-  // ── State ──────────────────────────────────────────────────
   int _strokes = 0;
   static const int _requiredStrokes = 3;
 
@@ -41,7 +36,6 @@ class _TeethGameScreenState extends State<TeethGameScreen> {
     });
   }
 
-  // ── Build ──────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

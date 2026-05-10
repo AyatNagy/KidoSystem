@@ -21,7 +21,6 @@ class _BeeCountingPageState extends State<BeeCountingPage>
   int _count = 0;
   bool _isAnimating = false;
   bool _hasWon = false;
-  // حذفنا الـ Player المحلي لاستخدام الـ AudioService
   late AnimationController _moveController;
 
   @override
@@ -31,9 +30,7 @@ class _BeeCountingPageState extends State<BeeCountingPage>
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     );
-
-    // تشغيل صوت التعليمات عند البداية
-    AudioService.play(fileName: 'instructions/bee_intro.mp3');
+    AudioService.play(fileName: 'level1/bee_intro.mp3');
   }
 
   @override
@@ -43,27 +40,19 @@ class _BeeCountingPageState extends State<BeeCountingPage>
   }
 
   void _handleTap() async {
-    // الشرط ده مهم جداً: بيمنع التفاعل لو النحلة بتتحرك (Animating)
-    // أو لو فيه صوت لسه شغال (عشان نضمن الترتيب)
     if (_isAnimating || _count >= 4) return;
 
     setState(() => _isAnimating = true);
-
-    // 1. تشغيل الأنميشن الأول
     _moveController.reset();
     await _moveController.forward();
 
-    // 2. زيادة العداد بعد وصول النحلة
     setState(() {
       _count++;
       _isAnimating = false;
     });
 
-    // 3. تشغيل صوت الرقم واستخدامه كـ "حاجز" زمني
-    // الـ await هنا بتخلي الميثود متخلصش غير لما الصوت يخلص
     await AudioService.play(fileName: 'numeric_ar/kid-$_count.mp3');
 
-    // 4. لو وصلنا للعدد النهائي
     if (_count == 4) {
       setState(() => _hasWon = true);
       await Future.delayed(const Duration(milliseconds: 500));
@@ -83,7 +72,6 @@ class _BeeCountingPageState extends State<BeeCountingPage>
         children: [
           const BackgroundColors(),
 
-          // الوردة
           Positioned(
             top: sh * 0.12,
             left: sw * 0.5 - responsive.imageWidth(0.25),
@@ -98,7 +86,6 @@ class _BeeCountingPageState extends State<BeeCountingPage>
             ),
           ),
 
-          // النحل اللي استقر مكانه
           for (int i = 0; i < _count; i++)
             Positioned(
               left: landingPositions[i].dx,
@@ -110,7 +97,6 @@ class _BeeCountingPageState extends State<BeeCountingPage>
               ),
             ),
 
-          // النحلة اللي بتطير حالياً
           if (_isAnimating)
             AnimatedBuilder(
               animation: _moveController,
@@ -121,14 +107,12 @@ class _BeeCountingPageState extends State<BeeCountingPage>
                       responsive.imageWidth(0.10),
                       sh - responsive.imageHeight(0.25),
                     ),
-                    end:
-                        landingPositions[_count], // بتطير للمكان التالي بناءً على الـ _count الحالي
+                    end: landingPositions[_count],
                     width: responsive.imageWidth(0.15),
                     height: responsive.imageHeight(0.08),
                   ),
             ),
 
-          // بيت النحل (مساحة الضغط)
           Positioned(
             bottom: sh * 0.05,
             left: sw * 0.01,
@@ -145,7 +129,6 @@ class _BeeCountingPageState extends State<BeeCountingPage>
             ),
           ),
 
-          // تأثير الفوز
           if (_hasWon)
             IgnorePointer(
               child: Positioned.fill(
@@ -156,7 +139,6 @@ class _BeeCountingPageState extends State<BeeCountingPage>
               ),
             ),
 
-          // زر التالي
           if (_hasWon)
             Positioned(
               bottom: sh * 0.05,

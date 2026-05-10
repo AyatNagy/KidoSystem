@@ -28,22 +28,30 @@ class _MovingCarPageState extends State<MovingCarPage>
   final List<Color> _lightColors = [
     AppColors.kidoRed,
     AppColors.kidoOrange,
-    AppColors.kidoGreen
+    AppColors.kidoGreen,
   ];
 
   @override
   void initState() {
     super.initState();
+    _playWelcomeAudio();
     _carController = AnimationController(
-        duration: const Duration(seconds: 4), vsync: this);
+      duration: const Duration(seconds: 4),
+      vsync: this,
+    );
 
     _carMovement = Tween<double>(begin: 1000, end: 400).animate(
       CurvedAnimation(parent: _carController, curve: Curves.easeOutQuart),
     );
     _carController.forward();
     _cloudController = AnimationController(
-        duration: const Duration(seconds: 25), vsync: this)
-      ..repeat();
+      duration: const Duration(seconds: 25),
+      vsync: this,
+    )..repeat();
+  }
+
+  void _playWelcomeAudio() async {
+    await AudioService.play(fileName: 'level1/put_boxs.mp3');
   }
 
   void _onCubePlaced(int index) async {
@@ -62,20 +70,21 @@ class _MovingCarPageState extends State<MovingCarPage>
     await AudioService.play(fileName: 'car.mp3');
     await Future.delayed(const Duration(milliseconds: 800));
     await AudioService.play(fileName: 'yaay.mp3');
-    _carMovement = Tween<double>(begin: 400, end: -500).animate(
-      CurvedAnimation(parent: _carController, curve: Curves.linear),
-    );
+    _carMovement = Tween<double>(
+      begin: 400,
+      end: -500,
+    ).animate(CurvedAnimation(parent: _carController, curve: Curves.linear));
     _carController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted) {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Level1Home(childName: 'habiba',)
-                )
+              context,
+              MaterialPageRoute(
+                builder: (context) => Level1Home(childName: 'habiba'),
+              ),
             );
-            }
+          }
         });
       }
     });
@@ -110,27 +119,27 @@ class _MovingCarPageState extends State<MovingCarPage>
         child: Stack(
           children: [
             Positioned(
-                top: sh * 0.05,
-                left: sw * 0.05,
-                child: Container(
-                  padding: EdgeInsets.all(sw * 0.03),
-                  decoration: BoxDecoration(
+              top: sh * 0.05,
+              left: sw * 0.05,
+              child: Container(
+                padding: EdgeInsets.all(sw * 0.03),
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: AppColors.kidoYellow,
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.yellowAccent.withOpacity(0.5),
-                        blurRadius: sw * 0.04,
-                        spreadRadius: sw * 0.01
-                    )
+                      color: Colors.yellowAccent.withOpacity(0.5),
+                      blurRadius: sw * 0.04,
+                      spreadRadius: sw * 0.01,
+                    ),
                   ],
-                  ),
-                  child: Icon(
-                      Icons.wb_sunny_rounded,
-                      color: AppColors.kidoOrange,
-                      size: r.buttonHeight
-                  ),
-                )
+                ),
+                child: Icon(
+                  Icons.wb_sunny_rounded,
+                  color: AppColors.kidoOrange,
+                  size: r.buttonHeight,
+                ),
+              ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -167,9 +176,9 @@ class _MovingCarPageState extends State<MovingCarPage>
                   child: Transform.scale(
                     scale: 1.2,
                     child: Image.asset(
-                        "assets/images/kido-car.png",
-                        height: r.imageHeight(0.15),
-                        width: r.imageWidth(0.6)
+                      "assets/images/kido-car.png",
+                      height: r.imageHeight(0.15),
+                      width: r.imageWidth(0.6),
                     ),
                   ),
                 );
@@ -177,10 +186,7 @@ class _MovingCarPageState extends State<MovingCarPage>
             ),
 
             if (!_isReadyToDrive)
-              Align(
-                alignment: Alignment.centerRight,
-                child: _buildCubeDock(r),
-              ),
+              Align(alignment: Alignment.centerRight, child: _buildCubeDock(r)),
 
             if (_isReadyToDrive) ...[
               Positioned.fill(
@@ -189,11 +195,8 @@ class _MovingCarPageState extends State<MovingCarPage>
                   fit: BoxFit.cover,
                 ),
               ),
-              NextButton(
-                  color: AppColors.kidoGreen,
-                  onPressed: widget.onNext!,
-              )
-            ]
+              NextButton(color: AppColors.kidoGreen, onPressed: widget.onNext!),
+            ],
           ],
         ),
       ),
@@ -204,8 +207,8 @@ class _MovingCarPageState extends State<MovingCarPage>
     return Container(
       margin: EdgeInsets.only(right: responsive.localWidth * 0.04),
       padding: EdgeInsets.symmetric(
-          vertical: responsive.localHeight * 0.02,
-          horizontal: responsive.localWidth * 0.02
+        vertical: responsive.localHeight * 0.02,
+        horizontal: responsive.localWidth * 0.02,
       ),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.2),
@@ -222,8 +225,8 @@ class _MovingCarPageState extends State<MovingCarPage>
             data: index,
             feedback: _buildCube(index, true, responsive),
             childWhenDragging: Opacity(
-                opacity: 0.2,
-                child: _buildCube(index, false, responsive)
+              opacity: 0.2,
+              child: _buildCube(index, false, responsive),
             ),
             child: _buildCube(index, false, responsive),
           );
@@ -243,9 +246,9 @@ class _MovingCarPageState extends State<MovingCarPage>
         borderRadius: BorderRadius.circular(size * 0.2),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              offset: Offset(size * 0.05, size * 0.08),
-              blurRadius: size * 0.1
+            color: Colors.black.withOpacity(0.2),
+            offset: Offset(size * 0.05, size * 0.08),
+            blurRadius: size * 0.1,
           ),
         ],
       ),

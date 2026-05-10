@@ -4,8 +4,6 @@ import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Widgets/Buttons/replay_button.dart';
 import 'package:kido/constants.dart';
 import 'package:lottie/lottie.dart';
-
-// Ensure these paths match your new folder structure in kido – level3_home.dart 5_6_2026 5_46_23 PM.jpg
 import '../../../../Widgets/Animation/animated_hand_widget.dart';
 import '../../../../Widgets/content/draganddrop.dart';
 import '../../../../Widgets/responsive_provider.dart';
@@ -15,9 +13,9 @@ import '../../../../services/audio_service.dart';
 import 'moving_car.dart';
 
 class CubesLesson extends StatefulWidget {
-  final VoidCallback? onNext; // Fixed: Capitalized VoidCallback
+  final VoidCallback? onNext;
 
-  const CubesLesson({super.key, this.onNext}); // Pass to constructor
+  const CubesLesson({super.key, this.onNext});
 
   @override
   State<CubesLesson> createState() => _CubesLessonState();
@@ -29,6 +27,16 @@ class _CubesLessonState extends State<CubesLesson> {
   int _currentStep = 0;
   Key _dragDropKey = UniqueKey();
   final stackingQuestion = StackingLessonsData.cubes;
+
+  @override
+  void initState() {
+    super.initState();
+    _playWelcomeAudio();
+  }
+
+  void _playWelcomeAudio() async {
+    await AudioService.play(fileName: 'level1/put_boxs.mp3');
+  }
 
   void _handleSuccess(Map<String, String?> answers) async {
     setState(() {
@@ -88,7 +96,10 @@ class _CubesLessonState extends State<CubesLesson> {
               onAnswered: _handleSuccess,
             ),
             AnimatedHandWidget(
-              visible: _showTutorial && !_isFinished && _currentStep < tutorialSteps.length,
+              visible:
+                  _showTutorial &&
+                  !_isFinished &&
+                  _currentStep < tutorialSteps.length,
               currentStep: _currentStep,
               steps: tutorialSteps,
             ),
@@ -106,12 +117,13 @@ class _CubesLessonState extends State<CubesLesson> {
                 child: NextButton(
                   color: AppColors.kidoOrange,
                   onPressed: () {
-                    // Logic: Use callback if provided, otherwise default navigation
                     if (widget.onNext != null) {
                       widget.onNext!();
                     } else {
                       Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => const MovingCarPage()),
+                        MaterialPageRoute(
+                          builder: (context) => const MovingCarPage(),
+                        ),
                       );
                     }
                   },
