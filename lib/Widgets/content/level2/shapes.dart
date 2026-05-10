@@ -42,7 +42,6 @@ class _BaseDrawingPageState extends State<BaseDrawingPage> {
     _startInstructionTimer();
   }
 
-  // فانكشن تنظيف مركزية
   void _cleanup() {
     _instructionTimer?.cancel();
     _instructionTimer = null;
@@ -53,7 +52,7 @@ class _BaseDrawingPageState extends State<BaseDrawingPage> {
 
   @override
   void dispose() {
-    _cleanup(); // تنظيف عند الخروج من الصفحة
+    _cleanup();
     super.dispose();
   }
 
@@ -73,18 +72,23 @@ class _BaseDrawingPageState extends State<BaseDrawingPage> {
 
   void _playSuccessSequence() {
     _cleanup();
-    _successCount = 0;
-    String fileName = "shapes/${widget.shapeName}.mp3";
-
-    AudioService.play(fileName: fileName);
-    _successCount++;
-
-    _successRepeatTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      if (mounted && _isFinished && _successCount < 3) {
+    AudioService.play(fileName: "yaay.mp3");
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted && _isFinished) {
+        String fileName = "shapes/${widget.shapeName}.mp3";
         AudioService.play(fileName: fileName);
-        _successCount++;
-      } else {
-        timer.cancel();
+        _successCount = 1;
+
+        _successRepeatTimer = Timer.periodic(const Duration(seconds: 2), (
+          timer,
+        ) {
+          if (mounted && _isFinished && _successCount < 3) {
+            AudioService.play(fileName: fileName);
+            _successCount++;
+          } else {
+            timer.cancel();
+          }
+        });
       }
     });
   }

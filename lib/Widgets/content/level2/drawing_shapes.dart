@@ -41,7 +41,7 @@ class _DrawingState extends State<DrawingShapes> {
 
   void _toggleSound(bool play) {
     if (play && !_isSounding) {
-      AudioService.play(fileName: 'audio/scratch.mp3');
+      AudioService.play(fileName: 'scratch.mp3');
       _isSounding = true;
     } else if (!play && _isSounding) {
       AudioService.stop();
