@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Models/level3/letter_step.dart';
+import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import '../../../../Widgets/Animation/animated_hand_widget.dart';
@@ -17,13 +19,33 @@ class PlusDrawingPage extends StatefulWidget {
 }
 
 class _PlusDrawingPageState extends State<PlusDrawingPage> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  Timer? _instructionTimer;
   bool _isFinished = false;
   int _linesCompleted = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _startInstructionTimer();
+  }
+
+  void _startInstructionTimer() {
+    AudioService.play(fileName: 'shapes/lets_draw.mp3');
+    _instructionTimer = Timer.periodic(const Duration(seconds: 5), (
+      Timer timer,
+    ) {
+      if (!_isFinished) {
+        AudioService.play(fileName: 'shapes/lets_draw.mp3');
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  @override
   void dispose() {
-    _audioPlayer.dispose();
+    _instructionTimer?.cancel();
+    AudioService.stop();
     super.dispose();
   }
 
@@ -31,13 +53,18 @@ class _PlusDrawingPageState extends State<PlusDrawingPage> {
     setState(() {
       _linesCompleted++;
     });
+
     if (_linesCompleted >= 2) {
+      _instructionTimer?.cancel();
+      AudioService.stop();
+
       setState(() {
         _isFinished = true;
       });
-      await _audioPlayer.play(AssetSource('audio/yaay.mp3'));
+      await AudioService.play(fileName: 'yaay.mp3');
     }
   }
+
   List<Offset> _getAllPoints() {
     return const [
       Offset(0.5, 0.3),
@@ -103,17 +130,17 @@ class _PlusDrawingPageState extends State<PlusDrawingPage> {
                 color: AppColors.kidoColors[5],
                 child: Center(
                   child: Image.asset(
-                      'assets/images/drawing/plus.gif',
-                      height: 200
+                    'assets/images/drawing/plus.gif',
+                    height: 200,
                   ),
                 ),
               ),
             ),
             Center(
-                child: Lottie.asset(
-                  'assets/lottie/confetti.json',
-                  fit: BoxFit.cover
-                )
+              child: Lottie.asset(
+                'assets/lottie/confetti.json',
+                fit: BoxFit.cover,
+              ),
             ),
             Positioned(
               bottom: config.localHeight * 0.05,
@@ -123,7 +150,7 @@ class _PlusDrawingPageState extends State<PlusDrawingPage> {
                 shadowColor: AppColors.kidoColors[4],
                 onPressed: widget.onNext!,
               ),
-            )
+            ),
           ],
         ],
       ),

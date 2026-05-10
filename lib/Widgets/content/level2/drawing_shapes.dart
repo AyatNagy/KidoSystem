@@ -1,8 +1,9 @@
 // ignore_for_file: deprecated_member_use
-import 'package:audioplayers/audioplayers.dart';
+
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/constants.dart';
+import 'package:kido/services/audio_service.dart';
 import '../drawing_page.dart';
 
 class DrawingShapes extends StatefulWidget {
@@ -28,37 +29,39 @@ class DrawingShapes extends StatefulWidget {
 class _DrawingState extends State<DrawingShapes> {
   List<Offset?> points = [];
   Color selectedColor = Colors.blue;
-  final AudioPlayer _player = AudioPlayer();
   bool _isSounding = false;
   final Set<int> _hitPoints = {};
   int _completedSteps = 0;
 
   @override
-  void initState() {
-    super.initState();
-    _player.setReleaseMode(ReleaseMode.loop);
-    _player.setSource(AssetSource('audio/scratch.mp3'));
-  }
-
-  @override
   void dispose() {
-    _player.dispose();
+    _toggleSound(false);
     super.dispose();
   }
 
   void _toggleSound(bool play) {
     if (play && !_isSounding) {
-      _player.resume();
+      AudioService.play(fileName: 'audio/scratch.mp3');
       _isSounding = true;
     } else if (!play && _isSounding) {
-      _player.pause();
+      AudioService.stop();
       _isSounding = false;
     }
   }
 
-  void _handlePanUpdate(DragUpdateDetails details, List<Offset>? actualPoints, RenderBox box) {
+  void _handlePanUpdate(
+    DragUpdateDetails details,
+    List<Offset>? actualPoints,
+    RenderBox box,
+  ) {
+    if (_completedSteps >= (widget.guidePoints?.length ?? 0)) {
+      _toggleSound(false);
+      return;
+    }
+
     Offset touchPos = box.globalToLocal(details.globalPosition);
     Offset positionToDraw = touchPos;
+
     if (actualPoints != null) {
       int nextPointIndex = _hitPoints.length;
       if (nextPointIndex < actualPoints.length) {
@@ -81,23 +84,33 @@ class _DrawingState extends State<DrawingShapes> {
     if (currentlyFinishedSteps > _completedSteps) {
       _completedSteps = currentlyFinishedSteps;
       widget.onFinish?.call();
+      if (_completedSteps >= widget.guidePoints!.length) {
+        _toggleSound(false);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
-    final List<Offset>? scaledPoints = widget.guidePoints?.map((p) =>
-        Offset(p.dx * config.localWidth, p.dy * config.localHeight)
-    ).toList();
+    final List<Offset>? scaledPoints =
+        widget.guidePoints
+            ?.map(
+              (p) =>
+                  Offset(p.dx * config.localWidth, p.dy * config.localHeight),
+            )
+            .toList();
 
     return Stack(
       children: [
         GestureDetector(
           onPanStart: (_) => _toggleSound(true),
-          onPanUpdate: (details) => _handlePanUpdate(
-              details, scaledPoints, context.findRenderObject() as RenderBox
-          ),
+          onPanUpdate:
+              (details) => _handlePanUpdate(
+                details,
+                scaledPoints,
+                context.findRenderObject() as RenderBox,
+              ),
           onPanEnd: (_) {
             _toggleSound(false);
             _checkCompletion();
@@ -123,68 +136,63 @@ class _DrawingState extends State<DrawingShapes> {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.9),
               borderRadius: BorderRadius.circular(40),
-              boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
+              boxShadow: const [
+                BoxShadow(color: Colors.black12, blurRadius: 10),
+              ],
             ),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ...[Colors.red, Colors.green, Colors.blue].map((color) {
-                    bool isSelected = selectedColor == color;
-                    double btnSize = config.isTablet ? 55 : 40;
-                    return GestureDetector(
-                      onTap: () => setState(() => selectedColor = color),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        width: isSelected ? btnSize : btnSize * 0.75,
-                        height: isSelected ? btnSize : btnSize * 0.75,
-                        decoration: BoxDecoration(
-                          color: color,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 2),
-                          boxShadow: isSelected
-                              ? [BoxShadow(color: color.withOpacity(0.5), blurRadius: 12, spreadRadius: 4)]
-                              : [],
-                        ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ...[Colors.red, Colors.green, Colors.blue].map((color) {
+                  bool isSelected = selectedColor == color;
+                  double btnSize = config.isTablet ? 55 : 40;
+                  return GestureDetector(
+                    onTap: () => setState(() => selectedColor = color),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: isSelected ? btnSize : btnSize * 0.75,
+                      height: isSelected ? btnSize : btnSize * 0.75,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                        boxShadow:
+                            isSelected
+                                ? [
+                                  BoxShadow(
+                                    color: color.withOpacity(0.5),
+                                    blurRadius: 12,
+                                    spreadRadius: 4,
+                                  ),
+                                ]
+                                : [],
                       ),
-                    );
-                  }),
-                  const VerticalDivider(indent: 15, endIndent: 15, color: Colors.black12),
-                  IconButton(
-                    icon: Icon(Icons.delete, color: AppColors.kidoRed, size: config.localHeight * 0.04),
-                    onPressed: () {
-                      setState(() {
-                        points.clear();
-                        _hitPoints.clear();
-                        _completedSteps = 0;
-                      });
-                    },
+                    ),
+                  );
+                }),
+                const VerticalDivider(
+                  indent: 15,
+                  endIndent: 15,
+                  color: Colors.black12,
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: AppColors.kidoRed,
+                    size: config.localHeight * 0.04,
                   ),
-                ],
-              ),
+                  onPressed: () {
+                    setState(() {
+                      points.clear();
+                      _hitPoints.clear();
+                      _completedSteps = 0;
+                    });
+                  },
+                ),
+              ],
             ),
           ),
         ),
-        if (widget.instructionText != null)
-          Positioned(
-            top: config.localHeight * 0.05,
-            left: config.localWidth * 0.1,
-            right: config.localWidth * 0.1,
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                decoration: BoxDecoration(
-                  color: AppColors.bgColor,
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: selectedColor.withOpacity(0.3), width: 2),
-                ),
-                child: Text(
-                  widget.instructionText!,
-                  style: TextStyle(fontSize: config.title, fontWeight: FontWeight.bold, color: AppColors.textDark),
-                ),
-              ),
-            ),
-          ),
       ],
     );
   }

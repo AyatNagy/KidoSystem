@@ -1,11 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Models/level3/letter_step.dart';
+import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-
 import '../../../../../Widgets/Animation/animated_hand_widget.dart';
 import '../../../../../Widgets/content/drawing_page.dart';
 
@@ -19,9 +20,9 @@ class RainyCloud extends StatefulWidget {
 
 class _RainyCloudState extends State<RainyCloud> with TickerProviderStateMixin {
   late AnimationController _cloudController;
-  final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isFinished = false;
   int _linesCompleted = 0;
+  Timer? _instructionTimer;
 
   @override
   void initState() {
@@ -30,12 +31,25 @@ class _RainyCloudState extends State<RainyCloud> with TickerProviderStateMixin {
       vsync: this,
       duration: const Duration(seconds: 4),
     )..repeat(reverse: true);
+    _startInstructionTimer();
+  }
+
+  void _startInstructionTimer() {
+    AudioService.play(fileName: 'shapes/lets_draw.mp3');
+    _instructionTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      if (!_isFinished) {
+        AudioService.play(fileName: 'shapes/lets_draw.mp3');
+      } else {
+        timer.cancel();
+      }
+    });
   }
 
   @override
   void dispose() {
+    _instructionTimer?.cancel();
     _cloudController.dispose();
-    _audioPlayer.dispose();
+    AudioService.stop();
     super.dispose();
   }
 
@@ -43,12 +57,12 @@ class _RainyCloudState extends State<RainyCloud> with TickerProviderStateMixin {
     setState(() {
       _linesCompleted++;
     });
-
     if (_linesCompleted >= 3) {
+      _instructionTimer?.cancel();
       setState(() {
         _isFinished = true;
       });
-      await _audioPlayer.play(AssetSource('audio/yaay.mp3'));
+      await AudioService.play(fileName: 'yaay.mp3');
     }
   }
 
@@ -86,56 +100,56 @@ class _RainyCloudState extends State<RainyCloud> with TickerProviderStateMixin {
     final config = ResponsiveProvider.of(context);
 
     return Scaffold(
-        backgroundColor: AppColors.kidoColors[1],
-        body: Stack(
-            children: [
-              AnimatedBuilder(
-                animation: _cloudController,
-                builder: (context, child) {
-                  return Positioned(
-                      top: config.localHeight * 0.2,
-                      left: config.localWidth * 0.1 + (_cloudController.value * 20),
-                      child: Image.asset(
-                        'assets/images/cloud.png',
-                        height: config.localHeight * 0.25,
-                        width: config.localWidth * 0.7,
-                      )
-                  );
-                },
-              ),
-
-              Drawing(
-                guidePoints: _getAllPoints(),
-                pointsPerStep: 4,
-                onFinish: _handleStepFinished,
-              ),
-
-              AnimatedHandWidget(
-                steps: _getSteps(config.localWidth, config.localHeight),
-                currentStep: _linesCompleted.clamp(0, 2),
-                visible: !_isFinished,
-              ),
-
-              if (_isFinished) ...[
-                Positioned.fill(
-                  child: Container(
-                    color: AppColors.kidoColors[1],
-                    child: Image.asset('assets/gif/rainy-cloud.gif'),
-                  ),
+      backgroundColor: AppColors.kidoColors[1],
+      body: Stack(
+        children: [
+          AnimatedBuilder(
+            animation: _cloudController,
+            builder: (context, child) {
+              return Positioned(
+                top: config.localHeight * 0.2,
+                left: config.localWidth * 0.1 + (_cloudController.value * 20),
+                child: Image.asset(
+                  'assets/images/cloud.png',
+                  height: config.localHeight * 0.25,
+                  width: config.localWidth * 0.7,
                 ),
-                Center(child: Lottie.asset('assets/lottie/confetti.json')),
-                Positioned(
-                  bottom: config.localHeight * 0.05,
-                  right: config.localWidth * 0.1,
-                  child: NextButton(
-                    color: AppColors.kidoBlue,
-                    shadowColor: AppColors.kidoColors[1],
-                    onPressed: widget.onNext!,
-                  ),
-                )
-              ],
-            ]
-        )
+              );
+            },
+          ),
+
+          Drawing(
+            guidePoints: _getAllPoints(),
+            pointsPerStep: 4,
+            onFinish: _handleStepFinished,
+          ),
+
+          AnimatedHandWidget(
+            steps: _getSteps(config.localWidth, config.localHeight),
+            currentStep: _linesCompleted.clamp(0, 2),
+            visible: !_isFinished,
+          ),
+
+          if (_isFinished) ...[
+            Positioned.fill(
+              child: Container(
+                color: AppColors.kidoColors[1],
+                child: Image.asset('assets/gif/rainy-cloud.gif'),
+              ),
+            ),
+            Center(child: Lottie.asset('assets/lottie/confetti.json')),
+            Positioned(
+              bottom: config.localHeight * 0.05,
+              right: config.localWidth * 0.1,
+              child: NextButton(
+                color: AppColors.kidoBlue,
+                shadowColor: AppColors.kidoColors[1],
+                onPressed: widget.onNext!,
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }

@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/content/level1/background_colors.dart';
 import 'package:lottie/lottie.dart';
-// import 'package:audioplayers/audioplayers.dart'; // ممكن تمسحي ده لو مش محتاجة AudioPlayer هنا
 import 'package:kido/Widgets/Buttons/puls_button.dart';
 import 'package:kido/constants.dart';
 import '../../../../Widgets/responsive_provider.dart';
@@ -20,7 +19,6 @@ class MonkeyCountingPage extends StatefulWidget {
 class _MonkeyCountingPageState extends State<MonkeyCountingPage> {
   int _count = 0;
   final int _totalBananas = 5;
-  // حذفنا الـ _audioPlayer المحلي لأننا هنعتمد على الـ Service
   final List<bool> _isFed = [false, false, false, false, false];
 
   @override

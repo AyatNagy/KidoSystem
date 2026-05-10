@@ -12,11 +12,13 @@ class SquareDrawingPage extends StatelessWidget {
     return BaseDrawingPage(
       shapeData: ShapeData.square,
       successGif: 'assets/images/drawing/square.gif',
-      onNext: (){ Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context)=>TriangleDrawingPage())
-      );
-      }
+      onNext: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => TriangleDrawingPage()),
+        );
+      },
+      shapeName: 'square',
     );
   }
 }

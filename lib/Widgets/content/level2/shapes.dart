@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/Models/level3/letter_step.dart';
 import 'package:kido/Widgets/Buttons/next_button.dart';
+import 'package:kido/services/audio_service.dart';
 import '../../Animation/animated_hand_widget.dart';
 import '../../../Widgets/content/level2/drawing_shapes.dart';
 
@@ -13,12 +14,14 @@ class BaseDrawingPage extends StatefulWidget {
   final String successGif;
   final VoidCallback onNext;
   final int requiredPoints;
+  final String shapeName;
 
   const BaseDrawingPage({
     super.key,
     required this.shapeData,
     required this.successGif,
     required this.onNext,
+    required this.shapeName,
     this.requiredPoints = 0,
   });
 
@@ -27,27 +30,75 @@ class BaseDrawingPage extends StatefulWidget {
 }
 
 class _BaseDrawingPageState extends State<BaseDrawingPage> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  Timer? _instructionTimer;
+  Timer? _successRepeatTimer;
   bool _isFinished = false;
   int _progressCount = 0;
+  int _successCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _startInstructionTimer();
+  }
+
+  // فانكشن تنظيف مركزية
+  void _cleanup() {
+    _instructionTimer?.cancel();
+    _instructionTimer = null;
+    _successRepeatTimer?.cancel();
+    _successRepeatTimer = null;
+    AudioService.stop();
+  }
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    _cleanup(); // تنظيف عند الخروج من الصفحة
     super.dispose();
   }
 
-  void _handleProgress() async {
+  void _startInstructionTimer() {
+    _cleanup();
+    String fileName = "shapes/draw_${widget.shapeName}.mp3";
+    AudioService.play(fileName: fileName);
+
+    _instructionTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      if (mounted && !_isFinished) {
+        AudioService.play(fileName: fileName);
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  void _playSuccessSequence() {
+    _cleanup();
+    _successCount = 0;
+    String fileName = "shapes/${widget.shapeName}.mp3";
+
+    AudioService.play(fileName: fileName);
+    _successCount++;
+
+    _successRepeatTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (mounted && _isFinished && _successCount < 3) {
+        AudioService.play(fileName: fileName);
+        _successCount++;
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  void _handleProgress() {
     if (_isFinished) return;
     setState(() => _progressCount++);
-
-    int target = widget.requiredPoints > 0
-        ? widget.requiredPoints
-        : widget.shapeData.length;
-
+    int target =
+        widget.requiredPoints > 0
+            ? widget.requiredPoints
+            : widget.shapeData.length;
     if (_progressCount >= target) {
       setState(() => _isFinished = true);
-      await _audioPlayer.play(AssetSource('audio/yaay.mp3'));
+      _playSuccessSequence();
     }
   }
 
@@ -94,16 +145,24 @@ class _BaseDrawingPageState extends State<BaseDrawingPage> {
                 ),
               ),
             ),
-            Center(child: Lottie.asset('assets/lottie/confetti.json', fit: BoxFit.cover)),
+            Center(
+              child: Lottie.asset(
+                'assets/lottie/confetti.json',
+                fit: BoxFit.cover,
+              ),
+            ),
             Positioned(
               bottom: config.localHeight * 0.05,
               right: config.localWidth * 0.1,
               child: NextButton(
                 color: AppColors.kidoGreen,
                 shadowColor: AppColors.kidoColors[4],
-                onPressed: widget.onNext,
+                onPressed: () {
+                  _cleanup();
+                  widget.onNext();
+                },
               ),
-            )
+            ),
           ],
         ],
       ),

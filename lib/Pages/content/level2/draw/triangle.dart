@@ -14,10 +14,11 @@ class TriangleDrawingPage extends StatelessWidget {
       successGif: 'assets/images/drawing/triangle.gif',
       onNext: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context)=>Level2Home(childName: 'hab'))
+          context,
+          MaterialPageRoute(builder: (context) => Level2Home(childName: 'hab')),
         );
-      }
+      },
+      shapeName: 'triangle',
     );
   }
 }

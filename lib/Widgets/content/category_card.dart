@@ -22,6 +22,9 @@ class CategoryCard extends StatelessWidget {
     final double currentProgress = progress ?? 0.0;
     final bool isMastered = currentProgress >= 0.9;
 
+    // 👇 لو Image أو gif معمول بـ Image.asset
+    final bool isImageWidget = graphic is Image;
+
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -30,7 +33,11 @@ class CategoryCard extends StatelessWidget {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 400),
               curve: Curves.easeOutCubic,
-              padding: const EdgeInsets.all(15),
+
+              // 👇 الصور منغير padding
+              padding:
+                  isImageWidget ? EdgeInsets.zero : const EdgeInsets.all(15),
+
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: gradient,
@@ -54,9 +61,11 @@ class CategoryCard extends StatelessWidget {
                   width: 1.5,
                 ),
               ),
+
               child: Stack(
                 alignment: Alignment.center,
                 children: [
+                  // Progress
                   if (hasProgress)
                     SizedBox(
                       width: 90,
@@ -72,17 +81,31 @@ class CategoryCard extends StatelessWidget {
                       ),
                     ),
 
-                  Center(
-                    child: Opacity(
-                      opacity: hasProgress ? 0.8 : 1.0,
-                      child: graphic,
+                  // 👇 الصور تتملى
+                  if (isImageWidget)
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: hasProgress ? 0.8 : 1.0,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: graphic,
+                        ),
+                      ),
+                    )
+                  // 👇 الانيميشنز تفضل فى النص
+                  else
+                    Center(
+                      child: Opacity(
+                        opacity: hasProgress ? 0.8 : 1.0,
+                        child: graphic,
+                      ),
                     ),
-                  ),
 
+                  // Verified
                   if (isMastered)
                     Positioned(
-                      top: 0,
-                      right: 0,
+                      top: 10,
+                      right: 10,
                       child: Icon(
                         Icons.verified_rounded,
                         color: gradient.first,
@@ -90,9 +113,10 @@ class CategoryCard extends StatelessWidget {
                       ),
                     ),
 
+                  // Percentage
                   if (hasProgress)
                     Positioned(
-                      bottom: 0,
+                      bottom: 10,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,

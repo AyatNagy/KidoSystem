@@ -11,10 +11,12 @@ class CircleDrawingPage extends StatelessWidget {
     return BaseDrawingPage(
       shapeData: ShapeData.circle,
       successGif: 'assets/images/drawing/circle.gif',
-      onNext: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context)=>SquareDrawingPage())
-      ),
+      onNext:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SquareDrawingPage()),
+          ),
+      shapeName: 'circle',
     );
   }
 }

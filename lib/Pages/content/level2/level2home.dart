@@ -19,7 +19,10 @@ class Level2Home extends StatelessWidget {
             final double padding = constraints.maxWidth * 0.05;
 
             return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: padding, vertical: 15.0),
+              padding: EdgeInsets.symmetric(
+                horizontal: padding,
+                vertical: 15.0,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -59,11 +62,16 @@ class Level2Home extends StatelessWidget {
               CircleAvatar(
                 radius: 28,
                 backgroundColor: AppColors.purpleMain.withOpacity(0.1),
-                backgroundImage: avatarAsset != null ? AssetImage(avatarAsset!) : null,
-                child: avatarAsset == null
-                    ? const Icon(Icons.face_retouching_natural_rounded,
-                    size: 35, color: AppColors.purpleMain)
-                    : null,
+                backgroundImage:
+                    avatarAsset != null ? AssetImage(avatarAsset!) : null,
+                child:
+                    avatarAsset == null
+                        ? const Icon(
+                          Icons.face_retouching_natural_rounded,
+                          size: 35,
+                          color: AppColors.purpleMain,
+                        )
+                        : null,
               ),
               const SizedBox(width: 12),
               Flexible(
@@ -73,9 +81,10 @@ class Level2Home extends StatelessWidget {
                     Text(
                       "Hello, $childName!",
                       style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textDark),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textDark,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                     const Text(
@@ -88,7 +97,10 @@ class Level2Home extends StatelessWidget {
             ],
           ),
         ),
-        const Icon(Icons.notifications_active_rounded, color: AppColors.textGray),
+        const Icon(
+          Icons.notifications_active_rounded,
+          color: AppColors.textGray,
+        ),
       ],
     );
   }
@@ -118,32 +130,27 @@ class Level2Home extends StatelessWidget {
                 const Text(
                   "Daily Challenge",
                   style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  "Complete tasks to earn big!",
+                  "First Lines , Shapes ,Sizes and puzzle",
                   style: TextStyle(fontSize: 14, color: Colors.white70),
                 ),
                 const SizedBox(height: 15),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: AppColors.purpleMain,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: const Text("Let's Go"),
-                ),
               ],
             ),
           ),
           const Expanded(
             flex: 1,
-            child: Icon(Icons.extension_rounded, size: 60, color: Colors.white24),
+            child: Icon(
+              Icons.extension_rounded,
+              size: 60,
+              color: Colors.white24,
+            ),
           ),
         ],
       ),
@@ -171,12 +178,16 @@ class Level2Home extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-             Navigator.push(
-               context,
-               MaterialPageRoute(
-                 builder: (context) => ExamSkeletonScreen(examId: 'exam2', childName: childName,),
-               ),
-             );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => ExamSkeletonScreen(
+                      examId: 'exam2',
+                      childName: childName,
+                    ),
+              ),
+            );
           },
           borderRadius: BorderRadius.circular(20),
           child: Padding(
@@ -189,8 +200,11 @@ class Level2Home extends StatelessWidget {
                     color: Colors.white24,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.psychology_rounded,
-                      color: Colors.white, size: 30),
+                  child: const Icon(
+                    Icons.psychology_rounded,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                 ),
                 const SizedBox(width: 15),
                 const Expanded(
@@ -200,15 +214,19 @@ class Level2Home extends StatelessWidget {
                       Text(
                         "Final Exam",
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const Icon(Icons.arrow_forward_ios_rounded,
-                    color: Colors.white, size: 18),
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Colors.white,
+                  size: 18,
+                ),
               ],
             ),
           ),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/Animation/sad_effect.dart';
 
- // Import your effect
-
 class SadCharacter extends StatefulWidget {
   const SadCharacter({super.key});
 
@@ -12,16 +10,15 @@ class SadCharacter extends StatefulWidget {
 
 class _SadCharacterState extends State<SadCharacter> {
   @override
-
-  void initState(){
+  void initState() {
     super.initState();
-    
   }
+
   @override
-  void dispose(){
-    
+  void dispose() {
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -32,23 +29,23 @@ class _SadCharacterState extends State<SadCharacter> {
 
         //left tear
         Positioned(
-          top: 190,  
-          left: 140, 
-          child:SadEffect(
+          top: 190,
+          left: 140,
+          child: SadEffect(
             child: Image.asset(
-              'assets/images/left_tear_overlay.png', 
+              'assets/images/left_tear_overlay.png',
               width: 100,
             ),
           ),
         ),
-        
+
         //right tear
         Positioned(
-          top: 190,  
+          top: 190,
           right: 140,
           child: SadEffect(
             child: Image.asset(
-              'assets/images/right_tear_overlay.png', 
+              'assets/images/right_tear_overlay.png',
               width: 100,
             ),
           ),

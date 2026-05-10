@@ -168,9 +168,15 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
   @override
   void dispose() {
     _idleTimer?.cancel();
+
+    _glowController.stop();
+    _handController.stop();
+
     _glowController.dispose();
     _handController.dispose();
+
     AudioService.stop();
+
     super.dispose();
   }
 
@@ -184,7 +190,6 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // الخلفية
           Center(
             child: Image.asset(
               stage == PuzzleStage.intro
@@ -276,19 +281,27 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
               child: Lottie.asset('assets/lottie/CONFETTI.json', repeat: false),
             ),
 
-          // زر الرجوع
           Positioned(
             top: 40,
             left: 20,
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
-              onPressed:
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Level2Home(childName: 'hab'),
-                    ),
+              onPressed: () async {
+                _idleTimer?.cancel();
+
+                _glowController.stop();
+                _handController.stop();
+                AudioService.stop();
+
+                if (!mounted) return;
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Level2Home(childName: 'hab'),
                   ),
+                );
+              },
             ),
           ),
         ],

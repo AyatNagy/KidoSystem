@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Models/level3/letter_step.dart';
+import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 
@@ -17,13 +19,14 @@ class RocketLesson extends StatefulWidget {
   State<RocketLesson> createState() => _RocketLessonState();
 }
 
-class _RocketLessonState extends State<RocketLesson> with TickerProviderStateMixin {
+class _RocketLessonState extends State<RocketLesson>
+    with TickerProviderStateMixin {
   late AnimationController _rocketController;
   late Animation<Offset> _rocketAnimation;
   late AnimationController _glowController;
-  final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isLaunched = false;
   double _traceProgress = 0.0;
+  Timer? _instructionTimer;
 
   @override
   void initState() {
@@ -36,29 +39,50 @@ class _RocketLessonState extends State<RocketLesson> with TickerProviderStateMix
     _rocketAnimation = Tween<Offset>(
       begin: const Offset(0, 0),
       end: const Offset(2.0, -2.0),
-    ).animate(CurvedAnimation(parent: _rocketController, curve: Curves.easeInOutExpo));
+    ).animate(
+      CurvedAnimation(parent: _rocketController, curve: Curves.easeInOutExpo),
+    );
 
     _glowController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
+
+    _startInstructionTimer();
+  }
+
+  void _startInstructionTimer() {
+    AudioService.play(fileName: 'shapes/lets_draw.mp3');
+    _instructionTimer = Timer.periodic(const Duration(seconds: 5), (
+      Timer timer,
+    ) {
+      if (!_isLaunched) {
+        AudioService.play(fileName: 'shapes/lets_draw.mp3');
+      } else {
+        timer.cancel();
+      }
+    });
   }
 
   @override
   void dispose() {
+    _instructionTimer?.cancel();
     _rocketController.dispose();
     _glowController.dispose();
-    _audioPlayer.dispose();
+    AudioService.stop();
     super.dispose();
   }
 
   void _onLessonComplete() async {
     if (_isLaunched) return;
+    _instructionTimer?.cancel();
+
     setState(() {
       _isLaunched = true;
       _traceProgress = 1.0;
     });
-    await _audioPlayer.play(AssetSource('audio/yaay.mp3'));
+
+    await AudioService.play(fileName: 'yaay.mp3');
     _rocketController.forward();
   }
 
@@ -75,7 +99,7 @@ class _RocketLessonState extends State<RocketLesson> with TickerProviderStateMix
         endPoint: points.last,
         guidePoints: points,
         number: 1,
-      )
+      ),
     ];
   }
 
@@ -113,7 +137,10 @@ class _RocketLessonState extends State<RocketLesson> with TickerProviderStateMix
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         if (_traceProgress > 0)
-                          BoxShadow(color: AppColors.kidoOrange, blurRadius: 10)
+                          BoxShadow(
+                            color: AppColors.kidoOrange,
+                            blurRadius: 10,
+                          ),
                       ],
                     ),
                   ),
@@ -126,7 +153,7 @@ class _RocketLessonState extends State<RocketLesson> with TickerProviderStateMix
               Offset(0.35, 0.65),
               Offset(0.45, 0.55),
               Offset(0.55, 0.45),
-              Offset(0.65, 0.35)
+              Offset(0.65, 0.35),
             ],
             onFinish: _onLessonComplete,
           ),
@@ -147,7 +174,9 @@ class _RocketLessonState extends State<RocketLesson> with TickerProviderStateMix
             ),
           ),
           if (_isLaunched) ...[
-            Center(child: Lottie.asset('assets/lottie/confetti.json', repeat: false)),
+            Center(
+              child: Lottie.asset('assets/lottie/confetti.json', repeat: false),
+            ),
             Positioned(
               bottom: config.localHeight * 0.05,
               right: config.localWidth * 0.1,

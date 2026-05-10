@@ -93,38 +93,12 @@ class Category2 extends StatelessWidget {
           },
         ),
 
-        //Big
         CategoryCard(
           gradient: AppColors.numbersGrad,
-          graphic: Center(child: SortingTower()),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SizeIntroPage(goal: SizeGoal.big),
-              ),
-            );
-          },
-        ),
-
-        //Small
-        CategoryCard(
-          gradient: AppColors.numbersGrad,
-          graphic: Center(child: SortingTower()),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SizeIntroPage(goal: SizeGoal.small),
-              ),
-            );
-          },
-        ),
-
-        //tall
-        CategoryCard(
-          gradient: AppColors.numbersGrad,
-          graphic: Center(child: SortingTower()),
+          graphic: Image.asset(
+            'assets/images/sizes/size_cc.png',
+            fit: BoxFit.cover,
+          ),
           onTap: () {
             Navigator.push(
               context,
@@ -133,38 +107,13 @@ class Category2 extends StatelessWidget {
           },
         ),
 
-        //Short
-        CategoryCard(
-          gradient: AppColors.numbersGrad,
-          graphic: Center(child: SortingTower()),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SizeIntroPage(goal: SizeGoal.short),
-              ),
-            );
-          },
-        ),
-
-        //Thin
-        CategoryCard(
-          gradient: AppColors.numbersGrad,
-          graphic: Center(child: SortingTower()),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SizeIntroPage(goal: SizeGoal.thin),
-              ),
-            );
-          },
-        ),
-
         //Shapes
         CategoryCard(
           gradient: [AppColors.bgColor, AppColors.bgColor],
-          graphic: Center(child: Image.asset('assets/gif/shapes.gif')),
+          graphic: Image.asset(
+            'assets/images/sizes/shape_c.png',
+            fit: BoxFit.cover,
+          ),
           onTap: () {
             Navigator.push(
               context,
@@ -176,7 +125,10 @@ class Category2 extends StatelessWidget {
         //Puzzle
         CategoryCard(
           gradient: [AppColors.kidoPink, AppColors.bgColor],
-          graphic: Center(child: Image.asset('assets/gif/puzzle.gif')),
+          graphic: Image.asset(
+            'assets/images/puzzle/puzzle_c.png',
+            fit: BoxFit.cover,
+          ),
           onTap: () {
             Navigator.push(
               context,
