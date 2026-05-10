@@ -4,6 +4,7 @@ import 'package:kido/Models/exams/chioce_question.dart';
 import 'package:kido/Models/exams/draw_question.dart';
 import 'package:kido/Models/exams/draganddrop_question.dart';
 import 'package:kido/Models/exams/speak_question.dart';
+import 'package:kido/Widgets/Buttons/replay_button.dart';
 import 'package:kido/Widgets/Questions/chioce_question_widget.dart';
 import 'package:kido/Widgets/Questions/draw_question_widget.dart';
 import 'package:kido/Widgets/Questions/draganddrop_question_widget.dart';
@@ -277,10 +278,10 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Question ${currentIndex + 1}", style: TextStyle(fontSize: config.body, color: AppColors.textGray)),
-                  IconButton(
-                    onPressed: _playQuestionAudio,
-                    icon: const Icon(Icons.replay_circle_filled_rounded, color: AppColors.kidoPink, size: 40),
-                  ),
+                  ReplayButton(
+                      color: AppColors.kidoPink,
+                      onPressed: _playQuestionAudio
+                  )
                 ],
               ),
               const SizedBox(height: 10),
