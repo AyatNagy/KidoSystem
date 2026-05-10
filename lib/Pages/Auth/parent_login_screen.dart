@@ -40,7 +40,7 @@ class _ParentLoginState extends State<ParentLogin> {
             customDialog(
               context,
               DailogModel(
-                title: "Success 🎉",
+                title: "Success",
                 message: "Login successful!",
                 image: "assets/images/signin-success.png",
               ),
@@ -57,7 +57,7 @@ class _ParentLoginState extends State<ParentLogin> {
             customDialog(
               context,
               DailogModel(
-                title: "Error ❌",
+                title: "Error",
                 message: state.errorMessage,
                 image: "assets/images/signin-failed.png",
               ),
@@ -71,7 +71,7 @@ class _ParentLoginState extends State<ParentLogin> {
               customDialog(
                 context,
                 DailogModel(
-                  title: "Success 🎉",
+                  title: "Success",
                   message: "Google Login successful!",
                   image: "assets/images/google-success.png",
                 ),
@@ -88,7 +88,7 @@ class _ParentLoginState extends State<ParentLogin> {
               customDialog(
                 context,
                 DailogModel(
-                  title: "Error ❌",
+                  title: "Error",
                   message: state.errorMessage,
                   image: "assets/images/google-failed.png",
                 ),
@@ -99,7 +99,6 @@ class _ParentLoginState extends State<ParentLogin> {
           child: BlocBuilder<LoginCubit, LoginState>(
             builder: (context, loginState) {
               final loginCubit = context.read<LoginCubit>();
-              final googleCubit = context.read<GoogleAuthCubit>();
               final isLoading =
                   loginState is LoginLoading ||
                   context.watch<GoogleAuthCubit>().state is GoogleAuthLoading;
@@ -122,14 +121,6 @@ class _ParentLoginState extends State<ParentLogin> {
                   passwordController.text.trim(),
                 );
               }
-
-              Future<void> handleGoogle() async {
-                googleCubit.signInWithGoogle();
-              }
-
-              // ignore: avoid_print
-              void handleFacebook() => print("Facebook Login");
-
               return StatefulBuilder(
                 builder: (context, setState) {
                   return Scaffold(
@@ -193,9 +184,6 @@ class _ParentLoginState extends State<ParentLogin> {
                                           ),
                                         ),
                                       ),
-                                    SizedBox(
-                                      height: config.localHeight * 0.001,
-                                    ),
                                     CustomTextField(
                                       fieldController: passwordController,
                                       fieldIcon: const Icon(Icons.lock),
@@ -310,72 +298,7 @@ class _ParentLoginState extends State<ParentLogin> {
                                         ),
                                       ),
                                     ),
-                                    Row(
-                                      children: const [
-                                        Expanded(child: Divider()),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                          ),
-                                          child: Text(
-                                            "or sign in with",
-                                            style: TextStyle(
-                                              fontFamily: 'nunito',
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(child: Divider()),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        OutlinedButton(
-                                          onPressed:
-                                              isLoading ? null : handleGoogle,
-                                          style: OutlinedButton.styleFrom(
-                                            padding: EdgeInsets.all(
-                                              config.localHeight * 0.015,
-                                            ),
-                                            side: const BorderSide(
-                                              color: Colors.grey,
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                            ),
-                                          ),
-                                          child: Image.asset(
-                                            'assets/images/google.png',
-                                            height: config.localHeight * 0.05,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: config.localWidth * 0.05,
-                                        ),
-                                        OutlinedButton(
-                                          onPressed: handleFacebook,
-                                          style: OutlinedButton.styleFrom(
-                                            padding: EdgeInsets.all(
-                                              config.localHeight * 0.015,
-                                            ),
-                                            side: const BorderSide(
-                                              color: Colors.grey,
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                            ),
-                                          ),
-                                          child: Image.asset(
-                                            'assets/images/facebook.png',
-                                            height: config.localHeight * 0.05,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,

@@ -28,7 +28,7 @@ class CleaningMap extends StatefulWidget {
 class _CleaningMapState extends State<CleaningMap> {
   final DragDropQuestion trashQuestionData = DragDropQuestion(
     examId: ['clean_mission'],
-    questionText: "ارمي القمامة في السلة",
+    questionAudio: "ارمي القمامة في السلة",
     backgroundImage: 'assets/images/clean/Trash/TrashBackground.png',
     targets: [
       DragTargetZone(

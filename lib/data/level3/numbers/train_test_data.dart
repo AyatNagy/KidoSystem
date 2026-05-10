@@ -14,7 +14,7 @@ final List<TrainQuestion> trainTestQuestions=[
     stopPosition: 0.57,
     question:DragDropQuestion(
     examId:['train_test'],
-    questionText:"ركب العربة الناقصة في القطار",
+    questionAudio:"ركب العربة الناقصة في القطار",
     items:[
       DragItem(
         id:"car3",
@@ -48,7 +48,7 @@ final List<TrainQuestion> trainTestQuestions=[
     stopPosition: 0.77,
     question:DragDropQuestion(
     examId:['train_test'],
-    questionText:"ركب العربة الناقصة في القطار",
+    questionAudio:"ركب العربة الناقصة في القطار",
     items:[
       DragItem(
         id:"car7",
@@ -81,7 +81,7 @@ final List<TrainQuestion> trainTestQuestions=[
     stopPosition: 0.41,
     question:DragDropQuestion(
     examId:['train_test'],
-    questionText:"ركب العربة الناقصة في القطار",
+    questionAudio:"ركب العربة الناقصة في القطار",
     items:[
       DragItem(
         id:"car2",
@@ -114,7 +114,7 @@ final List<TrainQuestion> trainTestQuestions=[
     stopPosition: 0.67,
     question:DragDropQuestion(
     examId:['train_test'],
-    questionText:"ركب العربة الناقصة في القطار",
+    questionAudio:"ركب العربة الناقصة في القطار",
     items:[
       DragItem(
         id:"car6",
@@ -141,5 +141,3 @@ final List<TrainQuestion> trainTestQuestions=[
   ),
   ),
 ];
-
-

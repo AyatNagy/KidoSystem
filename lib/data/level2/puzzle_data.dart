@@ -14,7 +14,7 @@ final List<PuzzleData> appleLevels = [
   PuzzleData(
     fullImage: "assets/images/puzzle/apple_full.png",
     question: DragDropQuestion(
-      questionText: "",
+      questionAudio: "",
       backgroundImage: "assets/images/puzzle/apple_1_missing.png",
       items: [
         DragItem(
@@ -39,7 +39,7 @@ final List<PuzzleData> appleLevels = [
   PuzzleData(
     fullImage: "assets/images/puzzle/apple_full.png",
     question: DragDropQuestion(
-      questionText: "",
+      questionAudio: "",
       backgroundImage: "assets/images/puzzle/apple_2_missing.png",
       items: [
         DragItem(
@@ -77,7 +77,7 @@ final List<PuzzleData> appleLevels = [
   PuzzleData(
     fullImage: "assets/images/puzzle/apple_full.png",
     question: DragDropQuestion(
-      questionText: "",
+      questionAudio: "",
       backgroundImage: "assets/images/puzzle/apple_3_missing.png",
       items: [
         DragItem(
@@ -130,7 +130,7 @@ final List<PuzzleData> cowLevels = [
   PuzzleData(
     fullImage: "assets/images/puzzle/cow_full.png",
     question: DragDropQuestion(
-      questionText: "",
+      questionAudio: "",
       backgroundImage: "assets/images/puzzle/cow_1_missing.png",
       items: [
         DragItem(
@@ -155,7 +155,7 @@ final List<PuzzleData> cowLevels = [
   PuzzleData(
     fullImage: "assets/images/puzzle/cow_full.png",
     question: DragDropQuestion(
-      questionText: "",
+      questionAudio: "",
       backgroundImage: "assets/images/puzzle/cow_2_missing.png",
       items: [
         DragItem(
@@ -194,7 +194,7 @@ final List<PuzzleData> cowLevels = [
   PuzzleData(
     fullImage: "assets/images/puzzle/cow_full.png",
     question: DragDropQuestion(
-      questionText: "",
+      questionAudio: "",
       backgroundImage: "assets/images/puzzle/cow_3_missing.png",
       items: [
         DragItem(

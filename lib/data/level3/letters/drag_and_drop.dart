@@ -5,7 +5,7 @@ import '../../../Models/targets_item.dart';
 
 final List<DragDropQuestion> arLetter = [
   DragDropQuestion(
-    questionText: 'ألف',
+    questionAudio: 'ألف',
     items: [
       DragItem(
         id: "ا",
@@ -39,7 +39,7 @@ final List<DragDropQuestion> arLetter = [
   ),
 
   DragDropQuestion(
-    questionText: 'ب',
+    questionAudio: 'ب',
     items: [
       DragItem(
         id: "ب",
@@ -73,7 +73,7 @@ final List<DragDropQuestion> arLetter = [
   ),
 
   DragDropQuestion(
-    questionText: 'ت',
+    questionAudio: 'ت',
     items: [
       DragItem(
         id: "ت",
@@ -107,7 +107,7 @@ final List<DragDropQuestion> arLetter = [
   ),
 
   DragDropQuestion(
-    questionText: 'ث',
+    questionAudio: 'ث',
     items: [
       DragItem(
         id: "ث",
@@ -141,7 +141,7 @@ final List<DragDropQuestion> arLetter = [
   ),
 
   DragDropQuestion(
-    questionText: 'ج',
+    questionAudio: 'ج',
     items: [
       DragItem(
         id: "ج",
@@ -177,7 +177,7 @@ final List<DragDropQuestion> arLetter = [
 
 final List<DragDropQuestion> enLetter = [
   DragDropQuestion(
-    questionText: 'A',
+    questionAudio: 'A',
     items: [
       DragItem(
         id: "leftA",
@@ -224,7 +224,7 @@ final List<DragDropQuestion> enLetter = [
   ),
 
   DragDropQuestion(
-    questionText: 'B',
+    questionAudio: 'B',
     items: [
       DragItem(
         id: "verB",
@@ -271,7 +271,7 @@ final List<DragDropQuestion> enLetter = [
   ),
 
   DragDropQuestion(
-    questionText: 'C',
+    questionAudio: 'C',
     items: [
       DragItem(
         id: "C",
@@ -292,7 +292,7 @@ final List<DragDropQuestion> enLetter = [
   ),
 
   DragDropQuestion(
-    questionText: 'D',
+    questionAudio: 'D',
     items: [
       DragItem(
         id: "verD",

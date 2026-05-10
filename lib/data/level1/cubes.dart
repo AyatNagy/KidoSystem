@@ -6,7 +6,7 @@ import '../../../Models/targets_item.dart';
 
 class StackingLessonsData {
   static final DragDropQuestion cubes = DragDropQuestion(
-    questionText: 'Big to Small',
+    questionAudio: 'Big to Small',
     items: [
       DragItem(
           id: "cube_large",

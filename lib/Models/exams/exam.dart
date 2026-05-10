@@ -1,4 +1,5 @@
 import 'package:kido/Models/exams/chioce_question.dart';
+import '../../data/exam/choice_question_data.dart';
 
 class Exam {
   final String id;

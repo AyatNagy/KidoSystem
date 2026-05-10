@@ -7,7 +7,7 @@ class AnimalsGameData {
   static List<DragDropQuestion> animalsQuestions=[
     DragDropQuestion(
       examId: ['Animals_faces__game'],
-      questionText: 'ركب وجه القطة',
+      questionAudio: 'ركب وجه القطة',
       backgroundImage: 'assets/images/animals/cat_body.png',
        items:[
          DragItem(
@@ -27,9 +27,9 @@ class AnimalsGameData {
         ]
         ),
 
-        DragDropQuestion(
+    DragDropQuestion(
       examId: ['Animals_faces__game'],
-      questionText: 'ركب وجه الكلب',
+      questionAudio: 'ركب وجه الكلب',
       backgroundImage: 'assets/images/animals/dog_body.png',
        items:[
          DragItem(
@@ -49,9 +49,9 @@ class AnimalsGameData {
           ),
         ]
         ),
-         DragDropQuestion(
+    DragDropQuestion(
       examId: ['Animals_faces__game'],
-      questionText: 'ركب وجه البطة',
+      questionAudio: 'ركب وجه البطة',
       backgroundImage: 'assets/images/animals/duck_body.png',
        items:[
          DragItem(
@@ -74,7 +74,7 @@ class AnimalsGameData {
 
          DragDropQuestion(
       examId: ['Animals_faces__game'],
-      questionText: 'ركب وجه الحصان',
+      questionAudio: 'ركب وجه الحصان',
       backgroundImage: 'assets/images/animals/horse_body.png',
        items:[
          DragItem(
@@ -96,7 +96,7 @@ class AnimalsGameData {
         ),
         DragDropQuestion(
       examId: ['Animals_faces__game'],
-      questionText: 'ركب وجه الاسد',
+      questionAudio: 'ركب وجه الاسد',
       backgroundImage: 'assets/images/animals/lion_body.png',
        items:[
          DragItem(
@@ -118,7 +118,7 @@ class AnimalsGameData {
         ),
          DragDropQuestion(
       examId: ['Animals_faces__game'],
-      questionText: 'ركب وجه الارنب',
+      questionAudio: 'ركب وجه الارنب',
       backgroundImage: 'assets/images/animals/rabbit_body.png',
        items:[
          DragItem(

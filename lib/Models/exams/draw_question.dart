@@ -6,23 +6,8 @@ class DrawingQuestion extends Question {
 
   DrawingQuestion({
     required super.examId,
-    required super.questionText,
+    required super.questionAudio,
     required this.targetShape,
     required this.image,
   });
 }
-
-final List<DrawingQuestion> allDrawingQuestions = [
-  DrawingQuestion(
-    examId: ['exam2'],
-    questionText: "'V' ارسم حرف ",
-    targetShape: 'V-shape',
-    image: "assets/images/letterV.png",
-  ),
-  DrawingQuestion(
-    examId: ['exam1'],
-    questionText: "ارسم دائرة",
-    targetShape: 'Circle',
-    image: "assets/images/circle.png",
-  ),
-];

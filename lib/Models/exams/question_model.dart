@@ -1,6 +1,6 @@
 abstract class Question {
   final List<String>? examId;
-  final String questionText;
+  final String questionAudio;
 
-  Question({required this.examId, required this.questionText});
+  Question({required this.examId, required this.questionAudio});
 }

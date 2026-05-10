@@ -4,7 +4,7 @@ import '../../Models/exams/draganddrop_question.dart';
 import '../../Models/targets_item.dart';
 
 final DragDropQuestion bunnyQuestion = DragDropQuestion(
-  questionText: 'الأرنب',
+  questionAudio: 'الأرنب',
   items: [
     DragItem(
       id: 'c1',

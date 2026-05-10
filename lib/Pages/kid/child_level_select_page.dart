@@ -74,10 +74,7 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
     }
   }
 
-  void _submit() {
-    final level = _selectedLevel;
-    if (level == null) return;
-
+  Future<void> _launchLevel(int level) async {
     Widget targetPage;
     switch (level) {
       case 1: targetPage = Level1Home(childName: widget.childName); break;
@@ -86,11 +83,24 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
       default: return;
     }
 
-    if (Navigator.canPop(context)) {
-      Navigator.pop(context, ChildLevelSelectResult(level));
-      Navigator.push(context, MaterialPageRoute(builder: (_) => targetPage));
-    } else {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => targetPage));
+    // 1. Wait for the exam to finish and return a result
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => targetPage)
+    );
+
+    // 2. Catch the "Failed Exam 2" signal
+    if (result is int && result == -1) {
+      // Optionally update the UI so Level 1 looks selected
+      setState(() {
+        _selectedLevel = 1;
+      });
+
+      // 3. Automatically launch Level 1 for review
+      _launchLevel(1);
+    } else if (result is int && result > 0) {
+      // Refresh progress if they passed and unlocked something new
+      _loadProgress();
     }
   }
 
@@ -258,7 +268,7 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: _selectedLevel == null ? null : _submit,
+          onPressed: _selectedLevel == null ? null : () => _launchLevel(_selectedLevel!),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF1F2A44),
             padding: const EdgeInsets.symmetric(vertical: 20),

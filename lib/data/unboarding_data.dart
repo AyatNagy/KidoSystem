@@ -21,15 +21,14 @@ final List<OnboardModel> onboardData = [
     image: 'assets/images/connect.png',
     title: 'Connect',
     color: Color(0xFFCC5E33),
-    desc: 'Track your child’s progress and stay in touch with teachers.',
+    desc: 'Track your child’s progress and stay in touch.',
     gradientColors: [Color(0xFFFFB482), Color(0xFFCC5E33), Color(0xFF8A2F07)],
   ),
   OnboardModel(
     image: 'assets/images/guide.jpeg',
     title: 'Guide',
     color: Color(0xFF2E8B57),
-    desc:
-        'Assess levels, assign activities, and create extra exams when needed.',
+    desc: 'Assess levels and assign activities.',
     gradientColors: [Color(0xFF9AF7C2), Color(0xFF2E8B57), Color(0xFF0F5E33)],
   ),
 ];

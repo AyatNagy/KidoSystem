@@ -107,7 +107,7 @@ class _SenseDragPracticeScreenState extends State<SenseDragPracticeScreen>
   void _prepareDragDropData() {
     final wrongSenseData = _getWrongOptionData();
     dragDropData = DragDropQuestion(
-      questionText: "",
+      questionAudio: "",
       backgroundImage: senseData.faceWithoutFeature,
       items: [
         DragItem(

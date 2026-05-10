@@ -1,1 +1,6 @@
-enum QuestionType { tapBodyPart, dragToComplete, sorting, choosing }
+enum QuestionType {
+  choice,
+  drawing,
+  dragDrop,
+  speak
+}

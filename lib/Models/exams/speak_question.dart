@@ -8,22 +8,6 @@ class SpeakQuestion extends Question {
     required this.image,
     required this.acceptedAnswers,
     required super.examId,
-    required super.questionText,
+    required super.questionAudio,
   });
 }
-
-final List<SpeakQuestion> allSpaekQuestions = [
-  SpeakQuestion(
-    examId: ['exam2'],
-    questionText: "اسم الشكل",
-    image: "assets/images/circle-shape.png",
-    acceptedAnswers: ["دايره", "دايرة", "دائرة"],
-  ),
-
-  SpeakQuestion(
-    examId: ['exam1'],
-    questionText: "اسم الحيوان",
-    image: "assets/images/cat2.png",
-    acceptedAnswers: ["قطة", "قطه", "قط"],
-  ),
-];
