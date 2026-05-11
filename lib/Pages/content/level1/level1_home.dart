@@ -113,7 +113,13 @@ class Level1Home extends StatelessWidget {
               children: [
                 const Text("Daily Challenge", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.bgColor)),
                 const SizedBox(height: 8),
-                const Text("Earn 3 stars today!", style: TextStyle(fontSize: 14, color: Colors.white70)),
+                const Text(
+                    "Counting, Sorting, PedBoard, Self-Care, feelings and Senses",
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70
+                    )
+                ),
                 const SizedBox(height: 15),
                 ElevatedButton(
                   onPressed: () {},

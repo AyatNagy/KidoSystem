@@ -14,4 +14,11 @@ final List<SpeakQuestion> allSpaekQuestions = [
     image: "assets/images/cat2.png",
     acceptedAnswers: ["قطة", "قطه", "قط"],
   ),
+
+  SpeakQuestion(
+    examId: ["post_level2"],
+    questionAudio: "exams/what_name.mp3",
+    image: "assets/images/drawing/triangle.gif",
+    acceptedAnswers: ["ثلث", "مثاث", "مثلث"],
+  ),
 ];

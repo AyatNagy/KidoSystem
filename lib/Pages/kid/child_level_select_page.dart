@@ -83,23 +83,17 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
       default: return;
     }
 
-    // 1. Wait for the exam to finish and return a result
     final result = await Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => targetPage)
     );
 
-    // 2. Catch the "Failed Exam 2" signal
     if (result is int && result == -1) {
-      // Optionally update the UI so Level 1 looks selected
       setState(() {
         _selectedLevel = 1;
       });
-
-      // 3. Automatically launch Level 1 for review
       _launchLevel(1);
     } else if (result is int && result > 0) {
-      // Refresh progress if they passed and unlocked something new
       _loadProgress();
     }
   }
@@ -137,28 +131,28 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
                             _buildLevelNode(
                               config,
                               level: 1,
-                              title: "Beginner Bay",
                               color: AppColors.kidoBlue,
-                              icon: Icons.rocket_launch,
+                              imageWidget: Image.asset('assets/images/level1.jpeg'),
                               alignment: Alignment.centerLeft,
+                              icon: Icons.directions_car_filled,
                             ),
                             _buildPath(config, isRight: true),
                             _buildLevelNode(
                               config,
                               level: 2,
-                              title: "Growth Grove",
                               color: AppColors.kidoOrange,
-                              icon: Icons.auto_awesome,
+                              imageWidget: Image.asset('assets/images/level2.jpeg'),
                               alignment: Alignment.centerRight,
+                              icon: Icons.auto_awesome
                             ),
                             _buildPath(config, isRight: false),
                             _buildLevelNode(
                               config,
                               level: 3,
-                              title: "Hero Heights",
                               color: AppColors.kidoPink,
-                              icon: Icons.emoji_events,
+                              imageWidget: Image.asset('assets/images/level3.jpeg'),
                               alignment: Alignment.centerLeft,
+                              icon: Icons.wine_bar_sharp
                             ),
                           ],
                         ),
@@ -175,7 +169,14 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
     );
   }
 
-  Widget _buildLevelNode(dynamic config, {required int level, required String title, required Color color, required IconData icon, required Alignment alignment}) {
+  Widget _buildLevelNode(
+      dynamic config, {
+        required int level,
+        required Color color,
+        required IconData icon,
+        required Widget imageWidget,
+        required Alignment alignment,
+      }) {
     final bool isLocked = level > _unlockedLevel;
     final bool isSelected = _selectedLevel == level;
 
@@ -217,10 +218,10 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
                           width: 4,
                         ),
                       ),
-                      child: Icon(
-                        isLocked ? Icons.lock : icon,
-                        size: 45,
-                        color: isLocked ? Colors.grey[600] : (isSelected ? Colors.white : color),
+                      child: ClipOval(
+                        child: isLocked
+                            ? Icon(Icons.lock, size: 45, color: Colors.grey[600])
+                            : imageWidget,
                       ),
                     ),
                     if (isSelected)
@@ -235,15 +236,6 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
                       )
                   ],
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
-                    color: isLocked ? Colors.grey : const Color(0xFF1F2A44),
-                  ),
-                ),
               ],
             ),
           ),
@@ -251,7 +243,6 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
       ),
     );
   }
-
   Widget _buildPath(dynamic config, {required bool isRight}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),

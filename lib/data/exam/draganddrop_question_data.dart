@@ -229,4 +229,60 @@ final List<DragDropQuestion> allDragDropQuestions = [
       ),
     ],
   ),
+
+  DragDropQuestion(
+    examId: ["post_level2"],
+    questionAudio: "sizes/where_short.mp3",
+    items: [
+      DragItem(
+        id: "gir",
+        image: "assets/images/giraffe.png",
+        startPosition: const Offset(0.10, 0.60),
+        size: const Size(0.45, 0.45),
+      ),
+      DragItem(
+        id: "candel",
+        image: "assets/images/sizes/shortcandel.png",
+        startPosition: const Offset(0.55, 0.65),
+        size: const Size(0.45, 0.45),
+      ),
+    ],
+    targets: [
+      DragTargetZone(
+        id: "candel_target",
+        acceptedItemIds: ["candel"],
+        position: const Offset(0.30, 0.05),
+        size: const Size(0.45, 0.45),
+        image: "assets/images/box.png",
+      ),
+    ],
+  ),
+
+  DragDropQuestion(
+    examId: ["post_level2"],
+    questionAudio: "exams/complete_puzzle.mp3",
+    items: [
+      DragItem(
+        id: "square",
+        image: "assets/images/shapes/square.png",
+        startPosition: const Offset(0.10, 0.70),
+        size: const Size(0.25, 0.25),
+      ),
+      DragItem(
+        id: "circle",
+        image: "assets/images/shapes/rcircle.png",
+        startPosition: const Offset(0.55, 0.70),
+        size: const Size(0.25, 0.25),
+      ),
+    ],
+    targets: [
+      DragTargetZone(
+        id: "square_target",
+        acceptedItemIds: ["square"],
+        position: const Offset(0.20, 0.05),
+        size: const Size(0.70, 0.70),
+        image: "assets/images/shapes/puzzle.png",
+      ),
+    ],
+  ),
 ];
