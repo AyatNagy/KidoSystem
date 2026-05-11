@@ -28,6 +28,7 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
   late List<AnimalsModel> currentOptions;
 
   Timer? hintTimer;
+
   Timer? startDelayTimer;
   late AnimationController stretchController;
   late Animation<double> stretchAnimation;
@@ -71,10 +72,12 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
     startDelayTimer?.cancel();
     stretchController.repeat(reverse: true);
 
-    //question audio
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted && !showSuccess) {
-        AudioService.play(fileName: correctAnimal.audioName);
+        AudioService.playSequence(
+          "animals/where_is.mp3",
+          correctAnimal.audioName,
+        );
       }
     });
 
@@ -84,9 +87,12 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
       }
     });
 
-    hintTimer = Timer.periodic(const Duration(seconds: 7), (timer) {
+    hintTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (!showSuccess && mounted) {
-        AudioService.play(fileName: correctAnimal.audioName);
+        AudioService.playSequence(
+          "animals/where_is.mp3",
+          correctAnimal.audioName,
+        );
       } else {
         timer.cancel();
       }
@@ -104,16 +110,10 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
 
       if (mounted) {
         setState(() => showSuccess = true);
-        AudioService.play(fileName: "yaay.mp3");
-        Future.delayed(const Duration(milliseconds: 1500), () {
-          if (mounted && showSuccess) {
-            AudioService.stop();
-            AudioService.play(fileName: correctAnimal.audioName);
-          }
-        });
+        AudioService.playSequence("yaay.mp3", correctAnimal.audioName);
       }
 
-      await Future.delayed(const Duration(seconds: 6));
+      await Future.delayed(const Duration(seconds: 5));
       if (_currentAnimalIndex < animalsDiscovery.length - 1) {
         _currentAnimalIndex++;
         _loadLevel(_currentAnimalIndex);

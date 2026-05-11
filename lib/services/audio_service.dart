@@ -13,6 +13,19 @@ class AudioService {
     }
   }
 
+  static Future<void> playSequence(String firstFile, String secondFile) async {
+    try {
+      await _player.stop();
+      await _player.play(AssetSource('audio/$firstFile'));
+
+      await _player.onPlayerComplete.first;
+
+      await _player.play(AssetSource('audio/$secondFile'));
+    } catch (e) {
+      debugPrint("Audio Sequence Error: $e");
+    }
+  }
+
   static void stop() {
     _player.stop();
   }

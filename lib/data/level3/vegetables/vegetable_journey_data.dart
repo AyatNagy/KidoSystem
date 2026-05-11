@@ -14,12 +14,8 @@ List<LetterJourney> buildVegetableJourney() => [
     isLocked: true,
     charName: 'Chili Pepper\nفلفل حار',
   ),
-  LetterJourney(image: _onion, isLocked: true, charName: 'Onion\nبصل'),
-  LetterJourney(image: _tomato, isLocked: true, charName: 'Tomato\nطماطم'),
-  LetterJourney(image: _broccoli, isLocked: true, charName: 'Quiz\nاختبار'),
-  LetterJourney(
-    image: _carrot,
-    isLocked: true,
-    charName: 'Listen & Guess\nاستمع وخمّن',
-  ),
+  LetterJourney(image: _onion, isLocked: true, charName: ''),
+  LetterJourney(image: _tomato, isLocked: true, charName: ''),
+  LetterJourney(image: _broccoli, isLocked: true, charName: ''),
+  LetterJourney(image: _carrot, isLocked: true, charName: ''),
 ];

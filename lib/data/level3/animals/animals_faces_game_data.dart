@@ -7,7 +7,7 @@ class AnimalsGameData {
   static List<DragDropQuestion> animalsQuestions = [
     DragDropQuestion(
       examId: ['Animals_faces__game'],
-      questionAudio: 'ركب وجه القطة',
+      questionAudio: "animals/complete_face.mp3.mp3",
       backgroundImage: 'assets/images/animals/cat_body.png',
       items: [
         DragItem(
@@ -30,18 +30,12 @@ class AnimalsGameData {
 
     DragDropQuestion(
       examId: ['Animals_faces__game'],
-      questionAudio: 'ركب وجه الكلب',
+      questionAudio: "animals/complete_face.mp3.mp3",
       backgroundImage: 'assets/images/animals/dog_body.png',
       items: [
         DragItem(
           id: 'dog_face',
           image: 'assets/images/animals/dog_head.png',
-          startPosition: const Offset(0.01, 0.75),
-          size: const Size(0.88, 0.88),
-        ),
-        DragItem(
-          id: 'cat_face',
-          image: 'assets/images/animals/cat_head.png',
           startPosition: const Offset(0.01, 0.75),
           size: const Size(0.88, 0.88),
         ),
@@ -58,7 +52,7 @@ class AnimalsGameData {
     ),
     DragDropQuestion(
       examId: ['Animals_faces__game'],
-      questionAudio: 'ركب وجه البطة',
+      questionAudio: "animals/complete_face.mp3.mp3",
       backgroundImage: 'assets/images/animals/duck_body.png',
       items: [
         DragItem(
@@ -81,7 +75,7 @@ class AnimalsGameData {
 
     DragDropQuestion(
       examId: ['Animals_faces__game'],
-      questionAudio: 'ركب وجه الحصان',
+      questionAudio: "animals/complete_face.mp3.mp3",
       backgroundImage: 'assets/images/animals/horse_body.png',
       items: [
         DragItem(
@@ -103,7 +97,7 @@ class AnimalsGameData {
     ),
     DragDropQuestion(
       examId: ['Animals_faces__game'],
-      questionAudio: 'ركب وجه الاسد',
+      questionAudio: "animals/complete_face.mp3.mp3",
       backgroundImage: 'assets/images/animals/lion_body.png',
       items: [
         DragItem(
@@ -125,7 +119,7 @@ class AnimalsGameData {
     ),
     DragDropQuestion(
       examId: ['Animals_faces__game'],
-      questionAudio: 'ركب وجه الارنب',
+      questionAudio: "animals/complete_face.mp3.mp3",
       backgroundImage: 'assets/images/animals/rabbit_body.png',
       items: [
         DragItem(
