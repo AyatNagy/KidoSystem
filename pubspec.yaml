@@ -121,6 +121,8 @@ flutter:
     - assets/audio/animals/
     - assets/audio/level1/
     - assets/audio/shapes/
+    - assets/audio/exams/
+
      
    
   # An image asset can refer to one or more resolution-specific "variants", see

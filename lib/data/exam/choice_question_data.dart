@@ -4,42 +4,42 @@ import '../../Models/exams/chioce_question.dart';
 final List<ChoiceQuestion> allChoiceQuestions = [
   ChoiceQuestion(
     examId: ['exam2'],
-    questionAudio: "angry.mp3",
+    questionAudio: "exams/where_girl.mp3",
     choices: ["assets/images/boy.png", "assets/images/girl.png"],
     correctIndex: 1,
   ),
 
   ChoiceQuestion(
     examId: ['exam2'],
-    questionAudio: "اختار الحاجة التقيلة",
+    questionAudio: "exams/where_heavy.mp3",
     choices: ["assets/images/elephant.png", "assets/images/feather.png"],
     correctIndex: 0,
   ),
 
   ChoiceQuestion(
     examId: ['exam1', 'exam2'],
-    questionAudio: " مين الكبير",
+    questionAudio: "sizes/where_big.mp3",
     choices: ["assets/images/whale.png", "assets/images/small.png"],
     correctIndex: 0,
   ),
 
   ChoiceQuestion(
     examId: ['exam1'],
-    questionAudio: "كتاب العربيات فين",
+    questionAudio: "exams/where_animal_book.mp3",
     choices: ["assets/images/animals-book.png", "assets/images/cars-book.png"],
-    correctIndex: 1,
+    correctIndex: 0,
   ),
 
   ChoiceQuestion(
     examId: ['exam1'],
-    questionAudio: "مين حزين",
+    questionAudio: "exams/who_sad.mp3",
     choices: ["assets/images/sad.png", "assets/images/happy.png"],
     correctIndex: 0,
   ),
 
   ChoiceQuestion(
     examId: ['exam2'],
-    questionAudio: " لون الشمس",
+    questionAudio: "exams/color_sun.mp3",
     colorImage: "assets/images/gray-sun.png",
     colors: [Colors.red, Colors.blue, Colors.yellow, Colors.green],
     correctIndex: 2,
@@ -47,7 +47,7 @@ final List<ChoiceQuestion> allChoiceQuestions = [
 
   ChoiceQuestion(
     examId: ['exam1'],
-    questionAudio: "صوت مين ده",
+    questionAudio: "exams/where_dog.mp3",
     choices: ["assets/images/elephant2.png", "assets/images/dog2.png"],
     correctIndex: 1,
     sound: "assets/audio/dog.mp3",

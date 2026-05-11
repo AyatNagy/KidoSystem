@@ -4,6 +4,7 @@ import 'package:kido/Pages/Auth/parent_login_screen.dart';
 import 'package:kido/Pages/content/level1/level1_home.dart';
 import 'package:kido/Pages/content/level2/level2home.dart';
 import 'package:kido/Pages/content/level3/level3_home.dart';
+import 'package:kido/Pages/kid/exam_screen.dart';
 import 'Pages/shared/logo_page.dart';
 import 'Widgets/info_widget.dart';
 import 'Widgets/responsive_provider.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-            home: const Level3Home(childName: 'sara'),
+            home: const ExamSkeletonScreen(examId: "exam2", childName: "sara"),
           ),
         );
       },
