@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/content/level1/senses/senses_map_page.dart';
-import 'package:kido/Widgets/content/category_card.dart';
-import 'package:kido/constants.dart';
 import '../../../Widgets/Animation/senses.dart';
+import '../../../Widgets/content/category_card.dart';
+import '../../../constants.dart';
 import '../feelings/feelings_levels.dart';
 import 'Self_cleaning/cleaning_map.dart';
 import 'draw.dart';
@@ -14,7 +14,6 @@ import 'no3/cubes.dart';
 import 'no3/moving_car.dart';
 import 'no6/carrot.dart';
 import 'no6/lesson1.dart';
-//import 'no6/stake_lesson.dart';
 
 class Category extends StatelessWidget {
   const Category({super.key});
@@ -31,109 +30,57 @@ class Category extends StatelessWidget {
         childAspectRatio: 0.85,
       ),
       children: [
-        //  COUNTING
+        // 1. COUNTING
         CategoryCard(
           gradient: AppColors.alphabetGrad,
-          graphic: Center(
-            child: Image.asset(
-              'assets/images/level1/counting.gif',
-              fit: BoxFit.cover,
-            ),
-          ),
+          graphic: Center(child: Image.asset('assets/images/level1/counting.gif', fit: BoxFit.cover)),
           onTap: () async {
-              await Navigator.push(context, MaterialPageRoute(
-                builder: (context) => MonkeyCountingPage(onNext: () => Navigator.pop(context)),
-              ));
-              await Navigator.push(context, MaterialPageRoute(
-                builder: (context) => BeeCountingPage(onNext: () => Navigator.pop(context)),
-              ));
-              await Navigator.push(context, MaterialPageRoute(
-                builder: (context) => ToyRewardPage(onNext: () => Navigator.pop(context)),
-              ));
+            final navigator = Navigator.of(context);
+            await navigator.push(MaterialPageRoute(
+              builder: (context) => MonkeyCountingPage(onNext: () => Navigator.pop(context)),
+            ));
+
+            await navigator.push(MaterialPageRoute(
+              builder: (context) => BeeCountingPage(onNext: () => Navigator.pop(context)),
+            ));
+
+            await navigator.push(MaterialPageRoute(
+              builder: (context) => ToyRewardPage(onNext: () => Navigator.pop(context)),
+            ));
           },
         ),
 
-        // SORTING
+        // 2. SORTING
         CategoryCard(
           gradient: AppColors.numbersGrad,
-          graphic: Center(
-            child: Image.asset(
-              'assets/images/level1/sort.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (context) => CubesLesson(
-                      onNext: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => MovingCarPage(
-                                  onNext: () {
-                                    Navigator.popUntil(
-                                      context,
-                                      (route) => route.isFirst,
-                                    );
-                                  },
-                                ),
-                          ),
-                        );
-                      },
-                    ),
-              ),
-            );
+          graphic: Center(child: Image.asset('assets/images/level1/sort.png', fit: BoxFit.cover)),
+          onTap: () async {
+            final navigator = Navigator.of(context);
+
+            await navigator.push(MaterialPageRoute(
+              builder: (context) => CubesLesson(onNext: () => Navigator.pop(context)),
+            ));
+
+            await navigator.push(MaterialPageRoute(
+              builder: (context) => MovingCarPage(onNext: () => Navigator.pop(context)),
+            ));
           },
         ),
 
-        // PEGBOARD
+        // 3. PEGBOARD
         CategoryCard(
           gradient: AppColors.colorsGrad,
-          graphic: Center(
-            child: Image.asset(
-              'assets/images/level1/sticks-c.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (context) => BunnyFeedingGame(
-                      onNext: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                //(context) => StakeDrag(
-                                  //onNext: () {
-                                    //Navigator.push(
-                                      //context,
-                                      //MaterialPageRoute(
-                                        //builder:
-                                            (context) => StakesDrag(
-                                              onNext: () {
-                                                Navigator.popUntil(
-                                                  context,
-                                                  (route) => route.isFirst,
-                                                );
-                                              },
-                                            ),
-                                      //),
-                                    //);
-                                  //},
-                                //),
-                          ),
-                        );
-                      },
-                    ),
-              ),
-            );
+          graphic: Center(child: Image.asset('assets/images/level1/sticks-c.png', fit: BoxFit.cover)),
+          onTap: () async {
+            final navigator = Navigator.of(context);
+
+            await navigator.push(MaterialPageRoute(
+              builder: (context) => BunnyFeedingGame(onNext: () => Navigator.pop(context)),
+            ));
+
+            await navigator.push(MaterialPageRoute(
+              builder: (context) => StakesDrag(onNext: () => Navigator.pop(context)),
+            ));
           },
         ),
 
@@ -141,62 +88,35 @@ class Category extends StatelessWidget {
         CategoryCard(
           gradient: AppColors.fruitGrad,
           graphic: const Center(child: FiveSensesLogo()),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SensesMapPage()),
-            );
-          },
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SensesMapPage())),
         ),
 
         // MATCHING
         CategoryCard(
           gradient: [AppColors.kidoColors[5], AppColors.kidoOrange],
           graphic: Center(child: Image.asset('assets/gif/match.gif')),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MatchingPracticePage(),
-              ),
-            );
-          },
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const MatchingPracticePage())),
         ),
 
         // DRAWING
         CategoryCard(
           gradient: AppColors.puzzleGrad,
           graphic: Center(child: Image.asset('assets/images/drawing/draw.gif')),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const Draw()),
-            );
-          },
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const Draw())),
         ),
 
-        //SELF-CARE
+        // SELF-CARE
         CategoryCard(
           gradient: AppColors.vegetablesGrad,
           graphic: Center(child: Image.asset('assets/gif/self-care.gif')),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const CleaningMap()),
-            );
-          },
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const CleaningMap())),
         ),
 
         // FEELINGS
         CategoryCard(
           gradient: [AppColors.kidoColors[6], AppColors.kidoRed],
           graphic: Center(child: Image.asset('assets/gif/feelings.gif')),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const TreehouseLevels()),
-            );
-          },
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const TreehouseLevels())),
         ),
       ],
     );
