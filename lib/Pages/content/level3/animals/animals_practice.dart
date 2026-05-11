@@ -18,18 +18,15 @@ class AnimalsPracticePage extends StatefulWidget {
 
 class _AnimalsPracticePageState extends State<AnimalsPracticePage>
     with SingleTickerProviderStateMixin {
-  
-  // --- Game State ---
-  int _currentAnimalIndex = 0; // Tracks which animal we are asking about
+  int _currentAnimalIndex = 0;
   bool showSuccess = false;
   bool isLocked = false;
   bool canAnimate = false;
   List<int> wrongIndices = [];
-  
+
   late AnimalsModel correctAnimal;
   late List<AnimalsModel> currentOptions;
 
-  // --- Animation & Timers ---
   Timer? hintTimer;
   Timer? startDelayTimer;
   late AnimationController stretchController;
@@ -49,22 +46,19 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
     _loadLevel(_currentAnimalIndex);
   }
 
-  // This function sets up the data for the current animal
   void _loadLevel(int index) {
     setState(() {
       isLocked = false;
       showSuccess = false;
       canAnimate = false;
       wrongIndices.clear();
-      
-      // 1. Get the current correct animal from the list
+
       correctAnimal = animalsDiscovery[index];
 
-      // 2. Pick a random "wrong" animal for variety
-      List<AnimalsModel> others = animalsDiscovery.where((a) => a != correctAnimal).toList();
+      List<AnimalsModel> others =
+          animalsDiscovery.where((a) => a != correctAnimal).toList();
       AnimalsModel wrongAnimal = others[Random().nextInt(others.length)];
 
-      // 3. Prepare options
       currentOptions = [correctAnimal, wrongAnimal];
       currentOptions.shuffle();
     });
@@ -75,7 +69,7 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
   void _resetAndStartTimers() {
     hintTimer?.cancel();
     startDelayTimer?.cancel();
-    stretchController.repeat(reverse:true);
+    stretchController.repeat(reverse: true);
 
     //question audio
     Future.delayed(const Duration(seconds: 1), () {
@@ -84,14 +78,12 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
       }
     });
 
-    //hint animation
     startDelayTimer = Timer(const Duration(seconds: 5), () {
       if (mounted && !showSuccess) {
         setState(() => canAnimate = true);
       }
     });
 
-    //voice repeating
     hintTimer = Timer.periodic(const Duration(seconds: 7), (timer) {
       if (!showSuccess && mounted) {
         AudioService.play(fileName: correctAnimal.audioName);
@@ -104,9 +96,8 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
   void handleTap(int index) async {
     if (isLocked) return;
 
-    if (currentOptions[index]==correctAnimal) {
-      
-      setState(()=>isLocked=true);
+    if (currentOptions[index] == correctAnimal) {
+      setState(() => isLocked = true);
       hintTimer?.cancel();
       startDelayTimer?.cancel();
       AudioService.stop();
@@ -114,12 +105,11 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
       if (mounted) {
         setState(() => showSuccess = true);
         AudioService.play(fileName: "yaay.mp3");
-        Future.delayed(const Duration(milliseconds: 1500),(){
-          if(mounted&&showSuccess){
+        Future.delayed(const Duration(milliseconds: 1500), () {
+          if (mounted && showSuccess) {
             AudioService.stop();
             AudioService.play(fileName: correctAnimal.audioName);
           }
-
         });
       }
 
@@ -128,7 +118,7 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
         _currentAnimalIndex++;
         _loadLevel(_currentAnimalIndex);
       } else {
-        if (mounted) Navigator.pop(context,true);
+        if (mounted) Navigator.pop(context, true);
       }
     } else {
       if (mounted) {
@@ -147,9 +137,9 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
   }
 
   Matrix4 _getIdleTransform(double val) {
-  // Gentle up and down (8 pixels)
-  return Matrix4.identity()..translate(0.0, -8 * val);
-}
+    // Gentle up and down (8 pixels)
+    return Matrix4.identity()..translate(0.0, -8 * val);
+  }
 
   @override
   void dispose() {
@@ -162,57 +152,70 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
-    
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: showSuccess ? null : PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: ContentAppBar(title: "أين الـ ${correctAnimal.audioName.split('/').last.split('_').first}?"), 
-      ),
+      appBar:
+          showSuccess
+              ? null
+              : PreferredSize(
+                preferredSize: Size.fromHeight(60),
+                child: ContentAppBar(
+                  title:
+                      "أين الـ ${correctAnimal.audioName.split('/').last.split('_').first}?",
+                ),
+              ),
       body: SafeArea(
         child: Center(
-          child: showSuccess
-              ? SuccessOverlay(
-                  image: correctAnimal.animalPath,
-                  title: '',
-                  transform: Matrix4.identity(),
-                )
-              : Padding(
-                  padding: config.pagePadding,
-                  child: Center(
-                    child:SizedBox(
-                      height: config.imageHeight(0.7),
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(currentOptions.length, (index) {
-                      bool isAnswer = currentOptions[index] == correctAnimal;
-                      return AnimatedBuilder(
-                        animation: stretchAnimation,
-                        builder: (context, child) {
-                          Matrix4 finalTransform=Matrix4.identity();
-                          bool isWrong=wrongIndices.contains(index);
-                          if (isAnswer && canAnimate) {
-                          finalTransform= getHintTransform(stretchAnimation.value);
-                        } else if(!isWrong) {
-                          finalTransform = _getIdleTransform(stretchAnimation.value);
-                        }
-                          return ChoiceItem(
-                            image: currentOptions[index].image!,
-                            isWrong: wrongIndices.contains(index),
-                            canAnimate: isAnswer && canAnimate,
-                            animation: stretchAnimation,
-                            onTap: () => handleTap(index),
-                            transform: finalTransform,
-                            height: config.imageHeight(0.9),
-                            
-                          );
-                        },
-                      );
-                    }),
+          child:
+              showSuccess
+                  ? SuccessOverlay(
+                    image: correctAnimal.animalPath,
+                    title: '',
+                    transform: Matrix4.identity(),
+                  )
+                  : Padding(
+                    padding: config.pagePadding,
+                    child: Center(
+                      child: SizedBox(
+                        height: config.imageHeight(0.7),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: List.generate(currentOptions.length, (
+                            index,
+                          ) {
+                            bool isAnswer =
+                                currentOptions[index] == correctAnimal;
+                            return AnimatedBuilder(
+                              animation: stretchAnimation,
+                              builder: (context, child) {
+                                Matrix4 finalTransform = Matrix4.identity();
+                                bool isWrong = wrongIndices.contains(index);
+                                if (isAnswer && canAnimate) {
+                                  finalTransform = getHintTransform(
+                                    stretchAnimation.value,
+                                  );
+                                } else if (!isWrong) {
+                                  finalTransform = _getIdleTransform(
+                                    stretchAnimation.value,
+                                  );
+                                }
+                                return ChoiceItem(
+                                  image: currentOptions[index].image!,
+                                  isWrong: wrongIndices.contains(index),
+                                  canAnimate: isAnswer && canAnimate,
+                                  animation: stretchAnimation,
+                                  onTap: () => handleTap(index),
+                                  transform: finalTransform,
+                                  height: config.imageHeight(0.9),
+                                );
+                              },
+                            );
+                          }),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                  ),
-              ),
         ),
       ),
     );
