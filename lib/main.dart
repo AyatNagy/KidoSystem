@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:kido/Pages/Auth/parent_login_screen.dart';
 import 'package:kido/Pages/content/level1/level1_home.dart';
 import 'package:kido/Pages/content/level2/level2home.dart';
 import 'package:kido/Pages/content/level3/level3_home.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-            home: const Logo(),
+            home: const Level3Home(childName: 'sara'),
           ),
         );
       },
