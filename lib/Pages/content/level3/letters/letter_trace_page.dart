@@ -15,7 +15,8 @@ import '../../../../constants.dart';
 class LetterTracePage extends StatefulWidget {
   final String letter;
   final VoidCallback? onComplete;
-  const LetterTracePage({super.key, required this.letter, this.onComplete});
+  final bool isExam;
+  const LetterTracePage({super.key, required this.letter, this.onComplete, this.isExam=false});
 
   @override
   State<LetterTracePage> createState() => _LetterTracePageState();
@@ -71,6 +72,7 @@ class _LetterTracePageState extends State<LetterTracePage>
     _pathSamplePoints = _samplePath(_letterPath, steps: 80);
     _currentStep = 0;
     _stars = 0;
+    _showHand = widget.isExam ? false : true;
     _showHand = true;
     _lockedAfterSuccess = false;
     pointsList.clear();
@@ -247,15 +249,21 @@ class _LetterTracePageState extends State<LetterTracePage>
                                           if (_currentStep <
                                               _steps.length - 1) {
                                             _currentStep++;
-                                            _showHand = true;
+                                            _showHand = widget.isExam ? false : true;
                                             return;
                                           }
                                           if (_stars >= 3) {
                                             _lockedAfterSuccess = true;
-                                            _showCelebration();
+                                            if(widget.isExam){
+                                              if(widget.onComplete!=null){
+                                                widget.onComplete!();
+                                              }
+                                            }else{
+                                              _showCelebration();
+                                            }
                                             return;
                                           }
-                                          _showHand = true;
+                                          _showHand = widget.isExam ? false : true;
                                         });
                                       },
                                       child: CustomPaint(

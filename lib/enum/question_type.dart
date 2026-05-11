@@ -2,5 +2,6 @@ enum QuestionType {
   choice,
   drawing,
   dragDrop,
-  speak
+  speak,
+  trace
 }

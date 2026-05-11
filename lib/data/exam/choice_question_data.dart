@@ -52,4 +52,67 @@ final List<ChoiceQuestion> allChoiceQuestions = [
     correctIndex: 1,
     sound: "assets/audio/dog.mp3",
   ),
+  ChoiceQuestion(
+    examId: ["post_level3"],
+    questionAudio: "assets/audio/find_duck.mp3",
+    choices: [
+      "assets/images/animals/cat.png",
+      "assets/images/animals/duck.png"
+    ],
+    correctIndex: 1,
+  ),
+  ChoiceQuestion(
+    examId: ["post_level3"],
+    questionAudio: "assets/audio/find_six_arabic.mp3",
+    choices: [
+      "assets/images/arabicNumbers/num6.png",
+      "assets/images/arabicNumbers/num9.png"
+    ],
+    correctIndex: 0,
+  ),
+  ChoiceQuestion(
+    examId: ["post_level3"],
+    questionAudio: "assets/audio/find_orange.mp3",
+    choices: [
+      "assets/images/fruits/orange.png",
+      "assets/images/fruits/banana.png"
+    ],
+    correctIndex: 0,
+  ),
+  ChoiceQuestion(
+    examId: ["post_level3"],
+    questionAudio: "assets/audio/find_duck.mp3",
+    choices: [
+      "assets/images/arabicNumbers/num1.png",
+      "assets/images/arabicNumbers/num4.png"
+    ],
+    correctIndex: 1,
+  ),
+  ChoiceQuestion(
+    examId: ["post_level3"],
+    questionAudio: "assets/audio/find_bellPepper.mp3",
+    choices: [
+      "assets/images/cartoonVegetable/potato.png",
+      "assets/images/cartoonVegetable/bell_pepper.png"
+    ],
+    correctIndex: 1,
+  ),
+  ChoiceQuestion(
+    examId: ["post_level3"],
+    questionAudio: "assets/audio/find_two.mp3",
+    choices: [
+      "assets/images/englishNumbers/num2.png",
+      "assets/images/englishNumbers/num5.png"
+    ],
+    correctIndex: 0,
+  ),
+  ChoiceQuestion(
+    examId: ["post_level3"],
+    questionAudio: "assets/audio/find_dog.mp3",
+    choices: [
+      "assets/images/animals/rabbit.png",
+      "assets/images/animals/dog.png"
+    ],
+    correctIndex:1,
+  ),
 ];

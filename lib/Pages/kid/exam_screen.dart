@@ -12,21 +12,22 @@ import 'package:kido/Widgets/Questions/speak_question_widget.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import '../../Models/exams/exam_model.dart';
+import '../../Models/exams/trace_question.dart';
 import '../../config/progress.dart';
 import '../../constants.dart';
 import '../../data/exam/choice_question_data.dart';
 import '../../data/exam/draganddrop_question_data.dart';
 import '../../data/exam/draw_question_data.dart';
 import '../../data/exam/speak_question_data.dart';
+import '../../data/exam/trace_question.dart';
 import '../../enum/question_type.dart';
 import '../../services/audio_service.dart';
 import '../../utils/placement_level.dart';
+import '../content/level3/letters/letter_trace_page.dart';
 
 class ExamSkeletonScreen extends StatefulWidget {
   final String examId;
   final String childName;
-
-  /// When true (onboarding placement), maps score % to levels 1–3 and skips in-map exam unlock rules.
   final bool onboardingPlacement;
 
   const ExamSkeletonScreen({
@@ -81,6 +82,9 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
       ...allSpaekQuestions
           .where((q) => q.examId!.contains(widget.examId))
           .map((q) => ExamQuestion(type: QuestionType.speak, data: q)),
+      ...allTraceQuestions
+          .where((q) => q.examId!.contains(widget.examId))
+          .map((q) => ExamQuestion(type: QuestionType.trace, data: q)),
     ];
   }
 
@@ -314,6 +318,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
               Expanded(
                 child: _buildQuestionWidget(examQuestion),
               ),
+              if (examQuestion.type != QuestionType.trace)
               CustomGradientButton(
                 title: "Next",
                 onPressed: handleNext,
@@ -340,6 +345,19 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
         return DragDropQuestionWidget(key: ValueKey(currentIndex), question: examQuestion.data, isExamMode: true, onAnswered: (ans) => setState(() => dragAnswers = ans));
       case QuestionType.speak:
         return SpeakQuestionWidget(key: ValueKey(currentIndex), question: examQuestion.data, onAnswered: (txt) => setState(() => currentSpokenResult = txt));
+      case QuestionType.trace:
+        final traceData = examQuestion.data as TraceQuestion;
+        return LetterTracePage(
+          key: ValueKey(currentIndex),
+          letter: traceData.letter,
+          isExam: true,
+          onComplete: () {
+            setState(() {
+              score++;
+            });
+            handleNext();
+          },
+        );
     }
   }
 }
