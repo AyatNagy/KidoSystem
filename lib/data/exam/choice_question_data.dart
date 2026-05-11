@@ -52,70 +52,65 @@ final List<ChoiceQuestion> allChoiceQuestions = [
     correctIndex: 1,
     sound: "assets/audio/dog.mp3",
   ),
-<<<<<<< HEAD
+
   ChoiceQuestion(
-    examId: ["post_level3"],
-    questionAudio: "assets/audio/find_duck.mp3",
+    examId: ["post_level2"],
+    questionAudio: "sizes/where_tall.mp3",
+    choices: ["assets/images/tree.png", "assets/images/vegi.png"],
+    correctIndex: 0,
+  ),
+
+  ChoiceQuestion(
+    examId: ["post_level2"],
+    questionAudio: "shapes/where_triangle.mp3",
     choices: [
-      "assets/images/animals/cat.png",
-      "assets/images/animals/duck.png"
+      "assets/images/shapes/circle.png",
+      "assets/images/drawing/triangle.gif",
     ],
     correctIndex: 1,
   ),
+
   ChoiceQuestion(
-    examId: ["post_level3"],
-    questionAudio: "assets/audio/find_six_arabic.mp3",
-    choices: [
-      "assets/images/arabicNumbers/num6.png",
-      "assets/images/arabicNumbers/num9.png"
-    ],
+    examId: ["post_level2"],
+    questionAudio: "sizes/where_big.mp3",
+    choices: ["assets/images/sizes/bus.png", "assets/images/kido-car.png"],
     correctIndex: 0,
   ),
+
   ChoiceQuestion(
     examId: ["post_level3"],
-    questionAudio: "assets/audio/find_orange.mp3",
-    choices: [
-      "assets/images/fruits/orange.png",
-      "assets/images/fruits/banana.png"
-    ],
-    correctIndex: 0,
-  ),
-  ChoiceQuestion(
-    examId: ["post_level3"],
-    questionAudio: "assets/audio/find_duck.mp3",
+    questionAudio: "exams/find_num4.mp3",
     choices: [
       "assets/images/arabicNumbers/num1.png",
-      "assets/images/arabicNumbers/num4.png"
+      "assets/images/arabicNumbers/num4.png",
     ],
     correctIndex: 1,
   ),
   ChoiceQuestion(
     examId: ["post_level3"],
-    questionAudio: "assets/audio/find_bellPepper.mp3",
+    questionAudio: "exams/find_bellPepper.mp3",
     choices: [
       "assets/images/cartoonVegetable/potato.png",
-      "assets/images/cartoonVegetable/bell_pepper.png"
+      "assets/images/cartoonVegetable/bell_pepper.png",
     ],
     correctIndex: 1,
   ),
   ChoiceQuestion(
     examId: ["post_level3"],
-    questionAudio: "assets/audio/find_two.mp3",
+    questionAudio: "exams/find_two.mp3",
     choices: [
       "assets/images/englishNumbers/num2.png",
-      "assets/images/englishNumbers/num5.png"
+      "assets/images/englishNumbers/num5.png",
     ],
     correctIndex: 0,
   ),
   ChoiceQuestion(
     examId: ["post_level3"],
-    questionAudio: "assets/audio/find_dog.mp3",
+    questionAudio: "exams/where_dog.mp3",
     choices: [
       "assets/images/animals/rabbit.png",
-      "assets/images/animals/dog.png"
+      "assets/images/animals/dog.png",
     ],
-    correctIndex:1,
+    correctIndex: 1,
   ),
-=======
->>>>>>> homelevels
 ];
