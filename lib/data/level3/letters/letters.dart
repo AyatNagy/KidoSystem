@@ -7,7 +7,7 @@ final List<LetterModel> arletters = [
     animalPath: 'assets/images/arabicLetters/rabbit.png',
     audioName: 'audio/alphabet_ar/ا.mp3',
     activeBorder: AppColors.kidoRed,
-    bgColor: AppColors.kidoColors[6]
+    bgColor: AppColors.kidoColors[6],
   ),
 
   LetterModel(
