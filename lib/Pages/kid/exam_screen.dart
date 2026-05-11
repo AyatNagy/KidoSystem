@@ -20,15 +20,20 @@ import '../../data/exam/draw_question_data.dart';
 import '../../data/exam/speak_question_data.dart';
 import '../../enum/question_type.dart';
 import '../../services/audio_service.dart';
+import '../../utils/placement_level.dart';
 
 class ExamSkeletonScreen extends StatefulWidget {
   final String examId;
   final String childName;
 
+  /// When true (onboarding placement), maps score % to levels 1–3 and skips in-map exam unlock rules.
+  final bool onboardingPlacement;
+
   const ExamSkeletonScreen({
     super.key,
     required this.examId,
     required this.childName,
+    this.onboardingPlacement = false,
   });
 
   @override
@@ -161,12 +166,28 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
   }
 
   void _finishExam() async {
-    double percentage = score / examQuestions.length;
-    bool passed = percentage >= 0.50;
+    final int total = examQuestions.isEmpty ? 1 : examQuestions.length;
+    final double percentage = score / total;
+
     int nextLevelToUnlock = 1;
     String unlockMessageText = "Keep practicing to unlock new levels!";
+    bool passed = percentage >= 0.50;
+    int stars =
+        percentage >= 0.85
+            ? 3
+            : (percentage >= 0.70 ? 2 : (percentage >= 0.50 ? 1 : 0));
 
-    if (widget.examId == "exam2" && !passed) {
+    if (widget.onboardingPlacement) {
+      nextLevelToUnlock = placementLevelFromScoreFraction(percentage);
+      await ProgressManager.unlockUpTo(nextLevelToUnlock);
+      passed = true;
+      stars =
+          nextLevelToUnlock >= 3
+              ? 3
+              : (nextLevelToUnlock == 2 ? 2 : 1);
+      unlockMessageText =
+          "Your level is set to $nextLevelToUnlock based on your score.";
+    } else if (widget.examId == "exam2" && !passed) {
       unlockMessageText = "Let's review Exam 1 to get stronger!";
       nextLevelToUnlock = -1;
     } else if (passed) {
@@ -180,8 +201,6 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
         await ProgressManager.unlockUpTo(3);
       }
     }
-
-    int stars = percentage >= 0.85 ? 3 : (percentage >= 0.70 ? 2 : (percentage >= 0.50 ? 1 : 0));
 
     showDialog(
       context: context,
@@ -211,7 +230,14 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                     ),
                   const SizedBox(height: 15),
                   Text(passed ? "AMAZING JOB!" : "NICE TRY!", style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                  Text("You got $score / ${examQuestions.length}", style: const TextStyle(fontSize: 18, color: Colors.grey)),
+                  Text("You got $score / $total", style: const TextStyle(fontSize: 18, color: Colors.grey)),
+                  if (widget.onboardingPlacement) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      "${(percentage * 100).round()}% correct",
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  ],
                   const SizedBox(height: 20),
                   Text(unlockMessageText, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.kidoGreen)),
                   const SizedBox(height: 25),

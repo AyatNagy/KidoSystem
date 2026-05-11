@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             builder: DevicePreview.appBuilder,
             locale: DevicePreview.locale(context),
-            home: const Level3Home(childName: 'sara'),
+            home: const Logo(),
           ),
         );
       },
