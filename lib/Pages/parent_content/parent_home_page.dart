@@ -352,7 +352,7 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
                         fit: BoxFit.cover,
                       ),
                     )
-                    : Icon(Icons.face, color: color),
+                    : Image.asset('assets/images/characters/boy.gif'),
           ),
           const SizedBox(width: 15),
           Expanded(

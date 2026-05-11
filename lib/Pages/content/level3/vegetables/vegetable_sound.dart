@@ -15,12 +15,9 @@ class VegetableSound extends StatefulWidget {
   State<VegetableSound> createState() => _VegetableSoundState();
 }
 
-class _VegetableSoundState extends State<VegetableSound>
-    with TickerProviderStateMixin {
+class _VegetableSoundState extends State<VegetableSound> with TickerProviderStateMixin {
   final FlutterTts flutterTts = FlutterTts();
   late int currentIndex;
-  bool _isSpeaking = false;
-
   late AnimationController _pulseController;
   late AnimationController _bgController;
 
@@ -62,8 +59,6 @@ class _VegetableSoundState extends State<VegetableSound>
       vsync: this,
       duration: const Duration(seconds: 4),
     )..repeat(reverse: true);
-
-    _speak();
   }
 
   @override
@@ -74,36 +69,15 @@ class _VegetableSoundState extends State<VegetableSound>
     super.dispose();
   }
 
-  Future _speak() async {
-    await flutterTts.stop();
-    setState(() => _isSpeaking = true);
-    HapticFeedback.mediumImpact();
-    _pulseController.repeat(reverse: true);
-    await flutterTts.setLanguage("en-US");
-    await flutterTts.setPitch(1.1);
-    await flutterTts.setVolume(1.0);
-    await flutterTts.speak(vegetablelist[currentIndex].text);
-
-    flutterTts.setCompletionHandler(() {
-      if (mounted) {
-        setState(() => _isSpeaking = false);
-        _pulseController.stop();
-        _pulseController.reset();
-      }
-    });
-  }
-
   void _next() {
     if (currentIndex < vegetablelist.length - 1) {
       setState(() => currentIndex++);
-      _speak();
     }
   }
 
   void _prev() {
     if (currentIndex > 0) {
       setState(() => currentIndex--);
-      _speak();
     }
   }
 
@@ -237,7 +211,6 @@ class _VegetableSoundState extends State<VegetableSound>
                           ),
                         ),
                         child: GestureDetector(
-                          onTap: _speak,
                           child: Container(
                             width: 76,
                             height: 76,

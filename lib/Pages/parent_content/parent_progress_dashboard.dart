@@ -13,7 +13,6 @@ String _initialLetter(String name) {
   return String.fromCharCodes(n.runes.take(1));
 }
 
-// ألوان المستويات
 const _level1Colors = [Color(0xFF6EC6F5), Color(0xFF3A8EE6)];
 const _level2Colors = [Color(0xFFFFB347), Color(0xFFFF6B35)];
 const _level3Colors = [Color(0xFFB06EF5), Color(0xFF7B2FF7)];
@@ -256,13 +255,10 @@ class _ParentProgressDashboardState extends State<ParentProgressDashboard>
   }
 }
 
-// ══════════════════════════════════════════════
-//  Child Progress Card
-// ══════════════════════════════════════════════
 class _ChildProgressCard extends StatelessWidget {
   final dynamic config;
   final Map<String, dynamic> child;
-  final ProgressReport? report; // ✅ nullable
+  final ProgressReport? report;
 
   const _ChildProgressCard({
     required this.config,
@@ -318,11 +314,9 @@ class _ChildProgressCard extends StatelessWidget {
             ),
             shape: const RoundedRectangleBorder(),
             collapsedShape: const RoundedRectangleBorder(),
-            // ── Colored top strip ──
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top strip
                 Container(
                   height: 5,
                   decoration: BoxDecoration(
