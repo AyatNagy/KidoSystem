@@ -1,10 +1,11 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kido/Models/level1/matching_model.dart';
 import 'package:kido/Widgets/content/choise_item_widget.dart';
-import 'package:kido/data/level1/matching_data.dart';
 import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
+import '../../../data/content/level1/matching_data.dart';
 
 class MatchingPracticePage extends StatefulWidget {
   const MatchingPracticePage({super.key});
@@ -154,8 +155,7 @@ class _MatchingPracticePageState extends State<MatchingPracticePage>
                       animation: hintController,
                       onTap: () => handleAnswer(true),
                       transform:
-                          Matrix4.identity()
-                            ..scale(1.0 + (0.1 * hintController.value)),
+                          Matrix4.identity()..scale(1.0 + (0.1 * hintController.value)),
                       height: 120,
                     ),
                   ],

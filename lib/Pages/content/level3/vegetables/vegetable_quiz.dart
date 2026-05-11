@@ -7,16 +7,6 @@ class VegetableQuiz extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Color(0xFFFEF7F0),
-        leading: BackButton(color: Colors.black),
-        title: Text(
-          'Vegetable Quiz',
-          style: TextStyle(fontFamily: "arlrdbd", color: Colors.black),
-        ),
-        centerTitle: true,
-      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(30.0),

@@ -4,7 +4,7 @@ import 'package:kido/Widgets/Buttons/puls_button.dart';
 import 'package:kido/constants.dart';
 import '../../../../Widgets/content/level1/background_colors.dart';
 import '../../../../Widgets/responsive_provider.dart';
-import '../../../../data/level1/bee_count.dart';
+import '../../../../data/content/level1/bee_count.dart';
 import '../../../../services/audio_service.dart';
 
 class ToyRewardPage extends StatefulWidget {

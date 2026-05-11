@@ -1,6 +1,6 @@
-import 'package:kido/data/level1/senses/sense_data.dart';
-import '../../../Models/level3/letters/letter_map.dart';
-import '../../../enum/sense_type.dart';
+import 'package:kido/data/content/level1/senses/sense_data.dart';
+import '../../../../Models/level3/letters/letter_map.dart';
+import '../../../../enum/sense_type.dart';
 
 final List<LetterJourney> sensesJourney = [
   LetterJourney(

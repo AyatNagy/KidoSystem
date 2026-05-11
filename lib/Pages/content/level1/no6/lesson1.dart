@@ -9,7 +9,7 @@ import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../Widgets/Buttons/next_button.dart';
 import '../../../../Widgets/content/level1/no6/lesson1.dart';
-import '../../../../data/level1/count_toys.dart';
+import '../../../../data/content/level1/count_toys.dart';
 
 class StakesDrag extends StatefulWidget {
   final VoidCallback? onNext;

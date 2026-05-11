@@ -1,5 +1,5 @@
-import '../../../Models/level1/sense_model.dart';
-import '../../../enum/sense_type.dart';
+import '../../../../Models/level1/sense_model.dart';
+import '../../../../enum/sense_type.dart';
 
 class SenseMapper {
   static SenseData get(SenseType type) {

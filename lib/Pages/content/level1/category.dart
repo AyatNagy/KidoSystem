@@ -14,7 +14,7 @@ import 'no3/cubes.dart';
 import 'no3/moving_car.dart';
 import 'no6/carrot.dart';
 import 'no6/lesson1.dart';
-import 'no6/stake_lesson.dart';
+//import 'no6/stake_lesson.dart';
 
 class Category extends StatelessWidget {
   const Category({super.key});
@@ -40,41 +40,16 @@ class Category extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (context) => MonkeyCountingPage(
-                      onNext: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => BeeCountingPage(
-                                  onNext: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => ToyRewardPage(
-                                              onNext: () {
-                                                Navigator.popUntil(
-                                                  context,
-                                                  (route) => route.isFirst,
-                                                );
-                                              },
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                          ),
-                        );
-                      },
-                    ),
-              ),
-            );
+          onTap: () async {
+              await Navigator.push(context, MaterialPageRoute(
+                builder: (context) => MonkeyCountingPage(onNext: () => Navigator.pop(context)),
+              ));
+              await Navigator.push(context, MaterialPageRoute(
+                builder: (context) => BeeCountingPage(onNext: () => Navigator.pop(context)),
+              ));
+              await Navigator.push(context, MaterialPageRoute(
+                builder: (context) => ToyRewardPage(onNext: () => Navigator.pop(context)),
+              ));
           },
         ),
 
@@ -135,12 +110,12 @@ class Category extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder:
-                                (context) => StakeDrag(
-                                  onNext: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
+                                //(context) => StakeDrag(
+                                  //onNext: () {
+                                    //Navigator.push(
+                                      //context,
+                                      //MaterialPageRoute(
+                                        //builder:
                                             (context) => StakesDrag(
                                               onNext: () {
                                                 Navigator.popUntil(
@@ -149,10 +124,10 @@ class Category extends StatelessWidget {
                                                 );
                                               },
                                             ),
-                                      ),
-                                    );
-                                  },
-                                ),
+                                      //),
+                                    //);
+                                  //},
+                                //),
                           ),
                         );
                       },

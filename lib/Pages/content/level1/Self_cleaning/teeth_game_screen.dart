@@ -1,4 +1,7 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
+import 'package:kido/constants.dart';
+import '../../../../Widgets/Painter/teeth_painter.dart';
 
 class TeethGameScreen extends StatefulWidget {
   const TeethGameScreen({super.key});
@@ -41,7 +44,7 @@ class _TeethGameScreenState extends State<TeethGameScreen> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEAF4FD),
+      backgroundColor: AppColors.bgColor,
       body: SafeArea(
         child: Stack(
           children: [
@@ -69,11 +72,11 @@ class _TeethGameScreenState extends State<TeethGameScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'التقدم: ${(_progress * 100).toInt()}%',
+                    '${(_progress * 100).toInt()}%',
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF0D4A6A),
+                      color: AppColors.blueColor,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -84,7 +87,7 @@ class _TeethGameScreenState extends State<TeethGameScreen> {
                       minHeight: 10,
                       backgroundColor: Colors.white.withOpacity(0.6),
                       valueColor: const AlwaysStoppedAnimation<Color>(
-                        Color(0xFF29B6F6),
+                        AppColors.kidoBlue,
                       ),
                     ),
                   ),
@@ -113,7 +116,7 @@ class _TeethGameScreenState extends State<TeethGameScreen> {
                   child: const Icon(
                     Icons.arrow_back_ios_new,
                     size: 16,
-                    color: Color(0xFF0D4A6A),
+                    color: AppColors.blueColor,
                   ),
                 ),
               ),
@@ -123,7 +126,7 @@ class _TeethGameScreenState extends State<TeethGameScreen> {
               Positioned(
                 left: _brushX - 14,
                 top: _brushY - 60,
-                child: IgnorePointer(child: _ToothbrushWidget()),
+                child: IgnorePointer(child: ToothbrushWidget()),
               ),
 
             if (_isFinished)
@@ -131,29 +134,21 @@ class _TeethGameScreenState extends State<TeethGameScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text(
-                      '🎉 أسنانك نضيفة!',
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xFF0D4A6A),
-                      ),
-                    ),
                     const SizedBox(height: 16),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: ElevatedButton(
                         onPressed: _reset,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0D4A6A),
-                          foregroundColor: Colors.white,
+                          backgroundColor: AppColors.blueColor,
+                          foregroundColor: AppColors.bgColor,
                           minimumSize: const Size(double.infinity, 50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
                         child: const Text(
-                          'العب تاني 🦷',
+                          'العب تاني',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w900,
@@ -170,62 +165,4 @@ class _TeethGameScreenState extends State<TeethGameScreen> {
       ),
     );
   }
-}
-
-class _ToothbrushWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(size: const Size(28, 90), painter: _BrushPainter());
-  }
-}
-
-class _BrushPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..style = PaintingStyle.fill;
-
-    paint.color = const Color(0xFF29B6F6);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-          size.width * 0.3,
-          size.height * 0.3,
-          size.width * 0.4,
-          size.height * 0.65,
-        ),
-        const Radius.circular(6),
-      ),
-      paint,
-    );
-
-    final headRect = RRect.fromRectAndRadius(
-      Rect.fromLTWH(0, 0, size.width, size.height * 0.32),
-      const Radius.circular(8),
-    );
-    paint.color = Colors.white;
-    canvas.drawRRect(headRect, paint);
-
-    paint
-      ..color = const Color(0xFF29B6F6)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5;
-    canvas.drawRRect(headRect, paint);
-
-    paint
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
-      ..strokeCap = StrokeCap.round
-      ..color = const Color(0xFF29B6F6);
-    for (int i = 0; i < 5; i++) {
-      final x = size.width * (0.1 + i * 0.19);
-      canvas.drawLine(
-        Offset(x, size.height * 0.02),
-        Offset(x, size.height * 0.28),
-        paint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(_BrushPainter old) => false;
 }

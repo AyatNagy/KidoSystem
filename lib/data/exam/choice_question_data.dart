@@ -52,7 +52,7 @@ final List<ChoiceQuestion> allChoiceQuestions = [
     correctIndex: 1,
     sound: "assets/audio/dog.mp3",
   ),
-<<<<<<< HEAD
+
   ChoiceQuestion(
     examId: ["post_level3"],
     questionAudio: "assets/audio/find_duck.mp3",
@@ -116,6 +116,4 @@ final List<ChoiceQuestion> allChoiceQuestions = [
     ],
     correctIndex:1,
   ),
-=======
->>>>>>> homelevels
 ];

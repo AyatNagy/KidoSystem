@@ -4,9 +4,10 @@ import 'package:kido/Pages/content/level1/senses/sense_tap_practice_page.dart';
 import 'package:kido/Widgets/content/level1/sense_face_view.dart';
 import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import 'package:kido/data/level1/senses/sense_data.dart';
 import 'package:kido/enum/sense_type.dart';
 import 'package:kido/services/audio_service.dart';
+import '../../../../constants.dart';
+import '../../../../data/content/level1/senses/sense_data.dart';
 
 class SenseLearningScreen extends StatefulWidget {
   final SenseType type;
@@ -27,19 +28,15 @@ class _SenseLearningScreenState extends State<SenseLearningScreen> {
   void initState() {
     super.initState();
     data = SenseMapper.get(widget.type);
-
-    // Automatically start the audio loop once the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _playLoop();
     });
   }
 
   Future<void> _playLoop() async {
-    // Loop the sound 5 times as per your original logic
     for (int i = 0; i < 5; i++) {
       if (!mounted) return;
       await _playSound();
-      // Brief pause between loops
       await Future.delayed(const Duration(seconds: 1));
     }
 
@@ -52,12 +49,8 @@ class _SenseLearningScreenState extends State<SenseLearningScreen> {
     if (isPlaying) return;
 
     if (mounted) setState(() => isPlaying = true);
-
     await AudioService.play(fileName: data.audio);
-
-    // Wait for the audio duration (assumed 2 seconds) before allowing another play
     await Future.delayed(const Duration(seconds: 2));
-
     if (mounted) setState(() => isPlaying = false);
   }
 
@@ -72,7 +65,6 @@ class _SenseLearningScreenState extends State<SenseLearningScreen> {
           height: config.localHeight,
           child: Stack(
             children: [
-              // Main interaction area
               GestureDetector(
                 onTap: _playSound,
                 child: SenseFaceView(
@@ -88,7 +80,7 @@ class _SenseLearningScreenState extends State<SenseLearningScreen> {
                   bottom: 40,
                   right: 40,
                   child: NextButton(
-                    color: Colors.green,
+                    color: AppColors.kidoGreen,
                     onPressed: () {
                       Navigator.push(
                         context,

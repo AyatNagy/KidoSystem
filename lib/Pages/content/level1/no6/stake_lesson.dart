@@ -8,7 +8,7 @@ import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../Widgets/Buttons/next_button.dart';
 import '../../../../Widgets/content/level1/stack_painter.dart';
-import '../../../../data/level1/stickes.dart';
+import '../../../../data/content/level1/stickes.dart';
 
 class StakeDrag extends StatefulWidget {
   final VoidCallback? onNext;
