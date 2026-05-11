@@ -12,6 +12,7 @@ import '../../utils/validators.dart';
 import '../../Widgets/Dialogs/dialog_widget.dart';
 import '../../Models/dailog_model.dart';
 import '../../api_service/api_services.dart';
+import 'package:kido/bloc/set_initial_level/set_initial_level_cubit.dart';
 import '../../Models/child.dart';
 import '../../config/cache_helper.dart';
 import 'package:kido/Widgets/Auth/password_errors_view.dart';
@@ -24,6 +25,8 @@ class StudentData extends StatefulWidget {
 }
 
 class _StudentDataState extends State<StudentData> {
+  late final SetInitialLevelCubit _setInitialLevelCubit;
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -34,6 +37,30 @@ class _StudentDataState extends State<StudentData> {
   bool isPasswordVisible = false;
   bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _setInitialLevelCubit = SetInitialLevelCubit();
+  }
+
+  @override
+  void dispose() {
+    _setInitialLevelCubit.close();
+    nameController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+    ageController.dispose();
+    super.dispose();
+  }
+
+  String _setInitialLevelErrorText() {
+    final s = _setInitialLevelCubit.state;
+    if (s is SetInitialLevelFailure) {
+      return s.errorMessage;
+    }
+    return 'تعذّر حفظ المستوى على السيرفر.';
+  }
 
   Future<void> handleAdd() async {
     if (_formKey.currentState!.validate()) {
@@ -105,6 +132,25 @@ class _StudentDataState extends State<StudentData> {
                 );
                 if (!mounted || pickedLevel == null) return;
 
+                final cid = registerResponse['child']?['id'];
+                if (cid != null) {
+                  final ok = await _setInitialLevelCubit.setInitialLevel(
+                    childId: (cid as num).toInt(),
+                    levelId: pickedLevel.level,
+                  );
+                  if (!mounted) return;
+                  if (!ok) {
+                    final msg = _setInitialLevelErrorText();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(msg),
+                        backgroundColor: AppColors.kidoRed,
+                      ),
+                    );
+                  }
+                }
+
+                if (!mounted) return;
                 Navigator.pop(context, {
                   'name': setup.childName,
                   'score': 1.0,
@@ -129,15 +175,36 @@ class _StudentDataState extends State<StudentData> {
                 final dynamic examResult = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => ExamSkeletonScreen(
-                      examId: examId,
-                      childName: childName,
-                    ),
+                    builder:
+                        (_) => ExamSkeletonScreen(
+                          examId: examId,
+                          childName: childName,
+                          onboardingPlacement: true,
+                        ),
                   ),
                 );
 
                 if (mounted && examResult != null) {
-                  int forcedLevel = (examResult is int) ? examResult : 1;
+                  int assignedLevel = (examResult is int) ? examResult : 1;
+                  if (assignedLevel < 1) assignedLevel = 1;
+                  if (assignedLevel > 3) assignedLevel = 3;
+
+                  final cid = registerResponse['child']?['id'];
+                  if (cid != null) {
+                    final ok = await _setInitialLevelCubit.setInitialLevel(
+                      childId: (cid as num).toInt(),
+                      levelId: assignedLevel,
+                    );
+                    if (!mounted) return;
+                    if (!ok) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(_setInitialLevelErrorText()),
+                          backgroundColor: AppColors.kidoRed,
+                        ),
+                      );
+                    }
+                  }
 
                   final setup = await Navigator.push<ChildProfileSetupResult>(
                     context,
@@ -149,17 +216,37 @@ class _StudentDataState extends State<StudentData> {
                   final pickedLevel = await Navigator.push<ChildLevelSelectResult>(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => ChildLevelSelectPage(
-                        childName: setup.childName,
-                        recommendedLevel: 1,
-                        forcedUnlockedLevel: forcedLevel,
-                        isRestrictedToLevel1: false,
-                      ),
+                      builder:
+                          (_) => ChildLevelSelectPage(
+                            childName: setup.childName,
+                            recommendedLevel: assignedLevel,
+                            forcedUnlockedLevel: assignedLevel,
+                            isRestrictedToLevel1: false,
+                          ),
                     ),
                   );
 
                   if (!mounted || pickedLevel == null) return;
 
+                  final cid2 = registerResponse['child']?['id'];
+                  if (cid2 != null) {
+                    final ok2 = await _setInitialLevelCubit.setInitialLevel(
+                      childId: (cid2 as num).toInt(),
+                      levelId: pickedLevel.level,
+                    );
+                    if (!mounted) return;
+                    if (!ok2) {
+                      final msg = _setInitialLevelErrorText();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(msg),
+                          backgroundColor: AppColors.kidoRed,
+                        ),
+                      );
+                    }
+                  }
+
+                  if (!mounted) return;
                   Navigator.pop(context, {
                     'name': setup.childName,
                     'score': 1.0,

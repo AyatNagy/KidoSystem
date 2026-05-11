@@ -1,38 +1,44 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/kid/child_level_select_page.dart';
 import 'package:kido/Pages/kid/child_profile_setup_page.dart';
+import 'package:kido/Pages/parent_content/parent_progress_dashboard.dart';
 import 'package:kido/Pages/parent_content/student_data_screen.dart';
-import 'package:kido/config/children_store.dart';
+import 'package:kido/bloc/parent_children/parent_children_cubit.dart';
 import '../../Widgets/responsive_provider.dart';
-import 'profile_page.dart';
 
-class ParentHomePage extends StatefulWidget {
+class ParentHomePage extends StatelessWidget {
   const ParentHomePage({super.key});
 
   @override
-  State<ParentHomePage> createState() => _ParentHomePageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => ParentChildrenCubit()..loadChildren(),
+      child: const _ParentHomeView(),
+    );
+  }
 }
 
-class _ParentHomePageState extends State<ParentHomePage> {
-  int _selectedIndex = 0;
-  List<Map<String, dynamic>> childrenList = [];
+class _ParentHomeView extends StatefulWidget {
+  const _ParentHomeView();
 
   @override
-  void initState() {
-    super.initState();
-    _loadChildren();
-  }
+  State<_ParentHomeView> createState() => _ParentHomeViewState();
+}
 
-  Future<void> _loadChildren() async {
-    final saved = await ChildrenStore.load();
-    if (!mounted) return;
-    setState(() => childrenList = saved);
-  }
+class _ParentHomeViewState extends State<_ParentHomeView> {
+  int _selectedIndex = 0;
 
-  Future<void> _persistChildren() async {
-    await ChildrenStore.save(childrenList);
+  Future<void> _persistFromReadyState() async {
+    final cubit = context.read<ParentChildrenCubit>();
+    final state = cubit.state;
+    if (state is ParentChildrenReady) {
+      await cubit.saveAndEmit(
+        List<Map<String, dynamic>>.from(state.children),
+      );
+    }
   }
 
   void _openChildDashboard(Map<String, dynamic> child) {
@@ -69,15 +75,13 @@ class _ParentHomePageState extends State<ParentHomePage> {
     );
     if (!mounted || pickedLevel == null) return;
 
-    setState(() {
-      child['name'] = setup.childName;
-      child['avatar'] = setup.avatarAsset;
-      child['level'] = pickedLevel.level;
-    });
-    await _persistChildren();
+    child['name'] = setup.childName;
+    child['avatar'] = setup.avatarAsset;
+    child['level'] = pickedLevel.level;
+    await _persistFromReadyState();
   }
 
-  void _goToAddChild() async {
+  Future<void> _goToAddChild() async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const StudentData()),
@@ -85,16 +89,21 @@ class _ParentHomePageState extends State<ParentHomePage> {
 
     if (result != null && result is Map<String, dynamic>) {
       final newChild = {
+        if (result['childId'] != null) 'id': result['childId'],
         'name': result['name'] ?? '',
         'avatar': result['avatar'],
         'level': result['level'] ?? 1,
         'score': (result['score'] as num?)?.toDouble() ?? 0.0,
       };
 
-      setState(() {
-        childrenList.add(newChild);
-      });
-      await _persistChildren();
+      final cubit = context.read<ParentChildrenCubit>();
+      final state = cubit.state;
+      final existing =
+          state is ParentChildrenReady
+              ? List<Map<String, dynamic>>.from(state.children)
+              : <Map<String, dynamic>>[];
+
+      await cubit.saveAndEmit([...existing, newChild]);
 
       if (!mounted) return;
       Navigator.push(
@@ -116,9 +125,8 @@ class _ParentHomePageState extends State<ParentHomePage> {
 
     final List<Widget> pages = [
       _buildHomeContent(config),
-      const Scaffold(body: Center(child: Text("Dashboard"))),
+      const ParentProgressDashboard(),
       const Scaffold(body: Center(child: Text("Learn"))),
-      // const ProfilePage(),
     ];
 
     return Scaffold(
@@ -132,62 +140,125 @@ class _ParentHomePageState extends State<ParentHomePage> {
     return Stack(
       children: [
         SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(config.localWidth * 0.05),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(config),
-                SizedBox(height: config.localHeight * 0.03),
-                Text(
-                  "Your Children",
-                  style: TextStyle(
-                    fontSize: config.title,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF2D3142),
-                  ),
-                ),
-                SizedBox(height: config.localHeight * 0.02),
-                if (childrenList.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Center(
-                      child: Text(
-                        "No children added yet.\nTap \"Add Child\" to get started!",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: config.body,
-                          color: Colors.grey,
-                        ),
-                      ),
+          child: RefreshIndicator(
+            onRefresh: () => context.read<ParentChildrenCubit>().loadChildren(),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.all(config.localWidth * 0.05),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(config),
+                  SizedBox(height: config.localHeight * 0.03),
+                  Text(
+                    "Your Children",
+                    style: TextStyle(
+                      fontSize: config.title,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF2D3142),
                     ),
-                  )
-                else
-                  ...childrenList.map((child) {
-                    final double score =
-                        (child['score'] as num?)?.toDouble() ?? 0.0;
-                    final int level = (child['level'] as int?) ?? 1;
+                  ),
+                  SizedBox(height: config.localHeight * 0.02),
+                  BlocBuilder<ParentChildrenCubit, ParentChildrenState>(
+                    builder: (context, state) {
+                      if (state is ParentChildrenLoading) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: config.localHeight * 0.08,
+                          ),
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
 
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 15),
-                      child: GestureDetector(
-                        onTap: () => _openChildDashboard(child),
-                        onLongPress: () => _editChild(child),
-                        child: _buildChildCard(
-                          config,
-                          name: child['name'] as String? ?? 'Unknown',
-                          level: "Level $level",
-                          color: _levelColor(level),
-                          progress: score,
-                          avatarAsset: child['avatar'] as String?,
-                        ),
-                      ),
-                    );
-                  }),
+                      if (state is ParentChildrenReady) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (state.notice != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber.shade100,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.info_outline,
+                                          color: Colors.amber.shade900,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            state.notice!,
+                                            style: TextStyle(
+                                              fontSize: config.body * 0.85,
+                                              color: Colors.amber.shade900,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            if (state.children.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 20,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "No children added yet.\nTap \"Add Child\" to get started!",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: config.body,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            else
+                              ...state.children.map((child) {
+                                final double score =
+                                    (child['score'] as num?)?.toDouble() ?? 0.0;
+                                final int level =
+                                    (child['level'] as int?) ?? 1;
 
-                _buildAddChildButton(config),
-                SizedBox(height: config.localHeight * 0.15),
-              ],
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 15),
+                                  child: GestureDetector(
+                                    onTap: () => _openChildDashboard(child),
+                                    onLongPress: () => _editChild(child),
+                                    child: _buildChildCard(
+                                      config,
+                                      name:
+                                          child['name'] as String? ??
+                                          'Unknown',
+                                      level: "Level $level",
+                                      color: _levelColor(level),
+                                      progress: score,
+                                      avatarAsset: child['avatar'] as String?,
+                                    ),
+                                  ),
+                                );
+                              }),
+                          ],
+                        );
+                      }
+
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                  _buildAddChildButton(config),
+                  SizedBox(height: config.localHeight * 0.15),
+                ],
+              ),
             ),
           ),
         ),
