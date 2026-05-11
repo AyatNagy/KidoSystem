@@ -6,7 +6,7 @@ import '../../Models/targets_item.dart';
 final List<DragDropQuestion> allDragDropQuestions = [
   DragDropQuestion(
     examId: ['exam2'],
-    questionAudio: "حط الأكل المناسب لكل حيوان",
+    questionAudio: "exams/feed_animals.mp3",
     items: [
       DragItem(
         id: "bone",
@@ -54,7 +54,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
 
   DragDropQuestion(
     examId: ['exam2'],
-    questionAudio: "مكانه في الغرفة ولا المطبخ",
+    questionAudio: "exams/category_home.mp3",
     items: [
       DragItem(
         id: "bed",
@@ -89,7 +89,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
 
   DragDropQuestion(
     examId: ['exam2'],
-    questionAudio: "مين الطويل ومين القصير",
+    questionAudio: "exams/collect_tall.mp3",
     items: [
       DragItem(
         id: "tall",
@@ -117,7 +117,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
 
   DragDropQuestion(
     examId: ['exam2'],
-    questionAudio: "كمل شكل العربية",
+    questionAudio: "exams/complete_puzzle.mp3",
     backgroundImage: "assets/images/targethalfcar.png",
     items: [
       DragItem(
@@ -140,7 +140,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
 
   DragDropQuestion(
     examId: ['exam2'],
-    questionAudio: "ركب باقي البطة",
+    questionAudio: "exams/complete_puzzle.mp3",
     backgroundImage: "assets/images/puzzle_duck.png",
     items: [
       DragItem(
@@ -163,7 +163,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
 
   DragDropQuestion(
     examId: ['exam1'],
-    questionAudio: "فين اللون الأحمر",
+    questionAudio: "exams/where_red.mp3",
     items: [
       DragItem(
         id: "red",
@@ -197,7 +197,7 @@ final List<DragDropQuestion> allDragDropQuestions = [
 
   DragDropQuestion(
     examId: ['exam1'],
-    questionAudio: "حط اللبس في المكان الصح",
+    questionAudio: "exams/category_w.mp3",
     items: [
       DragItem(
         id: "cotton",
