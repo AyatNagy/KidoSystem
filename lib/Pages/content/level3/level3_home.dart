@@ -8,11 +8,7 @@ class Level3Home extends StatelessWidget {
   final String childName;
   final String? avatarAsset;
 
-  const Level3Home({
-    super.key,
-    required this.childName,
-    this.avatarAsset,
-  });
+  const Level3Home({super.key, required this.childName, this.avatarAsset});
 
   @override
   Widget build(BuildContext context) {
@@ -46,18 +42,16 @@ class Level3Home extends StatelessWidget {
                           ),
                         ),
                         child: ClipOval(
-                          child: avatarAsset != null
-                              ? Image.asset(
-                            avatarAsset!,
-                            fit: BoxFit.cover,
-                          )
-                              : Center(
-                            child: Icon(
-                              Icons.face_retouching_natural_rounded,
-                              size: config.isTablet ? 45 : 35,
-                              color: AppColors.purpleMain,
-                            ),
-                          ),
+                          child:
+                              avatarAsset != null
+                                  ? Image.asset(avatarAsset!, fit: BoxFit.cover)
+                                  : Center(
+                                    child: Icon(
+                                      Icons.face_retouching_natural_rounded,
+                                      size: config.isTablet ? 45 : 35,
+                                      color: AppColors.purpleMain,
+                                    ),
+                                  ),
                         ),
                       ),
                       const SizedBox(width: 15),
@@ -96,7 +90,9 @@ class Level3Home extends StatelessWidget {
                 padding: EdgeInsets.all(config.isTablet ? 40.0 : 25.0),
                 decoration: BoxDecoration(
                   color: AppColors.purpleMain,
-                  borderRadius: BorderRadius.circular(config.isTablet ? 40 : 30),
+                  borderRadius: BorderRadius.circular(
+                    config.isTablet ? 40 : 30,
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.purpleMain.withOpacity(0.3),
@@ -123,7 +119,7 @@ class Level3Home extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            "Complete today's quiz to\nearn 3 stars!",
+                            "Family,Letters,Numbers,Fruits,Vegetables,Animals ",
                             style: TextStyle(
                               fontSize: config.isTablet ? 18 : 14,
                               color: Colors.white70,

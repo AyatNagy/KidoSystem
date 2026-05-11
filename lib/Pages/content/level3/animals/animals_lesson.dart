@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kido/Widgets/content/level3/discovery_widget.dart';
 import 'package:kido/data/level3/animals/animals_data.dart';
 
-
-
 class AnimalsDiscoveryScreen extends StatefulWidget {
   const AnimalsDiscoveryScreen({super.key});
 
@@ -21,7 +19,6 @@ class _AnimalsDiscoveryScreenState extends State<AnimalsDiscoveryScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      // Handle completion (e.g., show "Well Done!" or Navigate back)
       Navigator.pop(context);
     }
   }
@@ -40,5 +37,4 @@ class _AnimalsDiscoveryScreenState extends State<AnimalsDiscoveryScreen> {
       },
     );
   }
-
 }
