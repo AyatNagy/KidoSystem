@@ -108,7 +108,6 @@ class _VegetableSongState extends State<VegetableSong>
     }
   }
 
-  // ── التالي ───────────────────────────────────────────────
   void _nextPage() {
     if (_page + 1 < vegitablesongs2.length) {
       setState(() {
@@ -259,7 +258,6 @@ Widget _buildOption(String imgPath, bool isCorrect) {
               return Stack(
                 alignment: Alignment.center,
                 children: [
-                  // هالة وميض للإجابة الصحيحة
                   if (glowing && _glowCtrl.isAnimating)
                     Container(
                       width: 140,

@@ -8,7 +8,6 @@ import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/config/progress.dart';
 import 'package:kido/constants.dart';
 
-/// After child login: polished welcome + level summary, then opens the level map.
 class ChildLevelWelcomePage extends StatefulWidget {
   final String childName;
   final int allowedLevel;

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/content/level3/fruits/pixel_game.dart';
 import 'package:kido/constants.dart';
 import '../../../../Models/level3/letters/letter_map.dart';
 import '../../../../Widgets/content/level3/discovery_widget.dart';
-import '../../../../Widgets/content/level3/fruits/basket_game.dart';
-import '../../../../Widgets/content/level3/fruits/tree_game.dart';
 import '../../../../Widgets/content/journey_map.dart';
-import '../../../../data/level3/fruits/fruits_journey.dart';
+import '../../../../data/level3/vegetables/vegetables_journey.dart';
 
 class VegetablesMapPage extends StatefulWidget {
   const VegetablesMapPage({super.key});
@@ -20,7 +17,7 @@ class _VegetablesMapPageState extends State<VegetablesMapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: JourneymapPage(
-        journeyData: journeyFruits,
+        journeyData: journeyVegetables,
         backgroundColor: AppColors.kidoGreen,
         nodeButtonColor: const Color(0xFF3A7D44),
         detailFlowBuilder: (item) => VegetablesDetailsFlow(item: item),
@@ -38,46 +35,7 @@ class VegetablesDetailsFlow extends StatelessWidget {
     return Scaffold(
       body: DiscoveryPage(
         model: item.letterData,
-        onNextPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => TreeDiscoveryPage(
-                fruit: item.dragData,
-                onNext: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => FruitCollectorPage(
-                        fruit: item.dragData,
-                        onNext: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => FruitGamePage(
-                                fruit: item.dragData,
-                                onComplete: () {
-                                  Navigator.of(context)
-                                    ..pop()
-                                    ..pop()
-                                    ..pop()
-                                    ..pop(true);
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          );
-        },
+        onNextPressed: () {},
       ),
     );
   }

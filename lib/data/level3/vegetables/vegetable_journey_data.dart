@@ -7,7 +7,11 @@ const _onion = "assets/gif/onion.gif";
 const _tomato = "assets/gif/tomato.gif";
 
 List<LetterJourney> buildVegetableJourney() => [
-  LetterJourney(image: _broccoli, isLocked: true, charName: 'Broccoli\nبروكلي'),
+  LetterJourney(
+      image: _broccoli,
+      isLocked: true,
+      charName: 'Broccoli\nبروكلي'
+  ),
   LetterJourney(image: _carrot, isLocked: true, charName: 'Carrot\nجزر'),
   LetterJourney(
     image: _chili,

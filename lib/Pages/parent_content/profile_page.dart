@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kido/Pages/shared/logo_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/constants.dart';
@@ -15,48 +16,171 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String? parentName = 'Parent';
+  String _parentName = 'Parent';
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    _loadProfileData();
   }
 
-  Future<void> _loadUserData() async {
+  Future<void> _loadProfileData() async {
     final prefs = await SharedPreferences.getInstance();
+    final imagePath = prefs.getString('parent_image_path');
+
     setState(() {
-      parentName = prefs.getString('parent_name') ?? 'Parent';
-      final imagePath = prefs.getString('parent_image_path');
+      _parentName = prefs.getString('parent_name') ?? 'Parent';
       if (imagePath != null && imagePath.isNotEmpty) {
         _imageFile = File(imagePath);
       }
     });
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    final pickedFile = await _picker.pickImage(source: source);
+  Future<void> _handleImageAction(ImageSource source) async {
+    final XFile? pickedFile = await _picker.pickImage(source: source);
 
     if (pickedFile != null) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('parent_image_path', pickedFile.path);
-
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
+      setState(() => _imageFile = File(pickedFile.path));
     }
   }
 
+  Future<void> _performLogout() async {
+    try {
+      debugPrint("Logout initiated...");
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('user_email');
+      await prefs.remove('parent_name');
+      await prefs.remove('parent_image_path');
+      bool success = await prefs.clear();
+      debugPrint("Preferences cleared: $success");
+
+      if (!mounted) return;
+
+      Navigator.of(context, rootNavigator: true).pop();
+      await Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const Logo(),
+        ),
+            (Route<dynamic> route) => false,
+      );
+
+    } catch (e) {
+      debugPrint("Logout Error: $e");
+      Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final config = ResponsiveProvider.of(context);
+
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(config.localWidth * 0.06),
+        child: Column(
+          children: [
+            _buildAvatarSection(config),
+            SizedBox(height: config.localHeight * 0.02),
+            Text(
+              _parentName,
+              style: TextStyle(
+                fontSize: config.headline,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textDark,
+              ),
+            ),
+            SizedBox(height: config.localHeight * 0.04),
+            _ProfileTile(
+              icon: CupertinoIcons.person_fill,
+              title: "Edit Profile",
+              subtitle: "Update your personal info",
+              color: AppColors.kidoBlue,
+              onTap: () {},
+              config: config,
+            ),
+            _ProfileTile(
+              icon: CupertinoIcons.globe,
+              title: "Language",
+              subtitle: "English / العربية",
+              color: Colors.blueAccent,
+              onTap: () {},
+              config: config,
+            ),
+            _ProfileTile(
+              icon: CupertinoIcons.lock_shield,
+              title: "Privacy & Security",
+              subtitle: "Manage your data",
+              color: Colors.greenAccent,
+              onTap: () {},
+              config: config,
+            ),
+
+            SizedBox(height: config.localHeight * 0.04),
+            _buildLogoutButton(config),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvatarSection(dynamic config) {
+    return Center(
+      child: Stack(
+        children: [
+          GestureDetector(
+            onTap: _imageFile != null ? _showFullImage : null,
+            child: CircleAvatar(
+              radius: config.localHeight * 0.075,
+              backgroundColor: Colors.white,
+              backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
+              child: _imageFile == null
+                  ? Icon(Icons.person, size: config.localHeight * 0.07, color: AppColors.kidoBlue)
+                  : null,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: FloatingActionButton.small(
+              heroTag: 'camera_btn',
+              backgroundColor: AppColors.kidoOrange,
+              onPressed: () => _showImageSourceSheet(config),
+              child: Icon(Icons.camera_alt, color: Colors.white, size: config.body),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton(dynamic config) {
+    return OutlinedButton(
+      onPressed: () => _showLogoutDialog(),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: Colors.redAccent,
+        side: const BorderSide(color: Colors.redAccent, width: 1.5),
+        minimumSize: Size(double.infinity, config.localHeight * 0.06),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      ),
+      child: Text(
+        "LOG OUT",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: config.body),
+      ),
+    );
+  }
+
   void _showFullImage() {
-    if (_imageFile == null) return;
     showDialog(
       context: context,
-      builder: (_) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: GestureDetector(
-          onTap: () => Navigator.pop(context),
+      builder: (_) => GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: Dialog(
+          backgroundColor: Colors.transparent,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Image.file(_imageFile!, fit: BoxFit.contain),
@@ -66,126 +190,40 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // Assuming ResponsiveProvider is a custom helper you built
-    final config = ResponsiveProvider.of(context);
-
-    return Scaffold(
-      backgroundColor: AppColors.bgColor,
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(config.localWidth * 0.06),
+  void _showImageSourceSheet(dynamic config) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+      builder: (context) => SafeArea(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Center(
-              child: Stack(
-                children: [
-                  GestureDetector(
-                    onTap: _imageFile != null ? _showFullImage : null,
-                    child: Container(
-                      height: config.localHeight * 0.15,
-                      width: config.localHeight * 0.15,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                        image: _imageFile != null
-                            ? DecorationImage(
-                          image: FileImage(_imageFile!),
-                          fit: BoxFit.cover,
-                        )
-                            : null,
-                      ),
-                      child: _imageFile == null
-                          ? Icon(
-                        Icons.person,
-                        size: config.localHeight * 0.07,
-                        color: AppColors.kidoBlue,
-                      )
-                          : null,
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: InkWell(
-                      onTap: () => _showImageSourceSheet(context, config),
-                      child: Container(
-                        padding: EdgeInsets.all(config.localWidth * 0.02),
-                        decoration: const BoxDecoration(
-                          color: AppColors.kidoOrange,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.camera_alt,
-                          color: Colors.white,
-                          size: config.body,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+            if (_imageFile != null)
+              ListTile(
+                leading: const Icon(Icons.fullscreen, color: AppColors.kidoBlue),
+                title: const Text("View Photo"),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showFullImage();
+                },
               ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt, color: AppColors.kidoOrange),
+              title: const Text("Take a photo"),
+              onTap: () {
+                Navigator.pop(context);
+                _handleImageAction(ImageSource.camera);
+              },
             ),
-            SizedBox(height: config.localHeight * 0.02),
-            Text(
-              parentName!,
-              style: TextStyle(
-                fontSize: config.headline,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textDark,
-              ),
-            ),
-            SizedBox(height: config.localHeight * 0.04),
-            _buildProfileTile(
-              config,
-              CupertinoIcons.person_fill,
-              "Edit Profile",
-              "Update your personal info",
-              AppColors.kidoBlue,
-              onTap: () {},
-            ),
-            _buildProfileTile(
-              config,
-              CupertinoIcons.globe,
-              "Language",
-              "English / العربية",
-              Colors.blueAccent,
-              onTap: () {},
-            ),
-            _buildProfileTile(
-              config,
-              CupertinoIcons.lock_shield,
-              "Privacy & Security",
-              "Manage your data",
-              Colors.greenAccent,
-              onTap: () {},
-            ),
-            SizedBox(height: config.localHeight * 0.04),
-            ElevatedButton(
-              onPressed: () => _showLogoutDialog(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                elevation: 0,
-                side: const BorderSide(color: Colors.redAccent, width: 1.5),
-                minimumSize: Size(double.infinity, config.localHeight * 0.06),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-              ),
-              child: Text(
-                "LOG OUT",
-                style: TextStyle(
-                  color: Colors.redAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: config.body,
-                ),
-              ),
+            ListTile(
+              leading: const Icon(Icons.photo_library, color: Colors.blueAccent),
+              title: const Text("Choose from gallery"),
+              onTap: () {
+                Navigator.pop(context);
+                _handleImageAction(ImageSource.gallery);
+              },
             ),
           ],
         ),
@@ -193,87 +231,47 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _showImageSourceSheet(BuildContext context, dynamic config) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-      ),
-      builder: (context) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (_imageFile != null)
-                ListTile(
-                  leading: const Icon(Icons.image, color: AppColors.kidoBlue),
-                  title: const Text("Show profile photo"),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _showFullImage();
-                  },
-                ),
-              ListTile(
-                leading:
-                const Icon(Icons.camera_alt, color: AppColors.kidoOrange),
-                title: const Text("Take a photo"),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(ImageSource.camera);
-                },
-              ),
-              ListTile(
-                leading:
-                const Icon(Icons.photo_library, color: Colors.blueAccent),
-                title: const Text("Choose from gallery"),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(ImageSource.gallery);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showLogoutDialog(BuildContext context) {
+  void _showLogoutDialog() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text("Confirmation"),
-        content: const Text("Are you sure you want to log out?"),
+        title: const Text("Sign Out"),
+        content: const Text("Are you sure you want to exit the Kido app?"),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
+            child: const Text("Stay"),
           ),
           TextButton(
-            onPressed: () async {
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.clear();
-              if (!mounted) return;
-              Navigator.pushNamedAndRemoveUntil(context, '/welcome', (route) => false);
-            },
-            child:
-            const Text("Log out", style: TextStyle(color: Colors.redAccent)),
+            onPressed: _performLogout,
+            child: const Text("Logout", style: TextStyle(color: Colors.redAccent)),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildProfileTile(
-      dynamic config,
-      IconData icon,
-      String title,
-      String subtitle,
-      Color color, {
-        required VoidCallback onTap,
-      }) {
+class _ProfileTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+  final dynamic config;
+
+  const _ProfileTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.onTap,
+    required this.config,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: config.localHeight * 0.02),
       decoration: BoxDecoration(
@@ -289,8 +287,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       child: ListTile(
         onTap: onTap,
-        contentPadding:
-        EdgeInsets.symmetric(horizontal: config.localWidth * 0.04),
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
@@ -304,8 +300,7 @@ class _ProfilePageState extends State<ProfilePage> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: config.body),
         ),
         subtitle: Text(subtitle, style: TextStyle(fontSize: config.body * 0.8)),
-        trailing:
-        const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
       ),
     );
   }
