@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/images/common/logo.png" alt="Kido Logo" width="120" height="120" />
+<img src="assets/images/Logo.jpeg" alt="Kido Logo" width="120" height="120" />
 
 # Kido — Special Needs Educational App
 
