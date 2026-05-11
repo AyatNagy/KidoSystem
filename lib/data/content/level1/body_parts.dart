@@ -1,4 +1,4 @@
-import '../../Models/level1/body_parts_model.dart';
+import '../../../Models/level1/body_parts_model.dart';
 
 final List<BodyPart> bodyParts = [
   BodyPart(

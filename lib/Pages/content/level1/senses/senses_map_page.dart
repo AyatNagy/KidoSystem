@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/level3/letters/letter_map.dart';
 import 'package:kido/Pages/content/level1/senses/sense_learning_page.dart';
-import 'package:kido/data/level1/senses/senses_journy_data.dart';
+import 'package:kido/constants.dart';
 import 'package:kido/enum/sense_type.dart';
 import '../../../../Widgets/content/journey_map.dart';
+import '../../../../data/content/level1/senses/senses_journy_data.dart';
 
 class SensesMapPage extends StatelessWidget {
   const SensesMapPage({super.key});
@@ -13,8 +14,8 @@ class SensesMapPage extends StatelessWidget {
     return Scaffold(
       body: JourneymapPage(
         journeyData: sensesJourney,
-        backgroundColor: Colors.blueAccent,
-        nodeButtonColor: Colors.white,
+        backgroundColor: AppColors.kidoBlue,
+        nodeButtonColor: AppColors.bgColor,
         detailFlowBuilder: (item) {
           return SensesDetailsFlow(item: item);
         },

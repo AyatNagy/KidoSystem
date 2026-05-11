@@ -5,7 +5,7 @@ import 'package:kido/constants.dart';
 import '../../../../Widgets/content/level1/background_colors.dart';
 import '../../../../Widgets/content/level1/no1/bee_count.dart';
 import '../../../../Widgets/responsive_provider.dart';
-import '../../../../data/level1/bee_count.dart';
+import '../../../../data/content/level1/bee_count.dart';
 import '../../../../services/audio_service.dart';
 
 class BeeCountingPage extends StatefulWidget {

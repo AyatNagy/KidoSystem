@@ -195,7 +195,16 @@ class _MovingCarPageState extends State<MovingCarPage>
                   fit: BoxFit.cover,
                 ),
               ),
-              NextButton(color: AppColors.kidoGreen, onPressed: widget.onNext!),
+              Positioned(
+                bottom: sh * 0.05,
+                right: sw * 0.08,
+                child: NextButton(
+                  color: AppColors.kidoGreen,
+                  onPressed: widget.onNext ?? () {
+                    Navigator.pop(context);
+                    },
+                ),
+              )
             ],
           ],
         ),

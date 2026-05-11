@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/shared/start_page.dart';
 
+import '../../constants.dart';
+
 class Logo extends StatefulWidget {
   const Logo({super.key});
 
@@ -27,7 +29,7 @@ class _SplashScreen extends State<Logo> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.white,
+        color: AppColors.bgColor,
         child: Center(
           child: Image.asset(
             'assets/images/Logo.jpeg',

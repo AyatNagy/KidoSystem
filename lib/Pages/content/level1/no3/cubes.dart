@@ -8,7 +8,7 @@ import '../../../../Widgets/Animation/animated_hand_widget.dart';
 import '../../../../Widgets/content/draganddrop.dart';
 import '../../../../Widgets/responsive_provider.dart';
 import '../../../../config/responsive_config.dart';
-import '../../../../data/level1/cubes.dart';
+import '../../../../data/content/level1/cubes.dart';
 import '../../../../services/audio_service.dart';
 import 'moving_car.dart';
 

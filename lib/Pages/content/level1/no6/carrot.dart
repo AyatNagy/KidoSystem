@@ -5,7 +5,7 @@ import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../Widgets/Buttons/next_button.dart';
 import '../../../../Widgets/content/draganddrop.dart';
-import '../../../../data/level1/bunny_feed.dart';
+import '../../../../data/content/level1/bunny_feed.dart';
 
 class BunnyFeedingGame extends StatefulWidget {
   final VoidCallback? onNext;

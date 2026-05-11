@@ -1,4 +1,6 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
+import 'package:kido/constants.dart';
 import '../../../../data/level3/vegetables/vegetable_journey_data.dart';
 import 'vegetable_quiz.dart';
 import 'vegetable_song.dart';
@@ -31,11 +33,9 @@ class _VegetableMapScreenState extends State<VegetableMapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6FBF4),
-
       body: JourneymapPage(
         journeyData: journey,
-        backgroundColor: const Color(0xFFF6FBF4),
+        backgroundColor: AppColors.kidoGreen,
         nodeButtonColor: const Color(0xFF3A7D44),
         detailFlowBuilder: (item) {
           final index = journey.indexOf(item);

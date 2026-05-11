@@ -6,10 +6,11 @@ import 'package:kido/Models/level1/sense_model.dart';
 import 'package:kido/Models/targets_item.dart';
 import 'package:kido/Widgets/content/draganddrop.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import 'package:kido/data/level1/senses/sense_data.dart';
 import 'package:kido/enum/sense_type.dart';
 import 'package:kido/services/audio_service.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../../../data/content/level1/senses/sense_data.dart';
 
 class SenseDragPracticeScreen extends StatefulWidget {
   final SenseType type;

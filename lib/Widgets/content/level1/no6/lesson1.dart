@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../data/level1/count_toys.dart';
+import '../../../../data/content/level1/count_toys.dart';
 
 class ToyIcon extends StatelessWidget {
   final int index;
@@ -7,6 +7,7 @@ class ToyIcon extends StatelessWidget {
   final double size;
 
   const ToyIcon({
+    super.key,
     required this.index,
     this.isDragging = false,
     required this.size,

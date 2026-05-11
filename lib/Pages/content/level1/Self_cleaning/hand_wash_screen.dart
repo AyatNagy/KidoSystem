@@ -1,6 +1,8 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:kido/constants.dart';
 
 class HandwashScreen extends StatefulWidget {
   const HandwashScreen({super.key});
@@ -38,7 +40,6 @@ class _HandwashScreenState extends State<HandwashScreen> {
   void _onPanStart(DragStartDetails d, Size area) {
     if (_done) return;
     final pos = d.localPosition;
-    // التأكد إن الضغط حصل على الصابونة
     if ((pos - (_soapPos + const Offset(32, 32))).distance > 38) return;
     setState(() {
       _dragging = true;
@@ -62,8 +63,6 @@ class _HandwashScreenState extends State<HandwashScreen> {
 
       final cx = _soapPos.dx + 32;
       final cy = _soapPos.dy + 32;
-
-      // إضافة فقاعات أثناء الحركة
       for (int i = 0; i < 2; i++) {
         _bubbles.add(
           _Bubble(
@@ -93,7 +92,9 @@ class _HandwashScreenState extends State<HandwashScreen> {
         return;
       }
       setState(() {
-        for (final b in _bubbles) b.opacity -= 0.07;
+        for (final b in _bubbles) {
+          b.opacity -= 0.07;
+        }
         _bubbles.removeWhere((b) => b.opacity <= 0);
       });
       if (_bubbles.isEmpty) t.cancel();
@@ -124,11 +125,9 @@ class _HandwashScreenState extends State<HandwashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF4FBFF),
       body: SafeArea(
         child: Column(
           children: [
-            // ── Top bar ──────────────────────────────────────
             Padding(
               padding: const EdgeInsets.all(14.0),
               child: Row(
@@ -139,24 +138,13 @@ class _HandwashScreenState extends State<HandwashScreen> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFDDF0FA),
+                        color: AppColors.bgColor,
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: const Icon(
                         Icons.home_rounded,
                         size: 22,
-                        color: Color(0xFF0D4A6A),
-                      ),
-                    ),
-                  ),
-                  const Expanded(
-                    child: Text(
-                      'اغسل إيديك 🧼',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xFF0D4A6A),
+                        color: AppColors.blueColor,
                       ),
                     ),
                   ),
@@ -165,7 +153,6 @@ class _HandwashScreenState extends State<HandwashScreen> {
               ),
             ),
 
-            // ── Progress Bar ─────────────────────────────────
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Column(
@@ -175,9 +162,9 @@ class _HandwashScreenState extends State<HandwashScreen> {
                     child: LinearProgressIndicator(
                       value: _progress,
                       minHeight: 12,
-                      backgroundColor: const Color(0xFFD6EDF8),
+                      backgroundColor: AppColors.bgColor,
                       valueColor: const AlwaysStoppedAnimation(
-                        Color(0xFF3AABDB),
+                        AppColors.kidoBlue,
                       ),
                     ),
                   ),
@@ -187,14 +174,13 @@ class _HandwashScreenState extends State<HandwashScreen> {
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF3AABDB),
+                      color: AppColors.kidoBlue,
                     ),
                   ),
                 ],
               ),
             ),
 
-            // ── Game Scene ───────────────────────────────────
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(14),
@@ -212,7 +198,6 @@ class _HandwashScreenState extends State<HandwashScreen> {
                           child: Stack(
                             clipBehavior: Clip.hardEdge,
                             children: [
-                              // حالة اليد المتسخة
                               Positioned.fill(
                                 child: Opacity(
                                   opacity: _dirtyOpacity,
@@ -222,7 +207,6 @@ class _HandwashScreenState extends State<HandwashScreen> {
                                   ),
                                 ),
                               ),
-                              // حالة الفرك (Scrubbing)
                               if (_progress > 0.05)
                                 Positioned.fill(
                                   child: Opacity(
@@ -233,7 +217,6 @@ class _HandwashScreenState extends State<HandwashScreen> {
                                     ),
                                   ),
                                 ),
-                              // حالة النظافة التامة
                               if (_progress > 0.85)
                                 Positioned.fill(
                                   child: Opacity(
@@ -245,7 +228,6 @@ class _HandwashScreenState extends State<HandwashScreen> {
                                   ),
                                 ),
 
-                              // رسم الفقاعات
                               ..._bubbles.map(
                                 (b) => Positioned(
                                   left: b.position.dx - b.size / 2,
@@ -270,7 +252,6 @@ class _HandwashScreenState extends State<HandwashScreen> {
                                 ),
                               ),
 
-                              // الصابونة
                               if (!_done)
                                 Positioned(
                                   left: _soapPos.dx,
@@ -281,9 +262,7 @@ class _HandwashScreenState extends State<HandwashScreen> {
                                       shape: BoxShape.circle,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: const Color(
-                                            0xFF3AABDB,
-                                          ).withOpacity(_dragging ? 0.4 : 0.2),
+                                          color: AppColors.kidoBlue.withOpacity(_dragging ? 0.4 : 0.2),
                                           blurRadius: _dragging ? 16 : 8,
                                         ),
                                       ],
@@ -305,42 +284,7 @@ class _HandwashScreenState extends State<HandwashScreen> {
               ),
             ),
 
-            // ── Win Message ──────────────────────────────────
             if (_done) ...[
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 18),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE8F8F0),
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                    color: const Color(0xFFA8DFC4),
-                    width: 1.5,
-                  ),
-                ),
-                child: const Column(
-                  children: [
-                    Text(
-                      'إيديك نضيفة! ',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xFF0A5C2E),
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      '👏',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF2E8B57),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -349,15 +293,15 @@ class _HandwashScreenState extends State<HandwashScreen> {
                   child: ElevatedButton(
                     onPressed: _restart,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0D4A6A),
-                      foregroundColor: Colors.white,
+                      backgroundColor: AppColors.blueColor,
+                      foregroundColor: AppColors.bgColor,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                     child: const Text(
-                      'العب تاني 🔄',
+                      'العب تاني',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
