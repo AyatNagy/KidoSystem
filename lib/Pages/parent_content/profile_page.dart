@@ -1,5 +1,5 @@
 // ignore_for_file: deprecated_member_use
-/*import 'dart:io';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -68,6 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Assuming ResponsiveProvider is a custom helper you built
     final config = ResponsiveProvider.of(context);
 
     return Scaffold(
@@ -132,7 +133,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             ),
-
             SizedBox(height: config.localHeight * 0.02),
             Text(
               parentName!,
@@ -175,7 +175,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 elevation: 0,
                 side: const BorderSide(color: Colors.redAccent, width: 1.5),
                 minimumSize: Size(double.infinity, config.localHeight * 0.06),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
               ),
               child: Text(
                 "LOG OUT",
@@ -214,7 +215,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                 ),
               ListTile(
-                leading: const Icon(Icons.camera_alt, color: AppColors.kidoOrange),
+                leading:
+                const Icon(Icons.camera_alt, color: AppColors.kidoOrange),
                 title: const Text("Take a photo"),
                 onTap: () {
                   Navigator.pop(context);
@@ -222,7 +224,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.photo_library, color: Colors.blueAccent),
+                leading:
+                const Icon(Icons.photo_library, color: Colors.blueAccent),
                 title: const Text("Choose from gallery"),
                 onTap: () {
                   Navigator.pop(context);
@@ -252,10 +255,11 @@ class _ProfilePageState extends State<ProfilePage> {
             onPressed: () async {
               final prefs = await SharedPreferences.getInstance();
               await prefs.clear();
-              if (!context.mounted) return;
+              if (!mounted) return;
               Navigator.pushNamedAndRemoveUntil(context, '/welcome', (route) => false);
             },
-            child: const Text("Log out", style: TextStyle(color: Colors.redAccent)),
+            child:
+            const Text("Log out", style: TextStyle(color: Colors.redAccent)),
           ),
         ],
       ),
@@ -285,7 +289,8 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       child: ListTile(
         onTap: onTap,
-        contentPadding: EdgeInsets.symmetric(horizontal: config.localWidth * 0.04),
+        contentPadding:
+        EdgeInsets.symmetric(horizontal: config.localWidth * 0.04),
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
@@ -299,8 +304,9 @@ class _ProfilePageState extends State<ProfilePage> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: config.body),
         ),
         subtitle: Text(subtitle, style: TextStyle(fontSize: config.body * 0.8)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+        trailing:
+        const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
       ),
     );
   }
-}*/
+}

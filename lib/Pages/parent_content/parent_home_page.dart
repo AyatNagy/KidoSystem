@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/kid/child_level_select_page.dart';
 import 'package:kido/Pages/kid/child_profile_setup_page.dart';
 import 'package:kido/Pages/parent_content/parent_progress_dashboard.dart';
+import 'package:kido/Pages/parent_content/profile_page.dart';
 import 'package:kido/Pages/parent_content/student_data_screen.dart';
 import 'package:kido/bloc/parent_children/parent_children_cubit.dart';
+import 'package:kido/constants.dart';
 import '../../Widgets/responsive_provider.dart';
 
 class ParentHomePage extends StatelessWidget {
@@ -127,10 +129,11 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
       _buildHomeContent(config),
       const ParentProgressDashboard(),
       const Scaffold(body: Center(child: Text("Learn"))),
+      const ProfilePage(),
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8),
+      backgroundColor: AppColors.bgColor,
       body: IndexedStack(index: _selectedIndex, children: pages),
       bottomNavigationBar: _buildBottomNav(),
     );
