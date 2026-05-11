@@ -176,7 +176,7 @@ flutter run
 
 ### Backend setup
 ```bash
-git clone <backend-repo-url>
+git clone <https://github.com/AyatNagy/Kido_backendd>
 cd KidoBackend
 npm install
 ```
