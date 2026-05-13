@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../Widgets/content/level3/discovery_widget.dart';
-import '../../../../data/content/level3/fruits/fruits_discovery.dart';
-import '../../../../data/content/level3/fruits/fruits_pixel.dart';
+import '../../../../data/content/level3/vegetables/discovery_vegetables.dart';
 
 class DiscoveryVegetables extends StatefulWidget {
   const DiscoveryVegetables({super.key});
@@ -15,7 +14,7 @@ class _DiscoveryVegetablesState extends State<DiscoveryVegetables> {
 
   void _handleNext() {
     setState(() {
-      if (_currentIndex < fruits.length - 1) {
+      if (_currentIndex < vegetablesDiscovery.length - 1) {
         _currentIndex++;
       } else {
         Navigator.pop(context);
@@ -25,7 +24,7 @@ class _DiscoveryVegetablesState extends State<DiscoveryVegetables> {
 
   @override
   Widget build(BuildContext context) {
-    final currentFruit = fruitsDiscovery[_currentIndex];
-    return DiscoveryPage(model: currentFruit, onNextPressed: _handleNext);
+    final currentVege = vegetablesDiscovery[_currentIndex];
+    return DiscoveryPage(model: currentVege, onNextPressed: _handleNext);
   }
 }

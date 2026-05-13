@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/content/level3/animals/animal_map.dart';
-import 'package:kido/Pages/content/level3/vegetables/vegetable_map_screen.dart';
+import 'package:kido/Pages/content/level3/vegetables/vegetables_map.dart';
 import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
 import 'choose_letters.dart';
@@ -75,7 +75,7 @@ class CategoryGrid extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => VegetableMapScreen()),
+              MaterialPageRoute(builder: (context) => VegetablesMapPage()),
             );
           },
         ),
