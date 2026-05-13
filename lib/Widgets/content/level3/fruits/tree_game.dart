@@ -5,7 +5,7 @@ import 'package:kido/Widgets/Buttons/puls_button.dart';
 import 'package:kido/constants.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../Models/level3/pixel.dart';
-import '../../../../data/level3/fruits/fruits_tree.dart';
+import '../../../../data/exam/level3/fruits/fruits_tree.dart';
 
 class TreeDiscoveryPage extends StatefulWidget {
   final PixelItem fruit;

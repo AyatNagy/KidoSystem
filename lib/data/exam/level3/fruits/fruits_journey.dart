@@ -1,6 +1,6 @@
-import 'package:kido/data/level3/fruits/fruits_pixel.dart';
-import '../../../Models/level3/letters/letter_map.dart';
+import '../../../../Models/level3/letters/letter_map.dart';
 import 'fruits_discovery.dart';
+import 'fruits_pixel.dart';
 
 final List<LetterJourney> journeyFruits = [
   LetterJourney(

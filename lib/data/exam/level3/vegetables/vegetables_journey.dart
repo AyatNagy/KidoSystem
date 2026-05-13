@@ -1,4 +1,4 @@
-import '../../../Models/level3/letters/letter_map.dart';
+import '../../../../Models/level3/letters/letter_map.dart';
 import 'discovery_vegetables.dart';
 
 final List<LetterJourney> journeyVegetables = [

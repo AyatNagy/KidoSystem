@@ -80,8 +80,7 @@ class LevelHomeBase extends StatelessWidget {
               backgroundColor: primaryColor.withOpacity(0.1),
               backgroundImage: avatarAsset != null ? AssetImage(avatarAsset!) : null,
               child: avatarAsset == null
-                  ? Icon(Icons.face_retouching_natural_rounded,
-                  size: config.isTablet ? 45 : 35, color: primaryColor)
+                  ? Image.asset('assets/images/characters/boy.gif')
                   : null,
             ),
             const SizedBox(width: 15),
@@ -93,7 +92,8 @@ class LevelHomeBase extends StatelessWidget {
                   style: TextStyle(
                     fontSize: config.title,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textDark,
+                    color: AppColors.textGray,
+                    fontFamily: 'tinyKids'
                   ),
                 ),
                 Text(
@@ -107,7 +107,6 @@ class LevelHomeBase extends StatelessWidget {
             ),
           ],
         ),
-        Icon(Icons.notifications_active_rounded, color: AppColors.textGray),
       ],
     );
   }

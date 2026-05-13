@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../Models/level3/fruits/pixel_fruits.dart';
+
+import '../../../../Models/level3/fruits/pixel_fruits.dart';
 
 final List<PixelFruitModel> fruits = [
 

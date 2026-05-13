@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import '../../Models/level2/draw_story.dart';
+import '../../../Models/level2/draw_story.dart';
 
 final List<LessonFrame> drawingStory = [
   LessonFrame(

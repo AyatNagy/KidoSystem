@@ -4,9 +4,9 @@ import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Widgets/Buttons/play_button.dart';
 import 'package:kido/Widgets/Buttons/replay_button.dart';
 import 'package:kido/Widgets/content/level3/numbers/numbers_train_display.dart';
-import 'package:kido/data/level3/numbers/train_test_data.dart';
 import 'package:kido/services/asset_service.dart';
 import 'package:kido/services/audio_service.dart';
+import '../../../../data/exam/level3/numbers/train_test_data.dart';
 
 class NumbersTrain extends StatefulWidget {
   final int phase;
@@ -179,7 +179,7 @@ void checkTrainPosition() {
 
 void onQuestionAnswered(Map<String,String?> answer){
   if(answer.isEmpty) return;
-  final carNumber=trainQuestion.carNumberFromPath(answer.keys.first!);
+  final carNumber=trainQuestion.carNumberFromPath(answer.keys.first);
   AudioService.play(fileName: 'yaay.mp3');
   setState(() {
     acceptedCarIndex=carNumber;

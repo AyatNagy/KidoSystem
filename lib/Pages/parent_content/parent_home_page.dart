@@ -240,11 +240,9 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
                                     onLongPress: () => _editChild(child),
                                     child: _buildChildCard(
                                       config,
-                                      name:
-                                          child['name'] as String? ??
-                                          'Unknown',
+                                      name: child['name'] as String? ?? 'Unknown',
                                       level: "Level $level",
-                                      color: _levelColor(level),
+                                      color: levelColor(level),
                                       progress: score,
                                       avatarAsset: child['avatar'] as String?,
                                     ),
@@ -273,19 +271,6 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
         ),
       ],
     );
-  }
-
-  Color _levelColor(int level) {
-    switch (level) {
-      case 1:
-        return const Color(0xFF2C8FF9);
-      case 2:
-        return const Color(0xFFFF8A65);
-      case 3:
-        return const Color(0xFFF06292);
-      default:
-        return const Color(0xFF2C8FF9);
-    }
   }
 
   Widget _buildHeader(dynamic config) {
@@ -345,17 +330,14 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
           CircleAvatar(
             radius: 25,
             backgroundColor: color.withOpacity(0.1),
-            child:
-                avatarAsset != null
-                    ? ClipOval(
-                      child: Image.asset(
-                        avatarAsset,
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                    : Image.asset('assets/images/characters/boy.gif'),
+            child: avatarAsset != null ? ClipOval(
+              child: Image.asset(
+                avatarAsset,
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+              ),
+            ) : Image.asset('assets/images/characters/boy.gif'),
           ),
           const SizedBox(width: 15),
           Expanded(
@@ -375,7 +357,7 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
                   style: TextStyle(
                     fontSize: config.body * 0.85,
                     fontWeight: FontWeight.w700,
-                    color: Colors.black54,
+                    color: AppColors.textDark,
                   ),
                 ),
                 const SizedBox(height: 5),

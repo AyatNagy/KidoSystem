@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
 import '../../../../Widgets/content/level3/discovery_widget.dart';
-import '../../../../data/level3/fruits/fruits_discovery.dart';
-import '../../../../data/level3/fruits/fruits_pixel.dart';
+import '../../../../data/exam/level3/fruits/fruits_discovery.dart';
+import '../../../../data/exam/level3/fruits/fruits_pixel.dart';
 
 class DiscoveryVegetables extends StatefulWidget {
   const DiscoveryVegetables({super.key});

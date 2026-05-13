@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/constants.dart';
-import '../../../Models/level3/fruits/discovery_fruits.dart';
+import '../../../../Models/level3/fruits/discovery_fruits.dart';
 
 final List<FruitsModel> vegetablesDiscovery = [
   FruitsModel(

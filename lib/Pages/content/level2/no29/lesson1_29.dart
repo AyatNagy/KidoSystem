@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-
-import '../../../../data/level2/no29.dart';
+import '../../../../data/content/level2/no29.dart';
 
 class DrawingStoryPage extends StatefulWidget {
   const DrawingStoryPage({super.key});

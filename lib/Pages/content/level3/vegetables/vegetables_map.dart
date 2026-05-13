@@ -3,7 +3,7 @@ import 'package:kido/constants.dart';
 import '../../../../Models/level3/letters/letter_map.dart';
 import '../../../../Widgets/content/level3/discovery_widget.dart';
 import '../../../../Widgets/content/journey_map.dart';
-import '../../../../data/level3/vegetables/vegetables_journey.dart';
+import '../../../../data/exam/level3/vegetables/vegetables_journey.dart';
 
 class VegetablesMapPage extends StatefulWidget {
   const VegetablesMapPage({super.key});

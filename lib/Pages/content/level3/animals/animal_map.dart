@@ -4,12 +4,9 @@ import 'package:kido/Pages/content/level3/animals/animals_face_game.dart';
 import 'package:kido/Pages/content/level3/animals/animals_practice.dart';
 import 'package:kido/Widgets/content/level3/discovery_widget.dart';
 import 'package:kido/constants.dart';
-import 'package:kido/data/level3/animals/animals_data.dart';
-import 'package:kido/data/level3/animals/animals_journey.dart';
 import 'package:kido/Widgets/content/journey_map.dart';
-
-
-
+import '../../../../data/exam/level3/animals/animals_data.dart';
+import '../../../../data/exam/level3/animals/animals_journey.dart';
 
 class AnimalMapPage extends StatefulWidget {
 

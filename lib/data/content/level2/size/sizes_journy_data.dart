@@ -1,6 +1,6 @@
-import 'package:kido/data/level2/size/size_data.dart';
-import '../../../Models/level3/letters/letter_map.dart';
-import '../../../enum/size_goal.dart';
+import 'package:kido/data/content/level2/size/size_data.dart';
+import '../../../../Models/level3/letters/letter_map.dart';
+import '../../../../enum/size_goal.dart';
 
 final List<LetterJourney> sizesJourney = [
   LetterJourney(

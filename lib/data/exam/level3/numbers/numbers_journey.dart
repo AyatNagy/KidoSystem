@@ -1,8 +1,8 @@
 import 'package:kido/Models/level3/letters/letter_map.dart';
-import 'package:kido/data/level3/numbers/number_lesson_arabic_data.dart';
-import 'package:kido/data/level3/numbers/number_lesson_english_data.dart';
-import 'package:kido/data/level3/numbers/tracing_bee.dart';
-import 'package:kido/data/level3/numbers/tracing_rabbit.dart';
+import 'package:kido/data/exam/level3/numbers/tracing_bee.dart';
+import 'package:kido/data/exam/level3/numbers/tracing_rabbit.dart';
+import 'number_lesson_arabic_data.dart';
+import 'number_lesson_english_data.dart';
 
 final List<LetterJourney> journeyNumArab = [
   LetterJourney(

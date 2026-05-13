@@ -4,9 +4,9 @@ import 'package:kido/Pages/content/level2/sizes/size_practice_page.dart';
 import 'package:kido/Widgets/content/content_app_bar.dart';
 import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import 'package:kido/data/level2/size/size_data.dart';
 import 'package:kido/enum/size_goal.dart';
 import 'package:kido/services/audio_service.dart';
+import '../../../../data/content/level2/size/size_data.dart';
 
 class SizeLessonPage extends StatefulWidget {
   final SizeGoal goal;

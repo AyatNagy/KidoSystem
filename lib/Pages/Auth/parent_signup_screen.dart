@@ -4,6 +4,7 @@ import 'package:kido/Pages/Auth/verify_email_page.dart';
 import 'package:kido/Widgets/Auth/password_strength_turtle%20.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/api_service/api_services.dart';
+import 'package:kido/constants.dart';
 import '../../Models/dailog_model.dart';
 import '../../Widgets/Layout/app_bar.dart';
 import '../../Widgets/Dialogs/dialog_widget.dart';
@@ -85,7 +86,7 @@ class _ParentSignupState extends State<ParentSignup> {
       customDialog(
         context,
         DailogModel(
-          title: "Success 🎉",
+          title: "Success",
           message: "Registration success!",
           image: "assets/images/signup-success.png",
         ),
@@ -106,7 +107,7 @@ class _ParentSignupState extends State<ParentSignup> {
       customDialog(
         context,
         DailogModel(
-          title: "Error ❌",
+          title: "Error",
           message: "Registration Failed.",
           image: "assets/images/signup-faied.png",
         ),
@@ -120,7 +121,7 @@ class _ParentSignupState extends State<ParentSignup> {
     final config = ResponsiveProvider.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bgColor,
       appBar: const KidoAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/level3/letters/letter_map.dart';
 import 'package:kido/Pages/content/level2/sizes/size_intro_page.dart';
-import 'package:kido/data/level2/size/sizes_journy_data.dart';
 import 'package:kido/enum/size_goal.dart';
 import '../../../../Widgets/content/journey_map.dart';
+import '../../../../data/content/level2/size/sizes_journy_data.dart';
 
 class SizesMapPage extends StatelessWidget {
   const SizesMapPage({super.key});

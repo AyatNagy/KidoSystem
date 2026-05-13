@@ -1,6 +1,5 @@
-import 'package:kido/data/level3/animals/animals_data.dart';
-import '../../../Models/level3/letters/letter_map.dart';
-
+import '../../../../Models/level3/letters/letter_map.dart';
+import 'animals_data.dart';
 
 final List<LetterJourney> animalsJourney = [
   LetterJourney(

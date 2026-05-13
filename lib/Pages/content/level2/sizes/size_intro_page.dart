@@ -3,8 +3,9 @@ import 'package:kido/Models/level2/size_model.dart';
 import 'package:kido/Pages/content/level2/sizes/size_lesson_page.dart';
 import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import 'package:kido/data/level2/size/size_data.dart';
 import 'package:kido/enum/size_goal.dart';
+
+import '../../../../data/content/level2/size/size_data.dart';
 
 class SizeIntroPage extends StatefulWidget {
   final SizeGoal goal;

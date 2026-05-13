@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -6,8 +7,8 @@ import 'package:kido/Widgets/content/choise_item_widget.dart';
 import 'package:kido/Widgets/content/content_app_bar.dart';
 import 'package:kido/Widgets/content/success_overlay_widget.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import 'package:kido/data/level3/animals/animals_data.dart';
 import 'package:kido/services/audio_service.dart';
+import '../../../../data/exam/level3/animals/animals_data.dart';
 
 class AnimalsPracticePage extends StatefulWidget {
   const AnimalsPracticePage({super.key});
@@ -53,9 +54,7 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
       showSuccess = false;
       canAnimate = false;
       wrongIndices.clear();
-
       correctAnimal = animalsDiscovery[index];
-
       List<AnimalsModel> others =
           animalsDiscovery.where((a) => a != correctAnimal).toList();
       AnimalsModel wrongAnimal = others[Random().nextInt(others.length)];

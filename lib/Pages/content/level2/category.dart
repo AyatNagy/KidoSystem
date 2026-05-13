@@ -8,7 +8,7 @@ import 'package:kido/Pages/content/level2/puzzle_practice.dart';
 import 'package:kido/Pages/content/level2/sizes/sizes_map_page.dart';
 import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
-import '../../../data/level2/puzzle_data.dart';
+import '../../../data/content/level2/puzzle_data.dart';
 import 'draw/draw_line/octobus_and_star.dart';
 
 class Category2 extends StatelessWidget {

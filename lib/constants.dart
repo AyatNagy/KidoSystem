@@ -46,3 +46,17 @@ class AppColors {
     Color(0xFFFFCDD2),
   ];
 }
+
+
+Color levelColor(int level) {
+  switch (level) {
+    case 1:
+      return const Color(0xFF2C8FF9);
+    case 2:
+      return const Color(0xFFFF8A65);
+    case 3:
+      return const Color(0xFFF06292);
+    default:
+      return const Color(0xFF2C8FF9);
+  }
+}

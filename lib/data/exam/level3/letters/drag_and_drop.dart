@@ -1,7 +1,7 @@
 import 'dart:ui';
-import '../../../Models/dragable_item.dart';
-import '../../../Models/exams/draganddrop_question.dart';
-import '../../../Models/targets_item.dart';
+import '../../../../Models/dragable_item.dart';
+import '../../../../Models/exams/draganddrop_question.dart';
+import '../../../../Models/targets_item.dart';
 
 final List<DragDropQuestion> arLetter = [
   DragDropQuestion(

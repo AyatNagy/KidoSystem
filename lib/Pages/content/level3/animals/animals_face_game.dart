@@ -1,11 +1,11 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/content/draganddrop.dart';
 import 'package:kido/Widgets/content/success_overlay_widget.dart';
-import 'package:kido/data/level3/animals/animals_data.dart';
-import 'package:kido/data/level3/animals/animals_faces_game_data.dart';
 import 'package:kido/services/audio_service.dart';
+import '../../../../data/exam/level3/animals/animals_data.dart';
+import '../../../../data/exam/level3/animals/animals_faces_game_data.dart';
 
 class AnimalFaceGamePage extends StatefulWidget {
   final int intialIndex;

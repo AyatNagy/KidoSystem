@@ -287,7 +287,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(30, 10, 30, 25),
                   child: CustomGradientButton(
-                    title: currentIndex == examQuestions.length - 1 ? "FINISH!" : "NEXT QUEST",
+                    title: currentIndex == examQuestions.length - 1 ? "FINISH!" : "NEXT",
                     onPressed: handleNext,
                     width: double.infinity,
                     borderRadius: 25,

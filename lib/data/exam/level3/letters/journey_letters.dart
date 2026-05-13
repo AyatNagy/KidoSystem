@@ -1,5 +1,5 @@
-import 'package:kido/data/level3/letters/drag_and_drop.dart';
-import '../../../Models/level3/letters/letter_map.dart';
+import '../../../../Models/level3/letters/letter_map.dart';
+import 'drag_and_drop.dart';
 import 'letters.dart';
 
 final List<LetterJourney> journeyEn = [
