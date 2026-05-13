@@ -86,7 +86,6 @@ class _GardenHarvestGameState extends State<GardenHarvestGame>
         if (count == 3) {
           Lottie.asset(
             'assets/lottie/confetti.json',
-            repeat: false,
             fit: BoxFit.cover,
           );
           _playSound('audio/yaay.mp3');
