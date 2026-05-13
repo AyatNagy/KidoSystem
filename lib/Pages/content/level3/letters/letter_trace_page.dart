@@ -10,7 +10,7 @@ import '../../../../Widgets/Painter/letter_path_painter.dart';
 import '../../../../Widgets/Painter/my_painter.dart';
 import '../../../../Widgets/Painter/steps_painter.dart';
 import '../../../../constants.dart';
-import '../../../../data/exam/level3/letters/letter_repository.dart';
+import '../../../../data/content/level3/letters/letter_repository.dart';
 
 class LetterTracePage extends StatefulWidget {
   final String letter;

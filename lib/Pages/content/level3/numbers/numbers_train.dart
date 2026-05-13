@@ -6,7 +6,7 @@ import 'package:kido/Widgets/Buttons/replay_button.dart';
 import 'package:kido/Widgets/content/level3/numbers/numbers_train_display.dart';
 import 'package:kido/services/asset_service.dart';
 import 'package:kido/services/audio_service.dart';
-import '../../../../data/exam/level3/numbers/train_test_data.dart';
+import '../../../../data/content/level3/numbers/train_test_data.dart';
 
 class NumbersTrain extends StatefulWidget {
   final int phase;
@@ -32,8 +32,6 @@ class _NumbersTrainState extends State<NumbersTrain> with TickerProviderStateMix
   bool isFirstTripFinished=false;
   bool isReady = false;
   int currentQuestionIndex=0;
-
-  //test state
   bool isTestTrip=false;
   bool isWaitingForInput=false;
   bool isTestAnswered=false;
@@ -75,7 +73,6 @@ _moveController.addStatusListener((status){
       vsync:this,
     );
 
-    //walking effect
     _walkController=AnimationController(
       duration:const Duration(milliseconds:600),
       vsync:this,

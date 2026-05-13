@@ -7,7 +7,7 @@ import '../../../../Widgets/content/level3/letters/bubble_pop.dart';
 import '../../../../Widgets/content/level3/letters/drag_and_drop.dart';
 import '../../../../Widgets/content/level3/letters/mystery_box.dart';
 import '../../../../Widgets/content/journey_map.dart';
-import '../../../../data/exam/level3/letters/journey_letters.dart';
+import '../../../../data/content/level3/letters/journey_letters.dart';
 
 class LettersMapPage extends StatefulWidget {
   const LettersMapPage({super.key});

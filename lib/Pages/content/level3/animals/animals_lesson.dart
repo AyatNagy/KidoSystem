@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/content/level3/discovery_widget.dart';
-import '../../../../data/exam/level3/animals/animals_data.dart';
+import '../../../../data/content/level3/animals/animals_data.dart';
 
 class AnimalsDiscoveryScreen extends StatefulWidget {
   const AnimalsDiscoveryScreen({super.key});

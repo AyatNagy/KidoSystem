@@ -8,7 +8,7 @@ import 'package:kido/Widgets/content/content_app_bar.dart';
 import 'package:kido/Widgets/content/success_overlay_widget.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/services/audio_service.dart';
-import '../../../../data/exam/level3/animals/animals_data.dart';
+import '../../../../data/content/level3/animals/animals_data.dart';
 
 class AnimalsPracticePage extends StatefulWidget {
   const AnimalsPracticePage({super.key});

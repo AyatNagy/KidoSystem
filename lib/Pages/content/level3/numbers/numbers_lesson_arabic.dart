@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/content/level3/numbers/number_lesson_widget.dart';
-import '../../../../data/exam/level3/numbers/number_lesson_arabic_data.dart'; // Make sure you have this widget
+import '../../../../data/content/level3/numbers/number_lesson_arabic_data.dart';
 
 class ArabicNumberLesson extends StatefulWidget {
   const ArabicNumberLesson({super.key, required Null Function() onNext});
@@ -14,7 +14,6 @@ class _ArabicNumberLessonState extends State<ArabicNumberLesson> {
 
   @override
   Widget build(BuildContext context) {
-    // We call the list from our Repository class
     final lessons = NumbersArabicLessonRepo.numbersArablessons;
 
     return Scaffold(

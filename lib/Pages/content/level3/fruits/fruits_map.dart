@@ -6,7 +6,7 @@ import '../../../../Widgets/content/level3/discovery_widget.dart';
 import '../../../../Widgets/content/level3/fruits/basket_game.dart';
 import '../../../../Widgets/content/level3/fruits/tree_game.dart';
 import '../../../../Widgets/content/journey_map.dart';
-import '../../../../data/exam/level3/fruits/fruits_journey.dart';
+import '../../../../data/content/level3/fruits/fruits_journey.dart';
 
 class FruitsMapPage extends StatefulWidget {
   const FruitsMapPage({super.key});

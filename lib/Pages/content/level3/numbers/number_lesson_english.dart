@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/level3/numbers/number_lesson_model.dart';
 import 'package:kido/Widgets/content/level3/numbers/number_lesson_widget.dart';
-import '../../../../data/exam/level3/numbers/number_lesson_english_data.dart'; // Make sure you have this widget
+import '../../../../data/content/level3/numbers/number_lesson_english_data.dart';
 
 class EnglishNumberLesson extends StatefulWidget {
   const EnglishNumberLesson({super.key});
