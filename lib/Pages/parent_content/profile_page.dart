@@ -2,11 +2,14 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kido/Pages/shared/logo_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/constants.dart';
+
+import '../../config/cache_helper.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -49,27 +52,32 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _performLogout() async {
+    if (mounted) Navigator.of(context).pop();
+
     try {
-      debugPrint("Logout initiated...");
+      await LocalStorage.logout();
+      try {
+        await GoogleSignIn.instance.signOut();
+        await GoogleSignIn.instance.disconnect();
+      } catch (_) {}
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('user_email');
       await prefs.remove('parent_name');
       await prefs.remove('parent_image_path');
-      bool success = await prefs.clear();
-      debugPrint("Preferences cleared: $success");
+      await prefs.remove('username');
+      await prefs.remove('email');
+      final token = await LocalStorage.getParentToken();
+      final loggedIn = await LocalStorage.getLoggedIn();
+      debugPrint("POST-LOGOUT: token=$token, loggedIn=$loggedIn");
 
       if (!mounted) return;
 
-      Navigator.of(context, rootNavigator: true).pop();
-      await Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context) => const Logo(),
-        ),
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const Logo()),
             (Route<dynamic> route) => false,
       );
-
     } catch (e) {
       debugPrint("Logout Error: $e");
+      if (!mounted) return;
       Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
     }
   }

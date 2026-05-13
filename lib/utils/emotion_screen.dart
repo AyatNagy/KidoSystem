@@ -25,7 +25,6 @@ class EmotionScreen extends StatelessWidget {
       case EmotionEffect.rain:
         return Stack(
           children: [
-            // Main rain
             Positioned.fill(
               child: Lottie.asset(
                 'assets/lottie/rain_drop.json',
@@ -103,7 +102,7 @@ class EmotionScreen extends StatelessWidget {
               height: 200,
               child: Lottie.asset('assets/lottie/star (2).json', repeat: true),
             ),
-            // 🌧 Small random storm
+            // Small random storm
             ...List.generate(15, (index) {
               return Positioned(
                 top: (index * 50) % 600,
