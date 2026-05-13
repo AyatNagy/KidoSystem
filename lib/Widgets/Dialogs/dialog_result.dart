@@ -117,7 +117,17 @@ class _DialogContent extends StatelessWidget {
             children: [
               Text(
                 passed ? "AWESOME!" : "GOOD TRY!",
-                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.kidoPink, letterSpacing: 1.5),
+                style:passed? const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.kidoGreen,
+                    letterSpacing: 1.5
+                ):const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.kidoRed,
+                    letterSpacing: 1.5
+                ),
               ),
               const SizedBox(height: 12),
               _ScorePill(score: score, total: total),
@@ -130,7 +140,7 @@ class _DialogContent extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.blueGrey.shade700),
               ),
               const SizedBox(height: 35),
-              _ContinueButton(onPressed: onDone),
+              _ContinueButton(onPressed: onDone, passed: passed,),
             ],
           ),
         ),
@@ -181,8 +191,9 @@ class _StarRating extends StatelessWidget {
 }
 
 class _ContinueButton extends StatelessWidget {
+  final bool passed;
   final VoidCallback onPressed;
-  const _ContinueButton({required this.onPressed});
+  const _ContinueButton({required this.onPressed, required this.passed});
 
   @override
   Widget build(BuildContext context) {
@@ -196,14 +207,22 @@ class _ContinueButton extends StatelessWidget {
       ),
       child: Ink(
         decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [AppColors.kidoPink, Color(0xFFFF7BB0)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+          gradient: passed? LinearGradient(
+              colors: [AppColors.kidoGreen, AppColors.kidoColors[4]],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter
+          ):const LinearGradient(
+              colors: [AppColors.kidoPink, Color(0xFFFF7BB0)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter
+          ),
           borderRadius: BorderRadius.circular(25),
         ),
         child: Container(
           width: double.infinity,
           height: 60,
           alignment: Alignment.center,
-          child: const Text("CONTINUE ➔", style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w900)),
+          child: const Text("CONTINUE", style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w900)),
         ),
       ),
     );

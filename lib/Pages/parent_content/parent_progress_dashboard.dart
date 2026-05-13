@@ -154,7 +154,7 @@ class _ParentProgressDashboardState extends State<ParentProgressDashboard>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'تقدّم الأطفال 🌟',
+                  'تقدّم الأطفال',
                   style: TextStyle(
                     fontSize: config.headline * 0.75,
                     fontWeight: FontWeight.w900,
@@ -217,7 +217,6 @@ class _ParentProgressDashboardState extends State<ParentProgressDashboard>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('👶', style: TextStyle(fontSize: 52)),
               const SizedBox(height: 12),
               Text(
                 'لا يوجد أطفال بعد\nأضيفي طفلاً من الصفحة الرئيسية',
@@ -429,10 +428,10 @@ class _ChildProgressCard extends StatelessWidget {
             // ── Expanded: categories ──
             children: [
               const Divider(height: 24, thickness: 0.5),
-              if (report == null || report!.grouped.isEmpty) // ✅ null check
+              if (report == null || report!.grouped.isEmpty)
                 _NoDetailWidget(config: config)
               else
-                ..._buildGrouped(config, report!), // ✅ non-null assert
+                ..._buildGrouped(config, report!),
             ],
           ),
         ),
@@ -560,9 +559,6 @@ class _ChildProgressCard extends StatelessWidget {
   }
 }
 
-// ══════════════════════════════════════════════
-//  Helper Widgets
-// ══════════════════════════════════════════════
 class _LevelBadge extends StatelessWidget {
   final int level;
   final List<Color> colors;

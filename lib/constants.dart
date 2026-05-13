@@ -21,6 +21,7 @@ class AppColors {
     Color(0xFFB9FBC0),
     Color(0xFFFFE5B4),
     Color(0xFFFFADAD),
+    Color(0xFFAED581)
   ];
 
   // Card Gradients
