@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/kid/child_level_select_page.dart';
 import 'package:kido/Pages/kid/child_profile_setup_page.dart';
-import 'package:kido/Pages/parent_content/parent_progress_dashboard.dart';
 import 'package:kido/Pages/parent_content/profile_page.dart';
 import 'package:kido/Pages/parent_content/student_data_screen.dart';
 import 'package:kido/bloc/parent_children/parent_children_cubit.dart';
 import 'package:kido/constants.dart';
+import '../../Models/child.dart';
 import '../../Widgets/responsive_provider.dart';
+import 'dashboard.dart';
 
 class ParentHomePage extends StatelessWidget {
   const ParentHomePage({super.key});
@@ -32,6 +33,7 @@ class _ParentHomeView extends StatefulWidget {
 
 class _ParentHomeViewState extends State<_ParentHomeView> {
   int _selectedIndex = 0;
+  Map<String, dynamic>? _activeChildMap;
 
   Future<void> _persistFromReadyState() async {
     final cubit = context.read<ParentChildrenCubit>();
@@ -44,16 +46,10 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
   }
 
   void _openChildDashboard(Map<String, dynamic> child) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder:
-            (_) => ChildLevelSelectPage(
-              childName: child['name'] ?? '',
-              recommendedLevel: child['level'] as int?,
-            ),
-      ),
-    );
+    setState(() {
+      _activeChildMap = child;
+      _selectedIndex = 1;
+    });
   }
 
   Future<void> _editChild(Map<String, dynamic> child) async {
@@ -70,16 +66,21 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
       MaterialPageRoute(
         builder:
             (_) => ChildLevelSelectPage(
-              childName: setup.childName,
-              recommendedLevel: child['level'] as int?,
-            ),
+          childName: setup.childName,
+          recommendedLevel: child['level'] as int?,
+        ),
       ),
     );
     if (!mounted || pickedLevel == null) return;
 
-    child['name'] = setup.childName;
-    child['avatar'] = setup.avatarAsset;
-    child['level'] = pickedLevel.level;
+    setState(() {
+      child['name'] = setup.childName;
+      child['avatar'] = setup.avatarAsset;
+      child['level'] = pickedLevel.level;
+      if (_activeChildMap != null && _activeChildMap!['id'] == child['id']) {
+        _activeChildMap = child;
+      }
+    });
     await _persistFromReadyState();
   }
 
@@ -91,7 +92,7 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
 
     if (result != null && result is Map<String, dynamic>) {
       final newChild = {
-        if (result['childId'] != null) 'id': result['childId'],
+        'id': result['childId'] ?? DateTime.now().millisecondsSinceEpoch.toString(),
         'name': result['name'] ?? '',
         'avatar': result['avatar'],
         'level': result['level'] ?? 1,
@@ -101,21 +102,28 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
       final cubit = context.read<ParentChildrenCubit>();
       final state = cubit.state;
       final existing =
-          state is ParentChildrenReady
-              ? List<Map<String, dynamic>>.from(state.children)
-              : <Map<String, dynamic>>[];
+      state is ParentChildrenReady
+          ? List<Map<String, dynamic>>.from(state.children)
+          : <Map<String, dynamic>>[];
 
-      await cubit.saveAndEmit([...existing, newChild]);
+      final updatedList = [...existing, newChild];
+      await cubit.saveAndEmit(updatedList);
 
       if (!mounted) return;
+
+      setState(() {
+        _activeChildMap = newChild;
+        _selectedIndex = 1;
+      });
+
       Navigator.push(
         context,
         MaterialPageRoute(
           builder:
               (_) => ChildLevelSelectPage(
-                childName: newChild['name'] as String,
-                recommendedLevel: newChild['level'] as int?,
-              ),
+            childName: newChild['name'] as String,
+            recommendedLevel: newChild['level'] as int?,
+          ),
         ),
       );
     }
@@ -125,25 +133,58 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
 
-    final List<Widget> pages = [
-      _buildHomeContent(config),
-      const ParentProgressDashboard(),
-      const Scaffold(body: Center(child: Text("Learn"))),
-      const ProfilePage(),
-    ];
+    return BlocListener<ParentChildrenCubit, ParentChildrenState>(
+      listener: (context, state) {
+        if (state is ParentChildrenReady && state.children.isNotEmpty && _activeChildMap == null) {
+          setState(() {
+            _activeChildMap = state.children.first;
+          });
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.bgColor,
+        body: BlocBuilder<ParentChildrenCubit, ParentChildrenState>(
+          builder: (context, state) {
+            Map<String, dynamic>? currentTarget = _activeChildMap;
 
-    return Scaffold(
-      backgroundColor: AppColors.bgColor,
-      body: IndexedStack(index: _selectedIndex, children: pages),
-      bottomNavigationBar: _buildBottomNav(),
+            if (state is ParentChildrenReady && state.children.isNotEmpty) {
+              final match = state.children.any((c) => c['id'] == currentTarget?['id']);
+              if (!match) {
+                currentTarget = state.children.first;
+              } else {
+                currentTarget = state.children.firstWhere((c) => c['id'] == currentTarget?['id']);
+              }
+            }
+
+            final int level = (currentTarget?['level'] as int?) ?? 1;
+            final double score = (currentTarget?['score'] as num?)?.toDouble() ?? 0.0;
+            final String name = currentTarget?['name'] as String? ?? 'Select a Child';
+
+            final List<Widget> pages = [
+              _buildHomeContent(config),
+              Dashboard(
+                key: ValueKey(currentTarget?['id'] ?? name),
+                level: level,
+                score: score,
+                child: Child(name: name, username: '', password: ''),
+              ),
+              const Scaffold(body: Center(child: Text("Learn"))),
+              const ProfilePage(),
+            ];
+
+            return IndexedStack(index: _selectedIndex, children: pages);
+          },
+        ),
+        bottomNavigationBar: _buildNav(),
+      ),
     );
   }
 
   Widget _buildHomeContent(dynamic config) {
-    return Stack(
-      children: [
-        SafeArea(
-          child: RefreshIndicator(
+    return SafeArea(
+      child: Stack(
+        children: [
+          RefreshIndicator(
             onRefresh: () => context.read<ParentChildrenCubit>().loadChildren(),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -257,19 +298,19 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
                     },
                   ),
                   _buildAddChildButton(config),
-                  SizedBox(height: config.localHeight * 0.15),
+                  SizedBox(height: config.localHeight * 0.2),
                 ],
               ),
             ),
           ),
-        ),
-        Positioned(
-          bottom: 20,
-          left: 20,
-          right: 20,
-          child: _buildAIChatCard(config),
-        ),
-      ],
+          Positioned(
+            bottom: 20,
+            left: 20,
+            right: 20,
+            child: _buildAIChatCard(config),
+          ),
+        ],
+      ),
     );
   }
 
@@ -304,13 +345,13 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
   }
 
   Widget _buildChildCard(
-    dynamic config, {
-    required String name,
-    required String level,
-    required Color color,
-    required double progress,
-    String? avatarAsset,
-  }) {
+      dynamic config, {
+        required String name,
+        required String level,
+        required Color color,
+        required double progress,
+        String? avatarAsset,
+      }) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(config.localWidth * 0.04),
@@ -494,7 +535,7 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
     );
   }
 
-  Widget _buildBottomNav() {
+  Widget _buildNav() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       selectedItemColor: Colors.blueAccent,
