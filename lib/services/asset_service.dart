@@ -12,7 +12,7 @@ class AssetService{
 
 class Images{
    const Images();
-  final String basePath='images';
+  final String basePath='assets/images';
   String get commonBasePath=>'$basePath/common';
   String get trainEnginePath=>'$commonBasePath/train_engine.png';
   String get trainRailwayPath=>'$commonBasePath/train_railway.png';
