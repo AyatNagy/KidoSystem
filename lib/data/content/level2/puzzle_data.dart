@@ -242,3 +242,4 @@ final List<PuzzleData> cowLevels = [
     ),
   ),
 ];
+final List<PuzzleData> allPuzzleLevels = [...cowLevels, ...appleLevels];

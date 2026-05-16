@@ -57,7 +57,7 @@ class ForgotByEmail extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                   Image.asset(
-                    'assets/images/Kido.png',
+                    'assets/images/kido.png',
                     height: 40,
                     width: 40,
                     fit: BoxFit.contain,

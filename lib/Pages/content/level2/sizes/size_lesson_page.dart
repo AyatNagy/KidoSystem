@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/level2/size_model.dart';
 import 'package:kido/Pages/content/level2/sizes/size_practice_page.dart';
+import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Widgets/content/content_app_bar.dart';
-import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/enum/size_goal.dart';
 import 'package:kido/services/audio_service.dart';
@@ -184,8 +184,9 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
           if (showPracticeButton)
             Padding(
               padding: config.pagePadding,
-              child: CustomGradientButton(
-                title: "يلا نلعب ",
+              child: NextButton(
+                color: Colors.orange,
+                shadowColor: Colors.orangeAccent,
                 onPressed: () {
                   AudioService.stop();
                   Navigator.push(

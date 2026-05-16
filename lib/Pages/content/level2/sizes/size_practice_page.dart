@@ -193,7 +193,7 @@ class _SizePracticePageState extends State<SizePracticePage>
               ? null
               : PreferredSize(
                 preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-                child: ContentAppBar(title: "فين الـ ${data.title}"),
+                child: ContentAppBar(title: ""),
               ),
       body: SafeArea(
         child: Center(
