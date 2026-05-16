@@ -26,11 +26,13 @@ class _AppLifecycleWatcherState extends State<AppLifecycleWatcher>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.paused) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
       AudioService.pauseOnLeave();
     } else if (state == AppLifecycleState.resumed) {
-      AudioService.resumeOnReturn();
+      Future.delayed(const Duration(milliseconds: 150), () {
+        AudioService.resumeOnReturn();
+      });
     } else if (state == AppLifecycleState.detached) {
       AudioService.stop();
     }

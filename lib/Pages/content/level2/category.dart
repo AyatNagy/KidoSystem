@@ -130,7 +130,8 @@ class Category2 extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PuzzlePracticeScreen(levels: appleLevels),
+                builder:
+                    (context) => PuzzlePracticeScreen(levels: allPuzzleLevels),
               ),
             );
           },
