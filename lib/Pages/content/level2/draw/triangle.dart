@@ -4,7 +4,14 @@ import '../../../../Widgets/content/level2/shapes.dart';
 import '../../../../data/content/level2/shapes.dart';
 
 class TriangleDrawingPage extends StatelessWidget {
-  const TriangleDrawingPage({super.key});
+  final String childName;
+  final int childId;
+
+  const TriangleDrawingPage({
+    super.key,
+    required this.childName,
+    required this.childId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +21,12 @@ class TriangleDrawingPage extends StatelessWidget {
       onNext: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Level2Home(childName: 'hab')),
+          MaterialPageRoute(
+            builder: (context) => Level2Home(
+              childName: childName,
+              childId: childId,
+            ),
+          ),
         );
       },
       shapeName: 'triangle',

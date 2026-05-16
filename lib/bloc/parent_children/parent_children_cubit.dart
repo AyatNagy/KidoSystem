@@ -12,18 +12,20 @@ class ParentChildrenCubit extends Cubit<ParentChildrenState> {
     emit(ParentChildrenLoading());
 
     try {
-      final local = await ChildrenStore.load();
+      // نجيب الـ API أولاً عشان نضمن إن allowedLevel محدث دايماً
       final api = await ApiService.fetchMyChildren();
+      print('API Response: $api');
 
-      if (api != null &&
-          api['success'] == true &&
-          api['data'] is List) {
+      if (api != null && api['success'] == true && api['data'] is List) {
+        final local = await ChildrenStore.load();
         final merged = _mergeApiWithLocal(api['data'] as List<dynamic>, local);
         await ChildrenStore.save(merged);
         emit(ParentChildrenReady(merged));
         return;
       }
 
+      // API فشل — fallback للـ local
+      final local = await ChildrenStore.load();
       final notice =
           api == null
               ? 'Could not refresh. Showing saved children.'
@@ -66,8 +68,10 @@ class ParentChildrenCubit extends Cubit<ParentChildrenState> {
               ? (progressMap['completedLessons'] as num).toInt()
               : 0;
 
+      // allowedLevel بييجي من الـ API مباشرة
       final level =
           (m['allowedLevel'] as num?)?.toInt() ??
+          (prev?['allowedLevel'] as int?) ??
           (prev?['level'] as int?) ??
           1;
 
@@ -88,6 +92,8 @@ class ParentChildrenCubit extends Cubit<ParentChildrenState> {
         'name': m['name'] as String? ?? '',
         'username': m['username'],
         'level': level,
+        'allowedLevel':
+            level, // ← التعديل: نحفظه بالاسمين عشان أي widget يلاقيه
         'avatar': prev?['avatar'] as String?,
         'score': score01,
         'completedLessons': completedCount,

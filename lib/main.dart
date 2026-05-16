@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Widgets/app_lifecycle_watcher.dart';
+import 'package:kido/bloc/assessment/assessment_cubit.dart';
 import 'Pages/shared/logo_page.dart';
 import 'Widgets/info_widget.dart';
 import 'Widgets/responsive_provider.dart';
@@ -15,18 +17,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InfoWidget(
-      builder: (context, deviceInfo) {
-        return ResponsiveProvider(
-          config: ResponsiveConfig(deviceInfo),
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            builder: DevicePreview.appBuilder,
-            locale: DevicePreview.locale(context),
-            home: const AppLifecycleWatcher(child: Logo()),
-          ),
-        );
-      },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AssessmentCubit>(create: (_) => AssessmentCubit()),
+      ],
+      child: InfoWidget(
+        builder: (context, deviceInfo) {
+          return ResponsiveProvider(
+            config: ResponsiveConfig(deviceInfo),
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              builder: DevicePreview.appBuilder,
+              locale: DevicePreview.locale(context),
+              home: const AppLifecycleWatcher(child: Logo()),
+            ),
+          );
+        },
+      ),
     );
   }
 }

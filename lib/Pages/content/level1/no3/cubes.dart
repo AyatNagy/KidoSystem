@@ -14,8 +14,14 @@ import 'moving_car.dart';
 
 class CubesLesson extends StatefulWidget {
   final VoidCallback? onNext;
-
-  const CubesLesson({super.key, this.onNext});
+  final String childName; // ← ضيف
+  final int childId;
+  const CubesLesson({
+    super.key,
+    this.onNext,
+    required this.childName,
+    required this.childId,
+  });
 
   @override
   State<CubesLesson> createState() => _CubesLessonState();
@@ -33,7 +39,6 @@ class _CubesLessonState extends State<CubesLesson> {
     super.initState();
     _playWelcomeAudio();
   }
-
   void _playWelcomeAudio() async {
     await AudioService.play(fileName: 'level1/put_boxs.mp3');
   }
@@ -122,7 +127,11 @@ class _CubesLessonState extends State<CubesLesson> {
                     } else {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (context) => const MovingCarPage(),
+                          builder:
+                              (context) => MovingCarPage(
+                                childName: widget.childName,
+                                childId: widget.childId,
+                              ),
                         ),
                       );
                     }

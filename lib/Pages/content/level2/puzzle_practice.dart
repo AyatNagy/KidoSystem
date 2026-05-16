@@ -11,8 +11,15 @@ import '../../../data/content/level2/puzzle_data.dart';
 
 class PuzzlePracticeScreen extends StatefulWidget {
   final List<PuzzleData> levels;
+  final String childName;
+  final int childId;
 
-  const PuzzlePracticeScreen({super.key, required this.levels});
+  const PuzzlePracticeScreen({
+    super.key,
+    required this.levels,
+    required this.childName,
+    required this.childId,
+  });
 
   @override
   State<PuzzlePracticeScreen> createState() => _PuzzlePracticeScreenState();
@@ -78,11 +85,9 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
 
     for (int i = 0; i < puzzleData.question.items.length; i++) {
       if (!mounted) return;
-
       setState(() {
         currentItemIndex = i;
       });
-
       _prepareHand(i);
       await _handController.forward(from: 0);
       await Future.delayed(const Duration(milliseconds: 500));
@@ -99,7 +104,6 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
       currentItemIndex = 0;
     });
     AudioService.play(fileName: "yalla_puzzle.mp3");
-
     _resetIdleTimer();
   }
 
@@ -227,44 +231,40 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
             ),
           if (showHint && !isSuccess) ...[
             Positioned(
-              left:
-                  w *
-                  puzzleData.question.items[currentItemIndex].startPosition.dx,
-              top:
-                  h *
-                  puzzleData.question.items[currentItemIndex].startPosition.dy,
+              left: w *
+                  puzzleData
+                      .question.items[currentItemIndex].startPosition.dx,
+              top: h *
+                  puzzleData
+                      .question.items[currentItemIndex].startPosition.dy,
               child: AnimatedBuilder(
                 animation: _glowAnimation,
-                builder:
-                    (context, child) => Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.yellow.withOpacity(
-                              _glowAnimation.value,
-                            ),
-                            blurRadius: 30,
-                            spreadRadius: 10,
-                          ),
-                        ],
+                builder: (context, child) => Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.yellow.withOpacity(_glowAnimation.value),
+                        blurRadius: 30,
+                        spreadRadius: 10,
                       ),
-                    ),
+                    ],
+                  ),
+                ),
               ),
             ),
             AnimatedBuilder(
               animation: _handAnimation,
-              builder:
-                  (_, __) => Positioned(
-                    left: w * _handAnimation.value.dx,
-                    top: h * _handAnimation.value.dy,
-                    child: Image.asset(
-                      "assets/images/animated_hand-Photoroom.png",
-                      width: 60,
-                    ),
-                  ),
+              builder: (_, __) => Positioned(
+                left: w * _handAnimation.value.dx,
+                top: h * _handAnimation.value.dy,
+                child: Image.asset(
+                  "assets/images/animated_hand-Photoroom.png",
+                  width: 60,
+                ),
+              ),
             ),
           ],
           if (isSuccess)
@@ -283,7 +283,16 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
                 AudioService.stop();
 
                 if (!mounted) return;
-                Navigator.pop(context);
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Level2Home(
+                      childName: widget.childName,
+                      childId: widget.childId,
+                    ),
+                  ),
+                );
               },
             ),
           ),

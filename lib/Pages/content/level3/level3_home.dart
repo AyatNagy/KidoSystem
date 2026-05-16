@@ -5,13 +5,15 @@ import 'category_grid.dart';
 
 class Level3Home extends StatelessWidget {
   final String childName;
+  final int childId;
   final String? avatarAsset;
-  const Level3Home({super.key, required this.childName, this.avatarAsset});
+  const Level3Home({super.key, required this.childName, required this.childId, this.avatarAsset});
 
   @override
   Widget build(BuildContext context) {
     return LevelHomeBase(
       childName: childName,
+      childId: childId,
       avatarAsset: avatarAsset,
       dailyChallengeTitle: "Daily Challenge",
       dailyChallengeSubtitle: "Family, Letters, Numbers, Fruits, Vegetables and Animals",
