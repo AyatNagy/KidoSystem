@@ -24,66 +24,62 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create:
-          (context) => DashboardBloc()..loadDashboardData(child, level, score),
+      create: (context) => DashboardBloc()..loadDashboardData(child, level, score),
       child: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
           return Scaffold(
             backgroundColor: AppColors.bgColor,
-            body:
-                state.isLoading
-                    ? const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.kidoPink,
-                      ),
-                    )
-                    : Stack(
+            body: state.isLoading
+                ? const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.kidoPink,
+              ),
+            )
+                : Stack(
+              children: [
+                _buildKidoGradientHeader(),
+                SafeArea(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildKidoGradientHeader(),
-
-                        SafeArea(
-                          child: SingleChildScrollView(
-                            physics: const BouncingScrollPhysics(),
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 20),
-                                const Text(
-                                  "Dashboard",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                                const SizedBox(height: 30),
-                                _buildModernHeroCard(state),
-                                const SizedBox(height: 35),
-                                const Text(
-                                  "Learning Journey",
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w900,
-                                    color: AppColors.textDark,
-                                    letterSpacing: -0.5,
-                                  ),
-                                ),
-                                const SizedBox(height: 15),
-                                _buildCreativeTaskGrid(state),
-                                const SizedBox(height: 100),
-                              ],
-                            ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          "Dashboard",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 26,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
-
-                        Positioned(
-                          bottom: 30,
-                          right: 20,
-                          child: _buildSwitchButton(context),
+                        const SizedBox(height: 30),
+                        _buildModernHeroCard(state),
+                        const SizedBox(height: 35),
+                        const Text(
+                          "Learning Journey",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.textDark,
+                            letterSpacing: -0.5,
+                          ),
                         ),
+                        const SizedBox(height: 15),
+                        _buildCreativeTaskGrid(state),
+                        const SizedBox(height: 100),
                       ],
                     ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 30,
+                  right: 20,
+                  child: _buildSwitchButton(context),
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -164,8 +160,7 @@ class Dashboard extends StatelessWidget {
                   radius: 32,
                   backgroundColor: Colors.white,
                   child: Text(
-                    (state.selectedChild?.name != null &&
-                            state.selectedChild!.name.isNotEmpty)
+                    (state.selectedChild?.name != null && state.selectedChild!.name.isNotEmpty)
                         ? state.selectedChild!.name[0].toUpperCase()
                         : "K",
                     style: const TextStyle(
@@ -182,7 +177,7 @@ class Dashboard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${state.selectedChild?.name}!",
+                      "${state.selectedChild?.name ?? 'Kid'}!",
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -249,30 +244,33 @@ class Dashboard extends StatelessWidget {
   }
 
   Widget _buildCreativeTaskGrid(DashboardState state) {
-    final items =
-        state.level == 3
-            ? level3Data(state.progress)
-            : level2Data(state.progress);
+    List<Map<String, dynamic>> taskItems = [];
+    if (state.level == 3) {
+      taskItems = level3Data(state.progress);
+    } else if (state.level == 2) {
+      taskItems = level2Data(state.progress);
+    } else {
+      taskItems = level1Data(state.progress);
+    }
     return Column(
-      children:
-          items
-              .map((item) => _buildModernTaskCard(item, state.previousProgress))
-              .toList(),
+      children: taskItems
+          .map((item) => _buildModernTaskCard(item, state.previousProgress))
+          .toList(),
     );
   }
 
   Widget _buildModernTaskCard(
-    Map<String, dynamic> item,
-    Map<String, double> prevProgress,
-  ) {
-    final String title = item['title'];
-    final String symbol = item['symbol'];
-    final double currentVal = (item['progress'] as num).toDouble();
+      Map<String, dynamic> item,
+      Map<String, double> prevProgress,
+      ) {
+    final String title = item['title'] ?? 'Task';
+    final String symbol = item['symbol'] ?? '✨';
+    final double currentVal = (item['progress'] as num? ?? 0.0).toDouble();
     final double previousVal = prevProgress[title] ?? currentVal;
     final bool isUp = currentVal >= previousVal;
     final Color kidoColor = _getKidoColorByTitle(title);
 
-    bool isImagePath = symbol.contains("assets/");
+    final bool isImagePath = symbol.contains("assets/");
 
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -298,10 +296,9 @@ class Dashboard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Center(
-              child:
-                  isImagePath
-                      ? Image.asset(symbol, width: 32, fit: BoxFit.contain)
-                      : Text(symbol, style: const TextStyle(fontSize: 28)),
+              child: isImagePath
+                  ? Image.asset(symbol, width: 32, fit: BoxFit.contain)
+                  : Text(symbol, style: const TextStyle(fontSize: 28)),
             ),
           ),
           const SizedBox(width: 16),
@@ -328,7 +325,7 @@ class Dashboard extends StatelessWidget {
                       ),
                     ),
                     FractionallySizedBox(
-                      widthFactor: currentVal,
+                      widthFactor: currentVal.clamp(0.0, 1.0), // Prevents layout explosion layout errors
                       child: Container(
                         height: 10,
                         decoration: BoxDecoration(
