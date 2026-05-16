@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../Models/exams/speak_question.dart';
 import '../responsive_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SpeakQuestionWidget extends StatefulWidget {
   final SpeakQuestion question;
@@ -31,7 +32,23 @@ class _SpeakQuestionWidgetState extends State<SpeakQuestionWidget> {
   }
 
   void startListening() async {
-    bool available = await _speech.initialize();
+    var status=await Permission.microphone.status;
+    if(status.isDenied){
+      status=await Permission.microphone.request();
+    }
+    if(status.isGranted){
+    bool available = await _speech.initialize(
+      onError: (errorNotification) {
+          //print('Speech Error: ${errorNotification.errorMsg}');
+          stopListening(); // Safely reset state if an error happens
+        },
+        onStatus: (statusNotification) {
+          //print('Speech Status: $statusNotification');
+          if (statusNotification == 'notListening') {
+            setState(() => isListening = false);
+          }
+        },
+    );
     if (available) {
       setState(() {
         isListening = true;
@@ -47,6 +64,9 @@ class _SpeakQuestionWidgetState extends State<SpeakQuestionWidget> {
         },
       );
     }
+  }else if(status.isPermanentlyDenied){
+    openAppSettings();
+  }
   }
 
   void stopListening() {
