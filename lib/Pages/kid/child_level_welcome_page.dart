@@ -11,11 +11,12 @@ import 'package:kido/constants.dart';
 class ChildLevelWelcomePage extends StatefulWidget {
   final String childName;
   final int allowedLevel;
-
+  final int childId;
   const ChildLevelWelcomePage({
     super.key,
     required this.childName,
     required this.allowedLevel,
+required this.childId,
   });
 
   @override
@@ -164,6 +165,7 @@ class _ChildLevelWelcomePageState extends State<ChildLevelWelcomePage>
         builder:
             (_) => ChildLevelSelectPage(
               childName: widget.childName,
+              childId: widget.childId,
               recommendedLevel: _level,
               forcedUnlockedLevel: _level,
             ),
