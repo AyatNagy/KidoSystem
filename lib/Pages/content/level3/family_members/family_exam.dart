@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+//import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lottie/lottie.dart';
 
 class FamilyMember {
@@ -99,7 +99,7 @@ class FamilyExam extends StatefulWidget {
 
 class _FamilyExamState extends State<FamilyExam>
     with SingleTickerProviderStateMixin {
-  final FlutterTts flutterTts = FlutterTts();
+  //final FlutterTts flutterTts = FlutterTts();
   final PageController _pageCtrl = PageController();
 
   int _page = 0;
@@ -130,16 +130,16 @@ class _FamilyExamState extends State<FamilyExam>
   void dispose() {
     _hintTimer?.cancel();
     _glowCtrl.dispose();
-    flutterTts.stop();
+    //flutterTts.stop();
     _pageCtrl.dispose();
     super.dispose();
   }
 
-  Future<void> _speak(String text) async {
+  /*Future<void> _speak(String text) async {
     await flutterTts.setLanguage('en-US');
     await flutterTts.setPitch(1.1);
     await flutterTts.speak(text);
-  }
+  }*/
 
   void _startPage(int page) {
     _hintTimer?.cancel();
@@ -149,11 +149,13 @@ class _FamilyExamState extends State<FamilyExam>
     wrongSelections = [];
 
     Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) _speak(familyMembers[page].name);
+      if (mounted) //_speak(familyMembers[page].name);
+        return;
     });
 
     _hintTimer = Timer.periodic(const Duration(seconds: 7), (_) {
-      if (!isPressed && mounted) _speak(familyMembers[page].name);
+      if (!isPressed && mounted) //_speak(familyMembers[page].name);
+        return;
     });
 
     Future.delayed(const Duration(seconds: 5), () {
@@ -177,7 +179,7 @@ class _FamilyExamState extends State<FamilyExam>
       _glowCtrl.reset();
       await Future.delayed(const Duration(milliseconds: 300));
       if (mounted) setState(() => showSuccess = true);
-      await _speak(familyMembers[_page].name);
+      //await _speak(familyMembers[_page].name);
     } else {
       await Future.delayed(const Duration(milliseconds: 400));
       if (mounted) {
@@ -279,7 +281,7 @@ class _FamilyExamState extends State<FamilyExam>
                 ),
                 _CircleBtn(
                   icon: Icons.volume_up_rounded,
-                  onTap: () => _speak(member.name),
+                  //onTap: () => _speak(member.name),
                   bg: const Color(0xFF4CAF50),
                   iconColor: Colors.white,
                 ),

@@ -6,7 +6,6 @@ import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/Widgets/Buttons/replay_button.dart';
 import 'package:kido/constants.dart';
 import '../../../Models/level3/discovery.dart';
-import '../../../Pages/content/level3/vegetables/vegetable_sound.dart';
 import '../../../services/audio_service.dart';
 import '../../responsive_provider.dart';
 
@@ -109,9 +108,6 @@ class _DiscoveryPageState extends State<DiscoveryPage> with TickerProviderStateM
               ),
             ),
           ),
-
-          Positioned(top: -80, left: -80, child: Blob(color: _grad[0], size: 260)),
-          Positioned(bottom: -60, right: -60, child: Blob(color: _grad[1], size: 220)),
 
           if (model.extraImage != null)
             Positioned(

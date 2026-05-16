@@ -1,5 +1,6 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+//import 'package:flutter_tts/flutter_tts.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'Family_model.dart';
 
@@ -11,7 +12,7 @@ class FamilySongScreen extends StatefulWidget {
 }
 
 class _FamilySongScreenState extends State<FamilySongScreen> {
-  final FlutterTts _tts = FlutterTts();
+  //final FlutterTts _tts = FlutterTts();
   final PageController _ctrl = PageController();
 
   bool _isPressed = false;
@@ -23,22 +24,22 @@ class _FamilySongScreenState extends State<FamilySongScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _speak(_list[0].ttsText);
+      //_speak(_list[0].ttsText);
     });
   }
 
   @override
   void dispose() {
     _ctrl.dispose();
-    _tts.stop();
+    //_tts.stop();
     super.dispose();
   }
 
-  Future<void> _speak(String text) async {
+  /*Future<void> _speak(String text) async {
     await _tts.setLanguage('en-US');
     await _tts.setPitch(1.1);
     await _tts.speak(text);
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +99,7 @@ class _FamilySongScreenState extends State<FamilySongScreen> {
                     children: [
                       // زر الصوت
                       GestureDetector(
-                        onTap: () => _speak(member.ttsText),
+                        //onTap: () => _speak(member.ttsText),
                         child: Container(
                           width: 60,
                           height: 60,
@@ -225,7 +226,7 @@ class _FamilySongScreenState extends State<FamilySongScreen> {
                             duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut,
                           );
-                          _speak(_list[index + 1].ttsText);
+                          //_speak(_list[index + 1].ttsText);
                         },
                       ),
                     ],

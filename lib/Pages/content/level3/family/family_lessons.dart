@@ -1,8 +1,9 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+//import 'package:flutter_tts/flutter_tts.dart';
 import 'Family_model.dart';
 
 class FamilySoundScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class FamilySoundScreen extends StatefulWidget {
 
 class _FamilySoundScreenState extends State<FamilySoundScreen>
     with SingleTickerProviderStateMixin {
-  final FlutterTts _tts = FlutterTts();
+  //final FlutterTts _tts = FlutterTts();
   late int _index;
   bool _isSpeaking = false;
   late AnimationController _pulseCtrl;
@@ -84,7 +85,7 @@ class _FamilySoundScreenState extends State<FamilySoundScreen>
   @override
   void dispose() {
     _pulseCtrl.dispose();
-    _tts.stop();
+   // _tts.stop();
     super.dispose();
   }
 
@@ -96,9 +97,9 @@ class _FamilySoundScreenState extends State<FamilySoundScreen>
     HapticFeedback.mediumImpact();
     _pulseCtrl.repeat(reverse: true);
 
-    await _tts.setLanguage('en-US');
-    await _tts.setPitch(1.2);
-    await _tts.speak(_list[_index].ttsText);
+    //await _tts.setLanguage('en-US');
+    //await _tts.setPitch(1.2);
+    //await _tts.speak(_list[_index].ttsText);
 
     await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
