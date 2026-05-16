@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/Auth/verify_code_page.dart';
-import 'package:kido/Pages/Auth/parent_login_screen.dart';
 import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import 'package:kido/Widgets/text_field_item.dart';
 import 'package:kido/utils/validators.dart';
@@ -9,15 +8,15 @@ import '../../bloc/forget_password/forget_password_cubit.dart';
 
 class ForgotByEmail extends StatelessWidget {
   final String? email;
+  ForgotByEmail({super.key, this.email});
 
-  const ForgotByEmail({super.key, this.email});
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController(
       text: email ?? '',
     );
-    final formKey = GlobalKey<FormState>();
 
     return BlocProvider(
       create: (context) => ForgetPasswordCubit(),
@@ -39,6 +38,7 @@ class ForgotByEmail extends StatelessWidget {
         builder: (context, state) {
           final cubit = context.read<ForgetPasswordCubit>();
           final isLoading = state is ForgetPasswordLoading;
+
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -48,14 +48,14 @@ class ForgotByEmail extends StatelessWidget {
               leading: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Image.asset(
                     'assets/images/log.png',
                     height: 40,
                     width: 40,
                     fit: BoxFit.contain,
                   ),
-                  SizedBox(width: 6),
+                  const SizedBox(width: 6),
                   Image.asset(
                     'assets/images/Kido.png',
                     height: 40,
@@ -65,11 +65,10 @@ class ForgotByEmail extends StatelessWidget {
                 ],
               ),
             ),
-
-            body: Padding(
+            body: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               child: Form(
-                key: formKey,
+                key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -79,7 +78,7 @@ class ForgotByEmail extends StatelessWidget {
                       width: 339,
                     ),
                     const SizedBox(height: 10),
-                    Text(
+                    const Text(
                       "Forgot password ?",
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -96,7 +95,7 @@ class ForgotByEmail extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Text(
+                    const Text(
                       "Don't worry! Enter your email below to receive a code",
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -106,27 +105,25 @@ class ForgotByEmail extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-
                     const SizedBox(height: 40),
                     CustomTextField(
                       fieldController: emailController,
-                      fieldIcon: Icon(Icons.email),
+                      fieldIcon: const Icon(Icons.email),
                       fieldLabel: "Email",
                       fieldObscure: false,
                       validator: Validators.validateEmail,
                     ),
-
-                    const SizedBox(height: 15),
-
+                    const SizedBox(height: 25),
                     CustomGradientButton(
                       title:
                           isLoading ? "Sending..." : "Send verification code",
                       onPressed:
                           !isLoading
                               ? () {
-                                if (formKey.currentState!.validate()) {
-                                  final email = emailController.text;
-                                  cubit.forgetPassword(email);
+                                if (_formKey.currentState!.validate()) {
+                                  cubit.forgetPassword(
+                                    emailController.text.trim(),
+                                  );
                                 }
                               }
                               : () {},
@@ -140,17 +137,13 @@ class ForgotByEmail extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ParentLogin(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "cancel",
-                        style: TextStyle(color: Color(0xff837F7F)),
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: Color(0xff837F7F),
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ],
