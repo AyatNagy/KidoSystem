@@ -15,19 +15,46 @@ import '../../bloc/google_auth/google_auth_cubit.dart';
 
 class ParentLogin extends StatefulWidget {
   const ParentLogin({super.key});
+
   @override
   State<ParentLogin> createState() => _ParentLoginState();
 }
 
 class _ParentLoginState extends State<ParentLogin> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  String? passwordError;
+  String? emailError;
+  bool isPasswordVisible = false;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> handleLogin(LoginCubit loginCubit) async {
+    setState(() {
+      emailError = Validators.validateEmail(emailController.text.trim());
+      passwordError = Validators.validateLoginPassword(
+        passwordController.text.trim(),
+      );
+    });
+
+    if (emailError != null || passwordError != null) return;
+
+    loginCubit.loginUser(
+      emailController.text.trim(),
+      passwordController.text.trim(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-    String? passwordError;
-    String? emailError;
-    final formKey = GlobalKey<FormState>();
 
     return MultiBlocProvider(
       providers: [
@@ -102,178 +129,190 @@ class _ParentLoginState extends State<ParentLogin> {
               final isLoading =
                   loginState is LoginLoading ||
                   context.watch<GoogleAuthCubit>().state is GoogleAuthLoading;
-              bool isPasswordVisible = false;
 
-              Future<void> handleLogin() async {
-                setState(() {
-                  emailError = Validators.validateEmail(
-                    emailController.text.trim(),
-                  );
-                  passwordError = Validators.validateLoginPassword(
-                    passwordController.text.trim(),
-                  );
-                });
-
-                if (emailError != null || passwordError != null) return;
-
-                loginCubit.loginUser(
-                  emailController.text.trim(),
-                  passwordController.text.trim(),
-                );
-              }
-              return StatefulBuilder(
-                builder: (context, setState) {
-                  return Scaffold(
-                    backgroundColor: Colors.white,
-                    appBar: const KidoAppBar(),
-                    body: SafeArea(
-                      child: Padding(
-                        padding: config.pagePadding,
-                        child: Column(
-                          children: [
-                            Text(
-                              "Hi, Parent!",
-                              style: TextStyle(
-                                fontFamily: 'tinyKids',
-                                fontSize: config.headline,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff3BDBE7),
+              return Scaffold(
+                backgroundColor: Colors.white,
+                appBar: const KidoAppBar(),
+                body: SafeArea(
+                  child: Padding(
+                    padding: config.pagePadding,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Text(
+                            "Hi, Parent!",
+                            style: TextStyle(
+                              fontFamily: 'tinyKids',
+                              fontSize: config.headline,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xff3BDBE7),
+                            ),
+                          ),
+                          SizedBox(
+                            height: config.localHeight * 0.25,
+                            width: config.localWidth * 0.8,
+                            child: Center(
+                              child: Image.asset(
+                                'assets/images/parent_sign in.png',
+                                fit: BoxFit.contain,
                               ),
                             ),
-                            Expanded(
-                              flex: 3,
-                              child: Center(
-                                child: Image.asset(
-                                  'assets/images/parent_sign in.png',
-                                  height: config.localHeight * 0.25,
-                                  width: config.localWidth * 0.8,
-                                  fit: BoxFit.contain,
+                          ),
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                CustomTextField(
+                                  fieldController: emailController,
+                                  fieldIcon: const Icon(Icons.email),
+                                  fieldLabel: "Email",
+                                  fieldObscure: false,
+                                  textInputAction: TextInputAction.next,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      emailError = Validators.validateEmail(
+                                        value,
+                                      );
+                                    });
+                                  },
                                 ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Form(
-                                key: formKey,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CustomTextField(
-                                      fieldController: emailController,
-                                      fieldIcon: const Icon(Icons.email),
-                                      fieldLabel: "Email",
-                                      fieldObscure: false,
-                                      textInputAction: TextInputAction.next,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          emailError = Validators.validateEmail(
+                                if (emailError != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        emailError!,
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                const SizedBox(height: 15),
+                                CustomTextField(
+                                  fieldController: passwordController,
+                                  fieldIcon: const Icon(Icons.lock),
+                                  fieldLabel: "Password",
+                                  fieldObscure: !isPasswordVisible,
+                                  textInputAction: TextInputAction.done,
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      isPasswordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: const Color(0xff837F7F),
+                                    ),
+                                    onPressed:
+                                        () => setState(
+                                          () =>
+                                              isPasswordVisible =
+                                                  !isPasswordVisible,
+                                        ),
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      passwordError =
+                                          Validators.validateLoginPassword(
                                             value,
                                           );
-                                        });
-                                      },
+                                    });
+                                  },
+                                ),
+                                if (passwordError != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        passwordError!,
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 12,
+                                        ),
+                                      ),
                                     ),
-                                    if (emailError != null)
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 5),
-                                        child: Text(
-                                          emailError!,
-                                          style: const TextStyle(
-                                            color: Colors.red,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ),
-                                    CustomTextField(
-                                      fieldController: passwordController,
-                                      fieldIcon: const Icon(Icons.lock),
-                                      fieldLabel: "Password",
-                                      fieldObscure: !isPasswordVisible,
-                                      textInputAction: TextInputAction.done,
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          isPasswordVisible
-                                              ? Icons.visibility
-                                              : Icons.visibility_off,
-                                          color: const Color(0xff837F7F),
-                                        ),
-                                        onPressed:
-                                            () => setState(
-                                              () =>
-                                                  isPasswordVisible =
-                                                      !isPasswordVisible,
-                                            ),
-                                      ),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          passwordError =
-                                              Validators.validateLoginPassword(
-                                                value,
-                                              );
-                                        });
-                                      },
+                                  ),
+                                SizedBox(height: config.localHeight * 0.03),
+                                Container(
+                                  width: config.localWidth * 0.55,
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xff3DF0C4),
+                                        Color(0xff3BDBE7),
+                                        Color(0xff2C8FF9),
+                                      ],
                                     ),
-                                    if (passwordError != null)
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 5),
-                                        child: Text(
-                                          passwordError!,
-                                          style: const TextStyle(
-                                            color: Colors.red,
-                                            fontSize: 12,
-                                          ),
-                                        ),
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  child: ElevatedButton(
+                                    onPressed:
+                                        isLoading
+                                            ? null
+                                            : () => handleLogin(loginCubit),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      shadowColor: Colors.transparent,
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: config.localHeight * 0.012,
                                       ),
-                                    SizedBox(height: config.localHeight * 0.01),
-                                    Container(
-                                      width: config.localWidth * 0.55,
-                                      decoration: BoxDecoration(
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            Color(0xff3DF0C4),
-                                            Color(0xff3BDBE7),
-                                            Color(0xff2C8FF9),
-                                          ],
-                                        ),
+                                      shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(25),
                                       ),
-                                      child: ElevatedButton(
-                                        onPressed:
-                                            isLoading ? null : handleLogin,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.transparent,
-                                          shadowColor: Colors.transparent,
-                                          padding: EdgeInsets.symmetric(
-                                            vertical:
-                                                config.localHeight * 0.012,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              25,
+                                    ),
+                                    child:
+                                        isLoading
+                                            ? const SizedBox(
+                                              height: 20,
+                                              width: 20,
+                                              child: CircularProgressIndicator(
+                                                color: Colors.white,
+                                                strokeWidth: 3,
+                                              ),
+                                            )
+                                            : Text(
+                                              "Sign In",
+                                              style: TextStyle(
+                                                fontSize: config.title,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                          ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed:
+                                      () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (_) => ForgotByEmail(
+                                                email:
+                                                    emailController.text.trim(),
+                                              ),
                                         ),
-                                        child:
-                                            isLoading
-                                                ? SizedBox(
-                                                  height:
-                                                      config.localHeight * 0.03,
-                                                  width:
-                                                      config.localHeight * 0.03,
-                                                  child:
-                                                      const CircularProgressIndicator(
-                                                        color: Colors.white,
-                                                        strokeWidth: 3,
-                                                      ),
-                                                )
-                                                : Text(
-                                                  "Sign In",
-                                                  style: TextStyle(
-                                                    fontSize: config.title,
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
+                                      ),
+                                  child: Text(
+                                    "Forget Password?",
+                                    style: TextStyle(
+                                      fontFamily: 'nunito',
+                                      color: const Color(0xff837F7F),
+                                      fontSize: config.body,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Don't have an account?",
+                                      style: TextStyle(
+                                        fontFamily: 'nunito',
+                                        color: const Color(0xff837F7F),
+                                        fontSize: config.body,
                                       ),
                                     ),
                                     TextButton(
@@ -282,67 +321,29 @@ class _ParentLoginState extends State<ParentLogin> {
                                             context,
                                             MaterialPageRoute(
                                               builder:
-                                                  (_) => ForgotByEmail(
-                                                    email:
-                                                        emailController.text
-                                                            .trim(),
-                                                  ),
+                                                  (_) => const ParentSignup(),
                                             ),
                                           ),
                                       child: Text(
-                                        "Forget Password?",
+                                        "Create one",
                                         style: TextStyle(
+                                          color: const Color(0xff2C8FF9),
                                           fontFamily: 'nunito',
-                                          color: const Color(0xff837F7F),
                                           fontSize: config.body,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Don't have an account?",
-                                          style: TextStyle(
-                                            fontFamily: 'nunito',
-                                            color: const Color(0xff837F7F),
-                                            fontSize: config.body,
-                                          ),
-                                        ),
-                                        TextButton(
-                                          onPressed:
-                                              () => Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder:
-                                                      (_) =>
-                                                          const ParentSignup(),
-                                                ),
-                                              ),
-                                          child: Text(
-                                            "Create one",
-                                            style: TextStyle(
-                                              color: const Color(0xff2C8FF9),
-                                              fontFamily: 'nunito',
-                                              fontSize: config.body,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
                                   ],
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
+                  ),
+                ),
               );
             },
           ),
