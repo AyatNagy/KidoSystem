@@ -69,8 +69,8 @@ class _StudentDataState extends State<StudentData> {
         usernameError = Validators.validateUsername(usernameController.text);
         ageError = Validators.validateAge(ageController.text);
       });
-
-      if (nameError != null || usernameError != null || ageError != null) {
+      final passwordError = Validators.validatePassword(passwordController.text);
+      if (nameError != null || usernameError != null || ageError != null || passwordError != null) {
         return;
       }
 
@@ -102,7 +102,6 @@ class _StudentDataState extends State<StudentData> {
             await LocalStorage.setChildId(registerResponse['child']['id']);
           }
 
-          // ← نجيب الـ childId مرة واحدة هنا عشان نستخدمه في كل الأماكن
           final int childId =
               (registerResponse['child']?['id'] as num?)?.toInt() ?? 0;
 
@@ -113,7 +112,7 @@ class _StudentDataState extends State<StudentData> {
               DailogModel(
                 title: "Level Assigned",
                 message:
-                    "Since $childName is under 3 years old, they will start at Level 1 to enjoy age-appropriate activities.",
+                "Since $childName is under 3 years old, they will start at Level 1 to enjoy age-appropriate activities.",
                 image: 'assets/images/exam.png',
                 buttonText: "Start Journey",
               ),
@@ -128,17 +127,17 @@ class _StudentDataState extends State<StudentData> {
                 if (!mounted || setup == null) return;
 
                 final pickedLevel =
-                    await Navigator.push<ChildLevelSelectResult>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ChildLevelSelectPage(
-                          childName: setup.childName,
-                          childId: childId, // ← ✓
-                          recommendedLevel: 1,
-                          isRestrictedToLevel1: true,
-                        ),
-                      ),
-                    );
+                await Navigator.push<ChildLevelSelectResult>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ChildLevelSelectPage(
+                      childName: setup.childName,
+                      childId: childId,
+                      recommendedLevel: 1,
+                      isRestrictedToLevel1: true,
+                    ),
+                  ),
+                );
                 if (!mounted || pickedLevel == null) return;
 
                 if (childId != 0) {
@@ -169,14 +168,14 @@ class _StudentDataState extends State<StudentData> {
             );
           } else {
             String examId =
-                (childAge >= 3 && childAge <= 5) ? 'exam1' : 'exam2';
+            (childAge >= 3 && childAge <= 5) ? 'exam1' : 'exam2';
             if (!mounted) return;
             customDialog(
               context,
               DailogModel(
                 title: "Level Assessment",
                 message:
-                    "To provide the best experience for $childName, we need to perform a quick exam to determine their current level.",
+                "To provide the best experience for $childName, we need to perform a quick exam to determine their current level.",
                 image: 'assets/images/exam.png',
               ),
               titleColor: AppColors.kidoPink,
@@ -188,7 +187,7 @@ class _StudentDataState extends State<StudentData> {
                       examId: examId,
                       childName: childName,
                       onboardingPlacement: true,
-                      childId: childId, // ← ✓
+                      childId: childId,
                     ),
                   ),
                 );
@@ -224,18 +223,18 @@ class _StudentDataState extends State<StudentData> {
                   if (!mounted || setup == null) return;
 
                   final pickedLevel =
-                      await Navigator.push<ChildLevelSelectResult>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ChildLevelSelectPage(
-                            childName: setup.childName,
-                            childId: childId, // ← ✓
-                            recommendedLevel: assignedLevel,
-                            forcedUnlockedLevel: assignedLevel,
-                            isRestrictedToLevel1: false,
-                          ),
-                        ),
-                      );
+                  await Navigator.push<ChildLevelSelectResult>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChildLevelSelectPage(
+                        childName: setup.childName,
+                        childId: childId,
+                        recommendedLevel: assignedLevel,
+                        forcedUnlockedLevel: assignedLevel,
+                        isRestrictedToLevel1: false,
+                      ),
+                    ),
+                  );
 
                   if (!mounted || pickedLevel == null) return;
 
@@ -341,6 +340,7 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           nameError!,
+                          textAlign: TextAlign.center, // 🛠️ Centered error text
                           style: const TextStyle(
                             color: Colors.red,
                             fontSize: 12,
@@ -364,6 +364,7 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           usernameError!,
+                          textAlign: TextAlign.center, // 🛠️ Centered error text
                           style: const TextStyle(
                             color: AppColors.kidoRed,
                             fontSize: 12,
@@ -389,6 +390,7 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           ageError!,
+                          textAlign: TextAlign.center, // 🛠️ Centered error text
                           style: const TextStyle(
                             color: AppColors.kidoRed,
                             fontSize: 12,
@@ -401,9 +403,13 @@ class _StudentDataState extends State<StudentData> {
                       fieldIcon: const Icon(Icons.lock),
                       fieldLabel: "Child's Password",
                       fieldObscure: !isPasswordVisible,
+                      onChanged: (value) {
+                        // 🛠️ Triggers re-build to pipe keystrokes directly into PasswordErrorsView live
+                        setState(() {});
+                      },
                       suffixIcon: IconButton(
                         onPressed: () => setState(
-                          () => isPasswordVisible = !isPasswordVisible,
+                              () => isPasswordVisible = !isPasswordVisible,
                         ),
                         icon: Icon(
                           isPasswordVisible
@@ -447,23 +453,23 @@ class _StudentDataState extends State<StudentData> {
                         ),
                         child: isLoading
                             ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white,
-                                  ),
-                                  strokeWidth: 2,
-                                ),
-                              )
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                            strokeWidth: 2,
+                          ),
+                        )
                             : Text(
-                                "Add My Little Star",
-                                style: TextStyle(
-                                  fontSize: config.title,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                          "Add My Little Star",
+                          style: TextStyle(
+                            fontSize: config.title,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ],

@@ -180,7 +180,7 @@ class _ParentLoginState extends State<ParentLogin> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 5),
                                     child: Align(
-                                      alignment: Alignment.centerLeft,
+                                      alignment: Alignment.center,
                                       child: Text(
                                         emailError!,
                                         style: const TextStyle(
@@ -224,7 +224,7 @@ class _ParentLoginState extends State<ParentLogin> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 5),
                                     child: Align(
-                                      alignment: Alignment.centerLeft,
+                                      alignment: Alignment.center,
                                       child: Text(
                                         passwordError!,
                                         style: const TextStyle(

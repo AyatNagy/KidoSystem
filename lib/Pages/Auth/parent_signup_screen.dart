@@ -30,7 +30,7 @@ class _ParentSignupState extends State<ParentSignup> {
   String? nameError;
   String? phoneError;
   String? emailError;
-  //String? passwordError;
+
   final phoneRegex = RegExp(
     r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
   );
@@ -39,6 +39,7 @@ class _ParentSignupState extends State<ParentSignup> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   String currentPassword = "";
+
   Future<void> handleSignup() async {
     final username = usernameController.text.trim();
     final name = nameController.text.trim();
@@ -51,15 +52,13 @@ class _ParentSignupState extends State<ParentSignup> {
       nameError = Validators.validateName(name);
       phoneError = Validators.validatePhone(phone);
       emailError = Validators.validateEmail(email);
-      //passwordError = Validators.validatePassword(password);
     });
-
+    final passwordError = Validators.validatePassword(password);
     if (usernameError != null ||
         nameError != null ||
         phoneError != null ||
-        emailError != null
-    //||passwordError != null
-    ) {
+        emailError != null ||
+        passwordError != null) {
       return;
     }
 
@@ -135,7 +134,7 @@ class _ParentSignupState extends State<ParentSignup> {
                   fontFamily: 'tinyKids',
                   fontSize: config.headline,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xffEE3187),
+                  color: const Color(0xffEE3187),
                   shadows: const [
                     Shadow(
                       blurRadius: 2,
@@ -291,7 +290,7 @@ class _ParentSignupState extends State<ParentSignup> {
                         onPressed:
                             () => setState(
                               () => isPasswordVisible = !isPasswordVisible,
-                            ),
+                        ),
                         icon: Icon(
                           isPasswordVisible
                               ? Icons.visibility
@@ -337,23 +336,23 @@ class _ParentSignupState extends State<ParentSignup> {
                           ),
                         ),
                         child:
-                            _isLoading
-                                ? SizedBox(
-                                  height: config.localHeight * 0.03,
-                                  width: config.localHeight * 0.03,
-                                  child: const CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 3,
-                                  ),
-                                )
-                                : Text(
-                                  "Create Account",
-                                  style: TextStyle(
-                                    fontSize: config.title,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                        _isLoading
+                            ? SizedBox(
+                          height: config.localHeight * 0.03,
+                          width: config.localHeight * 0.03,
+                          child: const CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 3,
+                          ),
+                        )
+                            : Text(
+                          "Create Account",
+                          style: TextStyle(
+                            fontSize: config.title,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: config.localHeight * 0.03),

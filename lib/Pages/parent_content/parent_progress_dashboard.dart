@@ -103,17 +103,13 @@ class _ParentProgressDashboardState extends State<ParentProgressDashboard>
                 child: CustomScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
-                    // ── Header ──
                     SliverToBoxAdapter(child: _buildHeader(config)),
-
-                    // ── Content ──
                     SliverPadding(
                       padding: EdgeInsets.symmetric(
                         horizontal: config.localWidth * 0.05,
                       ),
                       sliver: _buildBody(context, config, state),
                     ),
-
                     const SliverToBoxAdapter(child: SizedBox(height: 32)),
                   ],
                 ),
@@ -326,7 +322,6 @@ class _ChildProgressCard extends StatelessWidget {
                 SizedBox(height: config.localHeight * 0.012),
                 Row(
                   children: [
-                    // Avatar
                     Container(
                       width: 48,
                       height: 48,
