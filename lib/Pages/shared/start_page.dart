@@ -25,7 +25,7 @@ class Start extends StatelessWidget {
             Expanded(
               child: Center(
                 child: Image.asset(
-                  'assets/images/Start.png',
+                  'assets/images/start.png',
                   height: config.imageHeight(1),
                   width: config.imageWidth(1),
                   fit: BoxFit.contain,
