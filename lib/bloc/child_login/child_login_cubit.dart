@@ -18,7 +18,12 @@ class ChildLoginCubit extends Cubit<ChildLoginState> {
         final child = result['child'] as Map<String, dynamic>;
         final name = child['name'] as String? ?? username.trim();
         final allowed = (child['allowedLevel'] as num?)?.toInt();
-        emit(ChildLoginSuccess(childName: name, allowedLevel: allowed));
+        final id = (child['id'] as num?)?.toInt() ?? 0; 
+        emit(ChildLoginSuccess(
+          childName: name,
+          allowedLevel: allowed,
+          childId: id, 
+        ));
         return;
       }
 
