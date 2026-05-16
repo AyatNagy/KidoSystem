@@ -141,7 +141,7 @@ class _BodyPartsScreenState extends State<BodyPartsScreen>
           if (showCelebration)
             IgnorePointer(
               child: Lottie.asset(
-                'assets/lottie/CONFETTI.json',
+                'assets/lottie/confetti.json',
                 controller: _lottieController,
                 onLoaded: (composition) {
                   _lottieController

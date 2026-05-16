@@ -24,9 +24,7 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
   bool isSuccess = false;
   bool showHint = false;
   int currentLevelIndex = 0;
-
   int currentItemIndex = 0;
-
   Timer? _idleTimer;
 
   late AnimationController _glowController;
@@ -168,15 +166,11 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
   @override
   void dispose() {
     _idleTimer?.cancel();
-
     _glowController.stop();
     _handController.stop();
-
     _glowController.dispose();
     _handController.dispose();
-
     AudioService.stop();
-
     super.dispose();
   }
 
@@ -198,7 +192,6 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
                   : puzzleData.question.backgroundImage!,
             ),
           ),
-
           if (stage == PuzzleStage.modeling)
             AnimatedBuilder(
               animation: _handAnimation,
@@ -225,7 +218,6 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
                 );
               },
             ),
-
           if (stage == PuzzleStage.interaction)
             DragDropWidget(
               question: puzzleData.question,
@@ -275,12 +267,10 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
                   ),
             ),
           ],
-
           if (isSuccess)
             Positioned.fill(
-              child: Lottie.asset('assets/lottie/CONFETTI.json', repeat: false),
+              child: Lottie.asset('assets/lottie/confetti.json', repeat: false),
             ),
-
           Positioned(
             top: 40,
             left: 20,
@@ -288,19 +278,12 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
               icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
               onPressed: () async {
                 _idleTimer?.cancel();
-
                 _glowController.stop();
                 _handController.stop();
                 AudioService.stop();
 
                 if (!mounted) return;
-
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Level2Home(childName: 'hab'),
-                  ),
-                );
+                Navigator.pop(context);
               },
             ),
           ),

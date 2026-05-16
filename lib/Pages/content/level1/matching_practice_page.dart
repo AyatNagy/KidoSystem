@@ -80,7 +80,7 @@ class _MatchingPracticePageState extends State<MatchingPracticePage>
       AudioService.stop();
       AudioService.play(fileName: "yaay.mp3");
 
-      await Future.delayed(const Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 3));
 
       if (currentIndex < MatchingRepository.levels.length - 1) {
         currentIndex++;
@@ -155,7 +155,8 @@ class _MatchingPracticePageState extends State<MatchingPracticePage>
                       animation: hintController,
                       onTap: () => handleAnswer(true),
                       transform:
-                          Matrix4.identity()..scale(1.0 + (0.1 * hintController.value)),
+                          Matrix4.identity()
+                            ..scale(1.0 + (0.1 * hintController.value)),
                       height: 120,
                     ),
                   ],
@@ -167,7 +168,7 @@ class _MatchingPracticePageState extends State<MatchingPracticePage>
           if (isCelebrating)
             IgnorePointer(
               child: Lottie.asset(
-                'assets/lottie/CONFETTI.json',
+                'assets/lottie/confetti.json',
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: double.infinity,

@@ -20,7 +20,7 @@ class SuccessOverlay extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: Lottie.asset('assets/lottie/CONFETTI.json', fit: BoxFit.cover),
+          child: Lottie.asset('assets/lottie/confetti.json', fit: BoxFit.cover),
         ),
         Center(
           child: Column(

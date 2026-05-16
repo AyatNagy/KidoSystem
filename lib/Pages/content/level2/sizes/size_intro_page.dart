@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Models/level2/size_model.dart';
 import 'package:kido/Pages/content/level2/sizes/size_lesson_page.dart';
-import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/enum/size_goal.dart';
 
@@ -34,6 +33,19 @@ class _SizeIntroPageState extends State<SizeIntroPage>
       begin: 1.0,
       end: 1.1,
     ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInOut));
+
+    _startAutoNavigation();
+  }
+
+  void _startAutoNavigation() {
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => SizeLessonPage(goal: widget.goal)),
+        );
+      }
+    });
   }
 
   @override
@@ -71,19 +83,6 @@ class _SizeIntroPageState extends State<SizeIntroPage>
                   fontSize: config.headline,
                   fontWeight: FontWeight.bold,
                 ),
-              ),
-              SizedBox(height: config.localHeight * 0.05),
-              CustomGradientButton(
-                title: "ابدأ",
-                width: double.infinity,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => SizeLessonPage(goal: widget.goal),
-                    ),
-                  );
-                },
               ),
             ],
           ),

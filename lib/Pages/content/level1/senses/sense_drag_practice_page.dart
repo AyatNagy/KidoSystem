@@ -210,7 +210,7 @@ class _SenseDragPracticeScreenState extends State<SenseDragPracticeScreen>
           if (isSuccess)
             Positioned.fill(
               child: Lottie.asset(
-                'assets/lottie/CONFETTI.json',
+                'assets/lottie/confetti.json',
                 fit: BoxFit.cover,
                 repeat: false,
               ),

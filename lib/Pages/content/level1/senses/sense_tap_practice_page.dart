@@ -78,7 +78,6 @@ class _SenseTapPracticeScreenState extends State<SenseTapPracticeScreen> {
     timer?.cancel();
 
     if (_getRect(w, h).contains(d.localPosition)) {
-      // ✅ إجابة صحيحة
       setState(() {
         isCompleted = true;
         showHint = false;
@@ -135,17 +134,15 @@ class _SenseTapPracticeScreenState extends State<SenseTapPracticeScreen> {
                 ),
               ),
 
-              // طبقة الاحتفال (فقط الأنيميشن)
               if (showSuccessUI)
                 Positioned.fill(
                   child: Lottie.asset(
-                    'assets/lottie/CONFETTI.json',
+                    'assets/lottie/confetti.json',
                     fit: BoxFit.cover,
-                    repeat: false, // يشتغل مرة واحدة عند النجاح
+                    repeat: true,
                   ),
                 ),
 
-              // زر التالي
               if (showNextButton)
                 Positioned(
                   bottom: 40,
@@ -164,7 +161,6 @@ class _SenseTapPracticeScreenState extends State<SenseTapPracticeScreen> {
                   ),
                 ),
 
-              // زر الرجوع
               Positioned(
                 top: 40,
                 left: 20,

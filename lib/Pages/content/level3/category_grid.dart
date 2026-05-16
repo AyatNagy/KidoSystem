@@ -26,7 +26,7 @@ class CategoryGrid extends StatelessWidget {
         CategoryCard(
           gradient: AppColors.alphabetGrad,
           graphic: Image.asset(
-            'images/letters/lettersE_c.png',
+            'assets/images/letters/lettersE_c.png',
             fit: BoxFit.cover,
           ),
           onTap: () {
@@ -40,7 +40,7 @@ class CategoryGrid extends StatelessWidget {
         CategoryCard(
           gradient: AppColors.numbersGrad,
           graphic: Image.asset(
-            'images/englishNumbers/numE_c.png',
+            'assets/images/englishNumbers/numE_c.png',
             fit: BoxFit.cover,
           ),
           onTap: () {
@@ -61,7 +61,10 @@ class CategoryGrid extends StatelessWidget {
 */
         CategoryCard(
           gradient: AppColors.puzzleGrad,
-          graphic: Image.asset('images/fruits/fruits_c.png', fit: BoxFit.cover),
+          graphic: Image.asset(
+            'assets/images/fruits/fruits_c.png',
+            fit: BoxFit.cover,
+          ),
           onTap: () {
             Navigator.push(
               context,
@@ -71,7 +74,10 @@ class CategoryGrid extends StatelessWidget {
         ),
         CategoryCard(
           gradient: AppColors.vegetablesGrad,
-          graphic: Image.asset('images/fruits/veg_c.png', fit: BoxFit.cover),
+          graphic: Image.asset(
+            'assets/images/fruits/veg_c.png',
+            fit: BoxFit.cover,
+          ),
           onTap: () {
             Navigator.push(
               context,
@@ -81,7 +87,10 @@ class CategoryGrid extends StatelessWidget {
         ),
         CategoryCard(
           gradient: AppColors.puzzleGrad,
-          graphic: Image.asset('images/family/family_c.png', fit: BoxFit.cover),
+          graphic: Image.asset(
+            'assets/images/family/family_c.png',
+            fit: BoxFit.cover,
+          ),
           onTap: () {
             Navigator.push(
               context,
@@ -92,7 +101,7 @@ class CategoryGrid extends StatelessWidget {
         CategoryCard(
           gradient: AppColors.puzzleGrad,
           graphic: Image.asset(
-            'images/animals/animals_c.png',
+            'assets/images/animals/animals_c.png',
             fit: BoxFit.cover,
           ),
           onTap: () {

@@ -47,7 +47,7 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/images/Characters/
+    - assets/images/characters/
     - assets/images/arabicLetters/
     - assets/images/letters/
     - assets/images/sizes/
