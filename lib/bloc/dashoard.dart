@@ -71,6 +71,55 @@ class DashboardBloc extends Cubit<DashboardState> {
   ) async {
     emit(state.copyWith(isLoading: true));
     await Future.delayed(const Duration(milliseconds: 800));
+
+    Map<String, double> yesterdayProgress =
+        selectedLevel == 3
+            ? {
+              "Letters": 0.40,
+              "Numbers": 0.50,
+              "Vegetables": 0.20,
+              "Fruits": 0.10,
+            }
+            : {
+              "Emotions": 0.30,
+              "Self-Care": 0.50,
+              "Social": 0.20,
+              "Motor": 0.30,
+            };
+
+    Map<String, double> todayProgress =
+        selectedLevel == 3
+            ? {
+              "Letters": score,
+              "Numbers": 0.45,
+              "Vegetables": 0.25,
+              "Fruits": 0.15,
+            }
+            : {
+              "Emotions": score,
+              "Self-Care": 0.60,
+              "Social": 0.40,
+              "Motor": 0.35,
+            };
+
+    emit(
+      DashboardState(
+        children: [
+          initialChild,
+          Child(name: "Sibling", username: "tester", password: "123"),
+        ],
+        selectedChildIndex: 0,
+        level: selectedLevel,
+        progress: todayProgress,
+        previousProgress: yesterdayProgress,
+        isLoading: false,
+        completedLessons: (score * 10).toInt(),
+        totalLessons: 20,
+        accuracy: 88,
+        badges: 3,
+        isImproving: true,
+      ),
+    );
   }
 
   void toggleChild() {
