@@ -102,6 +102,10 @@ class _StudentDataState extends State<StudentData> {
             await LocalStorage.setChildId(registerResponse['child']['id']);
           }
 
+          // ← نجيب الـ childId مرة واحدة هنا عشان نستخدمه في كل الأماكن
+          final int childId =
+              (registerResponse['child']?['id'] as num?)?.toInt() ?? 0;
+
           if (childAge < 3) {
             if (!mounted) return;
             customDialog(
@@ -127,32 +131,26 @@ class _StudentDataState extends State<StudentData> {
                     await Navigator.push<ChildLevelSelectResult>(
                       context,
                       MaterialPageRoute(
-                        builder:
-                            (_) => ChildLevelSelectPage(
-                              childName: setup.childName,
-                              childId:
-                                  (registerResponse['child']?['id'] as num?)
-                                      ?.toInt() ??
-                                  0, // ← بدل setup.childId
-                              recommendedLevel: 1,
-                              isRestrictedToLevel1: true,
-                            ),
+                        builder: (_) => ChildLevelSelectPage(
+                          childName: setup.childName,
+                          childId: childId, // ← ✓
+                          recommendedLevel: 1,
+                          isRestrictedToLevel1: true,
+                        ),
                       ),
                     );
                 if (!mounted || pickedLevel == null) return;
 
-                final cid = registerResponse['child']?['id'];
-                if (cid != null) {
+                if (childId != 0) {
                   final ok = await _setInitialLevelCubit.setInitialLevel(
-                    childId: (cid as num).toInt(),
+                    childId: childId,
                     levelId: pickedLevel.level,
                   );
                   if (!mounted) return;
                   if (!ok) {
-                    final msg = _setInitialLevelErrorText();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(msg),
+                        content: Text(_setInitialLevelErrorText()),
                         backgroundColor: AppColors.kidoRed,
                       ),
                     );
@@ -163,7 +161,7 @@ class _StudentDataState extends State<StudentData> {
                 Navigator.pop(context, {
                   'name': setup.childName,
                   'score': 1.0,
-                  'childId': registerResponse['child']['id'],
+                  'childId': childId,
                   'level': pickedLevel.level,
                   'avatar': setup.avatarAsset,
                 });
@@ -186,13 +184,12 @@ class _StudentDataState extends State<StudentData> {
                 final dynamic examResult = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder:
-                        (_) => ExamSkeletonScreen(
-                          examId: examId,
-                          childName: childName,
-                          onboardingPlacement: true,
-                          childId: registerResponse['child']?['id'],
-                        ),
+                    builder: (_) => ExamSkeletonScreen(
+                      examId: examId,
+                      childName: childName,
+                      onboardingPlacement: true,
+                      childId: childId, // ← ✓
+                    ),
                   ),
                 );
 
@@ -201,10 +198,9 @@ class _StudentDataState extends State<StudentData> {
                   if (assignedLevel < 1) assignedLevel = 1;
                   if (assignedLevel > 3) assignedLevel = 3;
 
-                  final cid = registerResponse['child']?['id'];
-                  if (cid != null) {
+                  if (childId != 0) {
                     final ok = await _setInitialLevelCubit.setInitialLevel(
-                      childId: (cid as num).toInt(),
+                      childId: childId,
                       levelId: assignedLevel,
                     );
                     if (!mounted) return;
@@ -221,8 +217,7 @@ class _StudentDataState extends State<StudentData> {
                   final setup = await Navigator.push<ChildProfileSetupResult>(
                     context,
                     MaterialPageRoute(
-                      builder:
-                          (_) => ChildProfileSetupPage(childName: childName),
+                      builder: (_) => ChildProfileSetupPage(childName: childName),
                     ),
                   );
 
@@ -232,34 +227,28 @@ class _StudentDataState extends State<StudentData> {
                       await Navigator.push<ChildLevelSelectResult>(
                         context,
                         MaterialPageRoute(
-                          builder:
-                              (_) => ChildLevelSelectPage(
-                                childName: setup.childName,
-                                childId:
-                                    (registerResponse['child']?['id'] as num?)
-                                        ?.toInt() ??
-                                    0,
-                                recommendedLevel: assignedLevel,
-                                forcedUnlockedLevel: assignedLevel,
-                                isRestrictedToLevel1: false,
-                              ),
+                          builder: (_) => ChildLevelSelectPage(
+                            childName: setup.childName,
+                            childId: childId, // ← ✓
+                            recommendedLevel: assignedLevel,
+                            forcedUnlockedLevel: assignedLevel,
+                            isRestrictedToLevel1: false,
+                          ),
                         ),
                       );
 
                   if (!mounted || pickedLevel == null) return;
 
-                  final cid2 = registerResponse['child']?['id'];
-                  if (cid2 != null) {
+                  if (childId != 0) {
                     final ok2 = await _setInitialLevelCubit.setInitialLevel(
-                      childId: (cid2 as num).toInt(),
+                      childId: childId,
                       levelId: pickedLevel.level,
                     );
                     if (!mounted) return;
                     if (!ok2) {
-                      final msg = _setInitialLevelErrorText();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(msg),
+                          content: Text(_setInitialLevelErrorText()),
                           backgroundColor: AppColors.kidoRed,
                         ),
                       );
@@ -270,7 +259,7 @@ class _StudentDataState extends State<StudentData> {
                   Navigator.pop(context, {
                     'name': setup.childName,
                     'score': 1.0,
-                    'childId': registerResponse['child']['id'],
+                    'childId': childId,
                     'level': pickedLevel.level,
                     'avatar': setup.avatarAsset,
                   });
@@ -413,10 +402,9 @@ class _StudentDataState extends State<StudentData> {
                       fieldLabel: "Child's Password",
                       fieldObscure: !isPasswordVisible,
                       suffixIcon: IconButton(
-                        onPressed:
-                            () => setState(
-                              () => isPasswordVisible = !isPasswordVisible,
-                            ),
+                        onPressed: () => setState(
+                          () => isPasswordVisible = !isPasswordVisible,
+                        ),
                         icon: Icon(
                           isPasswordVisible
                               ? Icons.visibility
@@ -457,26 +445,25 @@ class _StudentDataState extends State<StudentData> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
-                        child:
-                            isLoading
-                                ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
-                                    strokeWidth: 2,
+                        child: isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
                                   ),
-                                )
-                                : Text(
-                                  "Add My Little Star",
-                                  style: TextStyle(
-                                    fontSize: config.title,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  strokeWidth: 2,
                                 ),
+                              )
+                            : Text(
+                                "Add My Little Star",
+                                style: TextStyle(
+                                  fontSize: config.title,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
                     ),
                   ],
