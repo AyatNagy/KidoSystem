@@ -303,7 +303,7 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 12),
               if (_imageFile != null)
                 ListTile(
-                  leading: CircleAvatar(backgroundColor: Colors.blue, child: const Icon(CupertinoIcons.eye_fill, color: AppColors.kidoBlue)),
+                  leading: CircleAvatar(backgroundColor: Colors.blue, child: const Icon(CupertinoIcons.eye_fill, color: AppColors.bgColor)),
                   title: const Text("View Current Photo", style: TextStyle(fontWeight: FontWeight.bold)),
                   onTap: () {
                     Navigator.pop(context);
@@ -311,7 +311,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                 ),
               ListTile(
-                leading: const CircleAvatar(backgroundColor: Colors.orange, child: Icon(CupertinoIcons.camera_fill, color: AppColors.kidoOrange)),
+                leading: const CircleAvatar(backgroundColor: AppColors.kidoOrange, child: Icon(CupertinoIcons.camera_fill, color: AppColors.bgColor)),
                 title: const Text("Take a photo", style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.pop(context);
@@ -319,7 +319,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
               ),
               ListTile(
-                leading: const CircleAvatar(backgroundColor: Colors.purple, child: Icon(CupertinoIcons.photo_fill, color: Colors.purple)),
+                leading: const CircleAvatar(backgroundColor: AppColors.kidoPink, child: Icon(CupertinoIcons.photo_fill, color: AppColors.bgColor)),
                 title: const Text("Choose from gallery", style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.pop(context);
