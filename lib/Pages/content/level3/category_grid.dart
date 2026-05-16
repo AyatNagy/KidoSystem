@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/content/level3/animals/animal_map.dart';
+import 'package:kido/Pages/content/level3/letters/ar_letters_map.dart';
+import 'package:kido/Pages/content/level3/letters/letters_map.dart';
+import 'package:kido/Pages/content/level3/numbers/numbers_map.dart';
 import 'package:kido/Pages/content/level3/vegetables/vegetables_map.dart';
 import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
-import 'choose_letters.dart';
 import 'family_members/BackgroundPage.dart';
 import 'fruits/fruits_map.dart';
-import 'numbers/choose_numbers.dart';
+
 
 class CategoryGrid extends StatelessWidget {
   const CategoryGrid({super.key});
@@ -26,28 +28,58 @@ class CategoryGrid extends StatelessWidget {
         CategoryCard(
           gradient: AppColors.alphabetGrad,
           graphic: Image.asset(
-            'assets/images/letters/lettersE_c.png',
+            'assets/images/arabicLetters/lettersa_c.png',
             fit: BoxFit.cover,
           ),
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => LanguageSelectionPage()),
+              MaterialPageRoute(builder: (context) => ArLettersMapPage()),
             );
           },
         ),
+        CategoryCard(
+          gradient: AppColors.alphabetGrad,
+          graphic: Image.asset(
+            'assets/images/letters/letterse_c.png',
+            fit: BoxFit.cover,
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LettersMapPage()),
+            );
+          },
+        ),
+        
 
         CategoryCard(
           gradient: AppColors.numbersGrad,
           graphic: Image.asset(
-            'assets/images/englishNumbers/numE_c.png',
+            'assets/images/englishNumbers/nume_c.png',
             fit: BoxFit.cover,
           ),
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => NumbersLanguageSelectionPage(),
+                builder: (context) =>NumbersMapPage(isEnglish: true,),
+              ),
+            );
+          },
+        ),
+        CategoryCard(
+          gradient: AppColors.numbersGrad,
+          graphic: Image.asset(
+            'assets/images/arabicNumbers/numa_c.png',
+            fit: BoxFit.cover,
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>NumbersMapPage(isEnglish:false ,),
+
               ),
             );
           },

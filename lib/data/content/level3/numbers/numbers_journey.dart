@@ -15,35 +15,35 @@ final List<LetterJourney> journeyNumArab = [
   LetterJourney(
     image: 'assets/images/arabicNumbers/num2_map.png',
     charName: '٢',
-    isLocked: false,
+    isLocked: true,
     letterData: NumbersArabicLessonRepo.numbersArablessons[1],
     tracingData: tracingNumberTwoArab,
   ),
   LetterJourney(
     image: 'assets/images/arabicNumbers/num3_map.png',
     charName: '٣',
-    isLocked: false,
+    isLocked: true,
     letterData: NumbersArabicLessonRepo.numbersArablessons[2],
     tracingData: tracingNumberThreeArab,
   ),
   LetterJourney(
     image: 'assets/images/arabicNumbers/num4_map.png',
     charName: '٤',
-    isLocked: false,
+    isLocked: true,
     letterData: NumbersArabicLessonRepo.numbersArablessons[3],
     tracingData: tracingNumberFourArab,
   ),
   LetterJourney(
     image: 'assets/images/arabicNumbers/num5_map.png',
     charName: '٥',
-    isLocked: false,
+    isLocked: true,
     letterData: NumbersArabicLessonRepo.numbersArablessons[4],
     tracingData: tracingNumberFiveArab,
   ),
   LetterJourney(
     image: 'assets/images/common/train_engine.png',
     charName: 'train_phase1',
-    isLocked: false,
+    isLocked: true,
   ),
   LetterJourney(
     image: 'assets/images/arabicNumbers/num6_map.png',
@@ -72,7 +72,7 @@ final List<LetterJourney> journeyNumArab = [
   LetterJourney(
     image: 'assets/images/common/train_engine.png',
     charName: 'train_phase2',
-    isLocked: false,
+    isLocked: true,
   ),
 ];
 
