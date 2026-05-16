@@ -66,6 +66,7 @@ class _KidoLoginViewState extends State<_KidoLoginView> {
                     MaterialPageRoute(
                       builder:
                           (_) => ChildLevelWelcomePage(
+                            childId: state.childId,
                             childName: state.childName,
                             allowedLevel: state.allowedLevel ?? 1,
                           ),
