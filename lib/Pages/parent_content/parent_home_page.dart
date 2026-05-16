@@ -66,7 +66,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
       MaterialPageRoute(
         builder: (_) => ChildLevelSelectPage(
           childName: child['name'] ?? '',
-          childId: child['id'] as int? ?? 0, // ← ضيف
+          childId: child['id'] as int? ?? 0, 
           recommendedLevel:
               child['allowedLevel'] as int? ?? child['level'] as int? ?? 1,
         ),
@@ -88,7 +88,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
       MaterialPageRoute(
         builder: (_) => ChildLevelSelectPage(
           childName: setup.childName,
-          childId: child['id'] as int? ?? 0, // ← ضيف
+          childId: child['id'] as int? ?? 0, 
           recommendedLevel:
               child['allowedLevel'] as int? ?? child['level'] as int?,
         ),
@@ -134,7 +134,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
         MaterialPageRoute(
           builder: (_) => ChildLevelSelectPage(
             childName: newChild['name'] as String,
-            childId: newChild['id'] as int? ?? 0, // ← ضيف
+            childId: newChild['id'] as int? ?? 0,
             recommendedLevel: newChild['allowedLevel'] as int?,
           ),
         ),
