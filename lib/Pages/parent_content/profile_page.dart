@@ -12,7 +12,9 @@ import 'package:kido/constants.dart';
 import '../../config/cache_helper.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final Function(Locale) onLanguageChanged;
+
+  const ProfilePage({super.key, required this.onLanguageChanged});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -88,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const ParentLogin()),
-        (Route<dynamic> route) => false,
+            (Route<dynamic> route) => false,
       );
     } catch (e) {
       debugPrint("Logout Error: $e");
@@ -102,6 +104,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Scaffold(
       backgroundColor: AppColors.bgColor,
@@ -109,72 +112,82 @@ class _ProfilePageState extends State<ProfilePage> {
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverToBoxAdapter(
-            child: Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  height: config.localHeight * 0.22,
-                  decoration: BoxDecoration(
-                    color: AppColors.kidoBlue.withOpacity(0.15),
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.only(
+                top: config.localHeight * 0.06,
+                bottom: config.localHeight * 0.04,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.kidoBlue.withOpacity(0.15),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40),
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildAvatarSection(config),
+                  SizedBox(height: config.localHeight * 0.015),
+                  Text(
+                    _parentName,
+                    style: TextStyle(
+                      fontSize: config.headline * 1.1,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textDark,
+                      letterSpacing: 0.5,
                     ),
                   ),
-                ),
-                Positioned(
-                  top: config.localHeight * 0.08,
-                  child: Column(
-                    children: [
-                      _buildAvatarSection(config),
-                      SizedBox(height: config.localHeight * 0.015),
-                      Text(
-                        _parentName,
-                        style: TextStyle(
-                          fontSize: config.headline * 1.1,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textDark,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: config.localHeight * 0.38),
-              ],
+                ],
+              ),
             ),
           ),
           SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: config.localWidth * 0.06),
+            padding: EdgeInsets.only(
+              left: config.localWidth * 0.06,
+              right: config.localWidth * 0.06,
+              top: config.localHeight * 0.03,
+            ),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 _ProfileTile(
                   icon: CupertinoIcons.person_fill,
-                  title: "Edit Profile",
-                  subtitle: "Update your personal info",
+                  title: isRtl ? "تعديل الملف الشخصي" : "Edit Profile",
+                  subtitle: isRtl ? "تحديث معلوماتك الشخصية" : "Update your personal info",
                   color: AppColors.kidoBlue,
                   onTap: () {},
                   config: config,
+                  isRtl: isRtl,
                 ),
                 _ProfileTile(
                   icon: CupertinoIcons.globe,
-                  title: "Language",
-                  subtitle: "English / العربية",
+                  title: isRtl ? "اللغة" : "Language",
+                  subtitle: isRtl ? "العربية" : "English",
                   color: AppColors.purpleMain,
-                  onTap: () {},
+                  onTap: () {
+                    // Toggles the language dynamically depending on current directionality
+                    if (isRtl) {
+                      widget.onLanguageChanged(const Locale('en'));
+                    } else {
+                      widget.onLanguageChanged(const Locale('ar'));
+                    }
+                  },
                   config: config,
+                  isRtl: isRtl,
                 ),
                 _ProfileTile(
                   icon: CupertinoIcons.lock_shield_fill,
-                  title: "Privacy & Security",
-                  subtitle: "Manage your data",
+                  title: isRtl ? "الخصوصية والأمان" : "Privacy & Security",
+                  subtitle: isRtl ? "إدارة بياناتك الخاصة" : "Manage your data",
                   color: AppColors.textDark,
                   onTap: () {},
                   config: config,
+                  isRtl: isRtl,
                 ),
-                SizedBox(height: config.localHeight * 0.05),
-                _buildLogoutButton(config),
+                SizedBox(height: config.localHeight * 0.04),
+                _buildLogoutButton(config, isRtl),
                 SizedBox(height: config.localHeight * 0.04),
               ]),
             ),
@@ -185,8 +198,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildAvatarSection(dynamic config) {
-    final bool hasImage =
-        kIsWeb ? (_webImageBytes != null) : (_imageFile != null);
+    final bool hasWebImage = kIsWeb && _webImageBytes != null;
+    final bool hasMobileImage = !kIsWeb && _imageFile != null;
+    final bool hasImage = hasWebImage || hasMobileImage;
+
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -200,6 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       child: Stack(
+        alignment: Alignment.center,
         children: [
           GestureDetector(
             onTap: hasImage ? _showFullImage : null,
@@ -211,21 +227,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: CircleAvatar(
                   radius: double.infinity,
                   backgroundColor: AppColors.kidoBlue.withOpacity(0.1),
-                  backgroundImage:
-                      hasImage
-                          ? (kIsWeb
-                                  ? MemoryImage(_webImageBytes!)
-                                  : FileImage(_imageFile!))
-                              as ImageProvider
-                          : null,
-                  child:
-                      !hasImage
-                          ? Icon(
-                            CupertinoIcons.person_alt,
-                            size: config.localHeight * 0.055,
-                            color: AppColors.kidoBlue,
-                          )
-                          : null,
+                  backgroundImage: hasWebImage
+                      ? MemoryImage(_webImageBytes!)
+                      : (hasMobileImage ? FileImage(_imageFile!) : null) as ImageProvider?,
+                  child: !hasImage
+                      ? Icon(
+                    CupertinoIcons.person_alt,
+                    size: config.localHeight * 0.055,
+                    color: AppColors.kidoBlue,
+                  )
+                      : null,
                 ),
               ),
             ),
@@ -264,7 +275,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildLogoutButton(dynamic config) {
+  Widget _buildLogoutButton(dynamic config, bool isRtl) {
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
@@ -276,7 +287,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       child: TextButton(
-        onPressed: () => _showLogoutDialog(),
+        onPressed: () => _showLogoutDialog(isRtl),
         style: TextButton.styleFrom(
           backgroundColor: Colors.red.shade50,
           minimumSize: Size(double.infinity, config.localHeight * 0.065),
@@ -288,14 +299,14 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              CupertinoIcons.arrow_right_circle,
+            Icon(
+              isRtl ? CupertinoIcons.arrow_left_circle : CupertinoIcons.arrow_right_circle,
               color: Colors.redAccent,
               size: 20,
             ),
             const SizedBox(width: 8),
             Text(
-              "LOG OUT",
+              isRtl ? "تسجيل الخروج" : "LOG OUT",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: config.body,
@@ -312,26 +323,24 @@ class _ProfilePageState extends State<ProfilePage> {
   void _showFullImage() {
     showDialog(
       context: context,
-      builder:
-          (_) => GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Dialog(
-              backgroundColor: Colors.transparent,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child:
-                    kIsWeb
-                        ? Image.memory(_webImageBytes!, fit: BoxFit.contain)
-                        : Image.file(_imageFile!, fit: BoxFit.contain),
-              ),
-            ),
+      builder: (_) => GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: kIsWeb
+                ? Image.memory(_webImageBytes!, fit: BoxFit.contain)
+                : Image.file(_imageFile!, fit: BoxFit.contain),
           ),
+        ),
+      ),
     );
   }
 
   void _showImageSourceSheet(dynamic config) {
-    final bool hasImage =
-        kIsWeb ? (_webImageBytes != null) : (_imageFile != null);
+    final bool hasImage = kIsWeb ? (_webImageBytes != null) : (_imageFile != null);
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     showModalBottomSheet(
       context: context,
@@ -339,130 +348,133 @@ class _ProfilePageState extends State<ProfilePage> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
-      builder:
-          (context) => SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 40,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  if (hasImage)
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.blue,
-                        child: const Icon(
-                          CupertinoIcons.eye_fill,
-                          color: AppColors.bgColor,
-                        ),
-                      ),
-                      title: const Text(
-                        "View Current Photo",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _showFullImage();
-                      },
-                    ),
-                  ListTile(
-                    leading: const CircleAvatar(
-                      backgroundColor: AppColors.kidoOrange,
-                      child: Icon(
-                        CupertinoIcons.camera_fill,
-                        color: AppColors.bgColor,
-                      ),
-                    ),
-                    title: const Text(
-                      "Take a photo",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _handleImageAction(ImageSource.camera);
-                    },
-                  ),
-                  ListTile(
-                    leading: const CircleAvatar(
-                      backgroundColor: AppColors.kidoPink,
-                      child: Icon(
-                        CupertinoIcons.photo_fill,
-                        color: AppColors.bgColor,
-                      ),
-                    ),
-                    title: const Text(
-                      "Choose from gallery",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _handleImageAction(ImageSource.gallery);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-    );
-  }
-
-  void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            title: const Row(
-              children: [
-                Icon(CupertinoIcons.info_circle_fill, color: Colors.redAccent),
-                SizedBox(width: 10),
-                Text("Sign Out", style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
-            ),
-            content: const Text(
-              "Are you sure you want to exit the Kido app? Everything will be safely waiting for your return!",
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  "Stay",
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.bold,
-                  ),
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              ElevatedButton(
-                onPressed: _performLogout,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
+              const SizedBox(height: 12),
+              if (hasImage)
+                ListTile(
+                  leading: const CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    child: Icon(
+                      CupertinoIcons.eye_fill,
+                      color: AppColors.bgColor,
+                    ),
+                  ),
+                  title: Text(
+                    isRtl ? "عرض الصورة الحالية" : "View Current Photo",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _showFullImage();
+                  },
+                ),
+              ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: AppColors.kidoOrange,
+                  child: Icon(
+                    CupertinoIcons.camera_fill,
+                    color: AppColors.bgColor,
                   ),
                 ),
-                child: const Text(
-                  "Logout",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                title: Text(
+                  isRtl ? "التقاط صورة" : "Take a photo",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _handleImageAction(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: AppColors.kidoPink,
+                  child: Icon(
+                    CupertinoIcons.photo_fill,
+                    color: AppColors.bgColor,
                   ),
                 ),
+                title: Text(
+                  isRtl ? "اختيار من المعرض" : "Choose from gallery",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _handleImageAction(ImageSource.gallery);
+                },
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog(bool isRtl) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        title: Row(
+          children: [
+            const Icon(CupertinoIcons.info_circle_fill, color: Colors.redAccent),
+            const SizedBox(width: 10),
+            Text(
+              isRtl ? "تسجيل الخروج" : "Sign Out",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: Text(
+          isRtl
+              ? "هل أنت متأكد من رغبتك في تسجيل الخروج من تطبيق كيدو؟ كل شيء سينتظرك بأمان لحين عودتك!"
+              : "Are you sure you want to exit the Kido app? Everything will be safely waiting for your return!",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              isRtl ? "البقاء" : "Stay",
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: _performLogout,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            child: Text(
+              isRtl ? "خروج" : "Logout",
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -474,6 +486,7 @@ class _ProfileTile extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
   final dynamic config;
+  final bool isRtl;
 
   const _ProfileTile({
     required this.icon,
@@ -482,6 +495,7 @@ class _ProfileTile extends StatelessWidget {
     required this.color,
     required this.onTap,
     required this.config,
+    this.isRtl = false,
   });
 
   @override
@@ -536,7 +550,7 @@ class _ProfileTile extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: Icon(
-            CupertinoIcons.chevron_forward,
+            isRtl ? CupertinoIcons.chevron_back : CupertinoIcons.chevron_forward,
             size: 14,
             color: Colors.grey.shade400,
           ),

@@ -35,7 +35,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   late AnimationController _levelUpdateAnimController;
-  String? _lastUpdatedChildName;
+  Locale _currentLocale = const Locale('en');
 
   @override
   void initState() {
@@ -66,9 +66,9 @@ class _ParentHomeViewState extends State<_ParentHomeView>
       MaterialPageRoute(
         builder: (_) => ChildLevelSelectPage(
           childName: child['name'] ?? '',
-          childId: child['id'] as int? ?? 0, // ← ضيف
+          childId: child['id'] as int? ?? 0,
           recommendedLevel:
-              child['allowedLevel'] as int? ?? child['level'] as int? ?? 1,
+          child['allowedLevel'] as int? ?? child['level'] as int? ?? 1,
         ),
       ),
     );
@@ -88,9 +88,9 @@ class _ParentHomeViewState extends State<_ParentHomeView>
       MaterialPageRoute(
         builder: (_) => ChildLevelSelectPage(
           childName: setup.childName,
-          childId: child['id'] as int? ?? 0, // ← ضيف
+          childId: child['id'] as int? ?? 0,
           recommendedLevel:
-              child['allowedLevel'] as int? ?? child['level'] as int?,
+          child['allowedLevel'] as int? ?? child['level'] as int?,
         ),
       ),
     );
@@ -122,9 +122,9 @@ class _ParentHomeViewState extends State<_ParentHomeView>
       final cubit = context.read<ParentChildrenCubit>();
       final state = cubit.state;
       final existing =
-          state is ParentChildrenReady
-              ? List<Map<String, dynamic>>.from(state.children)
-              : <Map<String, dynamic>>[];
+      state is ParentChildrenReady
+          ? List<Map<String, dynamic>>.from(state.children)
+          : <Map<String, dynamic>>[];
 
       await cubit.saveAndEmit([...existing, newChild]);
 
@@ -134,7 +134,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
         MaterialPageRoute(
           builder: (_) => ChildLevelSelectPage(
             childName: newChild['name'] as String,
-            childId: newChild['id'] as int? ?? 0, // ← ضيف
+            childId: newChild['id'] as int? ?? 0,
             recommendedLevel: newChild['allowedLevel'] as int?,
           ),
         ),
@@ -146,14 +146,11 @@ class _ParentHomeViewState extends State<_ParentHomeView>
     await context.read<ParentChildrenCubit>().loadChildren();
 
     _levelUpdateAnimController.forward().then(
-      (_) => _levelUpdateAnimController.reverse(),
+          (_) => _levelUpdateAnimController.reverse(),
     );
 
-    setState(() {
-      _lastUpdatedChildName = null;
-    });
-
     if (mounted) {
+      final isRtl = _currentLocale.languageCode == 'ar';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
@@ -162,7 +159,9 @@ class _ParentHomeViewState extends State<_ParentHomeView>
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'مبروك! المستوى ${result.currentAllowedLevel} اتفتح! 🎉',
+                  isRtl
+                      ? 'مبروك! المستوى ${result.currentAllowedLevel} اتفتح! '
+                      : 'Congratulations! Level ${result.currentAllowedLevel} is unlocked!',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -183,6 +182,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
+    final isRtl = _currentLocale.languageCode == 'ar';
 
     final List<Widget> pages = [
       BlocListener<AssessmentCubit, AssessmentState>(
@@ -191,21 +191,29 @@ class _ParentHomeViewState extends State<_ParentHomeView>
             _onLevelUnlocked(state.result);
           }
         },
-        child: _buildHomeContent(config),
+        child: _buildHomeContent(config, isRtl),
       ),
       const ParentProgressDashboard(),
-      const Scaffold(body: Center(child: Text("Learn"))),
-      const ProfilePage(),
+      Scaffold(body: Center(child: Text(isRtl ? "تعلم" : "Learn"))),
+      ProfilePage(
+        onLanguageChanged: (Locale newLocale) {
+          setState(() {
+            _currentLocale = newLocale;
+          });
+        },
+      ),
     ];
-
-    return Scaffold(
-      backgroundColor: AppColors.bgColor,
-      body: IndexedStack(index: _selectedIndex, children: pages),
-      bottomNavigationBar: _buildBottomNav(),
+    return Directionality(
+      textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+      child: Scaffold(
+        backgroundColor: AppColors.bgColor,
+        body: IndexedStack(index: _selectedIndex, children: pages),
+        bottomNavigationBar: _buildBottomNav(isRtl),
+      ),
     );
   }
 
-  Widget _buildHomeContent(dynamic config) {
+  Widget _buildHomeContent(dynamic config, bool isRtl) {
     return Stack(
       children: [
         SafeArea(
@@ -217,10 +225,10 @@ class _ParentHomeViewState extends State<_ParentHomeView>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildHeader(config),
+                  _buildHeader(config, isRtl),
                   SizedBox(height: config.localHeight * 0.03),
                   Text(
-                    "Your Children",
+                    isRtl ? "أطفالك" : "Your Children",
                     style: TextStyle(
                       fontSize: config.title,
                       fontWeight: FontWeight.bold,
@@ -283,7 +291,9 @@ class _ParentHomeViewState extends State<_ParentHomeView>
                                 ),
                                 child: Center(
                                   child: Text(
-                                    "No children added yet.\nTap \"Add Child\" to get started!",
+                                    isRtl
+                                        ? "لم يتم إضافة أطفال بعد.\nاضغط على \"إضافة طفل\" للبدء!"
+                                        : "No children added yet.\nTap \"Add Child\" to get started!",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: config.body,
@@ -296,10 +306,10 @@ class _ParentHomeViewState extends State<_ParentHomeView>
                               ...state.children.map((child) {
                                 final int level =
                                     (child['allowedLevel'] as int?) ??
-                                    (child['level'] as int?) ??
-                                    1;
+                                        (child['level'] as int?) ??
+                                        1;
                                 final childName =
-                                    child['name'] as String? ?? 'Unknown';
+                                    child['name'] as String? ?? (isRtl ? 'غير معروف' : 'Unknown');
                                 final double progress = (level / 3.0).clamp(
                                   0.0,
                                   1.0,
@@ -307,18 +317,18 @@ class _ParentHomeViewState extends State<_ParentHomeView>
 
                                 return ScaleTransition(
                                   scale:
-                                      _levelUpdateAnimController.isAnimating
-                                          ? Tween<double>(
-                                            begin: 1.0,
-                                            end: 1.05,
-                                          ).animate(
-                                            CurvedAnimation(
-                                              parent:
-                                                  _levelUpdateAnimController,
-                                              curve: Curves.elasticInOut,
-                                            ),
-                                          )
-                                          : const AlwaysStoppedAnimation(1.0),
+                                  _levelUpdateAnimController.isAnimating
+                                      ? Tween<double>(
+                                    begin: 1.0,
+                                    end: 1.05,
+                                  ).animate(
+                                    CurvedAnimation(
+                                      parent:
+                                      _levelUpdateAnimController,
+                                      curve: Curves.elasticInOut,
+                                    ),
+                                  )
+                                      : const AlwaysStoppedAnimation(1.0),
                                   child: Padding(
                                     padding: const EdgeInsets.only(bottom: 15),
                                     child: GestureDetector(
@@ -326,6 +336,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
                                       onLongPress: () => _editChild(child),
                                       child: _buildChildCard(
                                         config,
+                                        isRtl,
                                         name: childName,
                                         level: level,
                                         progress: progress,
@@ -342,7 +353,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
                       return const SizedBox.shrink();
                     },
                   ),
-                  _buildAddChildButton(config),
+                  _buildAddChildButton(config, isRtl),
                   SizedBox(height: config.localHeight * 0.15),
                 ],
               ),
@@ -353,7 +364,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
           bottom: 20,
           left: 20,
           right: 20,
-          child: _buildAIChatCard(config),
+          child: _buildAIChatCard(config, isRtl),
         ),
       ],
     );
@@ -372,12 +383,12 @@ class _ParentHomeViewState extends State<_ParentHomeView>
     }
   }
 
-  Widget _buildHeader(dynamic config) {
+  Widget _buildHeader(dynamic config, bool isRtl) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Welcome back,",
+          isRtl ? "مرحباً بعودتك،" : "Welcome back,",
           style: TextStyle(fontSize: config.body, color: Colors.grey),
         ),
         Container(
@@ -400,12 +411,13 @@ class _ParentHomeViewState extends State<_ParentHomeView>
   }
 
   Widget _buildChildCard(
-    dynamic config, {
-    required String name,
-    required int level,
-    required double progress,
-    String? avatarAsset,
-  }) {
+      dynamic config,
+      bool isRtl, {
+        required String name,
+        required int level,
+        required double progress,
+        String? avatarAsset,
+      }) {
     final color = _levelColor(level);
     return Container(
       width: double.infinity,
@@ -427,16 +439,16 @@ class _ParentHomeViewState extends State<_ParentHomeView>
             radius: 25,
             backgroundColor: color.withOpacity(0.1),
             child:
-                avatarAsset != null
-                    ? ClipOval(
-                      child: Image.asset(
-                        avatarAsset,
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                    : Image.asset('assets/images/characters/boy.gif'),
+            avatarAsset != null
+                ? ClipOval(
+              child: Image.asset(
+                avatarAsset,
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+              ),
+            )
+                : Image.asset('assets/images/characters/boy.gif'),
           ),
           const SizedBox(width: 15),
           Expanded(
@@ -452,7 +464,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  "Level $level",
+                  isRtl ? "المستوى $level" : "Level $level",
                   style: TextStyle(
                     fontSize: config.body * 0.85,
                     fontWeight: FontWeight.w700,
@@ -486,7 +498,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  "Level $level",
+                  isRtl ? "مستوى $level" : "Level $level",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: color,
@@ -496,7 +508,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
               ),
               const SizedBox(height: 4),
               Text(
-                "Hold to edit",
+                isRtl ? "علق للتعديل" : "Hold to edit",
                 style: TextStyle(
                   fontSize: config.body * 0.7,
                   color: Colors.grey.shade400,
@@ -509,7 +521,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
     );
   }
 
-  Widget _buildAddChildButton(dynamic config) {
+  Widget _buildAddChildButton(dynamic config, bool isRtl) {
     return Container(
       width: double.infinity,
       height: config.localHeight * 0.1,
@@ -536,7 +548,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
               ),
               const SizedBox(width: 10),
               Text(
-                "Add Child",
+                isRtl ? "إضافة طفل" : "Add Child",
                 style: TextStyle(
                   color: Colors.grey,
                   fontWeight: FontWeight.w600,
@@ -550,7 +562,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
     );
   }
 
-  Widget _buildAIChatCard(dynamic config) {
+  Widget _buildAIChatCard(dynamic config, bool isRtl) {
     return Container(
       padding: EdgeInsets.all(config.localWidth * 0.05),
       decoration: BoxDecoration(
@@ -579,7 +591,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Need advice?",
+                  isRtl ? "تحتاج إلى نصيحة؟" : "Need advice?",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -587,7 +599,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
                   ),
                 ),
                 Text(
-                  "Ask our AI about progress",
+                  isRtl ? "اسأل الذكاء الاصطناعي عن التقدم" : "Ask our AI about progress",
                   style: TextStyle(
                     color: Colors.white70,
                     fontSize: config.body * 0.8,
@@ -605,7 +617,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
               padding: const EdgeInsets.symmetric(horizontal: 12),
             ),
             child: Text(
-              "Chat",
+              isRtl ? "محادثة" : "Chat",
               style: TextStyle(fontSize: config.body * 0.8),
             ),
           ),
@@ -614,29 +626,29 @@ class _ParentHomeViewState extends State<_ParentHomeView>
     );
   }
 
-  Widget _buildBottomNav() {
+  Widget _buildBottomNav(bool isRtl) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       selectedItemColor: Colors.blueAccent,
       unselectedItemColor: Colors.grey,
       currentIndex: _selectedIndex,
       onTap: (index) => setState(() => _selectedIndex = index),
-      items: const [
+      items: [
         BottomNavigationBarItem(
-          icon: Icon(CupertinoIcons.home),
-          label: "Home",
+          icon: const Icon(CupertinoIcons.home),
+          label: isRtl ? "الرئيسية" : "Home",
         ),
         BottomNavigationBarItem(
-          icon: Icon(CupertinoIcons.graph_square),
-          label: "Dashboard",
+          icon: const Icon(CupertinoIcons.graph_square),
+          label: isRtl ? "اللوحة" : "Dashboard",
         ),
         BottomNavigationBarItem(
-          icon: Icon(CupertinoIcons.play_rectangle),
-          label: "Learn",
+          icon: const Icon(CupertinoIcons.play_rectangle),
+          label: isRtl ? "تعلم" : "Learn",
         ),
         BottomNavigationBarItem(
-          icon: Icon(CupertinoIcons.person),
-          label: "Profile",
+          icon: const Icon(CupertinoIcons.person),
+          label: isRtl ? "حسابي" : "Profile",
         ),
       ],
     );
