@@ -48,7 +48,25 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
   void _openChildDashboard(Map<String, dynamic> child) {
     setState(() {
       _activeChildMap = child;
-      _selectedIndex = 1;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ChildLevelSelectPage(
+          childName: child['name'] as String? ?? 'Child',
+          recommendedLevel: child['level'] as int? ?? 1,
+        ),
+      ),
+    ).then((updatedLevelResult) {
+      if (updatedLevelResult != null && updatedLevelResult is ChildLevelSelectResult) {
+        setState(() {
+          child['level'] = updatedLevelResult.level;
+          if (_activeChildMap != null && _activeChildMap!['id'] == child['id']) {
+            _activeChildMap = child;
+          }
+        });
+        _persistFromReadyState();
+      }
     });
   }
 
