@@ -39,7 +39,6 @@ class _CubesLessonState extends State<CubesLesson> {
     super.initState();
     _playWelcomeAudio();
   }
-
   void _playWelcomeAudio() async {
     await AudioService.play(fileName: 'level1/put_boxs.mp3');
   }
