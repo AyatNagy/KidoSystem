@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,6 +21,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String _parentName = 'Parent';
   File? _imageFile;
+  Uint8List? _webImageBytes;
   final ImagePicker _picker = ImagePicker();
 
   @override
@@ -30,14 +32,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _loadProfileData() async {
     final prefs = await SharedPreferences.getInstance();
-    final imagePath = prefs.getString('parent_image_path');
 
     setState(() {
       _parentName = prefs.getString('parent_name') ?? 'Parent';
-      if (imagePath != null && imagePath.isNotEmpty) {
-        _imageFile = File(imagePath);
-      }
     });
+    if (!kIsWeb) {
+      final imagePath = prefs.getString('parent_image_path');
+      if (imagePath != null && imagePath.isNotEmpty) {
+        setState(() {
+          _imageFile = File(imagePath);
+        });
+      }
+    }
   }
 
   Future<void> _handleImageAction(ImageSource source) async {
@@ -45,8 +51,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (pickedFile != null) {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('parent_image_path', pickedFile.path);
-      setState(() => _imageFile = File(pickedFile.path));
+
+      if (kIsWeb) {
+        final Uint8List imageBytes = await pickedFile.readAsBytes();
+        setState(() {
+          _webImageBytes = imageBytes;
+        });
+      } else {
+        await prefs.setString('parent_image_path', pickedFile.path);
+        setState(() {
+          _imageFile = File(pickedFile.path);
+        });
+      }
     }
   }
 
@@ -167,6 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildAvatarSection(dynamic config) {
+    final bool hasImage = kIsWeb ? (_webImageBytes != null) : (_imageFile != null);
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -182,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Stack(
         children: [
           GestureDetector(
-            onTap: _imageFile != null ? _showFullImage : null,
+            onTap: hasImage ? _showFullImage : null,
             child: CircleAvatar(
               radius: config.localHeight * 0.065,
               backgroundColor: Colors.white,
@@ -191,8 +208,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: CircleAvatar(
                   radius: double.infinity,
                   backgroundColor: AppColors.kidoBlue.withOpacity(0.1),
-                  backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
-                  child: _imageFile == null
+                  backgroundImage: hasImage
+                      ? (kIsWeb ? MemoryImage(_webImageBytes!) : FileImage(_imageFile!)) as ImageProvider
+                      : null,
+                  child: !hasImage
                       ? Icon(CupertinoIcons.person_alt, size: config.localHeight * 0.055, color: AppColors.kidoBlue)
                       : null,
                 ),
@@ -275,7 +294,9 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: Colors.transparent,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(30),
-            child: Image.file(_imageFile!, fit: BoxFit.contain),
+            child: kIsWeb
+                ? Image.memory(_webImageBytes!, fit: BoxFit.contain)
+                : Image.file(_imageFile!, fit: BoxFit.contain),
           ),
         ),
       ),
@@ -283,6 +304,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showImageSourceSheet(dynamic config) {
+    final bool hasImage = kIsWeb ? (_webImageBytes != null) : (_imageFile != null);
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -301,7 +324,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(10)),
               ),
               const SizedBox(height: 12),
-              if (_imageFile != null)
+              if (hasImage)
                 ListTile(
                   leading: CircleAvatar(backgroundColor: Colors.blue, child: const Icon(CupertinoIcons.eye_fill, color: AppColors.bgColor)),
                   title: const Text("View Current Photo", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -390,7 +413,7 @@ class _ProfileTile extends StatelessWidget {
       margin: EdgeInsets.only(bottom: config.localHeight * 0.022),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24), // Super bubbly curved corners
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
             color: color.withOpacity(0.06),
@@ -407,7 +430,7 @@ class _ProfileTile extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: color.withOpacity(0.12),
-            shape: BoxShape.circle, // Circular soft background badges look incredibly polished
+            shape: BoxShape.circle,
           ),
           child: Icon(icon, color: color, size: config.headline * 0.9),
         ),
