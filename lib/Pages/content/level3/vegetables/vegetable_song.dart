@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+//import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../Models/level3/vegetables/vegetable_model.dart';
 
@@ -14,7 +14,7 @@ class VegetableSong extends StatefulWidget {
 
 class _VegetableSongState extends State<VegetableSong>
     with SingleTickerProviderStateMixin {
-  final FlutterTts flutterTts = FlutterTts();
+  //final FlutterTts flutterTts = FlutterTts();
   final PageController _pageCtrl = PageController();
 
   int _page = 0;
@@ -47,16 +47,16 @@ class _VegetableSongState extends State<VegetableSong>
   void dispose() {
     _hintTimer?.cancel();
     _glowCtrl.dispose();
-    flutterTts.stop();
+    //flutterTts.stop();
     _pageCtrl.dispose();
     super.dispose();
   }
 
-  Future<void> _speak(String text) async {
+  /*Future<void> _speak(String text) async {
     await flutterTts.setLanguage('en-US');
     await flutterTts.setPitch(1.1);
     await flutterTts.speak(text);
-  }
+  }*/
 
   void _startPage(int page) {
     _hintTimer?.cancel();
@@ -66,11 +66,13 @@ class _VegetableSongState extends State<VegetableSong>
     wrongSelections = [];
 
     Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) _speak(_list[page].text);
+      if (mounted) //_speak(_list[page].text);
+        return;
     });
 
     _hintTimer = Timer.periodic(const Duration(seconds: 7), (_) {
-      if (!isPressed && mounted) _speak(_list[page].text);
+      if (!isPressed && mounted) //_speak(_list[page].text);
+        return;
     });
 
     Future.delayed(const Duration(seconds: 5), () {
@@ -94,7 +96,7 @@ class _VegetableSongState extends State<VegetableSong>
       _glowCtrl.reset();
       await Future.delayed(const Duration(milliseconds: 300));
       if (mounted) setState(() => showSuccess = true);
-      await _speak(_list[_page].text);
+      //await _speak(_list[_page].text);
     } else {
       await Future.delayed(const Duration(milliseconds: 400));
       if (mounted) {
@@ -190,7 +192,7 @@ class _VegetableSongState extends State<VegetableSong>
                 ),
                 _CircleBtn(
                   icon: Icons.volume_up_rounded,
-                  onTap: () => _speak(veg.text),
+                  //onTap: () => _speak(veg.text),
                   bg: const Color(0xFFE65100),
                   iconColor: Colors.white,
                 ),
