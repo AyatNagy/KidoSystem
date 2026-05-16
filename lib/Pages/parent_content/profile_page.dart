@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kido/Pages/Auth/parent_login_screen.dart';
 import 'package:kido/Pages/shared/logo_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
@@ -72,13 +73,15 @@ class _ProfilePageState extends State<ProfilePage> {
       if (!mounted) return;
 
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const Logo()),
-            (Route<dynamic> route) => false,
+        MaterialPageRoute(builder: (context) => const ParentLogin()),
+        (Route<dynamic> route) => false,
       );
     } catch (e) {
       debugPrint("Logout Error: $e");
       if (!mounted) return;
-      Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil('/welcome', (route) => false);
     }
   }
 
@@ -145,10 +148,16 @@ class _ProfilePageState extends State<ProfilePage> {
             child: CircleAvatar(
               radius: config.localHeight * 0.075,
               backgroundColor: Colors.white,
-              backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
-              child: _imageFile == null
-                  ? Icon(Icons.person, size: config.localHeight * 0.07, color: AppColors.kidoBlue)
-                  : null,
+              backgroundImage:
+                  _imageFile != null ? FileImage(_imageFile!) : null,
+              child:
+                  _imageFile == null
+                      ? Icon(
+                        Icons.person,
+                        size: config.localHeight * 0.07,
+                        color: AppColors.kidoBlue,
+                      )
+                      : null,
             ),
           ),
           Positioned(
@@ -158,7 +167,11 @@ class _ProfilePageState extends State<ProfilePage> {
               heroTag: 'camera_btn',
               backgroundColor: AppColors.kidoOrange,
               onPressed: () => _showImageSourceSheet(config),
-              child: Icon(Icons.camera_alt, color: Colors.white, size: config.body),
+              child: Icon(
+                Icons.camera_alt,
+                color: Colors.white,
+                size: config.body,
+              ),
             ),
           ),
         ],
@@ -185,16 +198,17 @@ class _ProfilePageState extends State<ProfilePage> {
   void _showFullImage() {
     showDialog(
       context: context,
-      builder: (_) => GestureDetector(
-        onTap: () => Navigator.pop(context),
-        child: Dialog(
-          backgroundColor: Colors.transparent,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.file(_imageFile!, fit: BoxFit.contain),
+      builder:
+          (_) => GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Dialog(
+              backgroundColor: Colors.transparent,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.file(_imageFile!, fit: BoxFit.contain),
+              ),
+            ),
           ),
-        ),
-      ),
     );
   }
 
@@ -204,59 +218,75 @@ class _ProfilePageState extends State<ProfilePage> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (_imageFile != null)
-              ListTile(
-                leading: const Icon(Icons.fullscreen, color: AppColors.kidoBlue),
-                title: const Text("View Photo"),
-                onTap: () {
-                  Navigator.pop(context);
-                  _showFullImage();
-                },
-              ),
-            ListTile(
-              leading: const Icon(Icons.camera_alt, color: AppColors.kidoOrange),
-              title: const Text("Take a photo"),
-              onTap: () {
-                Navigator.pop(context);
-                _handleImageAction(ImageSource.camera);
-              },
+      builder:
+          (context) => SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (_imageFile != null)
+                  ListTile(
+                    leading: const Icon(
+                      Icons.fullscreen,
+                      color: AppColors.kidoBlue,
+                    ),
+                    title: const Text("View Photo"),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showFullImage();
+                    },
+                  ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.camera_alt,
+                    color: AppColors.kidoOrange,
+                  ),
+                  title: const Text("Take a photo"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _handleImageAction(ImageSource.camera);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.photo_library,
+                    color: Colors.blueAccent,
+                  ),
+                  title: const Text("Choose from gallery"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _handleImageAction(ImageSource.gallery);
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.photo_library, color: Colors.blueAccent),
-              title: const Text("Choose from gallery"),
-              onTap: () {
-                Navigator.pop(context);
-                _handleImageAction(ImageSource.gallery);
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 
   void _showLogoutDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text("Sign Out"),
-        content: const Text("Are you sure you want to exit the Kido app?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Stay"),
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: const Text("Sign Out"),
+            content: const Text("Are you sure you want to exit the Kido app?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Stay"),
+              ),
+              TextButton(
+                onPressed: _performLogout,
+                child: const Text(
+                  "Logout",
+                  style: TextStyle(color: Colors.redAccent),
+                ),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: _performLogout,
-            child: const Text("Logout", style: TextStyle(color: Colors.redAccent)),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -308,7 +338,11 @@ class _ProfileTile extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: config.body),
         ),
         subtitle: Text(subtitle, style: TextStyle(fontSize: config.body * 0.8)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          size: 14,
+          color: Colors.grey,
+        ),
       ),
     );
   }
