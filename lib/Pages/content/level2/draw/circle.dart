@@ -4,7 +4,14 @@ import '../../../../Widgets/content/level2/shapes.dart';
 import '../../../../data/content/level2/shapes.dart';
 
 class CircleDrawingPage extends StatelessWidget {
-  const CircleDrawingPage({super.key});
+  final String childName; // ← ضيف
+  final int childId; // ← ضيف
+
+  const CircleDrawingPage({
+    super.key,
+    required this.childName, // ← ضيف
+    required this.childId, // ← ضيف
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +21,13 @@ class CircleDrawingPage extends StatelessWidget {
       onNext:
           () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => SquareDrawingPage()),
+            MaterialPageRoute(
+              builder:
+                  (context) => SquareDrawingPage(
+                    childName: childName, // ← ضيف
+                    childId: childId, // ← ضيف
+                  ),
+            ),
           ),
       shapeName: 'circle',
     );

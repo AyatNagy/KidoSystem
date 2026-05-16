@@ -11,8 +11,14 @@ import '../level1_home.dart';
 
 class MovingCarPage extends StatefulWidget {
   final VoidCallback? onNext;
-
-  const MovingCarPage({super.key, this.onNext});
+  final String childName; // ← ضيف
+  final int childId;
+  const MovingCarPage({
+    super.key,
+    this.onNext,
+    required this.childName,
+    required this.childId,
+  });
 
   @override
   State<MovingCarPage> createState() => _MovingCarPageState();
@@ -81,7 +87,11 @@ class _MovingCarPageState extends State<MovingCarPage>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Level1Home(childName: 'habiba'),
+                builder:
+                    (context) => Level1Home(
+                      childName: widget.childName, // ← بدل 'habiba'
+                      childId: widget.childId, // ← ضيف
+                    ),
               ),
             );
           }
@@ -200,11 +210,13 @@ class _MovingCarPageState extends State<MovingCarPage>
                 right: sw * 0.08,
                 child: NextButton(
                   color: AppColors.kidoGreen,
-                  onPressed: widget.onNext ?? () {
-                    Navigator.pop(context);
-                    },
+                  onPressed:
+                      widget.onNext ??
+                      () {
+                        Navigator.pop(context);
+                      },
                 ),
-              )
+              ),
             ],
           ],
         ),

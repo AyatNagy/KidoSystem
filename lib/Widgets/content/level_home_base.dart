@@ -6,6 +6,7 @@ import '../../Pages/kid/exam_screen.dart';
 
 class LevelHomeBase extends StatelessWidget {
   final String childName;
+  final int childId; // ← ضيفناها
   final String? avatarAsset;
   final String? levelTitle;
   final String dailyChallengeTitle;
@@ -19,6 +20,7 @@ class LevelHomeBase extends StatelessWidget {
   const LevelHomeBase({
     super.key,
     required this.childName,
+    required this.childId, // ← ضيفناها
     this.avatarAsset,
     this.levelTitle = "Categories",
     required this.dailyChallengeTitle,
@@ -78,10 +80,12 @@ class LevelHomeBase extends StatelessWidget {
             CircleAvatar(
               radius: config.isTablet ? 35 : 28,
               backgroundColor: primaryColor.withOpacity(0.1),
-              backgroundImage: avatarAsset != null ? AssetImage(avatarAsset!) : null,
-              child: avatarAsset == null
-                  ? Image.asset('assets/images/characters/boy.gif')
-                  : null,
+              backgroundImage:
+                  avatarAsset != null ? AssetImage(avatarAsset!) : null,
+              child:
+                  avatarAsset == null
+                      ? Image.asset('assets/images/characters/boy.gif')
+                      : null,
             ),
             const SizedBox(width: 15),
             Column(
@@ -93,7 +97,7 @@ class LevelHomeBase extends StatelessWidget {
                     fontSize: config.title,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textGray,
-                    fontFamily: 'tinyKids'
+                    fontFamily: 'tinyKids',
                   ),
                 ),
                 Text(
@@ -151,7 +155,11 @@ class LevelHomeBase extends StatelessWidget {
               ],
             ),
           ),
-          Icon(Icons.extension_rounded, size: config.isTablet ? 80 : 50, color: Colors.white24),
+          Icon(
+            Icons.extension_rounded,
+            size: config.isTablet ? 80 : 50,
+            color: Colors.white24,
+          ),
         ],
       ),
     );
@@ -170,15 +178,18 @@ class LevelHomeBase extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ExamSkeletonScreen(
-                examId: examId,
-                childName: childName,
+          onTap:
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => ExamSkeletonScreen(
+                        examId: examId,
+                        childName: childName,
+                        childId: childId, // ← ضيفناها
+                      ),
+                ),
               ),
-            ),
-          ),
           borderRadius: BorderRadius.circular(20),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -192,10 +203,18 @@ class LevelHomeBase extends StatelessWidget {
                 const Expanded(
                   child: Text(
                     "Final Exam",
-                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white, size: 18),
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Colors.white,
+                  size: 18,
+                ),
               ],
             ),
           ),

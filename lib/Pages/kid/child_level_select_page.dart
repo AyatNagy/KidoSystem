@@ -14,6 +14,7 @@ class ChildLevelSelectResult {
 
 class ChildLevelSelectPage extends StatefulWidget {
   final String childName;
+  final int childId;
   final int? recommendedLevel;
   final bool isRestrictedToLevel1;
   final int? forcedUnlockedLevel;
@@ -21,6 +22,7 @@ class ChildLevelSelectPage extends StatefulWidget {
   const ChildLevelSelectPage({
     super.key,
     required this.childName,
+    required this.childId,
     this.recommendedLevel,
     this.isRestrictedToLevel1 = false,
     this.forcedUnlockedLevel,
@@ -30,7 +32,8 @@ class ChildLevelSelectPage extends StatefulWidget {
   State<ChildLevelSelectPage> createState() => _ChildLevelSelectPageState();
 }
 
-class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with TickerProviderStateMixin {
+class _ChildLevelSelectPageState extends State<ChildLevelSelectPage>
+    with TickerProviderStateMixin {
   int? _selectedLevel;
   int _unlockedLevel = 1;
   late AnimationController _floatingController;
@@ -77,15 +80,31 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
   Future<void> _launchLevel(int level) async {
     Widget targetPage;
     switch (level) {
-      case 1: targetPage = Level1Home(childName: widget.childName); break;
-      case 2: targetPage = Level2Home(childName: widget.childName); break;
-      case 3: targetPage = Level3Home(childName: widget.childName); break;
-      default: return;
+      case 1:
+        targetPage = Level1Home(
+          childName: widget.childName,
+          childId: widget.childId,
+        );
+        break;
+      case 2:
+        targetPage = Level2Home(
+          childName: widget.childName,
+          childId: widget.childId,
+        );
+        break;
+      case 3:
+        targetPage = Level3Home(
+          childName: widget.childName,
+          childId: widget.childId,
+        );
+        break;
+      default:
+        return;
     }
 
     final result = await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => targetPage)
+      context,
+      MaterialPageRoute(builder: (_) => targetPage),
     );
 
     if (result is int && result == -1) {
@@ -113,9 +132,24 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
         ),
         child: Stack(
           children: [
-            _buildDecor(Alignment.topLeft, Icons.cloud, Colors.white.withOpacity(0.8), 60),
-            _buildDecor(Alignment.topRight, Icons.wb_sunny, Colors.orangeAccent.withOpacity(0.4), 80),
-            _buildDecor(Alignment.bottomLeft, Icons.star, Colors.yellow.withOpacity(0.5), 40),
+            _buildDecor(
+              Alignment.topLeft,
+              Icons.cloud,
+              Colors.white.withOpacity(0.8),
+              60,
+            ),
+            _buildDecor(
+              Alignment.topRight,
+              Icons.wb_sunny,
+              Colors.orangeAccent.withOpacity(0.4),
+              80,
+            ),
+            _buildDecor(
+              Alignment.bottomLeft,
+              Icons.star,
+              Colors.yellow.withOpacity(0.5),
+              40,
+            ),
 
             SafeArea(
               child: Column(
@@ -132,7 +166,9 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
                               config,
                               level: 1,
                               color: AppColors.kidoBlue,
-                              imageWidget: Image.asset('assets/images/level1.jpeg'),
+                              imageWidget: Image.asset(
+                                'assets/images/level1.jpeg',
+                              ),
                               alignment: Alignment.centerLeft,
                               icon: Icons.directions_car_filled,
                             ),
@@ -141,18 +177,22 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
                               config,
                               level: 2,
                               color: AppColors.kidoOrange,
-                              imageWidget: Image.asset('assets/images/level2.jpeg'),
+                              imageWidget: Image.asset(
+                                'assets/images/level2.jpeg',
+                              ),
                               alignment: Alignment.centerRight,
-                              icon: Icons.auto_awesome
+                              icon: Icons.auto_awesome,
                             ),
                             _buildPath(config, isRight: false),
                             _buildLevelNode(
                               config,
                               level: 3,
                               color: AppColors.kidoPink,
-                              imageWidget: Image.asset('assets/images/level3.jpeg'),
+                              imageWidget: Image.asset(
+                                'assets/images/level3.jpeg',
+                              ),
                               alignment: Alignment.centerLeft,
-                              icon: Icons.wine_bar_sharp
+                              icon: Icons.wine_bar_sharp,
                             ),
                           ],
                         ),
@@ -170,13 +210,13 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
   }
 
   Widget _buildLevelNode(
-      dynamic config, {
-        required int level,
-        required Color color,
-        required IconData icon,
-        required Widget imageWidget,
-        required Alignment alignment,
-      }) {
+    dynamic config, {
+    required int level,
+    required Color color,
+    required IconData icon,
+    required Widget imageWidget,
+    required Alignment alignment,
+  }) {
     final bool isLocked = level > _unlockedLevel;
     final bool isSelected = _selectedLevel == level;
 
@@ -193,7 +233,8 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
         child: Align(
           alignment: alignment,
           child: GestureDetector(
-            onTap: isLocked ? null : () => setState(() => _selectedLevel = level),
+            onTap:
+                isLocked ? null : () => setState(() => _selectedLevel = level),
             child: Column(
               children: [
                 Stack(
@@ -204,24 +245,38 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: isLocked ? Colors.grey[300] : (isSelected ? color : Colors.white),
+                        color:
+                            isLocked
+                                ? Colors.grey[300]
+                                : (isSelected ? color : Colors.white),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: isLocked ? Colors.transparent : color.withOpacity(0.4),
+                            color:
+                                isLocked
+                                    ? Colors.transparent
+                                    : color.withOpacity(0.4),
                             blurRadius: isSelected ? 20 : 10,
                             spreadRadius: isSelected ? 5 : 0,
-                          )
+                          ),
                         ],
                         border: Border.all(
-                          color: isSelected ? Colors.white : (isLocked ? Colors.grey[400]! : color),
+                          color:
+                              isSelected
+                                  ? Colors.white
+                                  : (isLocked ? Colors.grey[400]! : color),
                           width: 4,
                         ),
                       ),
                       child: ClipOval(
-                        child: isLocked
-                            ? Icon(Icons.lock, size: 45, color: Colors.grey[600])
-                            : imageWidget,
+                        child:
+                            isLocked
+                                ? Icon(
+                                  Icons.lock,
+                                  size: 45,
+                                  color: Colors.grey[600],
+                                )
+                                : imageWidget,
                       ),
                     ),
                     if (isSelected)
@@ -230,10 +285,17 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
                         top: 0,
                         child: Container(
                           padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                          child: const Icon(Icons.check_circle, color: Colors.green, size: 28),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 28,
+                          ),
                         ),
-                      )
+                      ),
                   ],
                 ),
               ],
@@ -243,6 +305,7 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
       ),
     );
   }
+
   Widget _buildPath(dynamic config, {required bool isRight}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -259,16 +322,26 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage> with Ticker
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: _selectedLevel == null ? null : () => _launchLevel(_selectedLevel!),
+          onPressed:
+              _selectedLevel == null
+                  ? null
+                  : () => _launchLevel(_selectedLevel!),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF1F2A44),
             padding: const EdgeInsets.symmetric(vertical: 20),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             elevation: 5,
           ),
           child: const Text(
             "LET'S GO!",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: 2),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+              letterSpacing: 2,
+            ),
           ),
         ),
       ),
@@ -292,19 +365,30 @@ class PathPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.blueGrey.withOpacity(0.2)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 6
-      ..strokeCap = StrokeCap.round;
+    final paint =
+        Paint()
+          ..color = Colors.blueGrey.withOpacity(0.2)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 6
+          ..strokeCap = StrokeCap.round;
 
     final path = Path();
     if (isRight) {
       path.moveTo(size.width * 0.2, 0);
-      path.quadraticBezierTo(size.width * 0.8, size.height * 0.5, size.width * 0.8, size.height);
+      path.quadraticBezierTo(
+        size.width * 0.8,
+        size.height * 0.5,
+        size.width * 0.8,
+        size.height,
+      );
     } else {
       path.moveTo(size.width * 0.8, 0);
-      path.quadraticBezierTo(size.width * 0.2, size.height * 0.5, size.width * 0.2, size.height);
+      path.quadraticBezierTo(
+        size.width * 0.2,
+        size.height * 0.5,
+        size.width * 0.2,
+        size.height,
+      );
     }
     for (var i = 0; i < 10; i++) {
       canvas.drawPath(path, paint);

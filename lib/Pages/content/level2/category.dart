@@ -12,7 +12,10 @@ import '../../../data/content/level2/puzzle_data.dart';
 import 'draw/draw_line/octobus_and_star.dart';
 
 class Category2 extends StatelessWidget {
-  const Category2({super.key});
+  final String childName;
+  final int childId;
+
+  const Category2({super.key, required this.childName, required this.childId});
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +70,9 @@ class Category2 extends StatelessWidget {
                                                                       context,
                                                                     ) => Level2Home(
                                                                       childName:
-                                                                          'Habiba',
+                                                                          childName,
+                                                                      childId:
+                                                                          childId,
                                                                     ),
                                                               ),
                                                             );
@@ -114,7 +119,13 @@ class Category2 extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CircleDrawingPage()),
+              MaterialPageRoute(
+                builder:
+                    (context) => CircleDrawingPage(
+                      childName: childName,
+                      childId: childId,
+                    ),
+              ),
             );
           },
         ),
@@ -130,7 +141,12 @@ class Category2 extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PuzzlePracticeScreen(levels: appleLevels),
+                builder:
+                    (context) => PuzzlePracticeScreen(
+                      levels: appleLevels,
+                      childName: childName,
+                      childId: childId,
+                    ),
               ),
             );
           },

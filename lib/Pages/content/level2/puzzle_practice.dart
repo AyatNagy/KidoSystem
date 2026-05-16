@@ -11,8 +11,15 @@ import '../../../data/content/level2/puzzle_data.dart';
 
 class PuzzlePracticeScreen extends StatefulWidget {
   final List<PuzzleData> levels;
+  final String childName;
+  final int childId;
 
-  const PuzzlePracticeScreen({super.key, required this.levels});
+  const PuzzlePracticeScreen({
+    super.key,
+    required this.levels,
+    required this.childName,
+    required this.childId,
+  });
 
   @override
   State<PuzzlePracticeScreen> createState() => _PuzzlePracticeScreenState();
@@ -283,7 +290,21 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
                 AudioService.stop();
 
                 if (!mounted) return;
+<<<<<<< Updated upstream
                 Navigator.pop(context);
+=======
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => Level2Home(
+                          childName: widget.childName,
+                          childId: widget.childId,
+                        ),
+                  ),
+                );
+>>>>>>> Stashed changes
               },
             ),
           ),

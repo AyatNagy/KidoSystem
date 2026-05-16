@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kido/Pages/kid/child_level_select_page.dart';
 import 'package:kido/Pages/kid/child_profile_setup_page.dart';
+import 'package:kido/Pages/parent_content/parent_progress_dashboard.dart';
 import 'package:kido/Pages/parent_content/profile_page.dart';
 import 'package:kido/Pages/parent_content/student_data_screen.dart';
+import 'package:kido/bloc/assessment/assessment_cubit.dart';
 import 'package:kido/bloc/parent_children/parent_children_cubit.dart';
 import 'package:kido/constants.dart';
-import '../../Models/child.dart';
 import '../../Widgets/responsive_provider.dart';
-import 'dashboard.dart';
 
 class ParentHomePage extends StatelessWidget {
   const ParentHomePage({super.key});
@@ -31,43 +31,47 @@ class _ParentHomeView extends StatefulWidget {
   State<_ParentHomeView> createState() => _ParentHomeViewState();
 }
 
-class _ParentHomeViewState extends State<_ParentHomeView> {
+class _ParentHomeViewState extends State<_ParentHomeView>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-  Map<String, dynamic>? _activeChildMap;
+  late AnimationController _levelUpdateAnimController;
+  String? _lastUpdatedChildName;
+
+  @override
+  void initState() {
+    super.initState();
+    _levelUpdateAnimController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    _levelUpdateAnimController.dispose();
+    super.dispose();
+  }
 
   Future<void> _persistFromReadyState() async {
     final cubit = context.read<ParentChildrenCubit>();
     final state = cubit.state;
     if (state is ParentChildrenReady) {
-      await cubit.saveAndEmit(
-        List<Map<String, dynamic>>.from(state.children),
-      );
+      await cubit.saveAndEmit(List<Map<String, dynamic>>.from(state.children));
     }
   }
 
   void _openChildDashboard(Map<String, dynamic> child) {
-    setState(() {
-      _activeChildMap = child;
-    });
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => ChildLevelSelectPage(
-          childName: child['name'] as String? ?? 'Child',
-          recommendedLevel: child['level'] as int? ?? 1,
+          childName: child['name'] ?? '',
+          childId: child['id'] as int? ?? 0, // ← ضيف
+          recommendedLevel:
+              child['allowedLevel'] as int? ?? child['level'] as int? ?? 1,
         ),
       ),
-    ).then((updatedLevelResult) {
-      if (updatedLevelResult != null && updatedLevelResult is ChildLevelSelectResult) {
-        setState(() {
-          child['level'] = updatedLevelResult.level;
-          if (_activeChildMap != null && _activeChildMap!['id'] == child['id']) {
-            _activeChildMap = child;
-          }
-        });
-        _persistFromReadyState();
-      }
-    });
+    );
   }
 
   Future<void> _editChild(Map<String, dynamic> child) async {
@@ -82,23 +86,20 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
     final pickedLevel = await Navigator.push<ChildLevelSelectResult>(
       context,
       MaterialPageRoute(
-        builder:
-            (_) => ChildLevelSelectPage(
+        builder: (_) => ChildLevelSelectPage(
           childName: setup.childName,
-          recommendedLevel: child['level'] as int?,
+          childId: child['id'] as int? ?? 0, // ← ضيف
+          recommendedLevel:
+              child['allowedLevel'] as int? ?? child['level'] as int?,
         ),
       ),
     );
     if (!mounted || pickedLevel == null) return;
 
-    setState(() {
-      child['name'] = setup.childName;
-      child['avatar'] = setup.avatarAsset;
-      child['level'] = pickedLevel.level;
-      if (_activeChildMap != null && _activeChildMap!['id'] == child['id']) {
-        _activeChildMap = child;
-      }
-    });
+    child['name'] = setup.childName;
+    child['avatar'] = setup.avatarAsset;
+    child['allowedLevel'] = pickedLevel.level;
+    child['level'] = pickedLevel.level;
     await _persistFromReadyState();
   }
 
@@ -110,37 +111,69 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
 
     if (result != null && result is Map<String, dynamic>) {
       final newChild = {
-        'id': result['childId'] ?? DateTime.now().millisecondsSinceEpoch.toString(),
+        if (result['childId'] != null) 'id': result['childId'],
         'name': result['name'] ?? '',
         'avatar': result['avatar'],
         'level': result['level'] ?? 1,
+        'allowedLevel': result['level'] ?? 1,
         'score': (result['score'] as num?)?.toDouble() ?? 0.0,
       };
 
       final cubit = context.read<ParentChildrenCubit>();
       final state = cubit.state;
       final existing =
-      state is ParentChildrenReady
-          ? List<Map<String, dynamic>>.from(state.children)
-          : <Map<String, dynamic>>[];
+          state is ParentChildrenReady
+              ? List<Map<String, dynamic>>.from(state.children)
+              : <Map<String, dynamic>>[];
 
-      final updatedList = [...existing, newChild];
-      await cubit.saveAndEmit(updatedList);
+      await cubit.saveAndEmit([...existing, newChild]);
 
       if (!mounted) return;
-
-      setState(() {
-        _activeChildMap = newChild;
-        _selectedIndex = 1;
-      });
-
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder:
-              (_) => ChildLevelSelectPage(
+          builder: (_) => ChildLevelSelectPage(
             childName: newChild['name'] as String,
-            recommendedLevel: newChild['level'] as int?,
+            childId: newChild['id'] as int? ?? 0, // ← ضيف
+            recommendedLevel: newChild['allowedLevel'] as int?,
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _onLevelUnlocked(dynamic result) async {
+    await context.read<ParentChildrenCubit>().loadChildren();
+
+    _levelUpdateAnimController.forward().then(
+      (_) => _levelUpdateAnimController.reverse(),
+    );
+
+    setState(() {
+      _lastUpdatedChildName = null;
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.star_rounded, color: Colors.orange, size: 22),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'مبروك! المستوى ${result.currentAllowedLevel} اتفتح! 🎉',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green.shade600,
+          duration: const Duration(seconds: 4),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       );
@@ -151,58 +184,32 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
 
-    return BlocListener<ParentChildrenCubit, ParentChildrenState>(
-      listener: (context, state) {
-        if (state is ParentChildrenReady && state.children.isNotEmpty && _activeChildMap == null) {
-          setState(() {
-            _activeChildMap = state.children.first;
-          });
-        }
-      },
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        body: BlocBuilder<ParentChildrenCubit, ParentChildrenState>(
-          builder: (context, state) {
-            Map<String, dynamic>? currentTarget = _activeChildMap;
-
-            if (state is ParentChildrenReady && state.children.isNotEmpty) {
-              final match = state.children.any((c) => c['id'] == currentTarget?['id']);
-              if (!match) {
-                currentTarget = state.children.first;
-              } else {
-                currentTarget = state.children.firstWhere((c) => c['id'] == currentTarget?['id']);
-              }
-            }
-
-            final int level = (currentTarget?['level'] as int?) ?? 1;
-            final double score = (currentTarget?['score'] as num?)?.toDouble() ?? 0.0;
-            final String name = currentTarget?['name'] as String? ?? 'Select a Child';
-
-            final List<Widget> pages = [
-              _buildHomeContent(config),
-              Dashboard(
-                key: ValueKey(currentTarget?['id'] ?? name),
-                level: level,
-                score: score,
-                child: Child(name: name, username: '', password: ''),
-              ),
-              const Scaffold(body: Center(child: Text("Learn"))),
-              const ProfilePage(),
-            ];
-
-            return IndexedStack(index: _selectedIndex, children: pages);
-          },
-        ),
-        bottomNavigationBar: _buildNav(),
+    final List<Widget> pages = [
+      BlocListener<AssessmentCubit, AssessmentState>(
+        listener: (context, state) {
+          if (state is AssessmentSuccess && state.result.levelUnlocked) {
+            _onLevelUnlocked(state.result);
+          }
+        },
+        child: _buildHomeContent(config),
       ),
+      const ParentProgressDashboard(),
+      const Scaffold(body: Center(child: Text("Learn"))),
+      const ProfilePage(),
+    ];
+
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      body: IndexedStack(index: _selectedIndex, children: pages),
+      bottomNavigationBar: _buildBottomNav(),
     );
   }
 
   Widget _buildHomeContent(dynamic config) {
-    return SafeArea(
-      child: Stack(
-        children: [
-          RefreshIndicator(
+    return Stack(
+      children: [
+        SafeArea(
+          child: RefreshIndicator(
             onRefresh: () => context.read<ParentChildrenCubit>().loadChildren(),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -287,23 +294,43 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
                               )
                             else
                               ...state.children.map((child) {
-                                final double score =
-                                    (child['score'] as num?)?.toDouble() ?? 0.0;
                                 final int level =
-                                    (child['level'] as int?) ?? 1;
+                                    (child['allowedLevel'] as int?) ??
+                                    (child['level'] as int?) ??
+                                    1;
+                                final childName =
+                                    child['name'] as String? ?? 'Unknown';
+                                final double progress = (level / 3.0).clamp(
+                                  0.0,
+                                  1.0,
+                                );
 
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 15),
-                                  child: GestureDetector(
-                                    onTap: () => _openChildDashboard(child),
-                                    onLongPress: () => _editChild(child),
-                                    child: _buildChildCard(
-                                      config,
-                                      name: child['name'] as String? ?? 'Unknown',
-                                      level: "Level $level",
-                                      color: levelColor(level),
-                                      progress: score,
-                                      avatarAsset: child['avatar'] as String?,
+                                return ScaleTransition(
+                                  scale:
+                                      _levelUpdateAnimController.isAnimating
+                                          ? Tween<double>(
+                                            begin: 1.0,
+                                            end: 1.05,
+                                          ).animate(
+                                            CurvedAnimation(
+                                              parent:
+                                                  _levelUpdateAnimController,
+                                              curve: Curves.elasticInOut,
+                                            ),
+                                          )
+                                          : const AlwaysStoppedAnimation(1.0),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 15),
+                                    child: GestureDetector(
+                                      onTap: () => _openChildDashboard(child),
+                                      onLongPress: () => _editChild(child),
+                                      child: _buildChildCard(
+                                        config,
+                                        name: childName,
+                                        level: level,
+                                        progress: progress,
+                                        avatarAsset: child['avatar'] as String?,
+                                      ),
                                     ),
                                   ),
                                 );
@@ -316,41 +343,51 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
                     },
                   ),
                   _buildAddChildButton(config),
-                  SizedBox(height: config.localHeight * 0.2),
+                  SizedBox(height: config.localHeight * 0.15),
                 ],
               ),
             ),
           ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            right: 20,
-            child: _buildAIChatCard(config),
-          ),
-        ],
-      ),
+        ),
+        Positioned(
+          bottom: 20,
+          left: 20,
+          right: 20,
+          child: _buildAIChatCard(config),
+        ),
+      ],
     );
+  }
+
+  Color _levelColor(int level) {
+    switch (level) {
+      case 1:
+        return const Color(0xFF2C8FF9);
+      case 2:
+        return const Color(0xFFFF8A65);
+      case 3:
+        return const Color(0xFFF06292);
+      default:
+        return const Color(0xFF2C8FF9);
+    }
   }
 
   Widget _buildHeader(dynamic config) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Welcome back,",
-              style: TextStyle(fontSize: config.body, color: Colors.grey),
-            ),
-          ],
+        Text(
+          "Welcome back,",
+          style: TextStyle(fontSize: config.body, color: Colors.grey),
         ),
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
-            boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
+            boxShadow: const [
+              BoxShadow(color: Colors.black12, blurRadius: 10),
+            ],
           ),
           child: Icon(
             CupertinoIcons.bell_fill,
@@ -363,13 +400,13 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
   }
 
   Widget _buildChildCard(
-      dynamic config, {
-        required String name,
-        required String level,
-        required Color color,
-        required double progress,
-        String? avatarAsset,
-      }) {
+    dynamic config, {
+    required String name,
+    required int level,
+    required double progress,
+    String? avatarAsset,
+  }) {
+    final color = _levelColor(level);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(config.localWidth * 0.04),
@@ -389,14 +426,17 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
           CircleAvatar(
             radius: 25,
             backgroundColor: color.withOpacity(0.1),
-            child: avatarAsset != null ? ClipOval(
-              child: Image.asset(
-                avatarAsset,
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-              ),
-            ) : Image.asset('assets/images/characters/boy.gif'),
+            child:
+                avatarAsset != null
+                    ? ClipOval(
+                      child: Image.asset(
+                        avatarAsset,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                    : Image.asset('assets/images/characters/boy.gif'),
           ),
           const SizedBox(width: 15),
           Expanded(
@@ -412,18 +452,22 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  level,
+                  "Level $level",
                   style: TextStyle(
                     fontSize: config.body * 0.85,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textDark,
+                    color: color,
                   ),
                 ),
                 const SizedBox(height: 5),
-                LinearProgressIndicator(
-                  value: progress.clamp(0.0, 1.0),
-                  color: color,
-                  backgroundColor: Colors.grey[200],
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 6,
+                    color: color,
+                    backgroundColor: Colors.grey[200],
+                  ),
                 ),
               ],
             ),
@@ -432,9 +476,23 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                "${(progress.clamp(0.0, 1.0) * 100).toInt()}%",
-                style: TextStyle(fontWeight: FontWeight.bold, color: color),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  "Level $level",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                    fontSize: 12,
+                  ),
+                ),
               ),
               const SizedBox(height: 4),
               Text(
@@ -546,14 +604,17 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
               shape: const StadiumBorder(),
               padding: const EdgeInsets.symmetric(horizontal: 12),
             ),
-            child: Text("Chat", style: TextStyle(fontSize: config.body * 0.8)),
+            child: Text(
+              "Chat",
+              style: TextStyle(fontSize: config.body * 0.8),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildNav() {
+  Widget _buildBottomNav() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       selectedItemColor: Colors.blueAccent,
@@ -561,7 +622,10 @@ class _ParentHomeViewState extends State<_ParentHomeView> {
       currentIndex: _selectedIndex,
       onTap: (index) => setState(() => _selectedIndex = index),
       items: const [
-        BottomNavigationBarItem(icon: Icon(CupertinoIcons.home), label: "Home"),
+        BottomNavigationBarItem(
+          icon: Icon(CupertinoIcons.home),
+          label: "Home",
+        ),
         BottomNavigationBarItem(
           icon: Icon(CupertinoIcons.graph_square),
           label: "Dashboard",
