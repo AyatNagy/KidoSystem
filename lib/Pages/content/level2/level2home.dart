@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import '../../../Widgets/content/level_home_base.dart';
-import '../../../constants.dart';
+import 'package:kido/Widgets/content/level_home_base.dart';
+import 'package:kido/constants.dart';
 import 'category.dart';
 
 class Level2Home extends StatelessWidget {
   final String childName;
   final String? avatarAsset;
   final int childId;
+
   const Level2Home({
     super.key,
     required this.childName,
-    this.avatarAsset,
     required this.childId,
+    this.avatarAsset,
   });
 
   @override
