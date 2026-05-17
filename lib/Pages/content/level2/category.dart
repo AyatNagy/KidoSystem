@@ -143,7 +143,7 @@ class Category2 extends StatelessWidget {
               MaterialPageRoute(
                 builder:
                     (context) => PuzzlePracticeScreen(
-                      levels: appleLevels,
+                      levels: allPuzzleLevels,
                       childName: childName,
                       childId: childId,
                     ),

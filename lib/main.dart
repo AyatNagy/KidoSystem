@@ -9,7 +9,12 @@ import 'Widgets/responsive_provider.dart';
 import 'config/responsive_config.dart';
 
 void main() {
-  runApp(DevicePreview(enabled: true, builder: (context) => const MyApp()));
+  WidgetsFlutterBinding.ensureInitialized();
+
+  PaintingBinding.instance.imageCache.maximumSize = 200;
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 50 * 1024 * 1024;
+
+  runApp(const AppLifecycleWatcher(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -17,23 +22,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AssessmentCubit>(create: (_) => AssessmentCubit()),
-      ],
-      child: InfoWidget(
-        builder: (context, deviceInfo) {
-          return ResponsiveProvider(
-            config: ResponsiveConfig(deviceInfo),
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              builder: DevicePreview.appBuilder,
-              locale: DevicePreview.locale(context),
-              home: const AppLifecycleWatcher(child: Logo()),
+    return DevicePreview(
+      enabled: true,
+      builder:
+          (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider<AssessmentCubit>(create: (_) => AssessmentCubit()),
+            ],
+            child: InfoWidget(
+              builder: (context, deviceInfo) {
+                return ResponsiveProvider(
+                  config: ResponsiveConfig(deviceInfo),
+                  child: MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    builder: DevicePreview.appBuilder,
+                    locale: DevicePreview.locale(context),
+                    home: const Logo(),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
+          ),
     );
   }
 }
