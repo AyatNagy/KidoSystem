@@ -161,22 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   config: config,
                   isRtl: isRtl,
                 ),
-                _ProfileTile(
-                  icon: CupertinoIcons.globe,
-                  title: isRtl ? "اللغة" : "Language",
-                  subtitle: isRtl ? "العربية" : "English",
-                  color: AppColors.purpleMain,
-                  onTap: () {
-                    // Toggles the language dynamically depending on current directionality
-                    if (isRtl) {
-                      widget.onLanguageChanged(const Locale('en'));
-                    } else {
-                      widget.onLanguageChanged(const Locale('ar'));
-                    }
-                  },
-                  config: config,
-                  isRtl: isRtl,
-                ),
+                _buildLanguageSwitchTile(config, isRtl),
                 _ProfileTile(
                   icon: CupertinoIcons.lock_shield_fill,
                   title: isRtl ? "الخصوصية والأمان" : "Privacy & Security",
@@ -193,6 +178,120 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageSwitchTile(dynamic config, bool isRtl) {
+    return Container(
+      margin: EdgeInsets.only(bottom: config.localHeight * 0.022),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.purpleMain.withOpacity(0.06),
+            blurRadius: 16,
+            spreadRadius: 1,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.purpleMain.withOpacity(0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                CupertinoIcons.globe,
+                color: AppColors.purpleMain,
+                size: config.headline * 0.9,
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isRtl ? "اللغة" : "Language",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: config.body * 1.05,
+                      color: AppColors.textDark,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2.0),
+                    child: Text(
+                      isRtl ? "تغيير لغة واجهة التطبيق" : "Change application language",
+                      style: TextStyle(
+                        fontSize: config.body * 0.8,
+                        color: Colors.grey.shade500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                color: AppColors.bgColor,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildSwitchButton('EN', 'English', !isRtl),
+                  _buildSwitchButton('AR', 'العربية', isRtl),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSwitchButton(String langCode, String label, bool isActive) {
+    return GestureDetector(
+      onTap: () {
+        if (langCode == 'EN' && isActive == false) {
+          widget.onLanguageChanged(const Locale('en'));
+        } else if (langCode == 'AR' && isActive == false) {
+          widget.onLanguageChanged(const Locale('ar'));
+        }
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: isActive ? AppColors.purpleMain : Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: isActive ? [
+            BoxShadow(
+              color: AppColors.purpleMain.withOpacity(0.2),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            )
+          ] : null,
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w900,
+            color: isActive ? Colors.white : AppColors.textGray,
+            fontFamily: langCode == 'AR' ? 'Cairo' : 'Fredoka',
+          ),
+        ),
       ),
     );
   }

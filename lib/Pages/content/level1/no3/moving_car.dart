@@ -11,7 +11,7 @@ import '../level1_home.dart';
 
 class MovingCarPage extends StatefulWidget {
   final VoidCallback? onNext;
-  final String childName; // ← ضيف
+  final String childName;
   final int childId;
   const MovingCarPage({
     super.key,
@@ -89,8 +89,8 @@ class _MovingCarPageState extends State<MovingCarPage>
               MaterialPageRoute(
                 builder:
                     (context) => Level1Home(
-                      childName: widget.childName, // ← بدل 'habiba'
-                      childId: widget.childId, // ← ضيف
+                      childName: widget.childName,
+                      childId: widget.childId,
                     ),
               ),
             );

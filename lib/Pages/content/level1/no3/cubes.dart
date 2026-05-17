@@ -14,7 +14,7 @@ import 'moving_car.dart';
 
 class CubesLesson extends StatefulWidget {
   final VoidCallback? onNext;
-  final String childName; // ← ضيف
+  final String childName;
   final int childId;
   const CubesLesson({
     super.key,

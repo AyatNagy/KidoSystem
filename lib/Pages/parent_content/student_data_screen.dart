@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:kido/Pages/kid/child_level_select_page.dart';
 import 'package:kido/Pages/kid/child_profile_setup_page.dart';
 import 'package:kido/Pages/kid/exam_screen.dart';
+import 'package:kido/Widgets/Layout/snackbar.dart';
 import '../../Widgets/Layout/app_bar.dart';
 import '../../Widgets/responsive_provider.dart';
 import '../../Widgets/text_field_item.dart';
@@ -147,12 +148,7 @@ class _StudentDataState extends State<StudentData> {
                   );
                   if (!mounted) return;
                   if (!ok) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(_setInitialLevelErrorText()),
-                        backgroundColor: AppColors.kidoRed,
-                      ),
-                    );
+                    showKidoSnack(context, _setInitialLevelErrorText());
                   }
                 }
 
@@ -204,12 +200,7 @@ class _StudentDataState extends State<StudentData> {
                     );
                     if (!mounted) return;
                     if (!ok) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(_setInitialLevelErrorText()),
-                          backgroundColor: AppColors.kidoRed,
-                        ),
-                      );
+                      showKidoSnack(context, _setInitialLevelErrorText());
                     }
                   }
 
@@ -245,12 +236,7 @@ class _StudentDataState extends State<StudentData> {
                     );
                     if (!mounted) return;
                     if (!ok2) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(_setInitialLevelErrorText()),
-                          backgroundColor: AppColors.kidoRed,
-                        ),
-                      );
+                      showKidoSnack(context, _setInitialLevelErrorText());
                     }
                   }
 
@@ -340,7 +326,7 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           nameError!,
-                          textAlign: TextAlign.center, // 🛠️ Centered error text
+                          textAlign: TextAlign.center,
                           style: const TextStyle(
                             color: Colors.red,
                             fontSize: 12,
@@ -364,7 +350,7 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           usernameError!,
-                          textAlign: TextAlign.center, // 🛠️ Centered error text
+                          textAlign: TextAlign.center,
                           style: const TextStyle(
                             color: AppColors.kidoRed,
                             fontSize: 12,
@@ -390,7 +376,7 @@ class _StudentDataState extends State<StudentData> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           ageError!,
-                          textAlign: TextAlign.center, // 🛠️ Centered error text
+                          textAlign: TextAlign.center,
                           style: const TextStyle(
                             color: AppColors.kidoRed,
                             fontSize: 12,
@@ -404,7 +390,6 @@ class _StudentDataState extends State<StudentData> {
                       fieldLabel: "Child's Password",
                       fieldObscure: !isPasswordVisible,
                       onChanged: (value) {
-                        // 🛠️ Triggers re-build to pipe keystrokes directly into PasswordErrorsView live
                         setState(() {});
                       },
                       suffixIcon: IconButton(
