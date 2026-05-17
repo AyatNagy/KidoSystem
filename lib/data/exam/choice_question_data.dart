@@ -61,6 +61,13 @@ final List<ChoiceQuestion> allChoiceQuestions = [
   ),
 
   ChoiceQuestion(
+    examId: ["post_level1"],
+    questionAudio: "senses/where_is_nose.mp3",
+    choices: ["assets/images/senses/nose.png", "assets/images/senses/ears.png"],
+    correctIndex: 0,
+  ),
+
+  ChoiceQuestion(
     examId: ["post_level2"],
     questionAudio: "sizes/where_tall.mp3",
     choices: ["assets/images/tree.png", "assets/images/vegi.png"],
