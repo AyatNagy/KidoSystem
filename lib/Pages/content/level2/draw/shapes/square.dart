@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/content/level2/draw/triangle.dart';
-import '../../../../Widgets/content/level2/shapes.dart';
-import '../../../../data/content/level2/shapes.dart';
+import 'package:kido/Pages/content/level2/draw/shapes/triangle.dart';
+import '../../../../../Widgets/content/level2/shapes.dart';
+import '../../../../../data/content/level2/shapes.dart';
 
 class SquareDrawingPage extends StatelessWidget {
   final String childName; // ← ضيف

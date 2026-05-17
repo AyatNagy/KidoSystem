@@ -23,7 +23,7 @@ class Level1Home extends StatelessWidget {
       dailyChallengeTitle: "Daily Challenge",
       dailyChallengeSubtitle:
           "Counting, Sorting, PedBoard, Self-Care, feelings and senses",
-      examId: "exam1",
+      examId: "post_level1",
       examIcon: Icons.toys,
       examGradientColors: [AppColors.kidoBlue, AppColors.kidoColors[1]],
       categoryWidget: Category(childName: childName, childId: childId),

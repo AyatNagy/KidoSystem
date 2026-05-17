@@ -21,7 +21,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String _parentName = 'Parent';
+  late final String _parentName;
   File? _imageFile;
   Uint8List? _webImageBytes;
   final ImagePicker _picker = ImagePicker();
@@ -36,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      _parentName = prefs.getString('parent_name') ?? 'Parent';
+      _parentName = prefs.getString('parent_name') ?? '';
     });
     if (!kIsWeb) {
       final imagePath = prefs.getString('parent_image_path');
