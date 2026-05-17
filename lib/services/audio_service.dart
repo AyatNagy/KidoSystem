@@ -28,6 +28,31 @@ class AudioService {
     }
   }
 
+  static Future<void> playAndWait({required String fileName}) async {
+    if (!_isAppInForeground) {
+      _currentFile = fileName;
+      _isPlayingBeforePause = true;
+      return;
+    }
+
+    try {
+      _currentFile = fileName;
+
+      _lastPosition = Duration.zero;
+
+      await _player.stop();
+
+      await _player.play(AssetSource('audio/$fileName'));
+
+      _isPlayingBeforePause = true;
+
+      // 👇 استنى لحد ما الصوت يخلص
+      await _player.onPlayerComplete.first;
+    } catch (e) {
+      debugPrint("Audio playAndWait Error: $e");
+    }
+  }
+
   static Future<void> playSequence(String firstFile, String secondFile) async {
     if (!_isAppInForeground) return;
 

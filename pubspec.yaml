@@ -80,11 +80,13 @@ flutter:
     - assets/images/clean/Trash/
     - assets/images/puzzle/
     - assets/images/matching/
+    - assets/images/colors/
     - assets/images/animals/
     - assets/audio/animals/
     - assets/audio/level1/
     - assets/audio/shapes/
     - assets/audio/exams/
+    - assets/audio/colors/
 
   fonts:
     - family: tinyKids
