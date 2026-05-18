@@ -55,8 +55,10 @@ class ApiService {
       if (response.statusCode == 200) {
         final data = response.data;
         print("Login Successful: ${data['user']}");
-        if (data['token'] != null)
+        if (data['token'] != null) {
           await LocalStorage.setParentToken(data['token']);
+          await LocalStorage.setLoggedIn(true);
+        }
         if (data['user'] != null && data['user']['id'] != null) {
           await LocalStorage.setUserId(data['user']['id']);
         }

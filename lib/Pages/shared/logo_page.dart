@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/shared/start_page.dart';
+import 'package:kido/config/app_launch.dart';
 
 import '../../constants.dart';
 
@@ -14,13 +14,22 @@ class _SplashScreen extends State<Logo> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Start()),
-      );
-    });
+    _navigateAfterSplash();
+  }
+
+  Future<void> _navigateAfterSplash() async {
+    await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+
+    final destination = await AppLaunch.getStartupDestination();
+    if (!mounted) return;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AppLaunch.widgetForDestination(destination),
+      ),
+    );
   }
 
   @override
