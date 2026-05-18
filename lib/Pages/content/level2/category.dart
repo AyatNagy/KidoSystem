@@ -10,7 +10,6 @@ import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
 import '../../../data/content/level2/puzzle_data.dart';
 import 'draw/draw_line/octobus_and_star.dart';
-import 'package:kido/utils/lesson_completion.dart';
 
 class Category2 extends StatelessWidget {
   final String childName;
@@ -30,7 +29,6 @@ class Category2 extends StatelessWidget {
         childAspectRatio: 0.85,
       ),
       children: [
-        //drawing line
         CategoryCard(
           gradient: AppColors.alphabetGrad,
           graphic: Center(
@@ -42,43 +40,28 @@ class Category2 extends StatelessWidget {
               MaterialPageRoute(
                 builder:
                     (context) => OctobusAndStar(
-                      childId: childId,
-                      lessonId: 16,
                       onNext: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => RainyCloud(
-                                  childId: childId,
-                                  lessonId: 17,
                                   onNext: () {
-                                    Navigator.push(
+                                    Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                         builder:
                                             (context) => RocketLesson(
-                                              childId: childId,
-                                              lessonId: 18,
                                               onNext: () {
-                                                Navigator.push(
+                                                Navigator.pushReplacement(
                                                   context,
                                                   MaterialPageRoute(
                                                     builder:
                                                         (
                                                           context,
                                                         ) => PlusDrawingPage(
-                                                          childId: childId,
-                                                          lessonId: 19,
-                                                          onNext: () async {
-                                                            await completeLessonForChild(
-                                                              childId: childId,
-                                                              lessonId: 20,
-                                                            );
-                                                            if (!context.mounted) {
-                                                              return;
-                                                            }
-                                                            Navigator.push(
+                                                          onNext: () {
+                                                            Navigator.pushReplacement(
                                                               context,
                                                               MaterialPageRoute(
                                                                 builder:
@@ -110,7 +93,6 @@ class Category2 extends StatelessWidget {
             );
           },
         ),
-
         CategoryCard(
           gradient: AppColors.numbersGrad,
           graphic: Image.asset(
@@ -124,8 +106,6 @@ class Category2 extends StatelessWidget {
             );
           },
         ),
-
-        //Shapes
         CategoryCard(
           gradient: [AppColors.bgColor, AppColors.bgColor],
           graphic: Image.asset(
@@ -145,8 +125,6 @@ class Category2 extends StatelessWidget {
             );
           },
         ),
-
-        //Puzzle
         CategoryCard(
           gradient: [AppColors.kidoPink, AppColors.bgColor],
           graphic: Image.asset(
