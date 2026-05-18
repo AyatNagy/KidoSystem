@@ -4,10 +4,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:kido/Models/level3/animals/animal_model.dart';
 import 'package:kido/Widgets/content/choise_item_widget.dart';
-import 'package:kido/Widgets/content/content_app_bar.dart';
 import 'package:kido/Widgets/content/success_overlay_widget.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/services/audio_service.dart';
+import '../../../../constants.dart';
 import '../../../../data/content/level3/animals/animals_data.dart';
 
 class AnimalsPracticePage extends StatefulWidget {
@@ -136,7 +136,6 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
   }
 
   Matrix4 _getIdleTransform(double val) {
-    // Gentle up and down (8 pixels)
     return Matrix4.identity()..translate(0.0, -8 * val);
   }
 
@@ -153,17 +152,7 @@ class _AnimalsPracticePageState extends State<AnimalsPracticePage>
     final config = ResponsiveProvider.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar:
-          showSuccess
-              ? null
-              : PreferredSize(
-                preferredSize: Size.fromHeight(60),
-                child: ContentAppBar(
-                  title:
-                      "أين الـ ${correctAnimal.audioName.split('/').last.split('_').first}?",
-                ),
-              ),
+      backgroundColor: AppColors.bgColor,
       body: SafeArea(
         child: Center(
           child:
