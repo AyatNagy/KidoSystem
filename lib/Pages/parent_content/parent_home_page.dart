@@ -194,7 +194,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
         },
         child: _buildHomeContent(config, isRtl),
       ),
-      Dashboard(level: 1, score: 1, child: ,),
+      Dashboard(level: 1, score: 1,),
       Scaffold(body: Center(child: Text(isRtl ? "تعلم" : "Learn"))),
       ProfilePage(
         onLanguageChanged: (Locale newLocale) {
