@@ -38,57 +38,46 @@ class Category2 extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder:
-                    (context) => OctobusAndStar(
-                      onNext: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => RainyCloud(
+                builder: (context) => OctobusAndStar(
+                  onNext: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RainyCloud(
+                          onNext: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RocketLesson(
                                   onNext: () {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder:
-                                            (context) => RocketLesson(
-                                              onNext: () {
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder:
-                                                        (
-                                                          context,
-                                                        ) => PlusDrawingPage(
-                                                          onNext: () {
-                                                            Navigator.pushReplacement(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (
-                                                                      context,
-                                                                    ) => Level2Home(
-                                                                      childName:
-                                                                          childName,
-                                                                      childId:
-                                                                          childId,
-                                                                    ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
+                                        builder: (context) => PlusDrawingPage(
+                                          onNext: () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => Level2Home(
+                                                  childName: childName,
+                                                  childId: childId,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
                                     );
                                   },
                                 ),
-                          ),
-                        );
-                      },
-                    ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             );
           },
@@ -116,11 +105,10 @@ class Category2 extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder:
-                    (context) => CircleDrawingPage(
-                      childName: childName,
-                      childId: childId,
-                    ),
+                builder: (context) => CircleDrawingPage(
+                  childName: childName,
+                  childId: childId,
+                ),
               ),
             );
           },
@@ -135,12 +123,11 @@ class Category2 extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder:
-                    (context) => PuzzlePracticeScreen(
-                      levels: allPuzzleLevels,
-                      childName: childName,
-                      childId: childId,
-                    ),
+                builder: (context) => PuzzlePracticeScreen(
+                  levels: allPuzzleLevels,
+                  childName: childName,
+                  childId: childId,
+                ),
               ),
             );
           },
