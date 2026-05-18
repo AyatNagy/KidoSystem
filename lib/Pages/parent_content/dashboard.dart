@@ -10,13 +10,13 @@ import '../../constants.dart';
 import '../../data/dashboard.dart';
 
 class Dashboard extends StatelessWidget {
-  final Child? child;
+  final Child child;
   final int level;
   final double score;
 
   const Dashboard({
     super.key,
-    this.child,
+    required this.child,
     required this.level,
     required this.score,
   });
@@ -24,7 +24,7 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => DashboardBloc()..loadDashboardData(child!, level, score),
+      create: (context) => DashboardBloc()..loadDashboardData(child, level, score),
       child: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
           return Scaffold(
