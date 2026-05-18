@@ -1,9 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:async';
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart'; // استيراد مكتبة الـ Lottie لعرض ملف الجيسون
+import 'package:lottie/lottie.dart';
 import 'package:kido/Models/level2/color_model.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/services/audio_service.dart';
@@ -27,58 +26,51 @@ class _ColorPoppingWidgetState extends State<ColorPoppingWidget>
   final List<bool> _isPopped = [false, false, false, false];
   int _poppedCount = 0;
   bool _isProcessing = false;
-  bool _showConfetti = false; // متغيّر للتحكم في ظهور أنيميشن الاحتفال الجيسون
+  bool _showConfetti = false;
 
-  late AnimationController _backgroundController;
-
-  // أنيميشن طيران ودخول البلالين من تحت الشاشة لفوق
   late AnimationController _entranceController;
-
-  // أنيميشن الاهتزاز الخفيف للبلالين وهي واقفة مكانها
   late AnimationController _floatingController;
-
-  Timer? _autoPopTimer;
+  late Animation<double> _floatingAnimation;
+  Timer? _balloonTimer;
 
   @override
   void initState() {
     super.initState();
 
-    // 1. أنيميشن الخلفية
-    _backgroundController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    )..repeat(reverse: true);
-
-    // 2. أنيميشن طيران البلالين من تحت لفوق عند البداية
     _entranceController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 1000),
     );
 
-    // 3. أنيميشن الاهتزاز اللطيف (Floating) للبلالين وهي واقفة
     _floatingController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 2000),
     )..repeat(reverse: true);
 
-    // تشغيل أنيميشن الطيران فوراً، وبدء تايمر الـ 3 ثوانٍ لما البلالين تستقر
-    _entranceController.forward().then((_) {
-      _startAutoPopTimer();
+    _floatingAnimation = Tween<double>(begin: -4.0, end: 4.0).animate(
+      CurvedAnimation(parent: _floatingController, curve: Curves.easeInOut),
+    );
+
+    _entranceController.forward().then((_) async {
+      await Future.delayed(const Duration(seconds: 2));
+      if (mounted) {
+        _startBalloonTimer();
+      }
     });
   }
 
-  // بدء عداد الـ 3 ثوانٍ للمساعدة التلقائية
-  void _startAutoPopTimer() {
-    _autoPopTimer?.cancel();
-    if (_poppedCount >= 4) return;
+  void _startBalloonTimer() {
+    _balloonTimer?.cancel();
+    if (_poppedCount >= 4 || !mounted) return;
 
-    _autoPopTimer = Timer(const Duration(seconds: 3), () {
+    _balloonTimer = Timer(const Duration(seconds: 2), () {
       _popNextBalloonAutomatically();
     });
   }
 
-  // فرقعة البالونة التالية تلقائياً لو الطفل اتأخر
   void _popNextBalloonAutomatically() {
+    if (_isProcessing || _poppedCount >= 4) return;
+
     for (int i = 0; i < _isPopped.length; i++) {
       if (!_isPopped[i]) {
         _popBalloon(i);
@@ -87,27 +79,11 @@ class _ColorPoppingWidgetState extends State<ColorPoppingWidget>
     }
   }
 
-  Color _getGlowColor() {
-    switch (widget.colorTarget.id) {
-      case 'red':
-        return Colors.redAccent;
-      case 'yellow':
-        return Colors.amber;
-      case 'blue':
-        return Colors.lightBlueAccent;
-      case 'green':
-        return Colors.greenAccent;
-      default:
-        return Colors.deepPurpleAccent;
-    }
-  }
-
   Future<void> _popBalloon(int index) async {
     if (_isPopped[index]) return;
     if (_isProcessing) return;
 
-    // بنوقف التايمر مؤقتاً علشان الأصوات والفرقعة ما يدخلوش في بعض
-    _autoPopTimer?.cancel();
+    _balloonTimer?.cancel();
     _isProcessing = true;
 
     setState(() {
@@ -115,42 +91,37 @@ class _ColorPoppingWidgetState extends State<ColorPoppingWidget>
       _poppedCount++;
     });
 
-    // 1. تشغيل صوت الفرقعة
-    await AudioService.playAndWait(fileName: 'colors/ballon_pop.mp3');
+    // 1️⃣ تشغيل صوت الفرقعة على الـ Player المنفصل (بدون await)
+    AudioService.playEffect(fileName: 'colors/ballon_pop.mp3');
 
-    await Future.delayed(const Duration(milliseconds: 50));
+    // 2️⃣ انتظار بسيط عشان الفرقعة تبان قبل نطق اسم اللون
+    await Future.delayed(const Duration(milliseconds: 300));
 
-    // 2. تشغيل صوت اسم اللون المظبوط
+    // 3️⃣ نطق اسم اللون بالدالة الأساسية القديمة والانتظار حتى ينتهي
     await AudioService.playAndWait(fileName: widget.colorTarget.introAudio);
 
     _isProcessing = false;
 
-    // التحقق من انتهاء المرحلة (كل البلالين اتفرقعت)
     if (_poppedCount == 4) {
-      // إظهار أنيميشن الاحتفال (الكونفيتي) في الـ Stack
       setState(() {
         _showConfetti = true;
       });
 
-      // 🎉 تشغيل صوت زمارة الاحتفال فوراً مع ظهور الكونفيتي
       await AudioService.playAndWait(fileName: 'party_blower.mp3');
-
-      // وقت إضافي علشان الطفل يستمتع بالكونفيتي والاحتفال قبل النقل للمرحلة الجاية
       await Future.delayed(const Duration(milliseconds: 1800));
 
       if (mounted) {
         widget.onCompleted();
       }
-    } else {
-      // لو لسه فيه بلالين، بنشغل التايمر تاني للبالونة اللي بعدها
-      _startAutoPopTimer();
+      return;
     }
+
+    _startBalloonTimer();
   }
 
   @override
   void dispose() {
-    _autoPopTimer?.cancel();
-    _backgroundController.dispose();
+    _balloonTimer?.cancel();
     _entranceController.dispose();
     _floatingController.dispose();
     super.dispose();
@@ -159,42 +130,16 @@ class _ColorPoppingWidgetState extends State<ColorPoppingWidget>
   @override
   Widget build(BuildContext context) {
     final responsive = ResponsiveProvider.of(context);
-    final glowColor = _getGlowColor();
 
     return Stack(
       children: [
-        // background
+        // ⚪ تعديل الخلفية: شاشة بيضاء سادة تماماً وبدون أي تدرج ألوان أو توهج
         Container(
           width: double.infinity,
           height: double.infinity,
           color: const Color(0xffFCFCFC),
         ),
 
-        // animated glow
-        AnimatedBuilder(
-          animation: _backgroundController,
-          builder: (context, child) {
-            return Opacity(
-              opacity: 0.08,
-              child: Center(
-                child: Container(
-                  width:
-                      responsive.localWidth *
-                      (0.55 + (_backgroundController.value * 0.1)),
-                  height:
-                      responsive.localWidth *
-                      (0.55 + (_backgroundController.value * 0.1)),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: glowColor,
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-
-        // balloons grid
         Padding(
           padding: EdgeInsets.symmetric(
             horizontal: responsive.localWidth * 0.08,
@@ -213,9 +158,11 @@ class _ColorPoppingWidgetState extends State<ColorPoppingWidget>
               final popped = _isPopped[index];
 
               return GestureDetector(
-                onTap: () => _popBalloon(index),
+                onTap: () {
+                  _popBalloon(index);
+                },
                 child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 350),
+                  duration: const Duration(milliseconds: 250),
                   transitionBuilder: (child, animation) {
                     return ScaleTransition(
                       scale: animation,
@@ -233,47 +180,28 @@ class _ColorPoppingWidgetState extends State<ColorPoppingWidget>
                             key: ValueKey('balloon_$index'),
                             animation: Listenable.merge([
                               _entranceController,
-                              _floatingController,
+                              _floatingAnimation,
                             ]),
                             builder: (context, child) {
-                              // 1. حركة الطيران من تحت لفوق عند فتح الشاشة
                               final double entranceValue =
                                   CurvedAnimation(
                                     parent: _entranceController,
-                                    curve: Curves.easeOutBack,
+                                    curve: Curves.easeOutCubic,
                                   ).value;
-                              final double slideUp =
-                                  (1.0 - entranceValue) * 500.0;
 
-                              // 2. حركة الاهتزاز (الطفو) الخفيفة والبلونة واقفة مكانها
-                              final double direction =
-                                  (index % 2 == 0) ? 1.0 : -1.0;
-                              final double floatingY =
-                                  math.sin(
-                                    _floatingController.value * math.pi * 2,
-                                  ) *
-                                  7.0 *
-                                  direction;
+                              final double slideUp =
+                                  (1.0 - entranceValue) * 600.0;
+                              final double floatingY = _floatingAnimation.value;
 
                               return Transform.translate(
                                 offset: Offset(0, slideUp + floatingY),
                                 child: child,
                               );
                             },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: glowColor.withOpacity(0.22),
-                                    blurRadius: 25,
-                                    spreadRadius: 2,
-                                  ),
-                                ],
-                              ),
-                              child: Image.asset(
-                                'assets/images/${widget.colorTarget.balloonImage}',
-                                fit: BoxFit.contain,
-                              ),
+                            // 🎈 تعديل البالونة: تم إزالة الـ BoxDecoration والـ BoxShadow تماماً من هنا لشيل الظل الأصفر
+                            child: Image.asset(
+                              'assets/images/${widget.colorTarget.balloonImage}',
+                              fit: BoxFit.contain,
                             ),
                           ),
                 ),
@@ -282,17 +210,15 @@ class _ColorPoppingWidgetState extends State<ColorPoppingWidget>
           ),
         ),
 
-        // طبقة الاحتفال بالـ JSON (تظهر فوق كل العناصر مغطية الشاشة بالكامل)
         if (_showConfetti)
           IgnorePointer(
-            // تمنع تفاعل الطفل مع الشاشة وقت الاحتفال لمنع أي ضغطات غريبة
             child: SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: Lottie.asset(
-                'assets/images/confetti.json', // غيري المسار هنا للاسم والملف المظبوط عندك
+                'assets/lottie/confetti.json',
                 fit: BoxFit.cover,
-                repeat: false, // يشتغل مرة واحدة بس مع الزمارة
+                repeat: false,
               ),
             ),
           ),

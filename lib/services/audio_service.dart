@@ -4,11 +4,28 @@ import 'package:flutter/foundation.dart';
 class AudioService {
   static final AudioPlayer _player = AudioPlayer();
 
+  // ➕ إضافة جديدة: لاعب منفصل تماماً للمؤثرات الصوتية (علشان يشتغلوا فوق بعض)
+  static final AudioPlayer _effectsPlayer = AudioPlayer();
+
   static String? _currentFile;
   static Duration _lastPosition = Duration.zero;
   static bool _isPlayingBeforePause = false;
-
   static bool _isAppInForeground = true;
+
+  // ➕ دالة جديدة تماماً: خاصة بالفرقعة، مش بتأثر على الـ _player القديم نهائي
+  static Future<void> playEffect({required String fileName}) async {
+    if (!_isAppInForeground) return;
+    try {
+      await _effectsPlayer.stop();
+      await _effectsPlayer.play(AssetSource('audio/$fileName'));
+    } catch (e) {
+      debugPrint("Audio Play Effect Error: $e");
+    }
+  }
+
+  // -------------------------------------------------------------
+  // ⚠️ الدوال القديمة كما هي تماماً دون أي تغيير في اللوجيك الخاص بها:
+  // -------------------------------------------------------------
 
   static Future<void> play({required String fileName}) async {
     if (!_isAppInForeground) {
@@ -37,13 +54,9 @@ class AudioService {
 
     try {
       _currentFile = fileName;
-
       _lastPosition = Duration.zero;
-
       await _player.stop();
-
       await _player.play(AssetSource('audio/$fileName'));
-
       _isPlayingBeforePause = true;
 
       // 👇 استنى لحد ما الصوت يخلص
@@ -81,6 +94,8 @@ class AudioService {
         await _player.pause();
         debugPrint("Audio paused on leave at: $_lastPosition");
       }
+      // زيادة أمان: بنوقف صوت المؤثرات لو خرجنا من التطبيق
+      await _effectsPlayer.pause();
     } catch (e) {
       debugPrint("Audio Pause On Leave Error: $e");
     }
@@ -104,5 +119,7 @@ class AudioService {
     _lastPosition = Duration.zero;
     _isPlayingBeforePause = false;
     _player.stop();
+    _effectsPlayer
+        .stop(); // بنوقف الـ effects كمان هنا عند الاستدعاء العام للـ stop
   }
 }

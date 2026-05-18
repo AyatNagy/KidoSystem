@@ -1,3 +1,6 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kido/Models/dragable_item.dart';
 import 'package:kido/Models/exams/draganddrop_question.dart';
@@ -22,34 +25,91 @@ class ColorQuizStageWidget extends StatefulWidget {
   State<ColorQuizStageWidget> createState() => _ColorQuizStageWidgetState();
 }
 
-class _ColorQuizStageWidgetState extends State<ColorQuizStageWidget> {
+class _ColorQuizStageWidgetState extends State<ColorQuizStageWidget>
+    with SingleTickerProviderStateMixin {
   int _currentQuestionIndex = 0;
   List<DragDropQuestion> _quizQuestions = [];
   bool _isInitialized = false;
-  bool _showHand = true;
+  bool _showHand = false;
+  bool _childStartedDragging = false;
+  bool _highlightCorrect = false;
+  Timer? _repeatTimer;
+  final List<String> _fadedWrongItems = [];
+  String? _currentlyDraggedItem;
+
+  // الأنيميشن الجديد المماثل لحركة السحب
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
 
   @override
   void initState() {
     super.initState();
+
+    // إعداد التكبير والتصغير المتكرر والناعم جداً
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+
     _generateQuestions();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _playQuestionAudio();
+      _playHelpSequence();
     });
   }
 
-  Future<void> _playQuestionAudio() async {
-    if (_quizQuestions.isNotEmpty &&
-        _currentQuestionIndex < _quizQuestions.length) {
-      await AudioService.playAndWait(
-        fileName: _quizQuestions[_currentQuestionIndex].questionAudio,
-      );
+  @override
+  void dispose() {
+    _repeatTimer?.cancel();
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _playHelpSequence() async {
+    if (!mounted) return;
+
+    setState(() {
+      _showHand = true;
+      _highlightCorrect = true;
+    });
+
+    // تشغيل نبضات التكبير والتصغير فوراً بشكل مستمر وناعم
+    _pulseController.repeat(reverse: true);
+
+    await AudioService.playAndWait(
+      fileName: _quizQuestions[_currentQuestionIndex].questionAudio,
+    );
+
+    if (!mounted) return;
+
+    await Future.delayed(const Duration(milliseconds: 1500));
+
+    if (mounted) {
+      setState(() {
+        _showHand = false;
+        _highlightCorrect = false;
+      });
+      _pulseController.reset();
     }
+
+    _startRepeatTimer();
+  }
+
+  void _startRepeatTimer() {
+    _repeatTimer?.cancel();
+    _repeatTimer = Timer(const Duration(seconds: 3), () async {
+      if (!_childStartedDragging && mounted) {
+        await _playHelpSequence();
+      }
+    });
   }
 
   void _generateQuestions() {
     final correctImages = widget.colorTarget.targetImages;
-
-    // تجميع كل صور التشتيت من الألوان الأخرى في المجموعة
     final otherColors =
         widget.currentGroup.colors
             .where((c) => c.id != widget.colorTarget.id)
@@ -60,18 +120,14 @@ class _ColorQuizStageWidgetState extends State<ColorQuizStageWidget> {
       allDistractors.addAll(color.targetImages);
     }
 
-    // لو مفيش مشتتات كفاية بنحط صور احتياطية
     if (allDistractors.isEmpty) {
       allDistractors = ['animals/cow.png', 'animals/cat.png'];
     }
 
     List<DragDropQuestion> generatedQuestions = [];
 
-    // توليد سؤال لكل صورة صحيحة متاحة للون الحالي
     for (int i = 0; i < correctImages.length; i++) {
       final correctImg = correctImages[i];
-
-      // اختيار مشتتات عشوائية ومختلفة في كل سؤال
       List<String> currentDistractors = List.from(allDistractors)..shuffle();
       final wrong1 = currentDistractors[0];
       final wrong2 =
@@ -79,12 +135,11 @@ class _ColorQuizStageWidgetState extends State<ColorQuizStageWidget> {
               ? currentDistractors[1]
               : currentDistractors[0];
 
-      // تجهيز العناصر الثلاثة (1 صح و 2 غلط)
       List<DragItem> items = [
         DragItem(
           id: 'correct_$i',
           image: 'assets/images/$correctImg',
-          startPosition: Offset.zero, // هيتم توزيعها عشوائياً بالأسفل
+          startPosition: Offset.zero,
           size: const Size(0.22, 0.22),
         ),
         DragItem(
@@ -101,10 +156,8 @@ class _ColorQuizStageWidgetState extends State<ColorQuizStageWidget> {
         ),
       ];
 
-      // خلط (Shuffle) العناصر عشان مكان الإجابة الصح يتغير في كل سؤال
       items.shuffle();
 
-      // إعادة تعيين الـ Positions الأفقية بناءً على الترتيب العشوائي الجديد
       final List<Offset> positions = [
         const Offset(0.08, 0.14),
         const Offset(0.40, 0.14),
@@ -144,23 +197,59 @@ class _ColorQuizStageWidgetState extends State<ColorQuizStageWidget> {
   }
 
   Future<void> _onItemAnswered(Map<String, String?> answers) async {
+    bool hasCorrectAnswer = answers.keys.any(
+      (key) => key.startsWith('correct_'),
+    );
+    if (!hasCorrectAnswer) return;
+
+    _repeatTimer?.cancel();
+    _pulseController.reset();
+
     setState(() {
       _showHand = false;
+      _highlightCorrect = false;
     });
 
-    await AudioService.playAndWait(fileName: "colors/correct_bell.mp3");
+    await AudioService.playAndWait(fileName: "great_hero.mp3");
     await Future.delayed(const Duration(milliseconds: 400));
 
     if (_currentQuestionIndex < _quizQuestions.length - 1) {
       setState(() {
         _currentQuestionIndex++;
-        _showHand = true;
+        _fadedWrongItems.clear();
+        _currentlyDraggedItem = null;
+        _showHand = false;
+        _highlightCorrect = false;
+        _childStartedDragging = false;
       });
+
       await Future.delayed(const Duration(milliseconds: 300));
-      _playQuestionAudio();
+      _playHelpSequence();
     } else {
       widget.onCompleted();
     }
+  }
+
+  Future<void> _handleWrongAnswer() async {
+    _repeatTimer?.cancel();
+    _pulseController.reset();
+
+    if (_currentlyDraggedItem != null) {
+      if (!_fadedWrongItems.contains(_currentlyDraggedItem!)) {
+        setState(() {
+          _fadedWrongItems.add(_currentlyDraggedItem!);
+        });
+      }
+    }
+
+    setState(() {
+      _showHand = false;
+      _highlightCorrect = false;
+      _childStartedDragging = false;
+    });
+
+    await Future.delayed(const Duration(milliseconds: 500));
+    await _playHelpSequence();
   }
 
   @override
@@ -169,9 +258,14 @@ class _ColorQuizStageWidgetState extends State<ColorQuizStageWidget> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    // تحديد مكان اليد بناءً على أول عنصر في السؤال الحالي (أياً كان نوعه لتبسيط التوجيه البصري)
-    final firstItemPos =
-        _quizQuestions[_currentQuestionIndex].items.first.startPosition;
+    final currentQuestion = _quizQuestions[_currentQuestionIndex];
+    final correctItem = currentQuestion.items.firstWhere(
+      (item) => item.id.startsWith('correct_'),
+    );
+    final correctItemPos = correctItem.startPosition;
+    final basketTarget = currentQuestion.targets.first;
+    final basketPos = basketTarget.position;
+    final screenSize = MediaQuery.of(context).size;
 
     return Stack(
       children: [
@@ -180,36 +274,120 @@ class _ColorQuizStageWidgetState extends State<ColorQuizStageWidget> {
           height: double.infinity,
           color: const Color(0xffFCFCFC),
         ),
+
+        // 1. كود الـ Widget الأصلي كما هو دون أي تعديل داخلي
         DragDropWidget(
           key: ValueKey('color_q_$_currentQuestionIndex'),
-          question: _quizQuestions[_currentQuestionIndex],
+          question: currentQuestion,
           onAnswered: _onItemAnswered,
-          onWrongDrop: () async {
-            await AudioService.play(fileName: "colors/wrong_buzz.mp3");
-          },
+          onWrongDrop: _handleWrongAnswer,
           onDragStart: () {
-            if (_showHand) {
-              setState(() {
-                _showHand = false;
-              });
+            _repeatTimer?.cancel();
+            _pulseController.reset();
+
+            final wrongItems =
+                currentQuestion.items
+                    .where((item) => !item.id.startsWith('correct_'))
+                    .toList();
+
+            if (wrongItems.isNotEmpty) {
+              _currentlyDraggedItem = wrongItems.first.id;
             }
+
+            setState(() {
+              _childStartedDragging = true;
+              _showHand = false;
+              _highlightCorrect = false;
+            });
           },
         ),
+
+        // 2. إخفاء ذكي للصورة الثابتة الأصلية لتجنب تكرار الظلال أو تداخل الصور
+        if (_highlightCorrect)
+          Positioned(
+            left: screenSize.width * correctItemPos.dx,
+            top: screenSize.height * correctItemPos.dy,
+            width: screenSize.width * correctItem.size.width,
+            height: screenSize.height * correctItem.size.height,
+            child: IgnorePointer(
+              child: Container(
+                color: const Color(
+                  0xffFCFCFC,
+                ), // يغطي العنصر القديم بظله تماماً وبنعومة
+              ),
+            ),
+          ),
+
+        // 3. الأنيميشن الاحترافي الجديد: نبض ناعم ومطابق تماماً لحركة السحب (بدون مشاكل بصريّة)
+        if (_highlightCorrect)
+          Positioned(
+            left: screenSize.width * correctItemPos.dx,
+            top: screenSize.height * correctItemPos.dy,
+            width: screenSize.width * correctItem.size.width,
+            height: screenSize.height * correctItem.size.height,
+            child: IgnorePointer(
+              child: AnimatedBuilder(
+                animation: _pulseAnimation,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _pulseAnimation.value,
+                    child: child,
+                  );
+                },
+                child: Image.asset(correctItem.image, fit: BoxFit.contain),
+              ),
+            ),
+          ),
+
+        // التغطية والـ Fade على العناصر الخاطئة
+        ...currentQuestion.items
+            .where((item) => _fadedWrongItems.contains(item.id))
+            .map((item) {
+              return Positioned(
+                left: screenSize.width * item.startPosition.dx,
+                top: screenSize.height * item.startPosition.dy,
+                width: screenSize.width * item.size.width,
+                height: screenSize.height * item.size.height,
+                child: IgnorePointer(
+                  child: AnimatedOpacity(
+                    opacity: 0.45,
+                    duration: const Duration(milliseconds: 400),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.85),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+
+        // حركة اليد الإرشادية
         if (_showHand)
           _AnimatedHandGuide(
-            startX: firstItemPos.dx + 0.05,
-            startY: firstItemPos.dy + 0.05,
+            startX: correctItemPos.dx + 0.08,
+            startY: correctItemPos.dy + 0.08,
+            endX: basketPos.dx + 0.12,
+            endY: basketPos.dy + 0.10,
           ),
       ],
     );
   }
 }
 
-// تعديل اليد المساعدة لتستقبل إحداثيات ديناميكية متوافقة مع الأجهزة
 class _AnimatedHandGuide extends StatefulWidget {
   final double startX;
   final double startY;
-  const _AnimatedHandGuide({required this.startX, required this.startY});
+  final double endX;
+  final double endY;
+
+  const _AnimatedHandGuide({
+    required this.startX,
+    required this.startY,
+    required this.endX,
+    required this.endY,
+  });
 
   @override
   State<_AnimatedHandGuide> createState() => _AnimatedHandGuideState();
@@ -218,20 +396,38 @@ class _AnimatedHandGuide extends StatefulWidget {
 class _AnimatedHandGuideState extends State<_AnimatedHandGuide>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _animation;
+  late Animation<double> _xAnimation;
+  late Animation<double> _yAnimation;
+  late Animation<double> _opacityAnimation;
 
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 900),
-    )..repeat(reverse: true);
+      duration: const Duration(milliseconds: 2200),
+    )..repeat();
 
-    _animation = Tween<double>(
-      begin: 0,
-      end: 15,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _xAnimation = Tween<double>(begin: widget.startX, end: widget.endX).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.1, 0.8, curve: Curves.easeInOut),
+      ),
+    );
+
+    _yAnimation = Tween<double>(begin: widget.startY, end: widget.endY).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.1, 0.8, curve: Curves.easeInOut),
+      ),
+    );
+
+    _opacityAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: 0.85), weight: 15),
+      TweenSequenceItem(tween: Tween(begin: 0.85, end: 0.85), weight: 65),
+      TweenSequenceItem(tween: Tween(begin: 0.85, end: 0.0), weight: 20),
+    ]).animate(_controller);
   }
 
   @override
@@ -243,27 +439,30 @@ class _AnimatedHandGuideState extends State<_AnimatedHandGuide>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return IgnorePointer(
-      child: AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
-          return Positioned(
-            left: size.width * widget.startX,
-            top: (size.height * widget.startY) + _animation.value,
-            child: Opacity(
-              opacity: 0.85,
-              child: Image.asset(
-                'assets/images/animated_hand-Photoroom.png',
-                width: size.isTablet ? 120 : 80, // دعم نسبي للتابلت
+
+    return Positioned(
+      left: 0,
+      top: 0,
+      child: IgnorePointer(
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(
+                size.width * _xAnimation.value,
+                size.height * _yAnimation.value,
               ),
-            ),
-          );
-        },
+              child: Opacity(
+                opacity: _opacityAnimation.value,
+                child: Image.asset(
+                  'assets/images/animated_hand-Photoroom.png',
+                  width: size.width > 600 ? 120 : 80,
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
-}
-
-extension on Size {
-  bool get isTablet => width > 600;
 }
