@@ -18,48 +18,52 @@ class ColorGameScreen extends StatefulWidget {
 
 class _ColorGameScreenState extends State<ColorGameScreen> {
   int _currentColorIndex = 0;
-
   GameStage _currentStage = GameStage.intro;
 
   @override
   void dispose() {
     AudioService.stop();
-
     super.dispose();
   }
 
-  void _goToNextColorOrFinish() {
-    // لو لسه فيه ألوان تانية
+  /// دالة التحكم في الانتقال بين الألوان والمراحل
+  void _handleQuizCompleted() {
+    if (!mounted) return;
+
+    // لو لسه فيه ألوان تانية في الجروب مخلصتش، انقل للون اللي بعده من أول الـ Intro
     if (_currentColorIndex < widget.currentGroup.colors.length - 1) {
       setState(() {
         _currentColorIndex++;
-
-        _currentStage = GameStage.intro;
+        _currentStage = GameStage.intro; // يرجع يعيد السايكل للون الجديد
       });
     } else {
-      // انتهاء الجروب بالكامل
-      AudioService.stop();
-
-      Navigator.pop(context);
+      // 💡 لما الألوان كلها تخلص تماماً.. يدخل فوراً على مرحلة الـ Mixing الشاملة للجروب
+      setState(() {
+        _currentStage = GameStage.mixing;
+      });
     }
+  }
+
+  void _finishGame() {
+    AudioService.stop();
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    // جلب بيانات اللون النشط حالياً بناءً على الاندكس
     final ColorTarget activeColor =
         widget.currentGroup.colors[_currentColorIndex];
 
     return Scaffold(
       backgroundColor: const Color(0xffFCFCFC),
-
       body: SafeArea(
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
-
           transitionBuilder: (child, animation) {
             return FadeTransition(opacity: animation, child: child);
           },
-
+          // الـ الـ AnimatedSwitcher هيعتمد على الـ الـ Stage والـ Color الفعلي لتأمين ترانزيشن ناعم وبدون كراشات
           child: _buildCurrentStage(activeColor),
         ),
       ),
@@ -68,62 +72,51 @@ class _ColorGameScreenState extends State<ColorGameScreen> {
 
   Widget _buildCurrentStage(ColorTarget activeColor) {
     switch (_currentStage) {
-      // INTRO
+      // 1️⃣ مرحلة الـ INTRO (التعريف باللون)
       case GameStage.intro:
         return ColorIntroWidget(
-          // الـ key ده مهم جداً عشان الفلوتر يعرف إن الشاشة اتغيرت
-          key: ValueKey('intro_${activeColor.id}'),
+          key: ValueKey(
+            'intro_${activeColor.id}',
+          ), // يضمن مسح الأنيميشن القديم تماماً
           colorTarget: activeColor,
           onCompleted: () {
             if (!mounted) return;
             setState(() {
-              _currentStage = GameStage.popping; // هينقل هنا فوراً
+              _currentStage = GameStage.popping;
             });
           },
         );
 
-      // POPPING
+      // 2️⃣ مرحلة الـ POPPING (فرقعة البلالين والـ Splash)
       case GameStage.popping:
         return ColorPoppingWidget(
           key: ValueKey('popping_${activeColor.id}'),
-
           colorTarget: activeColor,
-
           onCompleted: () {
             if (!mounted) return;
-
             setState(() {
               _currentStage = GameStage.quiz;
             });
           },
         );
 
-      // QUIZ
+      // 3️⃣ مرحلة الـ QUIZ (تجميع عناصر اللون جوة الباسكت الخاص بيه)
       case GameStage.quiz:
         return ColorQuizStageWidget(
           key: ValueKey('quiz_${activeColor.id}'),
-
           colorTarget: activeColor,
-
           currentGroup: widget.currentGroup,
-
-          onCompleted: () {
-            if (!mounted) return;
-
-            setState(() {
-              _currentStage = GameStage.mixing;
-            });
-          },
+          onCompleted:
+              _handleQuizCompleted, // هيفحص لو هينقل للون التالي أو للـ Mixing
         );
 
-      // MIXING
+      // 4️⃣ مرحلة الـ MIXING (التصنيف والمكس النهائي للجروب كامل)
       case GameStage.mixing:
         return ColorMixingWidget(
-          key: ValueKey('mixing_${activeColor.id}'),
-
+          // هنا بنثبت المفتاح باسم الجروب لأنها شاشة ختامية موحدة للمجموعة
+          key: ValueKey('mixing_final_${widget.currentGroup.groupName}'),
           currentGroup: widget.currentGroup,
-
-          onGameFinished: _goToNextColorOrFinish,
+          onGameFinished: _finishGame, // يقفل الشاشة ويرجع لبرة فوراً بنجاح
         );
     }
   }

@@ -55,24 +55,17 @@ class _ColorIntroWidgetState extends State<ColorIntroWidget>
   }
 
   Future<void> _playSequence() async {
-    // 1. انتظرى نص ثانية أول ما الصفحة تفتح عشان الأنميشن يظهر بسلاسة
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
-
-    // 2. شغلي الصوت للمرة الأولى
     AudioService.play(fileName: widget.colorTarget.introAudio);
 
-    // 3. انتظرى ثانيتين (أو المدي المناسبة لطول الكلمة "أحمر" مثلاً)
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
 
-    // 4. شغلي نفس الصوت للمرة الثانية
     AudioService.play(fileName: widget.colorTarget.introAudio);
 
-    // 5. انتظرى ثانيتين كمان عشان الطفل يلحق يسمع المرة الثانية
     await Future.delayed(const Duration(seconds: 2));
 
-    // 6. اقلبي فوراً على مرحلة البوبنج (البالونات)
     if (mounted) {
       widget.onCompleted();
     }
