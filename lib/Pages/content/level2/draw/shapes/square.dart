@@ -18,6 +18,7 @@ class SquareDrawingPage extends StatelessWidget {
     return BaseDrawingPage(
       shapeData: ShapeData.square,
       successGif: 'assets/images/drawing/square.gif',
+      childId: childId,
       onNext: () {
         Navigator.push(
           context,

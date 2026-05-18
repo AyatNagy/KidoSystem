@@ -9,13 +9,13 @@ final List<DragDropQuestion> arLetter = [
     items: [
       DragItem(
         id: "ا",
-        image: "assets/images/arabicLetters/vLine.png",
+        image: "assets/images/arabic_letters/vline.png",
         startPosition: const Offset(0.45, 0.7),
         size: const Size(0.2, 0.2),
       ),
       DragItem(
         id: "ء",
-        image: "assets/images/arabicLetters/hamza.png",
+        image: "assets/images/arabic_letters/hamza.png",
         startPosition: const Offset(0.15, 0.75),
         size: const Size(0.2, 0.2),
       ),
@@ -26,14 +26,14 @@ final List<DragDropQuestion> arLetter = [
         acceptedItemIds: ["ا"],
         position: const Offset(0.4, 0.3),
         size: const Size(0.3, 0.3),
-        image: "assets/images/arabicLetters/vLine.png",
+        image: "assets/images/arabic_letters/vline.png",
       ),
       DragTargetZone(
         id: "partء",
         acceptedItemIds: ["ء"],
         position: const Offset(0.4, 0.15),
         size: const Size(0.2, 0.2),
-        image: "assets/images/arabicLetters/hamza.png",
+        image: "assets/images/arabic_letters/hamza.png",
       ),
     ],
   ),
@@ -43,13 +43,13 @@ final List<DragDropQuestion> arLetter = [
     items: [
       DragItem(
         id: "ب",
-        image: "assets/images/arabicLetters/upperب.png",
+        image: "assets/images/arabic_letters/upperب.png",
         startPosition: const Offset(0.45, 0.75),
         size: const Size(0.50, 0.50),
       ),
       DragItem(
         id: "نقطة",
-        image: "assets/images/arabicLetters/lowerب.png",
+        image: "assets/images/arabic_letters/lowerب.png",
         startPosition: const Offset(0.15, 0.8),
         size: const Size(0.30, 0.30),
       ),
@@ -60,14 +60,14 @@ final List<DragDropQuestion> arLetter = [
         acceptedItemIds: ["ب"],
         position: const Offset(0.1, 0.2),
         size: const Size(0.8, 0.8),
-        image: "assets/images/arabicLetters/upperب.png",
+        image: "assets/images/arabic_letters/upperب.png",
       ),
       DragTargetZone(
         id: "partنقطة",
         acceptedItemIds: ["نقطة"],
         position: const Offset(0.4, 0.4),
         size: const Size(0.3, 0.4),
-        image: "assets/images/arabicLetters/lowerب.png",
+        image: "assets/images/arabic_letters/lowerب.png",
       ),
     ],
   ),
@@ -77,13 +77,13 @@ final List<DragDropQuestion> arLetter = [
     items: [
       DragItem(
         id: "ت",
-        image: "assets/images/arabicLetters/upperب.png",
+        image: "assets/images/arabic_letters/upperب.png",
         startPosition: const Offset(0.45, 0.75),
         size: const Size(0.50, 0.50),
       ),
       DragItem(
         id: "نقطة",
-        image: "assets/images/arabicLetters/lowerب.png",
+        image: "assets/images/arabic_letters/lowerب.png",
         startPosition: const Offset(0.15, 0.8),
         size: const Size(0.30, 0.30),
       ),
@@ -94,14 +94,14 @@ final List<DragDropQuestion> arLetter = [
         acceptedItemIds: ["ب"],
         position: const Offset(0.1, 0.2),
         size: const Size(0.8, 0.8),
-        image: "assets/images/arabicLetters/upperب.png",
+        image: "assets/images/arabic_letters/upperب.png",
       ),
       DragTargetZone(
         id: "partنقطة",
         acceptedItemIds: ["نقطة"],
         position: const Offset(0.4, 0.4),
         size: const Size(0.3, 0.4),
-        image: "assets/images/arabicLetters/lowerب.png",
+        image: "assets/images/arabic_letters/lowerب.png",
       ),
     ],
   ),
@@ -111,13 +111,13 @@ final List<DragDropQuestion> arLetter = [
     items: [
       DragItem(
         id: "ث",
-        image: "assets/images/arabicLetters/upperب.png",
+        image: "assets/images/arabic_letters/upperب.png",
         startPosition: const Offset(0.45, 0.75),
         size: const Size(0.50, 0.50),
       ),
       DragItem(
         id: "نقطة",
-        image: "assets/images/arabicLetters/lowerب.png",
+        image: "assets/images/arabic_letters/lowerب.png",
         startPosition: const Offset(0.15, 0.8),
         size: const Size(0.30, 0.30),
       ),
@@ -128,14 +128,14 @@ final List<DragDropQuestion> arLetter = [
         acceptedItemIds: ["ب"],
         position: const Offset(0.1, 0.2),
         size: const Size(0.8, 0.8),
-        image: "assets/images/arabicLetters/upperب.png",
+        image: "assets/images/arabic_letters/upperب.png",
       ),
       DragTargetZone(
         id: "partنقطة",
         acceptedItemIds: ["نقطة"],
         position: const Offset(0.4, 0.4),
         size: const Size(0.3, 0.4),
-        image: "assets/images/arabicLetters/lowerب.png",
+        image: "assets/images/arabic_letters/lowerب.png",
       ),
     ],
   ),
@@ -145,13 +145,13 @@ final List<DragDropQuestion> arLetter = [
     items: [
       DragItem(
         id: "ج",
-        image: "assets/images/arabicLetters/upperب.png",
+        image: "assets/images/arabic_letters/upperب.png",
         startPosition: const Offset(0.45, 0.75),
         size: const Size(0.50, 0.50),
       ),
       DragItem(
         id: "نقطة",
-        image: "assets/images/arabicLetters/lowerب.png",
+        image: "assets/images/arabic_letters/lowerب.png",
         startPosition: const Offset(0.15, 0.8),
         size: const Size(0.30, 0.30),
       ),
@@ -162,14 +162,14 @@ final List<DragDropQuestion> arLetter = [
         acceptedItemIds: ["ب"],
         position: const Offset(0.1, 0.2),
         size: const Size(0.8, 0.8),
-        image: "assets/images/arabicLetters/upperب.png",
+        image: "assets/images/arabic_letters/upperب.png",
       ),
       DragTargetZone(
         id: "partنقطة",
         acceptedItemIds: ["نقطة"],
         position: const Offset(0.4, 0.4),
         size: const Size(0.3, 0.4),
-        image: "assets/images/arabicLetters/lowerب.png",
+        image: "assets/images/arabic_letters/lowerب.png",
       ),
     ],
   ),
@@ -228,7 +228,7 @@ final List<DragDropQuestion> enLetter = [
     items: [
       DragItem(
         id: "verB",
-        image: "assets/images/letters/vLine.png",
+        image: "assets/images/letters/vline.png",
         startPosition: const Offset(0.1, 0.8),
         size: const Size(0.15, 0.45),
       ),
@@ -251,7 +251,7 @@ final List<DragDropQuestion> enLetter = [
         acceptedItemIds: ["verB"],
         position: const Offset(0.2, 0.2),
         size: const Size(0.35, 0.4),
-        image: "assets/images/letters/vLine.png",
+        image: "assets/images/letters/vline.png",
       ),
       DragTargetZone(
         id: "partUp",
@@ -296,7 +296,7 @@ final List<DragDropQuestion> enLetter = [
     items: [
       DragItem(
         id: "verD",
-        image: "assets/images/letters/vLine.png",
+        image: "assets/images/letters/vline.png",
         startPosition: const Offset(0.2, 0.8),
         size: const Size(0.15, 0.45),
       ),
@@ -313,7 +313,7 @@ final List<DragDropQuestion> enLetter = [
         acceptedItemIds: ["verD"],
         position: const Offset(0.2, 0.19),
         size: const Size(0.6, 0.34),
-        image: "assets/images/letters/vLine.png",
+        image: "assets/images/letters/vline.png",
       ),
       DragTargetZone(
         id: "partUp",

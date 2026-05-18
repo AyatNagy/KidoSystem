@@ -38,7 +38,7 @@ final List<LetterJourney> journeyEn = [
 
 final List<LetterJourney> journeyAr = [
   LetterJourney(
-    image: "assets/images/arabicletters/logoأ.png",
+    image: "assets/images/arabic_letters/logoأ.png",
     isLocked: false,
     charName: 'أ',
     letterData: arletters[0],
@@ -46,7 +46,7 @@ final List<LetterJourney> journeyAr = [
   ),
 
   LetterJourney(
-    image: "assets/images/arabicletters/logoب.png",
+    image: "assets/images/arabic_letters/logoب.png",
     isLocked: true,
     charName: 'ب',
     letterData: arletters[1],
@@ -54,7 +54,7 @@ final List<LetterJourney> journeyAr = [
   ),
 
   LetterJourney(
-    image: "assets/images/arabicletters/logoت.png",
+    image: "assets/images/arabic_letters/logoت.png",
     isLocked: true,
     charName: 'ت',
     letterData: arletters[2],
@@ -62,7 +62,7 @@ final List<LetterJourney> journeyAr = [
   ),
 
   LetterJourney(
-    image: "assets/images/arabicletters/logoث.png",
+    image: "assets/images/arabic_letters/logoث.png",
     isLocked: true,
     charName: 'ث',
     letterData: arletters[3],
@@ -70,7 +70,7 @@ final List<LetterJourney> journeyAr = [
   ),
 
   LetterJourney(
-    image: "assets/images/arabicletters/logoج.png",
+    image: "assets/images/arabic_letters/logoج.png",
     isLocked: true,
     charName: 'ج',
     letterData: arletters[4],

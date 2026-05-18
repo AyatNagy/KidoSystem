@@ -196,41 +196,6 @@ final List<DragDropQuestion> allDragDropQuestions = [
   ),
 
   DragDropQuestion(
-    examId: ['exam1'],
-    questionAudio: "exams/category_w.mp3",
-    items: [
-      DragItem(
-        id: "cotton",
-        image: "assets/images/cotton_Tshirt.png",
-        startPosition: const Offset(0.10, 0.60),
-        size: const Size(0.45, 0.45),
-      ),
-      DragItem(
-        id: "wool",
-        image: "assets/images/wool-Tshirt.png",
-        startPosition: const Offset(0.55, 0.65),
-        size: const Size(0.45, 0.45),
-      ),
-    ],
-    targets: [
-      DragTargetZone(
-        id: "cotton_target",
-        acceptedItemIds: ["cotton"],
-        position: const Offset(0.05, 0.05),
-        size: const Size(0.45, 0.45),
-        image: "assets/images/cotton.png",
-      ),
-      DragTargetZone(
-        id: "wool_target",
-        acceptedItemIds: ["wool"],
-        position: const Offset(0.52, 0.05),
-        size: const Size(0.45, 0.45),
-        image: "assets/images/wool.png",
-      ),
-    ],
-  ),
-
-  DragDropQuestion(
     examId: ["post_level2"],
     questionAudio: "sizes/where_short.mp3",
     items: [

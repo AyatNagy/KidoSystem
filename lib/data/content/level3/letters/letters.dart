@@ -3,34 +3,34 @@ import 'package:kido/constants.dart';
 
 final List<LetterModel> arletters = [
   LetterModel(
-    letterPath: 'assets/images/arabicLetters/letterأ.png',
-    animalPath: 'assets/images/arabicLetters/rabbit.png',
+    letterPath: 'assets/images/arabic_letters/letterأ.png',
+    animalPath: 'assets/images/arabic_letters/rabbit.png',
     audioName: 'audio/alphabet_ar/ا.mp3',
     activeBorder: AppColors.kidoRed,
     bgColor: AppColors.kidoColors[6],
   ),
 
   LetterModel(
-    letterPath: 'assets/images/arabicLetters/letterب.png',
-    animalPath: 'assets/images/arabicLetters/duck.png',
+    letterPath: 'assets/images/arabic_letters/letterب.png',
+    animalPath: 'assets/images/arabic_letters/duck.png',
     audioName: 'audio/alphabet_ar/ب.mp3',
   ),
 
   LetterModel(
-    letterPath: 'assets/images/arabicLetters/letterت.png',
-    animalPath: 'assets/images/arabicLetters/crocodile.png',
+    letterPath: 'assets/images/arabic_letters/letterت.png',
+    animalPath: 'assets/images/arabic_letters/crocodile.png',
     audioName: 'audio/alphabet_ar/ت.mp3',
   ),
 
   LetterModel(
-    letterPath: 'assets/images/arabicLetters/letterث.png',
-    animalPath: 'assets/images/arabicLetters/fox.png',
+    letterPath: 'assets/images/arabic_letters/letterث.png',
+    animalPath: 'assets/images/arabic_letters/fox.png',
     audioName: 'audio/alphabet_ar/ث.mp3',
   ),
 
   LetterModel(
-    letterPath: 'assets/images/arabicLetters/letterج.png',
-    animalPath: 'assets/images/arabicLetters/bell.png',
+    letterPath: 'assets/images/arabic_letters/letterج.png',
+    animalPath: 'assets/images/arabic_letters/bell.png',
     audioName: 'audio/alphabet_ar/ج.mp3',
   ),
 ];

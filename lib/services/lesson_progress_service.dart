@@ -1,14 +1,33 @@
+import 'package:flutter/foundation.dart';
 import 'package:kido/api_service/api_services.dart';
-import 'package:kido/config/cache_helper.dart';
+import 'package:kido/services/child_session_service.dart';
 
-/// Call when a child finishes a lesson (needs child JWT from login).
+/// Persists lesson completion on the server (`POST /progress/complete`).
 class LessonProgressService {
   LessonProgressService._();
 
-  static Future<bool> markLessonCompleted(int lessonId) async {
-    final token = await LocalStorage.getChildToken();
-    if (token == null) return false;
-    final res = await ApiService.completeLesson(lessonId: lessonId);
-    return res != null && res['success'] == true;
+  static Future<bool> markLessonCompleted(
+    int lessonId, {
+    required int childId,
+  }) async {
+    if (lessonId <= 0 || childId <= 0) return false;
+
+    await ChildSessionService.ensureLoggedIn(childId);
+
+    var res = await ApiService.completeLesson(lessonId: lessonId);
+    if (res != null && res['success'] == true) return true;
+
+    res = await ApiService.completeLessonAsParent(
+      childId: childId,
+      lessonId: lessonId,
+    );
+    final ok = res != null && res['success'] == true;
+    if (!ok && kDebugMode) {
+      debugPrint(
+        'LessonProgressService: failed lessonId=$lessonId childId=$childId '
+        '→ ${res?['message']}',
+      );
+    }
+    return ok;
   }
 }
