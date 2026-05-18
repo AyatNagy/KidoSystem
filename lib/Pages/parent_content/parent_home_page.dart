@@ -11,6 +11,7 @@ import 'package:kido/bloc/assessment/assessment_cubit.dart';
 import 'package:kido/bloc/parent_children/parent_children_cubit.dart';
 import 'package:kido/constants.dart';
 import '../../Widgets/responsive_provider.dart';
+import 'dashboard.dart';
 
 class ParentHomePage extends StatelessWidget {
   const ParentHomePage({super.key});
@@ -193,7 +194,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
         },
         child: _buildHomeContent(config, isRtl),
       ),
-      const ParentProgressDashboard(),
+      Dashboard(level: 1, score: 1, child: ,),
       Scaffold(body: Center(child: Text(isRtl ? "تعلم" : "Learn"))),
       ProfilePage(
         onLanguageChanged: (Locale newLocale) {
