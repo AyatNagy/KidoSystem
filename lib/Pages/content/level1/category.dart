@@ -1,149 +1,197 @@
 import 'package:flutter/material.dart';
-import 'package:kido/Pages/content/level2/draw/shapes/circle.dart';
-import 'package:kido/Pages/content/level2/draw/draw_line/rainy_cloud.dart';
-import 'package:kido/Pages/content/level2/draw/draw_line/rocket_lesson.dart';
-import 'package:kido/Pages/content/level2/draw/plus.dart';
-import 'package:kido/Pages/content/level2/level2home.dart';
-import 'package:kido/Pages/content/level2/puzzle_practice.dart';
-import 'package:kido/Pages/content/level2/sizes/sizes_map_page.dart';
-import 'package:kido/Widgets/content/category_card.dart';
-import 'package:kido/constants.dart';
-import '../../../data/content/level2/puzzle_data.dart';
-import 'draw/draw_line/octobus_and_star.dart';
+import 'package:kido/Pages/content/level1/senses/senses_map_page.dart';
+import '../../../Widgets/Animation/senses.dart';
+import '../../../Widgets/content/category_card.dart';
+import '../../../constants.dart';
+import '../feelings/feelings_levels.dart';
+import 'Self_cleaning/cleaning_map.dart';
+import 'draw.dart';
+import 'matching_practice_page.dart';
+import 'no1/banana_count.dart';
+import 'no1/bees_count.dart';
+import 'no1/toys_count.dart';
+import 'no3/cubes.dart';
+import 'no3/moving_car.dart';
+import 'no6/carrot.dart';
+import 'no6/lesson1.dart';
 
-class Category2 extends StatelessWidget {
-  final String childName;
-  final int childId;
+class Category extends StatelessWidget {
+  final String childName; // ← ضيف
+  final int childId; // ← ضيف
 
-  const Category2({super.key, required this.childName, required this.childId});
+  const Category({
+    super.key,
+    required this.childName, // ← ضيف
+    required this.childId, // ← ضيف
+  });
 
   @override
   Widget build(BuildContext context) {
     return GridView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 180,
         mainAxisSpacing: 20,
         crossAxisSpacing: 20,
         childAspectRatio: 0.85,
       ),
       children: [
+        // 1. COUNTING
         CategoryCard(
           gradient: AppColors.alphabetGrad,
           graphic: Center(
-            child: Image.asset('assets/images/drawing/draw-line.gif'),
+            child: Image.asset(
+              'assets/images/level1/counting.gif',
+              fit: BoxFit.cover,
+            ),
           ),
-          onTap: () {
-            Navigator.push(
-              context,
+          onTap: () async {
+            final navigator = Navigator.of(context);
+            await navigator.push(
               MaterialPageRoute(
                 builder:
-                    (context) => OctobusAndStar(
-                      onNext: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => RainyCloud(
-                                  onNext: () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => RocketLesson(
-                                              onNext: () {
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder:
-                                                        (
-                                                          context,
-                                                        ) => PlusDrawingPage(
-                                                          onNext: () {
-                                                            Navigator.pushReplacement(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (
-                                                                      context,
-                                                                    ) => Level2Home(
-                                                                      childName:
-                                                                          childName,
-                                                                      childId:
-                                                                          childId,
-                                                                    ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                          ),
-                        );
-                      },
+                    (context) => MonkeyCountingPage(
+                      onNext: () => Navigator.pop(context),
                     ),
+              ),
+            );
+            await navigator.push(
+              MaterialPageRoute(
+                builder:
+                    (context) =>
+                        BeeCountingPage(onNext: () => Navigator.pop(context)),
+              ),
+            );
+            await navigator.push(
+              MaterialPageRoute(
+                builder:
+                    (context) =>
+                        ToyRewardPage(onNext: () => Navigator.pop(context)),
               ),
             );
           },
         ),
+
+        // 2. SORTING
         CategoryCard(
           gradient: AppColors.numbersGrad,
-          graphic: Image.asset(
-            'assets/images/sizes/size_cc.png',
-            fit: BoxFit.cover,
+          graphic: Center(
+            child: Image.asset(
+              'assets/images/level1/sort.png',
+              fit: BoxFit.cover,
+            ),
           ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SizesMapPage()),
-            );
-          },
-        ),
-        CategoryCard(
-          gradient: [AppColors.bgColor, AppColors.bgColor],
-          graphic: Image.asset(
-            'assets/images/sizes/shape_c.png',
-            fit: BoxFit.cover,
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
+          onTap: () async {
+            final navigator = Navigator.of(context);
+            await navigator.push(
               MaterialPageRoute(
                 builder:
-                    (context) => CircleDrawingPage(
+                    (context) => CubesLesson(
+                      onNext: () => Navigator.pop(context),
                       childName: childName,
                       childId: childId,
                     ),
               ),
             );
-          },
-        ),
-        CategoryCard(
-          gradient: [AppColors.kidoPink, AppColors.bgColor],
-          graphic: Image.asset(
-            'assets/images/puzzle/puzzle_c.png',
-            fit: BoxFit.cover,
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
+            await navigator.push(
               MaterialPageRoute(
                 builder:
-                    (context) => PuzzlePracticeScreen(
-                      levels: allPuzzleLevels,
-                      childName: childName,
-                      childId: childId,
+                    (context) => MovingCarPage(
+                      onNext: () => Navigator.pop(context),
+                      childName: childName, // ← ضيف
+                      childId: childId, // ← ضيف
                     ),
               ),
             );
           },
+        ),
+
+        // 3. PEGBOARD
+        CategoryCard(
+          gradient: AppColors.colorsGrad,
+          graphic: Center(
+            child: Image.asset(
+              'assets/images/level1/sticks-c.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          onTap: () async {
+            final navigator = Navigator.of(context);
+            await navigator.push(
+              MaterialPageRoute(
+                builder:
+                    (context) =>
+                        BunnyFeedingGame(onNext: () => Navigator.pop(context)),
+              ),
+            );
+            await navigator.push(
+              MaterialPageRoute(
+                builder:
+                    (context) =>
+                        StakesDrag(onNext: () => Navigator.pop(context)),
+              ),
+            );
+          },
+        ),
+
+        // SENSES
+        CategoryCard(
+          gradient: AppColors.fruitGrad,
+          graphic: const Center(child: FiveSensesLogo()),
+          onTap:
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SensesMapPage()),
+              ),
+        ),
+
+        // MATCHING
+        CategoryCard(
+          gradient: [AppColors.kidoColors[5], AppColors.kidoOrange],
+          graphic: Center(child: Image.asset('assets/gif/match.gif')),
+          onTap:
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MatchingPracticePage(),
+                ),
+              ),
+        ),
+
+        // DRAWING
+        CategoryCard(
+          gradient: AppColors.puzzleGrad,
+          graphic: Center(child: Image.asset('assets/images/drawing/draw.gif')),
+          onTap:
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Draw()),
+              ),
+        ),
+
+        // SELF-CARE
+        CategoryCard(
+          gradient: AppColors.vegetablesGrad,
+          graphic: Center(child: Image.asset('assets/gif/self-care.gif')),
+          onTap:
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CleaningMap()),
+              ),
+        ),
+
+        // FEELINGS
+        CategoryCard(
+          gradient: [AppColors.kidoColors[6], AppColors.kidoRed],
+          graphic: Center(child: Image.asset('assets/gif/feelings.gif')),
+          onTap:
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const TreehouseLevels(),
+                ),
+              ),
         ),
       ],
     );
