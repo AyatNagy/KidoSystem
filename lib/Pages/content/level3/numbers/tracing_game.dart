@@ -203,8 +203,6 @@ class _TracingGameState extends State<TracingGame> {
                       onPanEnd: (details) {
                         if (isTransitioning) return;
 
-                        // SNAP BACK LOGIC:
-                        // If the drag ends and we haven't hit the target, snap back
                         double distance =
                             (beePosition! - currentTarget).distance;
                         if (distance >= 35) {

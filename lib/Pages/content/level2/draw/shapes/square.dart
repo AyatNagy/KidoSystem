@@ -4,13 +4,13 @@ import '../../../../../Widgets/content/level2/shapes.dart';
 import '../../../../../data/content/level2/shapes.dart';
 
 class SquareDrawingPage extends StatelessWidget {
-  final String childName; // ← ضيف
-  final int childId; // ← ضيف
+  final String childName;
+  final int childId;
 
   const SquareDrawingPage({
     super.key,
-    required this.childName, // ← ضيف
-    required this.childId, // ← ضيف
+    required this.childName,
+    required this.childId,
   });
 
   @override
@@ -24,10 +24,8 @@ class SquareDrawingPage extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder:
-                (context) => TriangleDrawingPage(
-                  childName: childName, // ← ضيف
-                  childId: childId, // ← ضيف
-                ),
+                (context) =>
+                    TriangleDrawingPage(childName: childName, childId: childId),
           ),
         );
       },
