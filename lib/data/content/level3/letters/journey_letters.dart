@@ -4,7 +4,7 @@ import 'letters.dart';
 
 final List<LetterJourney> journeyEn = [
   LetterJourney(
-    image: "assets/images/letters/logo-A.png",
+    image: "assets/images/letters/logo-a.png",
     isLocked: false,
     charName: 'A',
     letterData: enletters[0],
@@ -12,7 +12,7 @@ final List<LetterJourney> journeyEn = [
   ),
 
   LetterJourney(
-    image: "assets/images/letters/logo-B.png",
+    image: "assets/images/letters/logo-b.png",
     isLocked: true,
     charName: 'B',
     letterData: enletters[1],
@@ -20,7 +20,7 @@ final List<LetterJourney> journeyEn = [
   ),
 
   LetterJourney(
-    image: "assets/images/letters/logo-C.png",
+    image: "assets/images/letters/logo-c.png",
     isLocked: true,
     charName: 'C',
     letterData: enletters[2],
@@ -28,7 +28,7 @@ final List<LetterJourney> journeyEn = [
   ),
 
   LetterJourney(
-    image: "assets/images/letters/logo-D.png",
+    image: "assets/images/letters/logo-d.png",
     isLocked: true,
     charName: 'D',
     letterData: enletters[3],

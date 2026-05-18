@@ -37,7 +37,7 @@ final List<LetterModel> arletters = [
 
 final List<LetterModel> enletters = [
   LetterModel(
-    letterPath: 'assets/images/Letters/Aa.png',
+    letterPath: 'assets/images/Letters/aa.png',
     animalPath: 'assets/images/apple.png',
     audioName: 'audio/alphabet_en/kid-a.mp3',
     bgColor: AppColors.kidoPink,
@@ -45,7 +45,7 @@ final List<LetterModel> enletters = [
   ),
 
   LetterModel(
-    letterPath: 'assets/images/Letters/Bb.png',
+    letterPath: 'assets/images/Letters/bb.png',
     animalPath: 'assets/images/ball.png',
     audioName: 'audio/alphabet_en/kid-b.mp3',
     bgColor: AppColors.kidoBlue,
@@ -53,7 +53,7 @@ final List<LetterModel> enletters = [
   ),
 
   LetterModel(
-    letterPath: 'assets/images/Letters/Cc.png',
+    letterPath: 'assets/images/Letters/cc.png',
     animalPath: 'assets/images/cat2.png',
     audioName: 'audio/alphabet_en/kid-c.mp3',
     bgColor: AppColors.kidoGreen,
@@ -61,7 +61,7 @@ final List<LetterModel> enletters = [
   ),
 
   LetterModel(
-    letterPath: 'assets/images/Letters/Dd.png',
+    letterPath: 'assets/images/Letters/dd.png',
     animalPath: 'assets/images/dog2.png',
     audioName: 'audio/alphabet_en/kid-d.mp3',
     bgColor: AppColors.purpleMain,
