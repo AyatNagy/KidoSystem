@@ -5,10 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kido/Pages/Auth/parent_login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/constants.dart';
+import '../../config/app_launch.dart';
 import '../../config/cache_helper.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -69,35 +69,19 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _performLogout() async {
-    if (mounted) Navigator.of(context).pop();
-
     try {
       await LocalStorage.logout();
       try {
         await GoogleSignIn.instance.signOut();
         await GoogleSignIn.instance.disconnect();
       } catch (_) {}
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('parent_name');
-      await prefs.remove('parent_image_path');
-      await prefs.remove('username');
-      await prefs.remove('email');
-      final token = await LocalStorage.getParentToken();
-      final loggedIn = await LocalStorage.getLoggedIn();
-      debugPrint("POST-LOGOUT: token=$token, loggedIn=$loggedIn");
 
       if (!mounted) return;
-
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const ParentLogin()),
-            (Route<dynamic> route) => false,
-      );
+      AppLaunch.navigateToLogin(context);
     } catch (e) {
       debugPrint("Logout Error: $e");
       if (!mounted) return;
-      Navigator.of(
-        context,
-      ).pushNamedAndRemoveUntil('/welcome', (route) => false);
+      AppLaunch.navigateToLogin(context);
     }
   }
 
@@ -556,7 +540,10 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           ElevatedButton(
-            onPressed: _performLogout,
+            onPressed: () {
+              Navigator.pop(context);
+              _performLogout();
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.redAccent,
               elevation: 0,
