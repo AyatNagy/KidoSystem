@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import '../../config/progress.dart';
+import '../../services/child_session_service.dart';
 import '../../constants.dart';
 import '../content/level1/level1_home.dart';
 import '../content/level2/level2home.dart';
@@ -41,6 +42,9 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage>
   @override
   void initState() {
     super.initState();
+    if (widget.childId > 0) {
+      ChildSessionService.ensureLoggedIn(widget.childId);
+    }
     _loadProgress();
     _floatingController = AnimationController(
       vsync: this,

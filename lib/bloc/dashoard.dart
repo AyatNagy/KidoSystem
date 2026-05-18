@@ -1,9 +1,13 @@
 import '../Models/child.dart';
+import '../Models/progress_report.dart';
+import '../api_service/api_services.dart';
+import '../data/lesson_catalog.dart';
+import '../utils/dashboard_progress_mapper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DashboardState {
-  final List<Child> children;
-  final int selectedChildIndex;
+  final Child? selectedChild;
+  final int childId;
   final int level;
   final Map<String, double> progress;
   final Map<String, double> previousProgress;
@@ -15,9 +19,13 @@ class DashboardState {
   final int badges;
   final bool isImproving;
 
+  final ProgressReport? report;
+  final int? assessmentScore;
+  final String? assessmentLevel;
+
   DashboardState({
-    this.children = const [],
-    this.selectedChildIndex = 0,
+    this.selectedChild,
+    this.childId = 0,
     this.level = 1,
     this.progress = const {},
     this.previousProgress = const {},
@@ -27,14 +35,14 @@ class DashboardState {
     this.accuracy = 0,
     this.badges = 0,
     this.isImproving = true,
+    this.report,
+    this.assessmentScore,
+    this.assessmentLevel,
   });
 
-  Child? get selectedChild =>
-      children.isNotEmpty ? children[selectedChildIndex] : null;
-
   DashboardState copyWith({
-    List<Child>? children,
-    int? selectedChildIndex,
+    Child? selectedChild,
+    int? childId,
     int? level,
     Map<String, double>? progress,
     Map<String, double>? previousProgress,
@@ -44,10 +52,13 @@ class DashboardState {
     int? accuracy,
     int? badges,
     bool? isImproving,
+    ProgressReport? report,
+    int? assessmentScore,
+    String? assessmentLevel,
   }) {
     return DashboardState(
-      children: children ?? this.children,
-      selectedChildIndex: selectedChildIndex ?? this.selectedChildIndex,
+      selectedChild: selectedChild ?? this.selectedChild,
+      childId: childId ?? this.childId,
       level: level ?? this.level,
       progress: progress ?? this.progress,
       previousProgress: previousProgress ?? this.previousProgress,
@@ -57,6 +68,9 @@ class DashboardState {
       accuracy: accuracy ?? this.accuracy,
       badges: badges ?? this.badges,
       isImproving: isImproving ?? this.isImproving,
+      report: report ?? this.report,
+      assessmentScore: assessmentScore ?? this.assessmentScore,
+      assessmentLevel: assessmentLevel ?? this.assessmentLevel,
     );
   }
 }
@@ -64,85 +78,85 @@ class DashboardState {
 class DashboardBloc extends Cubit<DashboardState> {
   DashboardBloc() : super(DashboardState());
 
-  void loadDashboardData(
-    Child initialChild,
-    int selectedLevel,
-    double score,
-  ) async {
+  Future<void> loadDashboardData({
+    required Child child,
+    required int childId,
+    required int allowedLevel,
+    Map<String, dynamic>? childMeta,
+  }) async {
     emit(state.copyWith(isLoading: true));
-    await Future.delayed(const Duration(milliseconds: 800));
 
-    Map<String, double> yesterdayProgress =
-        selectedLevel == 3
-            ? {
-              "Letters": 0.40,
-              "Numbers": 0.50,
-              "Vegetables": 0.20,
-              "Fruits": 0.10,
-            }
-            : {
-              "Emotions": 0.30,
-              "Self-Care": 0.50,
-              "Social": 0.20,
-              "Motor": 0.30,
-            };
+    final level = allowedLevel.clamp(1, 3);
+    final previousProgress = Map<String, double>.from(state.progress);
 
-    Map<String, double> todayProgress =
-        selectedLevel == 3
-            ? {
-              "Letters": score,
-              "Numbers": 0.45,
-              "Vegetables": 0.25,
-              "Fruits": 0.15,
-            }
-            : {
-              "Emotions": score,
-              "Self-Care": 0.60,
-              "Social": 0.40,
-              "Motor": 0.35,
-            };
+    ProgressReport? report;
+    try {
+      report = await ApiService.fetchChildProgressAsParent(childId);
+    } catch (_) {
+      report = null;
+    }
+
+    final progress = DashboardProgressMapper.buildProgress(
+      allowedLevel: level,
+      report: report,
+    );
+
+    final completed =
+        report?.completedLessons ??
+        (childMeta?['completedLessons'] as num?)?.toInt() ??
+        0;
+    final reportTotal = report?.totalLessons ?? 0;
+    final total = reportTotal > 0
+        ? reportTotal
+        : LessonCatalog.totalLessonsUpToLevel(level);
+    final pct =
+        report?.completionPercentage ??
+        (total > 0 ? ((completed / total) * 100).round() : 0);
+
+    int? assessmentScore;
+    String? assessmentLevel;
+    final assessment = childMeta?['latestAssessment'];
+    if (assessment is Map) {
+      assessmentScore = (assessment['score'] as num?)?.toInt();
+      assessmentLevel = assessment['level']?.toString();
+    }
+
+    final improving =
+        previousProgress.isEmpty ||
+        progress.entries.every((e) {
+          final prev = previousProgress[e.key] ?? 0;
+          return e.value >= prev;
+        });
 
     emit(
       DashboardState(
-        children: [
-          initialChild,
-          Child(name: "Sibling", username: "tester", password: "123"),
-        ],
-        selectedChildIndex: 0,
-        level: selectedLevel,
-        progress: todayProgress,
-        previousProgress: yesterdayProgress,
+        selectedChild: child,
+        childId: childId,
+        level: level,
+        progress: progress,
+        previousProgress:
+            previousProgress.isEmpty ? progress : previousProgress,
         isLoading: false,
-        completedLessons: (score * 10).toInt(),
-        totalLessons: 20,
-        accuracy: 88,
-        badges: 3,
-        isImproving: true,
+        completedLessons: completed,
+        totalLessons: total,
+        accuracy: pct.clamp(0, 100),
+        badges: assessmentScore ?? completed.clamp(0, 99),
+        isImproving: improving,
+        report: report,
+        assessmentScore: assessmentScore,
+        assessmentLevel: assessmentLevel,
       ),
     );
   }
 
-  void toggleChild() {
-    final nextIndex = (state.selectedChildIndex + 1) % state.children.length;
-    final nextLevel = nextIndex == 0 ? 3 : 1;
-
-    Map<String, double> nextDayProgress =
-        nextLevel == 3
-            ? {"Letters": 0.7, "Numbers": 0.2, "Vegetables": 0.9, "Fruits": 0.4}
-            : {"Emotions": 0.95, "Self-Care": 0.3, "Social": 0.5, "Motor": 0.8};
-
-    emit(
-      state.copyWith(
-        selectedChildIndex: nextIndex,
-        level: nextLevel,
-        progress: nextDayProgress,
-        previousProgress: state.progress,
-        completedLessons: nextLevel == 3 ? 14 : 6,
-        accuracy: nextLevel == 3 ? 92 : 75,
-        badges: nextLevel == 3 ? 5 : 2,
-        isImproving: nextLevel == 3,
-        isLoading: false,
-      ),
+  Future<void> refresh({Map<String, dynamic>? childMeta}) async {
+    final child = state.selectedChild;
+    if (child == null || state.childId == 0) return;
+    await loadDashboardData(
+      child: child,
+      childId: state.childId,
+      allowedLevel: state.level,
+      childMeta: childMeta,
     );
   }
 }

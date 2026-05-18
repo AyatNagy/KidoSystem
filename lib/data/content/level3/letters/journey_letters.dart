@@ -4,7 +4,7 @@ import 'letters.dart';
 
 final List<LetterJourney> journeyEn = [
   LetterJourney(
-    image: "assets/images/letters/logo-A.png",
+    image: "assets/images/letters/logo-a.png",
     isLocked: false,
     charName: 'A',
     letterData: enletters[0],
@@ -12,7 +12,7 @@ final List<LetterJourney> journeyEn = [
   ),
 
   LetterJourney(
-    image: "assets/images/letters/logo-B.png",
+    image: "assets/images/letters/logo-b.png",
     isLocked: true,
     charName: 'B',
     letterData: enletters[1],
@@ -20,7 +20,7 @@ final List<LetterJourney> journeyEn = [
   ),
 
   LetterJourney(
-    image: "assets/images/letters/logo-C.png",
+    image: "assets/images/letters/logo-c.png",
     isLocked: true,
     charName: 'C',
     letterData: enletters[2],
@@ -28,7 +28,7 @@ final List<LetterJourney> journeyEn = [
   ),
 
   LetterJourney(
-    image: "assets/images/letters/logo-D.png",
+    image: "assets/images/letters/logo-d.png",
     isLocked: true,
     charName: 'D',
     letterData: enletters[3],
@@ -38,7 +38,7 @@ final List<LetterJourney> journeyEn = [
 
 final List<LetterJourney> journeyAr = [
   LetterJourney(
-    image: "assets/images/arabicletters/logoأ.png",
+    image: "assets/images/arabic_letters/logoأ.png",
     isLocked: false,
     charName: 'أ',
     letterData: arletters[0],
@@ -46,7 +46,7 @@ final List<LetterJourney> journeyAr = [
   ),
 
   LetterJourney(
-    image: "assets/images/arabicletters/logoب.png",
+    image: "assets/images/arabic_letters/logoب.png",
     isLocked: true,
     charName: 'ب',
     letterData: arletters[1],
@@ -54,7 +54,7 @@ final List<LetterJourney> journeyAr = [
   ),
 
   LetterJourney(
-    image: "assets/images/arabicletters/logoت.png",
+    image: "assets/images/arabic_letters/logoت.png",
     isLocked: true,
     charName: 'ت',
     letterData: arletters[2],
@@ -62,7 +62,7 @@ final List<LetterJourney> journeyAr = [
   ),
 
   LetterJourney(
-    image: "assets/images/arabicletters/logoث.png",
+    image: "assets/images/arabic_letters/logoث.png",
     isLocked: true,
     charName: 'ث',
     letterData: arletters[3],
@@ -70,7 +70,7 @@ final List<LetterJourney> journeyAr = [
   ),
 
   LetterJourney(
-    image: "assets/images/arabicletters/logoج.png",
+    image: "assets/images/arabic_letters/logoج.png",
     isLocked: true,
     charName: 'ج',
     letterData: arletters[4],

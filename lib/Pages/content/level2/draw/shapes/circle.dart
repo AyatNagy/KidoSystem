@@ -18,6 +18,7 @@ class CircleDrawingPage extends StatelessWidget {
     return BaseDrawingPage(
       shapeData: ShapeData.circle,
       successGif: 'assets/images/drawing/circle.gif',
+      childId: childId,
       onNext:
           () => Navigator.push(
             context,

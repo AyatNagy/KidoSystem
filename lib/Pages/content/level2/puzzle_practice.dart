@@ -150,7 +150,7 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
     _stopUserAssistance();
     setState(() => isSuccess = true);
 
-    AudioService.play(fileName: "yaay.mp3");
+    AudioService.play(fileName: "great_hero.mp3");
     await Future.delayed(const Duration(seconds: 2));
 
     _goToNextLevel();
@@ -231,40 +231,44 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
             ),
           if (showHint && !isSuccess) ...[
             Positioned(
-              left: w *
-                  puzzleData
-                      .question.items[currentItemIndex].startPosition.dx,
-              top: h *
-                  puzzleData
-                      .question.items[currentItemIndex].startPosition.dy,
+              left:
+                  w *
+                  puzzleData.question.items[currentItemIndex].startPosition.dx,
+              top:
+                  h *
+                  puzzleData.question.items[currentItemIndex].startPosition.dy,
               child: AnimatedBuilder(
                 animation: _glowAnimation,
-                builder: (context, child) => Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.yellow.withOpacity(_glowAnimation.value),
-                        blurRadius: 30,
-                        spreadRadius: 10,
+                builder:
+                    (context, child) => Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.yellow.withOpacity(
+                              _glowAnimation.value,
+                            ),
+                            blurRadius: 30,
+                            spreadRadius: 10,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
               ),
             ),
             AnimatedBuilder(
               animation: _handAnimation,
-              builder: (_, __) => Positioned(
-                left: w * _handAnimation.value.dx,
-                top: h * _handAnimation.value.dy,
-                child: Image.asset(
-                  "assets/images/animated_hand-Photoroom.png",
-                  width: 60,
-                ),
-              ),
+              builder:
+                  (_, __) => Positioned(
+                    left: w * _handAnimation.value.dx,
+                    top: h * _handAnimation.value.dy,
+                    child: Image.asset(
+                      "assets/images/animated_hand-Photoroom.png",
+                      width: 60,
+                    ),
+                  ),
             ),
           ],
           if (isSuccess)
@@ -287,10 +291,11 @@ class _PuzzlePracticeScreenState extends State<PuzzlePracticeScreen>
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Level2Home(
-                      childName: widget.childName,
-                      childId: widget.childId,
-                    ),
+                    builder:
+                        (context) => Level2Home(
+                          childName: widget.childName,
+                          childId: widget.childId,
+                        ),
                   ),
                 );
               },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
+import 'package:kido/constants.dart';
 
 class KidoAppBar extends StatelessWidget implements PreferredSizeWidget {
   const KidoAppBar({super.key});
@@ -12,7 +13,7 @@ class KidoAppBar extends StatelessWidget implements PreferredSizeWidget {
     final config = ResponsiveProvider.of(context);
 
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bgColor,
       elevation: 0,
 
       leadingWidth: config.localWidth * 0.35,

@@ -9,10 +9,19 @@ import 'package:kido/constants.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import '../../../../Widgets/Animation/animated_hand_widget.dart';
 import '../../../../Widgets/content/drawing_page.dart';
+import 'package:kido/utils/lesson_completion.dart';
 
 class PlusDrawingPage extends StatefulWidget {
   final VoidCallback? onNext;
-  const PlusDrawingPage({super.key, this.onNext});
+  final int childId;
+  final int lessonId;
+
+  const PlusDrawingPage({
+    super.key,
+    this.onNext,
+    this.childId = 0,
+    this.lessonId = 19,
+  });
 
   @override
   State<PlusDrawingPage> createState() => _PlusDrawingPageState();
@@ -148,7 +157,15 @@ class _PlusDrawingPageState extends State<PlusDrawingPage> {
               child: NextButton(
                 color: AppColors.kidoGreen,
                 shadowColor: AppColors.kidoColors[4],
-                onPressed: widget.onNext!,
+                onPressed: () async {
+                  if (widget.childId > 0) {
+                    await completeLessonForChild(
+                      childId: widget.childId,
+                      lessonId: widget.lessonId,
+                    );
+                  }
+                  widget.onNext?.call();
+                },
               ),
             ),
           ],

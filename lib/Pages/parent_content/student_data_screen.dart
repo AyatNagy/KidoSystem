@@ -16,6 +16,7 @@ import '../../api_service/api_services.dart';
 import 'package:kido/bloc/set_initial_level/set_initial_level_cubit.dart';
 import '../../Models/child.dart';
 import '../../config/cache_helper.dart';
+import '../../config/child_credentials_store.dart';
 import 'package:kido/Widgets/Auth/password_errors_view.dart';
 
 class StudentData extends StatefulWidget {
@@ -105,6 +106,14 @@ class _StudentDataState extends State<StudentData> {
 
           final int childId =
               (registerResponse['child']?['id'] as num?)?.toInt() ?? 0;
+
+          if (childId > 0) {
+            await ChildCredentialsStore.save(
+              childId: childId,
+              username: childUsername,
+              password: childPassword,
+            );
+          }
 
           if (childAge < 3) {
             if (!mounted) return;

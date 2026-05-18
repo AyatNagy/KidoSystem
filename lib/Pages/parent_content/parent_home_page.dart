@@ -2,7 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kido/Models/child.dart';
 import 'package:kido/Pages/kid/child_level_select_page.dart';
 import 'package:kido/Pages/kid/child_profile_setup_page.dart';
 import 'package:kido/Pages/parent_content/profile_page.dart';
@@ -11,7 +10,7 @@ import 'package:kido/bloc/assessment/assessment_cubit.dart';
 import 'package:kido/bloc/parent_children/parent_children_cubit.dart';
 import 'package:kido/constants.dart';
 import '../../Widgets/responsive_provider.dart';
-import 'dashboard.dart';
+import 'parent_dashboard_flow.dart';
 
 class ParentHomePage extends StatelessWidget {
   const ParentHomePage({super.key});
@@ -194,7 +193,7 @@ class _ParentHomeViewState extends State<_ParentHomeView>
         },
         child: _buildHomeContent(config, isRtl),
       ),
-      Dashboard(level: 1, score: 1, child: Child(username: '', password: '', name: ''),),
+      const ParentDashboardFlow(),
       Scaffold(body: Center(child: Text(isRtl ? "تعلم" : "Learn"))),
       ProfilePage(
         onLanguageChanged: (Locale newLocale) {
@@ -633,7 +632,12 @@ class _ParentHomeViewState extends State<_ParentHomeView>
       selectedItemColor: Colors.blueAccent,
       unselectedItemColor: Colors.grey,
       currentIndex: _selectedIndex,
-      onTap: (index) => setState(() => _selectedIndex = index),
+      onTap: (index) {
+        setState(() => _selectedIndex = index);
+        if (index == 1) {
+          context.read<ParentChildrenCubit>().loadChildren();
+        }
+      },
       items: [
         BottomNavigationBarItem(
           icon: const Icon(CupertinoIcons.home),

@@ -28,7 +28,7 @@ class CategoryGrid extends StatelessWidget {
         CategoryCard(
           gradient: AppColors.alphabetGrad,
           graphic: Image.asset(
-            'assets/images/arabicLetters/lettersa_c.png',
+            'assets/images/arabic_letters/lettersa_c.png',
             fit: BoxFit.cover,
           ),
           onTap: () {

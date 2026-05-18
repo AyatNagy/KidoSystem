@@ -29,7 +29,6 @@ class Category2 extends StatelessWidget {
         childAspectRatio: 0.85,
       ),
       children: [
-        //drawing line
         CategoryCard(
           gradient: AppColors.alphabetGrad,
           graphic: Center(
@@ -39,62 +38,50 @@ class Category2 extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder:
-                    (context) => OctobusAndStar(
-                      onNext: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => RainyCloud(
+                builder: (context) => OctobusAndStar(
+                  onNext: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RainyCloud(
+                          onNext: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RocketLesson(
                                   onNext: () {
-                                    Navigator.push(
+                                    Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder:
-                                            (context) => RocketLesson(
-                                              onNext: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder:
-                                                        (
-                                                          context,
-                                                        ) => PlusDrawingPage(
-                                                          onNext: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (
-                                                                      context,
-                                                                    ) => Level2Home(
-                                                                      childName:
-                                                                          childName,
-                                                                      childId:
-                                                                          childId,
-                                                                    ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
+                                        builder: (context) => PlusDrawingPage(
+                                          onNext: () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => Level2Home(
+                                                  childName: childName,
+                                                  childId: childId,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
                                     );
                                   },
                                 ),
-                          ),
-                        );
-                      },
-                    ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             );
           },
         ),
-
         CategoryCard(
           gradient: AppColors.numbersGrad,
           graphic: Image.asset(
@@ -108,8 +95,6 @@ class Category2 extends StatelessWidget {
             );
           },
         ),
-
-        //Shapes
         CategoryCard(
           gradient: [AppColors.bgColor, AppColors.bgColor],
           graphic: Image.asset(
@@ -120,17 +105,14 @@ class Category2 extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder:
-                    (context) => CircleDrawingPage(
-                      childName: childName,
-                      childId: childId,
-                    ),
+                builder: (context) => CircleDrawingPage(
+                  childName: childName,
+                  childId: childId,
+                ),
               ),
             );
           },
         ),
-
-        //Puzzle
         CategoryCard(
           gradient: [AppColors.kidoPink, AppColors.bgColor],
           graphic: Image.asset(
@@ -141,12 +123,11 @@ class Category2 extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder:
-                    (context) => PuzzlePracticeScreen(
-                      levels: allPuzzleLevels,
-                      childName: childName,
-                      childId: childId,
-                    ),
+                builder: (context) => PuzzlePracticeScreen(
+                  levels: allPuzzleLevels,
+                  childName: childName,
+                  childId: childId,
+                ),
               ),
             );
           },
