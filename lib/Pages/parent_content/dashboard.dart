@@ -10,7 +10,6 @@ import '../../constants.dart';
 import '../../data/dashboard.dart';
 
 class Dashboard extends StatelessWidget {
-  /// Child row from parent API / [ParentChildrenCubit] (`id`, `name`, `allowedLevel`, …).
   final Map<String, dynamic> childData;
   final VoidCallback? onSwitchChild;
 

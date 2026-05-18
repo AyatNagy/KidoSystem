@@ -8,7 +8,6 @@ import 'package:kido/Widgets/Layout/header_clipper.dart';
 import 'package:kido/bloc/parent_children/parent_children_cubit.dart';
 import 'package:kido/constants.dart';
 
-/// Shown before the parent dashboard: pick which child to view.
 class ParentChildSelectScreen extends StatelessWidget {
   final void Function(Map<String, dynamic> child)? onChildSelected;
 

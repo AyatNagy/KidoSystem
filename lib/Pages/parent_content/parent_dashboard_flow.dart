@@ -4,7 +4,6 @@ import 'package:kido/Pages/parent_content/dashboard.dart';
 import 'package:kido/Pages/parent_content/parent_child_select_screen.dart';
 import 'package:kido/bloc/parent_children/parent_children_cubit.dart';
 
-/// Dashboard tab: child list first, then that child's dashboard (same UI as before).
 class ParentDashboardFlow extends StatefulWidget {
   const ParentDashboardFlow({super.key});
 
