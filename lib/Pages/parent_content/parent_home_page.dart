@@ -197,7 +197,6 @@ class _ParentHomeViewState extends State<_ParentHomeView>
         child: _buildHomeContent(context, config),
       ),
       const ParentDashboardFlow(),
-      Scaffold(body: Center(child: Text(l10n.navLearn))),
       ProfilePage(
         onLanguageChanged: (Locale newLocale) {
           AppLocaleScope.of(context).setLocale(newLocale);
@@ -666,10 +665,6 @@ class _ParentHomeViewState extends State<_ParentHomeView>
         BottomNavigationBarItem(
           icon: const Icon(CupertinoIcons.graph_square),
           label: l10n.navDashboard,
-        ),
-        BottomNavigationBarItem(
-          icon: const Icon(CupertinoIcons.play_rectangle),
-          label: l10n.navLearn,
         ),
         BottomNavigationBarItem(
           icon: const Icon(CupertinoIcons.person),

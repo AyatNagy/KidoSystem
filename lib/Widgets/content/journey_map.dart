@@ -1,20 +1,7 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
-import 'package:kido/l10n/app_localizations.dart';
 import 'package:kido/utils/lesson_completion.dart';
 import 'map.dart';
-
-void _showMapSnack(BuildContext context, String message, {bool ok = true}) {
-  if (!context.mounted) return;
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(message),
-      backgroundColor: ok ? const Color(0xFF43A047) : const Color(0xFFE53935),
-      behavior: SnackBarBehavior.floating,
-      duration: const Duration(seconds: 2),
-    ),
-  );
-}
 
 class JourneymapPage extends StatefulWidget {
   final List<dynamic> journeyData;
@@ -53,25 +40,11 @@ class _JourneymapPageState extends State<JourneymapPage> {
       if (widget.childId > 0 && widget.resolveLessonId != null) {
         final lessonId = widget.resolveLessonId!(currentStep, index);
         if (lessonId != null) {
-          final saved = await completeLessonForChild(
+          await completeLessonForChild(
             childId: widget.childId,
             lessonId: lessonId,
           );
-          if (mounted) {
-            final l10n = AppLocalizations.of(context)!;
-            _showMapSnack(
-              context,
-              saved ? l10n.progressSaved : l10n.progressSaveFailed,
-              ok: saved,
-            );
-          }
         }
-      } else if (widget.childId <= 0 && mounted) {
-        _showMapSnack(
-          context,
-          'Child not linked — open from Home with a child profile.',
-          ok: false,
-        );
       }
       if (!mounted) return;
       setState(() {
@@ -99,7 +72,6 @@ class _JourneymapPageState extends State<JourneymapPage> {
               ),
             ),
           ),
-
           Positioned(
             top: 50,
             left: -30,
@@ -112,7 +84,6 @@ class _JourneymapPageState extends State<JourneymapPage> {
               ),
             ),
           ),
-
           Positioned(
             bottom: 100,
             right: -20,
@@ -125,9 +96,8 @@ class _JourneymapPageState extends State<JourneymapPage> {
               ),
             ),
           ),
-
           ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 120),
+            padding: const EdgeInsets.only(top: 240, bottom: 120),
             itemCount: widget.journeyData.length,
             itemBuilder: (context, index) {
               return MapNode(
@@ -139,7 +109,16 @@ class _JourneymapPageState extends State<JourneymapPage> {
               );
             },
           ),
-
+          Positioned(
+            top: 100,
+            left: 0,
+            right: 0,
+            child: Image.asset(
+              'assets/images/Characters/study-boy.gif',
+              height: 150,
+              fit: BoxFit.contain,
+            ),
+          ),
           Positioned(
             top: 50,
             left: 20,

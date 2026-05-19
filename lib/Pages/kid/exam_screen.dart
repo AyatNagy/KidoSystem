@@ -20,7 +20,6 @@ import '../../constants.dart';
 import '../../data/exam/exam_provider.dart';
 import '../../enum/question_type.dart';
 import '../../services/audio_service.dart';
-import '../../utils/placement_level.dart';
 import '../content/level3/letters/letter_trace_page.dart';
 import 'graduation_celebration_screen.dart';
 
@@ -68,6 +67,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     AudioService.stop();
     super.dispose();
   }
+
   void _playQuestionAudio() {
     _autoRepeatTimer?.cancel();
     final examQuestion = examQuestions[currentIndex];
@@ -117,11 +117,10 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
       }
       bool isAllCorrect = true;
       for (var target in q.targets) {
-        String? itemId =
-            dragAnswers.entries
-                .where((e) => e.value == target.id)
-                .map((e) => e.key)
-                .firstOrNull;
+        String? itemId = dragAnswers.entries
+            .where((e) => e.value == target.id)
+            .map((e) => e.key)
+            .firstOrNull;
         if (itemId == null || !target.acceptedItemIds.contains(itemId)) {
           isAllCorrect = false;
           break;
@@ -166,49 +165,55 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     int nextLevelToUnlock = 1;
     String unlockMessageText = "Keep practicing to unlock new levels!";
     bool passed = percentage >= 0.50;
-    int stars =
-    percentage >= 0.85
+    int stars = percentage >= 0.85
         ? 3
         : (percentage >= 0.70 ? 2 : (percentage >= 0.50 ? 1 : 0));
 
     if (widget.onboardingPlacement) {
-      nextLevelToUnlock = placementLevelFromScoreFraction(percentage);
-      levelToSubmit = nextLevelToUnlock;
-      await ProgressManager.unlockUpTo(nextLevelToUnlock);
-      passed = true;
-      stars = nextLevelToUnlock >= 3 ? 3 : (nextLevelToUnlock == 2 ? 2 : 1);
-      unlockMessageText =
-      "Your level is set to $nextLevelToUnlock based on your score.";
-    } else if (widget.examId == "exam2" && !passed) {
-      levelToSubmit = 2;
-      unlockMessageText = "Let's review Exam 1 to get stronger!";
-      nextLevelToUnlock = -1;
-    } else if (passed) {
-      if (widget.examId == "exam1" || widget.examId == "post_level1") {
+      if (!passed) {
+        nextLevelToUnlock = 1;
         levelToSubmit = 1;
+        unlockMessageText = "Level 1 is now UNLOCKED!";
+        await ProgressManager.unlockUpTo(1);
+      } else {
         nextLevelToUnlock = 2;
-        unlockMessageText = "Level 1 & 2 are now UNLOCKED!";
-        await ProgressManager.unlockUpTo(2);
-      } else if (widget.examId == "exam2"  || widget.examId == "post_level2") {
         levelToSubmit = 2;
-        nextLevelToUnlock = 3;
-        unlockMessageText = "Level 1, 2, & 3 are now UNLOCKED!";
-        await ProgressManager.unlockUpTo(3);
-      } else if (widget.examId == "post_level3") {
-        levelToSubmit = 3;
-        nextLevelToUnlock = 3;
-        unlockMessageText = "You finished Level 3 — you graduated!";
-        await ProgressManager.unlockUpTo(3);
+        unlockMessageText = "Levels 1 & 2 are now UNLOCKED!";
+        await ProgressManager.unlockUpTo(2);
       }
     } else {
-      if (widget.examId == "exam1") {
-        levelToSubmit = 1;
-      } else if (widget.examId == "exam2") {
+      if (widget.examId == "exam2" && !passed) {
         levelToSubmit = 2;
-      } else if (widget.examId == "post_level3") {
-        levelToSubmit = 3;
+        unlockMessageText = "Let's review Exam 1 to get stronger!";
+        nextLevelToUnlock = -1;
+      } else if (passed) {
+        if (widget.examId == "exam1" || widget.examId == "post_level1") {
+          levelToSubmit = 1;
+          nextLevelToUnlock = 2;
+          unlockMessageText = "Level 1 & 2 are now UNLOCKED!";
+          await ProgressManager.unlockUpTo(2);
+        } else if (widget.examId == "exam2" || widget.examId == "post_level2") {
+          levelToSubmit = 2;
+          nextLevelToUnlock = 3;
+          unlockMessageText = "Level 1, 2, & 3 are now UNLOCKED!";
+          await ProgressManager.unlockUpTo(3);
+        } else if (widget.examId == "post_level3") {
+          levelToSubmit = 3;
+          nextLevelToUnlock = 3;
+          unlockMessageText = "You finished Level 3 — you graduated!";
+          await ProgressManager.unlockUpTo(3);
+        }
+      } else {
+        if (widget.examId == "exam1") {
+          levelToSubmit = 1;
+        } else if (widget.examId == "exam2") {
+          levelToSubmit = 2;
+        } else if (widget.examId == "post_level3") {
+          levelToSubmit = 3;
+        }
       }
     }
+
     if (mounted) {
       context.read<AssessmentCubit>().submitAssessment(
         score: scorePercentage,
@@ -255,8 +260,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder:
-          (context) => BlocListener<AssessmentCubit, AssessmentState>(
+      builder: (context) => BlocListener<AssessmentCubit, AssessmentState>(
         listener: (context, state) {
           if (state is AssessmentSuccess) {
             print('Assessment submitted successfully');
@@ -274,9 +278,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                passed
-                    ? 'assets/gif/finish.gif'
-                    : 'assets/gif/not-finish.gif',
+                passed ? 'assets/gif/finish.gif' : 'assets/gif/not-finish.gif',
                 height: 180,
                 fit: BoxFit.contain,
               ),
@@ -293,9 +295,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                             Icons.star_rounded,
                             size: 45,
                             color:
-                            index < stars
-                                ? Colors.orange
-                                : Colors.grey.shade300,
+                            index < stars ? Colors.orange : Colors.grey.shade300,
                           ),
                         ),
                       ),
@@ -338,8 +338,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                       builder: (context, state) {
                         bool isLoading = state is AssessmentLoading;
                         return ElevatedButton(
-                          onPressed:
-                          isLoading
+                          onPressed: isLoading
                               ? null
                               : () {
                             Navigator.pop(context);
@@ -352,15 +351,13 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
                             backgroundColor: AppColors.kidoPink,
                             minimumSize: const Size(double.infinity, 50),
                           ),
-                          child:
-                          isLoading
+                          child: isLoading
                               ? const SizedBox(
                             width: 20,
                             height: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor:
-                              AlwaysStoppedAnimation<Color>(
+                              valueColor: AlwaysStoppedAnimation<Color>(
                                 Colors.white,
                               ),
                             ),
@@ -384,6 +381,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
       ),
     );
   }
+
   bool checkDrawingSoft(String target, List<Offset> points) {
     if (points.length < 10) return false;
     return target == "Circle" ? _isCircleSoft(points) : _isVSoft(points);
@@ -472,41 +470,41 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     switch (examQuestion.type) {
       case QuestionType.choice:
         return ChoiceQuestionWidget(
-          key: ValueKey(currentIndex),
-          question: examQuestion.data,
-          onSelected: handleChoiceSelected,
+            key: ValueKey(currentIndex),
+            question: examQuestion.data,
+            onSelected: handleChoiceSelected
         );
-      case QuestionType.drawing:
-        return DrawingQuestionWidget(
-          key: ValueKey(currentIndex),
-          question: examQuestion.data,
-          onDrawingUpdate: handleDrawingUpdate,
-          onClear: clearDrawing,
-        );
-      case QuestionType.dragDrop:
-        return DragDropQuestionWidget(
-          key: ValueKey(currentIndex),
-          question: examQuestion.data,
-          isExamMode: true,
-          onAnswered: (ans) => setState(() => dragAnswers = ans),
-        );
-      case QuestionType.speak:
-        return SpeakQuestionWidget(
-          key: ValueKey(currentIndex),
-          question: examQuestion.data,
-          onAnswered: (txt) => setState(() => currentSpokenResult = txt),
-        );
-      case QuestionType.trace:
-        final traceData = examQuestion.data as TraceQuestion;
-        return LetterTracePage(
-          key: ValueKey(currentIndex),
-          letter: traceData.letter,
-          isExam: true,
-          onComplete: () {
-            setState(() => score++);
-            handleNext();
-          },
-        );
+        case QuestionType.drawing:
+          return DrawingQuestionWidget(
+            key: ValueKey(currentIndex),
+            question: examQuestion.data,
+            onDrawingUpdate: handleDrawingUpdate,
+            onClear: clearDrawing,
+          );
+          case QuestionType.dragDrop:
+            return DragDropQuestionWidget(
+              key: ValueKey(currentIndex),
+              question: examQuestion.data,
+              isExamMode: true,
+              onAnswered: (ans) => setState(() => dragAnswers = ans),
+            );
+            case QuestionType.speak:
+              return SpeakQuestionWidget(
+                key: ValueKey(currentIndex),
+                question: examQuestion.data,
+                onAnswered: (txt) => setState(() => currentSpokenResult = txt),
+              );
+              case QuestionType.trace:
+                final traceData = examQuestion.data as TraceQuestion;
+                return LetterTracePage(
+                  key: ValueKey(currentIndex),
+                  letter: traceData.letter,
+                  isExam: true,
+                  onComplete: () {
+                    setState(() => score++);
+                    handleNext();
+                  },
+                );
     }
   }
 }
