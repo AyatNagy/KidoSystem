@@ -14,7 +14,9 @@ class ParentDashboardFlow extends StatefulWidget {
 class _ParentDashboardFlowState extends State<ParentDashboardFlow> {
   Map<String, dynamic>? _selectedChild;
 
-  void _selectChild(Map<String, dynamic> child) {
+  Future<void> _selectChild(Map<String, dynamic> child) async {
+    await context.read<ParentChildrenCubit>().loadChildren();
+    if (!mounted) return;
     setState(() => _selectedChild = child);
   }
 

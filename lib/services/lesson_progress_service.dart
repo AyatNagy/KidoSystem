@@ -12,22 +12,25 @@ class LessonProgressService {
   }) async {
     if (lessonId <= 0 || childId <= 0) return false;
 
-    await ChildSessionService.ensureLoggedIn(childId);
-
-    var res = await ApiService.completeLesson(lessonId: lessonId);
-    if (res != null && res['success'] == true) return true;
-
-    res = await ApiService.completeLessonAsParent(
+    // Parent app flow: parent JWT + childId (backend Kido_backendd).
+    var res = await ApiService.completeLessonAsParent(
       childId: childId,
       lessonId: lessonId,
     );
-    final ok = res != null && res['success'] == true;
-    if (!ok && kDebugMode) {
+    if (res != null && res['success'] == true) return true;
+
+    // Fallback: child JWT from stored credentials.
+    if (await ChildSessionService.ensureLoggedIn(childId)) {
+      res = await ApiService.completeLesson(lessonId: lessonId);
+      if (res != null && res['success'] == true) return true;
+    }
+
+    if (kDebugMode) {
       debugPrint(
         'LessonProgressService: failed lessonId=$lessonId childId=$childId '
         '→ ${res?['message']}',
       );
     }
-    return ok;
+    return false;
   }
 }

@@ -7,10 +7,12 @@ import 'package:kido/constants.dart';
 import 'package:kido/Widgets/content/journey_map.dart';
 import '../../../../data/content/level3/animals/animals_data.dart';
 import '../../../../data/content/level3/animals/animals_journey.dart';
+import 'package:kido/utils/category_progress.dart';
 
 class AnimalMapPage extends StatefulWidget {
+  final int childId;
 
-  const AnimalMapPage({super.key});
+  const AnimalMapPage({super.key, this.childId = 0});
 
   @override
   State<AnimalMapPage> createState() => _AnimalMapPageState();
@@ -21,7 +23,10 @@ class _AnimalMapPageState extends State<AnimalMapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: JourneymapPage(
-        journeyData:animalsJourney,
+        childId: widget.childId,
+        resolveLessonId: (_, index) =>
+            lessonIdByCategoryIndex('Animals', index),
+        journeyData: animalsJourney,
         backgroundColor: AppColors.kidoYellow,
         nodeButtonColor: AppColors.kidoColors[5],
         detailFlowBuilder: (item) {

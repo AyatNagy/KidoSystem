@@ -3,6 +3,7 @@ import 'package:kido/Pages/content/level1/senses/senses_map_page.dart';
 import '../../../Widgets/Animation/senses.dart';
 import '../../../Widgets/content/category_card.dart';
 import '../../../constants.dart';
+import 'package:kido/utils/category_progress.dart';
 import '../feelings/feelings_levels.dart';
 import 'Self_cleaning/cleaning_map.dart';
 import 'draw.dart';
@@ -70,6 +71,10 @@ class Category extends StatelessWidget {
                     ToyRewardPage(onNext: () => Navigator.pop(context)),
               ),
             );
+            await completeCategoryLessons(
+              childId: childId,
+              categoryName: 'Counting',
+            );
           },
         ),
 
@@ -104,6 +109,10 @@ class Category extends StatelessWidget {
                 ),
               ),
             );
+            await completeCategoryLessons(
+              childId: childId,
+              categoryName: 'Sorting',
+            );
           },
         ),
 
@@ -132,6 +141,10 @@ class Category extends StatelessWidget {
                     StakesDrag(onNext: () => Navigator.pop(context)),
               ),
             );
+            await completeCategoryLessons(
+              childId: childId,
+              categoryName: 'Pegboard',
+            );
           },
         ),
 
@@ -139,59 +152,84 @@ class Category extends StatelessWidget {
         CategoryCard(
           gradient: AppColors.fruitGrad,
           graphic: const Center(child: FiveSensesLogo()),
-          onTap:
-              () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SensesMapPage()),
-          ),
+          onTap: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SensesMapPage()),
+            );
+            await completeCategoryLessons(
+              childId: childId,
+              categoryName: 'Senses',
+            );
+          },
         ),
 
         // MATCHING
         CategoryCard(
           gradient: [AppColors.kidoColors[5], AppColors.kidoOrange],
           graphic: Center(child: Image.asset('assets/gif/match.gif')),
-          onTap:
-              () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MatchingPracticePage(),
-            ),
-          ),
+          onTap: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MatchingPracticePage(),
+              ),
+            );
+            await completeCategoryLessons(
+              childId: childId,
+              categoryName: 'Matching',
+            );
+          },
         ),
 
         // DRAWING
         CategoryCard(
           gradient: AppColors.puzzleGrad,
           graphic: Center(child: Image.asset('assets/images/drawing/draw.gif')),
-          onTap:
-              () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const Draw()),
-          ),
+          onTap: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Draw()),
+            );
+            await completeCategoryLessons(
+              childId: childId,
+              categoryName: 'Drawing',
+            );
+          },
         ),
 
         // SELF-CARE
         CategoryCard(
           gradient: AppColors.vegetablesGrad,
           graphic: Center(child: Image.asset('assets/gif/self-care.gif')),
-          onTap:
-              () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CleaningMap()),
-          ),
+          onTap: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CleaningMap()),
+            );
+            await completeCategoryLessons(
+              childId: childId,
+              categoryName: 'Self Care',
+            );
+          },
         ),
 
         // FEELINGS
         CategoryCard(
           gradient: [AppColors.kidoColors[6], AppColors.kidoRed],
           graphic: Center(child: Image.asset('assets/gif/feelings.gif')),
-          onTap:
-              () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const TreehouseLevels(),
-            ),
-          ),
+          onTap: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const TreehouseLevels(),
+              ),
+            );
+            await completeCategoryLessons(
+              childId: childId,
+              categoryName: 'Feelings',
+            );
+          },
         ),
       ],
     );

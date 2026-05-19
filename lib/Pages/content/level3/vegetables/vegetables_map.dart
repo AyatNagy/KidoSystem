@@ -5,9 +5,12 @@ import '../../../../Models/level3/letters/letter_map.dart';
 import '../../../../Widgets/content/level3/discovery_widget.dart';
 import '../../../../Widgets/content/journey_map.dart';
 import '../../../../data/content/level3/vegetables/vegetables_journey.dart';
+import 'package:kido/utils/category_progress.dart';
 
 class VegetablesMapPage extends StatefulWidget {
-  const VegetablesMapPage({super.key});
+  final int childId;
+
+  const VegetablesMapPage({super.key, this.childId = 0});
 
   @override
   State<VegetablesMapPage> createState() => _VegetablesMapPageState();
@@ -18,6 +21,9 @@ class _VegetablesMapPageState extends State<VegetablesMapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: JourneymapPage(
+        childId: widget.childId,
+        resolveLessonId: (_, index) =>
+            lessonIdByCategoryIndex('Vegetables', index),
         journeyData: journeyVegetables,
         backgroundColor: AppColors.kidoGreen,
         nodeButtonColor: const Color(0xFF3A7D44),

@@ -20,7 +20,7 @@ class Level3Home extends StatelessWidget {
       examId: "post_level3",
       examIcon: Icons.star,
       examGradientColors: [AppColors.kidoRed, AppColors.kidoOrange],
-      categoryWidget: CategoryGrid(),
+      categoryWidget: CategoryGrid(childId: childId),
     );
   }
 }

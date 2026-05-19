@@ -10,6 +10,7 @@ import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
 import '../../../data/content/level2/puzzle_data.dart';
 import 'draw/draw_line/octobus_and_star.dart';
+import 'package:kido/utils/lesson_completion.dart';
 
 class Category2 extends StatelessWidget {
   final String childName;
@@ -39,22 +40,35 @@ class Category2 extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => OctobusAndStar(
+                  childId: childId,
+                  lessonId: 16,
                   onNext: () {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => RainyCloud(
+                          childId: childId,
+                          lessonId: 17,
                           onNext: () {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => RocketLesson(
+                                  childId: childId,
+                                  lessonId: 18,
                                   onNext: () {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => PlusDrawingPage(
-                                          onNext: () {
+                                          childId: childId,
+                                          lessonId: 19,
+                                          onNext: () async {
+                                            await completeLessonForChild(
+                                              childId: childId,
+                                              lessonId: 20,
+                                            );
+                                            if (!context.mounted) return;
                                             Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
@@ -91,7 +105,7 @@ class Category2 extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SizesMapPage()),
+              MaterialPageRoute(builder: (context) => SizesMapPage(childId: childId)),
             );
           },
         ),

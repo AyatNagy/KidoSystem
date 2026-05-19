@@ -6,6 +6,7 @@ import '../../Models/child.dart';
 import '../../Widgets/Layout/header_clipper.dart';
 import '../../Widgets/Buttons/puls_button.dart';
 import '../../bloc/dashoard.dart';
+import '../../bloc/parent_children/parent_children_cubit.dart';
 import '../../constants.dart';
 import '../../data/dashboard.dart';
 
@@ -59,9 +60,25 @@ class Dashboard extends StatelessWidget {
                 SafeArea(
                   child: RefreshIndicator(
                     color: AppColors.kidoPink,
-                    onRefresh: () => context.read<DashboardBloc>().refresh(
-                          childMeta: childData,
-                        ),
+                    onRefresh: () async {
+                      final cubit = context.read<ParentChildrenCubit>();
+                      final bloc = context.read<DashboardBloc>();
+                      try {
+                        await cubit.loadChildren();
+                      } catch (_) {}
+                      if (!context.mounted) return;
+                      Map<String, dynamic> meta = childData;
+                      final childrenState = cubit.state;
+                      if (childrenState is ParentChildrenReady) {
+                        for (final c in childrenState.children) {
+                          if (c['id'] == childData['id']) {
+                            meta = c;
+                            break;
+                          }
+                        }
+                      }
+                      await bloc.refresh(childMeta: meta);
+                    },
                     child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(
                       parent: BouncingScrollPhysics(),

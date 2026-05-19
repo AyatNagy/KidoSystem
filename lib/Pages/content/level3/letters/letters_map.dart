@@ -8,9 +8,12 @@ import '../../../../Widgets/content/level3/letters/drag_and_drop.dart';
 import '../../../../Widgets/content/level3/letters/mystery_box.dart';
 import '../../../../Widgets/content/journey_map.dart';
 import '../../../../data/content/level3/letters/journey_letters.dart';
+import 'package:kido/utils/category_progress.dart';
 
 class LettersMapPage extends StatefulWidget {
-  const LettersMapPage({super.key});
+  final int childId;
+
+  const LettersMapPage({super.key, this.childId = 0});
 
   @override
   State<LettersMapPage> createState() => _LettersMapPageState();
@@ -21,6 +24,9 @@ class _LettersMapPageState extends State<LettersMapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: JourneymapPage(
+        childId: widget.childId,
+        resolveLessonId: (_, index) =>
+            lessonIdByCategoryIndex('Letters', index),
         journeyData: journeyEn,
         backgroundColor: AppColors.kidoGreen,
         nodeButtonColor: AppColors.kidoColors[4],

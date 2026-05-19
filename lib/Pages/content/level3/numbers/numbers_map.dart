@@ -8,10 +8,17 @@ import '../../../../Widgets/content/level3/letters/bubble_pop.dart';
 import '../../../../Widgets/content/journey_map.dart';
 import '../../../../data/content/level3/numbers/numbers_journey.dart';
 import 'numbers_train.dart';
+import 'package:kido/utils/category_progress.dart';
 
 class NumbersMapPage extends StatefulWidget {
   final bool isEnglish;
-  const NumbersMapPage({super.key,required this.isEnglish});
+  final int childId;
+
+  const NumbersMapPage({
+    super.key,
+    required this.isEnglish,
+    this.childId = 0,
+  });
 
   @override
   State<NumbersMapPage> createState() => _NumbersMapPageState();
@@ -22,7 +29,10 @@ class _NumbersMapPageState extends State<NumbersMapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: JourneymapPage(
-        journeyData: widget.isEnglish?journeyNumEng:journeyNumArab,
+        childId: widget.childId,
+        resolveLessonId: (_, index) =>
+            lessonIdByCategoryIndex('Numbers', index),
+        journeyData: widget.isEnglish ? journeyNumEng : journeyNumArab,
         backgroundColor: AppColors.kidoYellow,
         nodeButtonColor: AppColors.kidoColors[5],
         detailFlowBuilder: (item) {

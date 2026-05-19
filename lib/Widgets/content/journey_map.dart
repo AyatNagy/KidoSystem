@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
+import 'package:kido/utils/lesson_completion.dart';
 import 'map.dart';
 
 class JourneymapPage extends StatefulWidget {
@@ -7,6 +8,8 @@ class JourneymapPage extends StatefulWidget {
   final Color backgroundColor;
   final Color nodeButtonColor;
   final Widget Function(dynamic item) detailFlowBuilder;
+  final int childId;
+  final int? Function(dynamic item, int index)? resolveLessonId;
 
   const JourneymapPage({
     super.key,
@@ -14,6 +17,8 @@ class JourneymapPage extends StatefulWidget {
     required this.backgroundColor,
     required this.nodeButtonColor,
     required this.detailFlowBuilder,
+    this.childId = 0,
+    this.resolveLessonId,
   });
 
   @override
@@ -32,6 +37,16 @@ class _JourneymapPageState extends State<JourneymapPage> {
     );
 
     if (examPassed == true) {
+      if (widget.childId > 0 && widget.resolveLessonId != null) {
+        final lessonId = widget.resolveLessonId!(currentStep, index);
+        if (lessonId != null) {
+          await completeLessonForChild(
+            childId: widget.childId,
+            lessonId: lessonId,
+          );
+        }
+      }
+      if (!mounted) return;
       setState(() {
         if (index + 1 < widget.journeyData.length) {
           widget.journeyData[index + 1].isLocked = false;

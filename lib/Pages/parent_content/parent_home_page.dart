@@ -60,8 +60,8 @@ class _ParentHomeViewState extends State<_ParentHomeView>
     }
   }
 
-  void _openChildDashboard(Map<String, dynamic> child) {
-    Navigator.push(
+  Future<void> _openChildDashboard(Map<String, dynamic> child) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => ChildLevelSelectPage(
@@ -72,6 +72,9 @@ class _ParentHomeViewState extends State<_ParentHomeView>
         ),
       ),
     );
+    if (mounted) {
+      await context.read<ParentChildrenCubit>().loadChildren();
+    }
   }
 
   Future<void> _editChild(Map<String, dynamic> child) async {
@@ -632,10 +635,10 @@ class _ParentHomeViewState extends State<_ParentHomeView>
       selectedItemColor: Colors.blueAccent,
       unselectedItemColor: Colors.grey,
       currentIndex: _selectedIndex,
-      onTap: (index) {
+      onTap: (index) async {
         setState(() => _selectedIndex = index);
         if (index == 1) {
-          context.read<ParentChildrenCubit>().loadChildren();
+          await context.read<ParentChildrenCubit>().loadChildren();
         }
       },
       items: [

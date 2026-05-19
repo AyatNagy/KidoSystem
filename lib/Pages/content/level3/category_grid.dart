@@ -6,12 +6,14 @@ import 'package:kido/Pages/content/level3/numbers/numbers_map.dart';
 import 'package:kido/Pages/content/level3/vegetables/vegetables_map.dart';
 import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
+import 'package:kido/utils/category_progress.dart';
 import 'family_members/background_page.dart';
 import 'fruits/fruits_map.dart';
 
-
 class CategoryGrid extends StatelessWidget {
-  const CategoryGrid({super.key});
+  final int childId;
+
+  const CategoryGrid({super.key, this.childId = 0});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,9 @@ class CategoryGrid extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ArLettersMapPage()),
+              MaterialPageRoute(
+                builder: (context) => ArLettersMapPage(childId: childId),
+              ),
             );
           },
         ),
@@ -47,12 +51,12 @@ class CategoryGrid extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => LettersMapPage()),
+              MaterialPageRoute(
+                builder: (context) => LettersMapPage(childId: childId),
+              ),
             );
           },
         ),
-        
-
         CategoryCard(
           gradient: AppColors.numbersGrad,
           graphic: Image.asset(
@@ -63,7 +67,10 @@ class CategoryGrid extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>NumbersMapPage(isEnglish: true,),
+                builder: (context) => NumbersMapPage(
+                  isEnglish: true,
+                  childId: childId,
+                ),
               ),
             );
           },
@@ -78,19 +85,14 @@ class CategoryGrid extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>NumbersMapPage(isEnglish:false ,),
-
+                builder: (context) => NumbersMapPage(
+                  isEnglish: false,
+                  childId: childId,
+                ),
               ),
             );
           },
         ),
-
-        /*CategoryCard(
-          gradient: AppColors.colorsGrad,
-          graphic: Center(child: AnimatedColorsPalette(size: 80)),
-          onTap: () {},
-        ),
-*/
         CategoryCard(
           gradient: AppColors.puzzleGrad,
           graphic: Image.asset(
@@ -100,7 +102,9 @@ class CategoryGrid extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => FruitsMapPage()),
+              MaterialPageRoute(
+                builder: (context) => FruitsMapPage(childId: childId),
+              ),
             );
           },
         ),
@@ -113,7 +117,9 @@ class CategoryGrid extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => VegetablesMapPage()),
+              MaterialPageRoute(
+                builder: (context) => VegetablesMapPage(childId: childId),
+              ),
             );
           },
         ),
@@ -123,10 +129,14 @@ class CategoryGrid extends StatelessWidget {
             'assets/images/family/family_c.png',
             fit: BoxFit.cover,
           ),
-          onTap: () {
-            Navigator.push(
+          onTap: () async {
+            await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => FamilyBackGround()),
+            );
+            await completeCategoryLessons(
+              childId: childId,
+              categoryName: 'Family',
             );
           },
         ),
@@ -139,7 +149,9 @@ class CategoryGrid extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AnimalMapPage()),
+              MaterialPageRoute(
+                builder: (context) => AnimalMapPage(childId: childId),
+              ),
             );
           },
         ),
