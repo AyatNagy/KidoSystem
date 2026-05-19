@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kido/Pages/content/level2/colors/color_game_screen.dart';
 import 'package:kido/Pages/content/level2/draw/shapes/circle.dart';
 import 'package:kido/Pages/content/level2/draw/draw_line/rainy_cloud.dart';
 import 'package:kido/Pages/content/level2/draw/draw_line/rocket_lesson.dart';
@@ -8,6 +9,7 @@ import 'package:kido/Pages/content/level2/puzzle_practice.dart';
 import 'package:kido/Pages/content/level2/sizes/sizes_map_page.dart';
 import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
+import 'package:kido/data/content/level2/color_data.dart';
 import '../../../data/content/level2/puzzle_data.dart';
 import 'draw/draw_line/octobus_and_star.dart';
 import 'package:kido/utils/lesson_completion.dart';
@@ -39,59 +41,72 @@ class Category2 extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => OctobusAndStar(
-                  childId: childId,
-                  lessonId: 16,
-                  onNext: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RainyCloud(
-                          childId: childId,
-                          lessonId: 17,
-                          onNext: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RocketLesson(
+                builder:
+                    (context) => OctobusAndStar(
+                      childId: childId,
+                      lessonId: 16,
+                      onNext: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => RainyCloud(
                                   childId: childId,
-                                  lessonId: 18,
+                                  lessonId: 17,
                                   onNext: () {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => PlusDrawingPage(
-                                          childId: childId,
-                                          lessonId: 19,
-                                          onNext: () async {
-                                            await completeLessonForChild(
+                                        builder:
+                                            (context) => RocketLesson(
                                               childId: childId,
-                                              lessonId: 20,
-                                            );
-                                            if (!context.mounted) return;
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => Level2Home(
-                                                  childName: childName,
-                                                  childId: childId,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                              lessonId: 18,
+                                              onNext: () {
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder:
+                                                        (
+                                                          context,
+                                                        ) => PlusDrawingPage(
+                                                          childId: childId,
+                                                          lessonId: 19,
+                                                          onNext: () async {
+                                                            await completeLessonForChild(
+                                                              childId: childId,
+                                                              lessonId: 20,
+                                                            );
+                                                            if (!context
+                                                                .mounted)
+                                                              return;
+                                                            Navigator.pushReplacement(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (
+                                                                      context,
+                                                                    ) => Level2Home(
+                                                                      childName:
+                                                                          childName,
+                                                                      childId:
+                                                                          childId,
+                                                                    ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
                                       ),
                                     );
                                   },
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                          ),
+                        );
+                      },
+                    ),
               ),
             );
           },
@@ -105,7 +120,9 @@ class Category2 extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SizesMapPage(childId: childId)),
+              MaterialPageRoute(
+                builder: (context) => SizesMapPage(childId: childId),
+              ),
             );
           },
         ),
@@ -119,10 +136,11 @@ class Category2 extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CircleDrawingPage(
-                  childName: childName,
-                  childId: childId,
-                ),
+                builder:
+                    (context) => CircleDrawingPage(
+                      childName: childName,
+                      childId: childId,
+                    ),
               ),
             );
           },
@@ -137,11 +155,29 @@ class Category2 extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PuzzlePracticeScreen(
-                  levels: allPuzzleLevels,
-                  childName: childName,
-                  childId: childId,
-                ),
+                builder:
+                    (context) => PuzzlePracticeScreen(
+                      levels: allPuzzleLevels,
+                      childName: childName,
+                      childId: childId,
+                    ),
+              ),
+            );
+          },
+        ),
+        CategoryCard(
+          gradient: [AppColors.kidoPink, AppColors.bgColor],
+          graphic: Image.asset(
+            'assets/images/colors/color_c.png',
+            fit: BoxFit.cover,
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) =>
+                        ColorGameScreen(currentGroup: allColorGroups.first),
               ),
             );
           },
