@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kido/l10n/l10n_extension.dart';
 import '../../Models/child.dart';
 import '../../Widgets/Layout/header_clipper.dart';
 import '../../Widgets/Buttons/puls_button.dart';
@@ -46,6 +47,7 @@ class Dashboard extends StatelessWidget {
         ),
       child: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
+          final l10n = context.l10n;
           return Scaffold(
             backgroundColor: AppColors.bgColor,
             body: state.isLoading
@@ -88,19 +90,19 @@ class Dashboard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 20),
-                        const Text(
-                          "Dashboard",
-                          style: TextStyle(
+                        Text(
+                          l10n.dashboard,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 26,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
                         const SizedBox(height: 30),
-                        _buildModernHeroCard(state),
+                        _buildModernHeroCard(state, l10n),
                         const SizedBox(height: 35),
-                        const Text(
-                          "Learning Journey",
+                        Text(
+                          l10n.learningJourney,
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w900,
@@ -109,7 +111,7 @@ class Dashboard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 15),
-                        _buildCreativeTaskGrid(state),
+                        _buildCreativeTaskGrid(state, l10n),
                         const SizedBox(height: 100),
                       ],
                     ),
@@ -169,7 +171,7 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildModernHeroCard(DashboardState state) {
+  Widget _buildModernHeroCard(DashboardState state, dynamic l10n) {
     return Container(
       padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
@@ -220,16 +222,16 @@ class Dashboard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${state.selectedChild?.name ?? 'Kid'}!",
+                      '${state.selectedChild?.name ?? l10n.defaultKidName}!',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: AppColors.textDark,
                       ),
                     ),
-                    const Text(
-                      "Everything looks great today!",
-                      style: TextStyle(color: AppColors.textGray, fontSize: 14),
+                    Text(
+                      l10n.everythingLooksGreat,
+                      style: const TextStyle(color: AppColors.textGray, fontSize: 14),
                     ),
                   ],
                 ),
@@ -243,13 +245,13 @@ class Dashboard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildMetric(
-                "Accuracy",
+                l10n.accuracy,
                 "${state.accuracy}%",
                 Icons.track_changes_rounded,
                 AppColors.kidoBlue,
               ),
               _buildMetric(
-                "Badges",
+                l10n.badges,
                 "${state.badges}",
                 Icons.stars_rounded,
                 AppColors.kidoYellow,
@@ -286,7 +288,7 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildCreativeTaskGrid(DashboardState state) {
+  Widget _buildCreativeTaskGrid(DashboardState state, dynamic l10n) {
     List<Map<String, dynamic>> taskItems = [];
     if (state.level == 3) {
       taskItems = level3Data(state.progress);
@@ -304,7 +306,7 @@ class Dashboard extends StatelessWidget {
 
     return Column(
       children: taskItems
-          .map((item) => _buildModernTaskCard(item, state.previousProgress))
+          .map((item) => _buildModernTaskCard(item, state.previousProgress, l10n))
           .toList(),
     );
   }
@@ -334,13 +336,15 @@ class Dashboard extends StatelessWidget {
   Widget _buildModernTaskCard(
       Map<String, dynamic> item,
       Map<String, double> prevProgress,
+      dynamic l10n,
       ) {
-    final String title = item['title'] ?? 'Task';
+    final String rawTitle = item['title'] ?? 'Task';
+    final String title = l10n.categoryTitle(rawTitle);
     final String symbol = item['symbol'] ?? '✨';
     final double currentVal = (item['progress'] as num? ?? 0.0).toDouble();
-    final double previousVal = prevProgress[title] ?? currentVal;
+    final double previousVal = prevProgress[rawTitle] ?? currentVal;
     final bool isUp = currentVal >= previousVal;
-    final Color kidoColor = _getKidoColorByTitle(title);
+    final Color kidoColor = _getKidoColorByTitle(rawTitle);
 
     final bool isImagePath = symbol.contains("assets/");
 

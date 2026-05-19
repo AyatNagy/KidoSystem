@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kido/l10n/l10n_extension.dart';
 import 'package:kido/Pages/Auth/forgot_by_email_pagel.dart';
 import 'package:kido/Pages/parent_content/parent_home_page.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
@@ -55,6 +56,7 @@ class _ParentLoginState extends State<ParentLogin> {
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
+    final l10n = context.l10n;
 
     return MultiBlocProvider(
       providers: [
@@ -67,8 +69,8 @@ class _ParentLoginState extends State<ParentLogin> {
             customDialog(
               context,
               DailogModel(
-                title: "Success",
-                message: "Login successful!",
+                title: l10n.success,
+                message: l10n.loginSuccess,
                 image: "assets/images/signin-success.png",
               ),
               titleColor: Colors.green,
@@ -84,7 +86,7 @@ class _ParentLoginState extends State<ParentLogin> {
             customDialog(
               context,
               DailogModel(
-                title: "Error",
+                title: l10n.errorTitle,
                 message: state.errorMessage,
                 image: "assets/images/signin-failed.png",
               ),
@@ -97,9 +99,9 @@ class _ParentLoginState extends State<ParentLogin> {
             if (state is GoogleAuthSuccess) {
               customDialog(
                 context,
-                DailogModel(
-                  title: "Success",
-                  message: "Google Login successful!",
+              DailogModel(
+                title: l10n.success,
+                message: l10n.googleLoginSuccess,
                   image: "assets/images/google-success.png",
                 ),
                 titleColor: Colors.green,
@@ -114,10 +116,10 @@ class _ParentLoginState extends State<ParentLogin> {
             } else if (state is GoogleAuthFailure) {
               customDialog(
                 context,
-                DailogModel(
-                  title: "Error",
-                  message: state.errorMessage,
-                  image: "assets/images/google-failed.png",
+              DailogModel(
+                title: l10n.errorTitle,
+                message: state.errorMessage,
+                image: "assets/images/google-failed.png",
                 ),
                 titleColor: Colors.red,
               );
@@ -140,7 +142,7 @@ class _ParentLoginState extends State<ParentLogin> {
                       child: Column(
                         children: [
                           Text(
-                            "Hi, Parent!",
+                            l10n.hiParent,
                             style: TextStyle(
                               fontFamily: 'tinyKids',
                               fontSize: config.headline,
@@ -165,7 +167,7 @@ class _ParentLoginState extends State<ParentLogin> {
                                 CustomTextField(
                                   fieldController: emailController,
                                   fieldIcon: const Icon(Icons.email),
-                                  fieldLabel: "Email",
+                                  fieldLabel: l10n.email,
                                   fieldObscure: false,
                                   textInputAction: TextInputAction.next,
                                   onChanged: (value) {
@@ -194,7 +196,7 @@ class _ParentLoginState extends State<ParentLogin> {
                                 CustomTextField(
                                   fieldController: passwordController,
                                   fieldIcon: const Icon(Icons.lock),
-                                  fieldLabel: "Password",
+                                  fieldLabel: l10n.password,
                                   fieldObscure: !isPasswordVisible,
                                   textInputAction: TextInputAction.done,
                                   suffixIcon: IconButton(
@@ -273,7 +275,7 @@ class _ParentLoginState extends State<ParentLogin> {
                                               ),
                                             )
                                             : Text(
-                                              "Sign In",
+                                              l10n.signIn,
                                               style: TextStyle(
                                                 fontSize: config.title,
                                                 color: Colors.white,
@@ -295,7 +297,7 @@ class _ParentLoginState extends State<ParentLogin> {
                                         ),
                                       ),
                                   child: Text(
-                                    "Forget Password?",
+                                    l10n.forgotPassword,
                                     style: TextStyle(
                                       fontFamily: 'nunito',
                                       color: const Color(0xff837F7F),
@@ -308,7 +310,7 @@ class _ParentLoginState extends State<ParentLogin> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "Don't have an account?",
+                                      l10n.noAccountYet,
                                       style: TextStyle(
                                         fontFamily: 'nunito',
                                         color: const Color(0xff837F7F),
@@ -325,7 +327,7 @@ class _ParentLoginState extends State<ParentLogin> {
                                             ),
                                           ),
                                       child: Text(
-                                        "Create one",
+                                        l10n.createAccount,
                                         style: TextStyle(
                                           color: const Color(0xff2C8FF9),
                                           fontFamily: 'nunito',

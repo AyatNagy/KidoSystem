@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kido/l10n/l10n_extension.dart';
 import 'package:kido/Widgets/content/level_home_base.dart';
 import 'package:kido/constants.dart';
 import 'category.dart';
@@ -17,13 +18,14 @@ class Level2Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return LevelHomeBase(
       childName: childName,
       childId: childId,
       avatarAsset: avatarAsset,
       primaryColor: AppColors.purpleMain,
-      dailyChallengeTitle: "Daily Challenge",
-      dailyChallengeSubtitle: "Lines, Shapes, Sizes and Puzzle",
+      dailyChallengeTitle: l10n.dailyChallenge,
+      dailyChallengeSubtitle: l10n.level2ChallengeSubtitle,
       examId: "post_level2",
       examIcon: Icons.psychology_rounded,
       examGradientColors: [AppColors.kidoGreen, AppColors.kidoColors[7]],

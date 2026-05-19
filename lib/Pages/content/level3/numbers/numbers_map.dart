@@ -8,7 +8,8 @@ import '../../../../Widgets/content/level3/letters/bubble_pop.dart';
 import '../../../../Widgets/content/journey_map.dart';
 import '../../../../data/content/level3/numbers/numbers_journey.dart';
 import 'numbers_train.dart';
-import 'package:kido/utils/category_progress.dart';
+import 'package:kido/utils/journey_lesson_ids.dart';
+import 'package:kido/utils/journey_navigation.dart';
 
 class NumbersMapPage extends StatefulWidget {
   final bool isEnglish;
@@ -30,8 +31,11 @@ class _NumbersMapPageState extends State<NumbersMapPage> {
     return Scaffold(
       body: JourneymapPage(
         childId: widget.childId,
-        resolveLessonId: (_, index) =>
-            lessonIdByCategoryIndex('Numbers', index),
+        resolveLessonId: (item, index) => numbersMapLessonId(
+              item as LetterJourney,
+              index,
+              isEnglish: widget.isEnglish,
+            ),
         journeyData: widget.isEnglish ? journeyNumEng : journeyNumArab,
         backgroundColor: AppColors.kidoYellow,
         nodeButtonColor: AppColors.kidoColors[5],
@@ -84,10 +88,10 @@ class NumberDetailsFlow extends StatelessWidget {
                                             targetLetter: item.charName!,
                                             audioPath:item.letterData.audioPath,
                                                         onNext: () {
-                                                          Navigator.of(context)
-                                                            ..pop()
-                                                            ..pop()
-                                                            ..pop(true);
+                                                          finishJourneyNode(
+                                                            context,
+                                                            screensAboveMap: 2,
+                                                          );
                                                         },
                                                       ),
                                                 ),

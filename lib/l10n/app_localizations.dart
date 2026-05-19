@@ -5,8 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'app_localizations_ar.dart';
-import 'app_localizations_en.dart';
+import 'kido_strings.dart';
 
 // ignore_for_file: type=lint
 
@@ -187,6 +186,73 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose from gallery'**
   String get chooseGallery;
+
+  String get welcomeBack;
+  String get yourChildren;
+  String get addChild;
+  String get noChildrenYet;
+  String get holdToEdit;
+  String get levelLabel;
+  String get needAdvice;
+  String get askAiProgress;
+  String get chat;
+  String get navHome;
+  String get navDashboard;
+  String get navLearn;
+  String get navProfile;
+  String get chooseChild;
+  String get selectChildHint;
+  String get dailyReminderSent;
+  String get dailyReminderScheduled;
+  String get progressSaved;
+  String get progressSaveFailed;
+  String get childNotLinked;
+  String get noChildrenDashboard;
+
+  String get continueButton;
+  String get skip;
+  String get back;
+  String get success;
+  String get unknown;
+  String get locked;
+  String get letsGo;
+  String get startTagline;
+  String get startExploring;
+  String get login;
+  String get signUp;
+  String get email;
+  String get password;
+  String get forgotPassword;
+  String get signIn;
+  String get noAccountYet;
+  String get createAccount;
+  String get loginSuccess;
+  String get changeAppLanguage;
+  String get hiParent;
+  String get errorTitle;
+  String get googleLoginSuccess;
+  String get letsLearnFun;
+  String get categories;
+  String get dailyChallenge;
+  String get level1ChallengeSubtitle;
+  String get level2ChallengeSubtitle;
+  String get level3ChallengeSubtitle;
+  String get skillTest;
+  String get proveSkills;
+  String get startTest;
+  String get dashboard;
+  String get learningJourney;
+  String get accuracy;
+  String get badges;
+  String get everythingLooksGreat;
+  String get finalExam;
+  String get finalExamSubtitle;
+  String get defaultKidName;
+  String get taskLabel;
+
+  String helloChild(String name);
+  String levelUnlocked(int level);
+  String categoryTitle(String key);
 }
 
 class _AppLocalizationsDelegate
@@ -207,18 +273,5 @@ class _AppLocalizationsDelegate
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-  // Lookup logic when only language code is specified.
-  switch (locale.languageCode) {
-    case 'ar':
-      return AppLocalizationsAr();
-    case 'en':
-      return AppLocalizationsEn();
-  }
-
-  throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
-  );
+  return KidoStrings.fromLocale(locale);
 }

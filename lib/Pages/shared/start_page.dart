@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
+import 'package:kido/l10n/l10n_extension.dart';
 
 import '../../Widgets/Layout/app_bar.dart';
 import 'onboard_page.dart';
@@ -11,6 +12,7 @@ class Start extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
+    final l10n = context.l10n;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -34,7 +36,7 @@ class Start extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  "Every Child’s\nJourney to Their Star!",
+                  l10n.startTagline,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: config.headline,
@@ -104,7 +106,7 @@ class Start extends StatelessWidget {
                       child: Container(
                         alignment: Alignment.center,
                         child: Text(
-                          "Start Exploring!",
+                          l10n.startExploring,
                           style: TextStyle(
                             fontSize: config.buttonFont,
                             color: Colors.white,

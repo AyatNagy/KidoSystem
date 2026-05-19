@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
+import 'package:kido/l10n/l10n_extension.dart';
 import '../../config/progress.dart';
 import '../../services/child_session_service.dart';
 import '../../constants.dart';
@@ -338,8 +339,8 @@ class _ChildLevelSelectPageState extends State<ChildLevelSelectPage>
             ),
             elevation: 5,
           ),
-          child: const Text(
-            "LET'S GO!",
+          child: Text(
+            context.l10n.letsGo,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w900,

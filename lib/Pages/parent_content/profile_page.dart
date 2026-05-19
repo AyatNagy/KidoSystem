@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/constants.dart';
+import 'package:kido/l10n/l10n_extension.dart';
 import '../../config/app_launch.dart';
 import '../../config/cache_helper.dart';
 
@@ -88,6 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
+    final l10n = context.l10n;
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Scaffold(
@@ -138,8 +140,8 @@ class _ProfilePageState extends State<ProfilePage> {
               delegate: SliverChildListDelegate([
                 _ProfileTile(
                   icon: CupertinoIcons.person_fill,
-                  title: isRtl ? "تعديل الملف الشخصي" : "Edit Profile",
-                  subtitle: isRtl ? "تحديث معلوماتك الشخصية" : "Update your personal info",
+                  title: l10n.editProfile,
+                  subtitle: l10n.updateInfo,
                   color: AppColors.kidoBlue,
                   onTap: () {},
                   config: config,
@@ -148,8 +150,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildLanguageSwitchTile(config, isRtl),
                 _ProfileTile(
                   icon: CupertinoIcons.lock_shield_fill,
-                  title: isRtl ? "الخصوصية والأمان" : "Privacy & Security",
-                  subtitle: isRtl ? "إدارة بياناتك الخاصة" : "Manage your data",
+                  title: l10n.privacyTitle,
+                  subtitle: l10n.privacySubtitle,
                   color: AppColors.textDark,
                   onTap: () {},
                   config: config,
@@ -167,6 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildLanguageSwitchTile(dynamic config, bool isRtl) {
+    final l10n = context.l10n;
     return Container(
       margin: EdgeInsets.only(bottom: config.localHeight * 0.022),
       decoration: BoxDecoration(
@@ -203,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isRtl ? "اللغة" : "Language",
+                    l10n.languageTitle,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: config.body * 1.05,
@@ -213,7 +216,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 2.0),
                     child: Text(
-                      isRtl ? "تغيير لغة واجهة التطبيق" : "Change application language",
+                      l10n.changeAppLanguage,
                       style: TextStyle(
                         fontSize: config.body * 0.8,
                         color: Colors.grey.shade500,
@@ -359,6 +362,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildLogoutButton(dynamic config, bool isRtl) {
+    final l10n = context.l10n;
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
@@ -389,7 +393,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(width: 8),
             Text(
-              isRtl ? "تسجيل الخروج" : "LOG OUT",
+              l10n.logoutButton,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: config.body,
@@ -423,7 +427,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _showImageSourceSheet(dynamic config) {
     final bool hasImage = kIsWeb ? (_webImageBytes != null) : (_imageFile != null);
-    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    final l10n = context.l10n;
 
     showModalBottomSheet(
       context: context,
@@ -456,7 +460,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   title: Text(
-                    isRtl ? "عرض الصورة الحالية" : "View Current Photo",
+                    l10n.viewPhoto,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   onTap: () {
@@ -473,7 +477,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 title: Text(
-                  isRtl ? "التقاط صورة" : "Take a photo",
+                  l10n.takePhoto,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
@@ -490,7 +494,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 title: Text(
-                  isRtl ? "اختيار من المعرض" : "Choose from gallery",
+                  l10n.chooseGallery,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
@@ -506,6 +510,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showLogoutDialog(bool isRtl) {
+    final l10n = context.l10n;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -518,21 +523,17 @@ class _ProfilePageState extends State<ProfilePage> {
             const Icon(CupertinoIcons.info_circle_fill, color: Colors.redAccent),
             const SizedBox(width: 10),
             Text(
-              isRtl ? "تسجيل الخروج" : "Sign Out",
+              l10n.logoutDialogTitle,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
         ),
-        content: Text(
-          isRtl
-              ? "هل أنت متأكد من رغبتك في تسجيل الخروج من تطبيق كيدو؟ كل شيء سينتظرك بأمان لحين عودتك!"
-              : "Are you sure you want to exit the Kido app? Everything will be safely waiting for your return!",
-        ),
+        content: Text(l10n.logoutDialogContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              isRtl ? "البقاء" : "Stay",
+              l10n.stayButton,
               style: TextStyle(
                 color: Colors.grey.shade600,
                 fontWeight: FontWeight.bold,
@@ -552,7 +553,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             child: Text(
-              isRtl ? "خروج" : "Logout",
+              l10n.logoutConfirm,
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

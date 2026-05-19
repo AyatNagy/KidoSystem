@@ -8,6 +8,7 @@ import '../../../../Widgets/content/level3/fruits/tree_game.dart';
 import '../../../../Widgets/content/journey_map.dart';
 import '../../../../data/content/level3/fruits/fruits_journey.dart';
 import 'package:kido/utils/category_progress.dart';
+import 'package:kido/utils/journey_navigation.dart';
 
 class FruitsMapPage extends StatefulWidget {
   final int childId;
@@ -66,11 +67,10 @@ class FruitsDetailsFlow extends StatelessWidget {
                                           (context) => FruitGamePage(
                                             fruit: item.dragData,
                                             onComplete: () {
-                                              Navigator.of(context)
-                                                ..pop()
-                                                ..pop()
-                                                ..pop()
-                                                ..pop(true);
+                                              finishJourneyNode(
+                                                context,
+                                                screensAboveMap: 3,
+                                              );
                                             },
                                           ),
                                     ),

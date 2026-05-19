@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
-import 'package:kido/data/unboarding_data.dart';
+import 'package:kido/l10n/l10n_extension.dart';
 import 'package:kido/Pages/parent_content/parent_home_page.dart';
 import 'package:kido/Pages/Auth/parent_login_screen.dart';
 import '../../Widgets/custom_canditor.dart';
@@ -21,7 +21,8 @@ class _OnboardScreenState extends State<OnboardScreen> {
   int _index = 0;
 
   void _goToNext(ResponsiveConfig config) {
-    if (_index < onboardData.length - 1) {
+    final count = context.l10n.onboardPages.length;
+    if (_index < count - 1) {
       _controller.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -52,6 +53,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
+    final pages = context.l10n.onboardPages;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -64,12 +66,12 @@ class _OnboardScreenState extends State<OnboardScreen> {
               Expanded(
                 child: PageView.builder(
                   controller: _controller,
-                  itemCount: onboardData.length,
+                  itemCount: pages.length,
                   onPageChanged: (value) {
                     setState(() => _index = value);
                   },
                   itemBuilder:
-                      (context, i) => OnboardPage(data: onboardData[i]),
+                      (context, i) => OnboardPage(data: pages[i]),
                 ),
               ),
               Column(
@@ -77,22 +79,22 @@ class _OnboardScreenState extends State<OnboardScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
-                      onboardData.length,
+                      pages.length,
                       (i) => Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: config.localWidth * 0.01,
                         ),
                         child: CustomIndicator(
                           active: _index == i,
-                          color: onboardData[i].color,
+                          color: pages[i].color,
                         ),
                       ),
                     ),
                   ),
                   SizedBox(height: config.localHeight * 0.02),
                   GradientButton(
-                    gradientColors: onboardData[_index].gradientColors,
-                    title: "Continue",
+                    gradientColors: pages[_index].gradientColors,
+                    title: context.l10n.continueButton,
                     height: config.buttonHeight,
                     fontSize: config.buttonFont,
                     onPressed: () => _goToNext(config),
@@ -103,7 +105,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                     child: TextButton(
                       onPressed: _skip,
                       child: Text(
-                        "Skip",
+                        context.l10n.skip,
                         style: TextStyle(
                           fontSize: config.body,
                           color: Colors.grey,

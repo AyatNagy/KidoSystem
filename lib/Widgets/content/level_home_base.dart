@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
+import 'package:kido/l10n/l10n_extension.dart';
 import '../../Pages/kid/exam_screen.dart';
 
 class LevelHomeBase extends StatelessWidget {
@@ -35,6 +36,8 @@ class LevelHomeBase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
+    final l10n = context.l10n;
+    final displayTitle = levelTitle ?? l10n.categories;
 
     return Scaffold(
       backgroundColor: AppColors.bgColor,
@@ -61,11 +64,11 @@ class LevelHomeBase extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildHeader(config),
+                  _buildHeader(config, l10n),
                   SizedBox(height: config.localHeight * 0.035),
                   _buildDailyChallenge(config),
                   SizedBox(height: config.localHeight * 0.03),
-                  _buildExamSection(context, config),
+                  _buildExamSection(context, config, l10n),
                   SizedBox(height: config.localHeight * 0.04),
                   Row(
                     children: [
@@ -79,7 +82,7 @@ class LevelHomeBase extends StatelessWidget {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        levelTitle!,
+                        displayTitle,
                         style: TextStyle(
                           fontSize: config.title + 2,
                           fontWeight: FontWeight.w900,
@@ -112,7 +115,7 @@ class LevelHomeBase extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(dynamic config) {
+  Widget _buildHeader(dynamic config, dynamic l10n) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -145,7 +148,7 @@ class LevelHomeBase extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Hello, $childName!",
+                  l10n.helloChild(childName),
                   style: TextStyle(
                     fontSize: config.title,
                     fontWeight: FontWeight.w900,
@@ -155,7 +158,7 @@ class LevelHomeBase extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  "Let's learn and have fun!",
+                  l10n.letsLearnFun,
                   style: TextStyle(
                     fontSize: config.isTablet ? 16 : 13,
                     fontWeight: FontWeight.w500,
@@ -245,7 +248,7 @@ class LevelHomeBase extends StatelessWidget {
     );
   }
 
-  Widget _buildExamSection(BuildContext context, dynamic config) {
+  Widget _buildExamSection(BuildContext context, dynamic config, dynamic l10n) {
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -294,7 +297,7 @@ class LevelHomeBase extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Final Exam",
+                        l10n.finalExam,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: config.isTablet ? 22 : 17,
@@ -304,7 +307,7 @@ class LevelHomeBase extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        "Test your mighty knowledge and level up!",
+                        l10n.finalExamSubtitle,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.75),
                           fontSize: config.isTablet ? 14 : 11,

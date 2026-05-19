@@ -22,6 +22,7 @@ import '../../enum/question_type.dart';
 import '../../services/audio_service.dart';
 import '../../utils/placement_level.dart';
 import '../content/level3/letters/letter_trace_page.dart';
+import 'graduation_celebration_screen.dart';
 
 class ExamSkeletonScreen extends StatefulWidget {
   final String examId;
@@ -108,7 +109,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     } else if (examQuestion.type == QuestionType.dragDrop) {
       final q = examQuestion.data as DragDropQuestion;
       bool allTargetsFilled = q.targets.every(
-        (t) => dragAnswers.containsValue(t.id),
+            (t) => dragAnswers.containsValue(t.id),
       );
       if (!allTargetsFilled) {
         showKidoSnack(context, 'من فضلك ضع الإجابة في مكانها أولاً"');
@@ -134,7 +135,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
         return;
       }
       bool isCorrect = q.acceptedAnswers.any(
-        (ans) => currentSpokenResult.contains(ans),
+            (ans) => currentSpokenResult.contains(ans),
       );
       if (isCorrect) score++;
     }
@@ -166,9 +167,9 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     String unlockMessageText = "Keep practicing to unlock new levels!";
     bool passed = percentage >= 0.50;
     int stars =
-        percentage >= 0.85
-            ? 3
-            : (percentage >= 0.70 ? 2 : (percentage >= 0.50 ? 1 : 0));
+    percentage >= 0.85
+        ? 3
+        : (percentage >= 0.70 ? 2 : (percentage >= 0.50 ? 1 : 0));
 
     if (widget.onboardingPlacement) {
       nextLevelToUnlock = placementLevelFromScoreFraction(percentage);
@@ -177,7 +178,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
       passed = true;
       stars = nextLevelToUnlock >= 3 ? 3 : (nextLevelToUnlock == 2 ? 2 : 1);
       unlockMessageText =
-          "Your level is set to $nextLevelToUnlock based on your score.";
+      "Your level is set to $nextLevelToUnlock based on your score.";
     } else if (widget.examId == "exam2" && !passed) {
       levelToSubmit = 2;
       unlockMessageText = "Let's review Exam 1 to get stronger!";
@@ -193,12 +194,19 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
         nextLevelToUnlock = 3;
         unlockMessageText = "Level 1, 2, & 3 are now UNLOCKED!";
         await ProgressManager.unlockUpTo(3);
+      } else if (widget.examId == "post_level3") {
+        levelToSubmit = 3;
+        nextLevelToUnlock = 3;
+        unlockMessageText = "You finished Level 3 — you graduated!";
+        await ProgressManager.unlockUpTo(3);
       }
     } else {
       if (widget.examId == "exam1") {
         levelToSubmit = 1;
       } else if (widget.examId == "exam2") {
         levelToSubmit = 2;
+      } else if (widget.examId == "post_level3") {
+        levelToSubmit = 3;
       }
     }
     if (mounted) {
@@ -207,6 +215,21 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
         level: levelToSubmit,
         childId: widget.childId,
       );
+    }
+
+    if (!mounted) return;
+    if (widget.examId == "post_level3" && passed) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(
+          builder: (context) => GraduationCelebrationScreen(
+            childName: widget.childName,
+            score: score,
+            total: total,
+            stars: stars,
+          ),
+        ),
+      );
+      return;
     }
 
     _showResultDialog(
@@ -234,131 +257,131 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
       barrierDismissible: false,
       builder:
           (context) => BlocListener<AssessmentCubit, AssessmentState>(
-            listener: (context, state) {
-              if (state is AssessmentSuccess) {
-                print('Assessment submitted successfully');
-                print('Level Unlocked: ${state.result.levelUnlocked}');
-                print('Message: ${state.result.message}');
-              } else if (state is AssessmentError) {
-                print('Assessment submission failed: ${state.message}');
-              }
-            },
-            child: Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+        listener: (context, state) {
+          if (state is AssessmentSuccess) {
+            print('Assessment submitted successfully');
+            print('Level Unlocked: ${state.result.levelUnlocked}');
+            print('Message: ${state.result.message}');
+          } else if (state is AssessmentError) {
+            print('Assessment submission failed: ${state.message}');
+          }
+        },
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                passed
+                    ? 'assets/gif/finish.gif'
+                    : 'assets/gif/not-finish.gif',
+                height: 180,
+                fit: BoxFit.contain,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(
-                    passed
-                        ? 'assets/gif/finish.gif'
-                        : 'assets/gif/not-finish.gif',
-                    height: 180,
-                    fit: BoxFit.contain,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: [
-                        if (passed)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(
-                              3,
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    if (passed)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          3,
                               (index) => Icon(
-                                Icons.star_rounded,
-                                size: 45,
-                                color:
-                                    index < stars
-                                        ? Colors.orange
-                                        : Colors.grey.shade300,
-                              ),
-                            ),
-                          ),
-                        const SizedBox(height: 15),
-                        Text(
-                          passed ? "AMAZING JOB!" : "NICE TRY!",
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                            Icons.star_rounded,
+                            size: 45,
+                            color:
+                            index < stars
+                                ? Colors.orange
+                                : Colors.grey.shade300,
                           ),
                         ),
-                        Text(
-                          "You got $score / $total",
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey,
-                          ),
+                      ),
+                    const SizedBox(height: 15),
+                    Text(
+                      passed ? "AMAZING JOB!" : "NICE TRY!",
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "You got $score / $total",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    if (widget.onboardingPlacement) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        "${(percentage * 100).round()}% correct",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
                         ),
-                        if (widget.onboardingPlacement) ...[
-                          const SizedBox(height: 8),
-                          Text(
-                            "${(percentage * 100).round()}% correct",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                        const SizedBox(height: 20),
-                        Text(
-                          unlockMessageText,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.kidoGreen,
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        BlocBuilder<AssessmentCubit, AssessmentState>(
-                          builder: (context, state) {
-                            bool isLoading = state is AssessmentLoading;
-                            return ElevatedButton(
-                              onPressed:
-                                  isLoading
-                                      ? null
-                                      : () {
-                                        Navigator.pop(context);
-                                        Navigator.pop(
-                                          context,
-                                          nextLevelToUnlock,
-                                        );
-                                      },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.kidoPink,
-                                minimumSize: const Size(double.infinity, 50),
-                              ),
-                              child:
-                                  isLoading
-                                      ? const SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                Colors.white,
-                                              ),
-                                        ),
-                                      )
-                                      : const Text(
-                                        "DONE",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
+                      ),
+                    ],
+                    const SizedBox(height: 20),
+                    Text(
+                      unlockMessageText,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.kidoGreen,
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    BlocBuilder<AssessmentCubit, AssessmentState>(
+                      builder: (context, state) {
+                        bool isLoading = state is AssessmentLoading;
+                        return ElevatedButton(
+                          onPressed:
+                          isLoading
+                              ? null
+                              : () {
+                            Navigator.pop(context);
+                            Navigator.pop(
+                              context,
+                              nextLevelToUnlock,
                             );
                           },
-                        ),
-                      ],
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.kidoPink,
+                            minimumSize: const Size(double.infinity, 50),
+                          ),
+                          child:
+                          isLoading
+                              ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor:
+                              AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          )
+                              : const Text(
+                            "DONE",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
+        ),
+      ),
     );
   }
   bool checkDrawingSoft(String target, List<Offset> points) {
@@ -376,7 +399,7 @@ class _ExamSkeletonScreenState extends State<ExamSkeletonScreen> {
     double avgR = distances.reduce((a, b) => a + b) / distances.length;
     double dev =
         distances.map((d) => (d - avgR).abs()).reduce((a, b) => a + b) /
-        distances.length;
+            distances.length;
     return avgR > 20 && (dev / avgR) < 0.35;
   }
 

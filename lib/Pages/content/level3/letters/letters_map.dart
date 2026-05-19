@@ -8,7 +8,8 @@ import '../../../../Widgets/content/level3/letters/drag_and_drop.dart';
 import '../../../../Widgets/content/level3/letters/mystery_box.dart';
 import '../../../../Widgets/content/journey_map.dart';
 import '../../../../data/content/level3/letters/journey_letters.dart';
-import 'package:kido/utils/category_progress.dart';
+import 'package:kido/utils/journey_lesson_ids.dart';
+import 'package:kido/utils/journey_navigation.dart';
 
 class LettersMapPage extends StatefulWidget {
   final int childId;
@@ -25,8 +26,7 @@ class _LettersMapPageState extends State<LettersMapPage> {
     return Scaffold(
       body: JourneymapPage(
         childId: widget.childId,
-        resolveLessonId: (_, index) =>
-            lessonIdByCategoryIndex('Letters', index),
+        resolveLessonId: (_, index) => lettersMapLessonId(index),
         journeyData: journeyEn,
         backgroundColor: AppColors.kidoGreen,
         nodeButtonColor: AppColors.kidoColors[4],
@@ -81,12 +81,10 @@ class LetterDetailsFlow extends StatelessWidget {
                                                       ) => LetterTracePage(
                                                         letter: item.charName!,
                                                         onComplete: () {
-                                                          Navigator.of(context)
-                                                            ..pop()
-                                                            ..pop()
-                                                            ..pop()
-                                                            ..pop()
-                                                            ..pop(true);
+                                                          finishJourneyNode(
+                                                            context,
+                                                            screensAboveMap: 4,
+                                                          );
                                                         },
                                                       ),
                                                 ),

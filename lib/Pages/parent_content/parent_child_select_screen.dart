@@ -7,6 +7,7 @@ import 'package:kido/Pages/parent_content/dashboard.dart';
 import 'package:kido/Widgets/Layout/header_clipper.dart';
 import 'package:kido/bloc/parent_children/parent_children_cubit.dart';
 import 'package:kido/constants.dart';
+import 'package:kido/l10n/app_localizations.dart';
 
 class ParentChildSelectScreen extends StatelessWidget {
   final void Function(Map<String, dynamic> child)? onChildSelected;
@@ -15,6 +16,7 @@ class ParentChildSelectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       body: Stack(
@@ -31,9 +33,9 @@ class ParentChildSelectScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 12),
-                    const Text(
-                      'Choose a child',
-                      style: TextStyle(
+                    Text(
+                      l10n.chooseChild,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 26,
                         fontWeight: FontWeight.w900,
@@ -41,7 +43,7 @@ class ParentChildSelectScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Select a profile to view their learning dashboard',
+                      l10n.selectChildHint,
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.9),
                         fontSize: 14,
