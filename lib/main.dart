@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kido/Pages/content/level2/colors/color_game_screen.dart';
 import 'package:kido/Widgets/app_lifecycle_watcher.dart';
 import 'package:kido/bloc/assessment/assessment_cubit.dart';
-import 'package:kido/data/content/level2/color_data.dart';
 import 'Pages/shared/logo_page.dart';
 import 'Widgets/info_widget.dart';
 import 'Widgets/responsive_provider.dart';
@@ -39,7 +37,7 @@ class MyApp extends StatelessWidget {
                     debugShowCheckedModeBanner: false,
                     builder: DevicePreview.appBuilder,
                     locale: DevicePreview.locale(context),
-                    home: ColorGameScreen(currentGroup: allColorGroups[0]),
+                    home: const Logo(),
                   ),
                 );
               },
