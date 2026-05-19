@@ -52,16 +52,16 @@ class Category extends StatelessWidget {
             await navigator.push(
               MaterialPageRoute(
                 builder:
-                    (context) => MonkeyCountingPage(
-                  onNext: () => Navigator.pop(context),
-                ),
+                    (context) =>
+                    BeeCountingPage(onNext: () => Navigator.pop(context)),
               ),
             );
             await navigator.push(
               MaterialPageRoute(
                 builder:
-                    (context) =>
-                    BeeCountingPage(onNext: () => Navigator.pop(context)),
+                    (context) => MonkeyCountingPage(
+                  onNext: () => Navigator.pop(context),
+                ),
               ),
             );
             await navigator.push(
@@ -92,7 +92,7 @@ class Category extends StatelessWidget {
             await navigator.push(
               MaterialPageRoute(
                 builder:
-                    (context) => CubesLesson(
+                    (context) => MovingCarPage(
                   onNext: () => Navigator.pop(context),
                   childName: childName,
                   childId: childId,
@@ -102,7 +102,7 @@ class Category extends StatelessWidget {
             await navigator.push(
               MaterialPageRoute(
                 builder:
-                    (context) => MovingCarPage(
+                    (context) => CubesLesson(
                   onNext: () => Navigator.pop(context),
                   childName: childName,
                   childId: childId,
