@@ -37,15 +37,18 @@ class _SizeIntroPageState extends State<SizeIntroPage>
     _startAutoNavigation();
   }
 
-  void _startAutoNavigation() {
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => SizeLessonPage(goal: widget.goal)),
-        );
+  void _startAutoNavigation() async {
+    await Future.delayed(const Duration(seconds: 2));
+    if (mounted) {
+      final bool? isCompleted = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(builder: (_) => SizeLessonPage(goal: widget.goal)),
+      );
+
+      if (mounted && isCompleted == true) {
+        Navigator.of(context).pop(true);
       }
-    });
+    }
   }
 
   @override
@@ -63,28 +66,34 @@ class _SizeIntroPageState extends State<SizeIntroPage>
       body: SafeArea(
         child: Padding(
           padding: config.pagePadding,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AnimatedBuilder(
-                animation: scale,
-                builder:
-                    (_, child) =>
-                        Transform.scale(scale: scale.value, child: child),
-                child: Image.asset(
-                  data.correctImage,
-                  height: config.imageHeight(0.3),
+
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                AnimatedBuilder(
+                  animation: scale,
+                  builder:
+                      (_, child) =>
+                          Transform.scale(scale: scale.value, child: child),
+                  child: Image.asset(
+                    data.correctImage,
+                    height: config.imageHeight(0.3),
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
-              SizedBox(height: config.localHeight * 0.04),
-              Text(
-                data.title,
-                style: TextStyle(
-                  fontSize: config.headline,
-                  fontWeight: FontWeight.bold,
+                SizedBox(height: config.localHeight * 0.04),
+                Text(
+                  data.title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: config.headline,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

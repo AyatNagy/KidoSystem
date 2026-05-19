@@ -107,15 +107,18 @@ class _SizePracticePageState extends State<SizePracticePage>
       }
 
       await Future.delayed(const Duration(milliseconds: 2000));
-      //await AudioService.play(fileName: data.correctAudio);
       await Future.delayed(const Duration(seconds: 1));
       await AudioService.play(fileName: data.audio);
 
       await Future.delayed(const Duration(seconds: 2));
+
       if (mounted) {
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-        Navigator.of(context).pop(true);
+        await Future.delayed(const Duration(seconds: 2));
+        if (mounted) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          Navigator.of(context).pop(true);
+        }
       }
     } else {
       if (mounted) {
@@ -187,7 +190,7 @@ class _SizePracticePageState extends State<SizePracticePage>
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFDF6F0),
       appBar:
           showSuccess
               ? null

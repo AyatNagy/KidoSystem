@@ -131,7 +131,7 @@ class _SizeLessonPageState extends State<SizeLessonPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFDF6F0),
       appBar: ContentAppBar(title: data.title),
       body: Column(
         children: [
