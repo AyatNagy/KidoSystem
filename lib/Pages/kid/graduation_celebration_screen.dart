@@ -1,10 +1,12 @@
-// ignore_for_file: deprecated_member_use
+import 'package:audioplayers/audioplayers.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:kido/Pages/kid/graduation_certifcate_screen.dart';
 import 'package:kido/Widgets/Buttons/custom_app_button.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/services/audio_service.dart';
 
+/// Full-screen celebration after the level 3 final exam (`post_level3`) is passed.
 class GraduationCelebrationScreen extends StatefulWidget {
   final String childName;
   final int score;
@@ -24,27 +26,53 @@ class GraduationCelebrationScreen extends StatefulWidget {
       _GraduationCelebrationScreenState();
 }
 
-class _GraduationCelebrationScreenState extends State<GraduationCelebrationScreen> {
+class _GraduationCelebrationScreenState
+    extends State<GraduationCelebrationScreen> {
   late final ConfettiController _confettiTop;
   late final ConfettiController _confettiBurst;
+
+  // Create a local, dedicated player instance to isolate lifecycle contexts on Web
+  late final AudioPlayer _localCelebrationPlayer;
 
   @override
   void initState() {
     super.initState();
     _confettiTop = ConfettiController(duration: const Duration(seconds: 18));
     _confettiBurst = ConfettiController(duration: const Duration(seconds: 14));
+    _localCelebrationPlayer = AudioPlayer();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-      AudioService.play(fileName: 'graduation.mp3');
+
+      // 1. Fire off the visual confetti immediately
       _confettiTop.play();
       _confettiBurst.play();
+
+      // 2. Safely trigger the dedicated audio player
+      try {
+        // Give the web layout engine an extra moment to settle down
+        await Future.delayed(const Duration(milliseconds: 400));
+
+        if (mounted) {
+          // Tell the global background audio service to clear out its state
+          AudioService.stop();
+
+          // Use the clean local player instance with your proven asset path mapping
+          await _localCelebrationPlayer.play(
+            AssetSource('audio/graduation.mp3'),
+          );
+        }
+      } catch (e) {
+        debugPrint("Web local audio engine encountered a problem: $e");
+      }
     });
   }
 
   @override
   void dispose() {
-    AudioService.stop();
+    // Safely dispose of everything locally to protect against memory leaks
+    _localCelebrationPlayer.stop();
+    _localCelebrationPlayer.dispose();
     _confettiTop.dispose();
     _confettiBurst.dispose();
     super.dispose();
@@ -53,8 +81,6 @@ class _GraduationCelebrationScreenState extends State<GraduationCelebrationScree
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
-    final shortSide = media.size.shortestSide;
-    final gifHeight = (shortSide * 0.42).clamp(160.0, 260.0);
 
     final pastelGradient = LinearGradient(
       begin: Alignment.topLeft,
@@ -76,6 +102,20 @@ class _GraduationCelebrationScreenState extends State<GraduationCelebrationScree
         child: SafeArea(
           child: Stack(
             children: [
+              // 1. Center Hero Animation Layer
+              Positioned.fill(
+                top: media.size.height * 0.15,
+                bottom: media.size.height * 0.12,
+                child: IgnorePointer(
+                  child: Image.asset(
+                    'assets/gif/graduation.gif',
+                    fit: BoxFit.contain,
+                    alignment: Alignment.center,
+                  ),
+                ),
+              ),
+
+              // 2. Confetti Layers
               Positioned(
                 top: media.size.height * 0.02,
                 left: 0,
@@ -106,8 +146,13 @@ class _GraduationCelebrationScreenState extends State<GraduationCelebrationScree
                   ),
                 ),
               ),
+
+              // 3. Foreground Text UI & Action Buttons
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22,
+                  vertical: 12,
+                ),
                 child: Column(
                   children: [
                     Text(
@@ -153,12 +198,13 @@ class _GraduationCelebrationScreenState extends State<GraduationCelebrationScree
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
                         3,
-                            (index) => Icon(
+                        (index) => Icon(
                           Icons.star_rounded,
                           size: 44,
-                          color: index < widget.stars
-                              ? AppColors.kidoOrange
-                              : Colors.white.withOpacity(0.55),
+                          color:
+                              index < widget.stars
+                                  ? AppColors.kidoOrange
+                                  : Colors.white.withOpacity(0.55),
                         ),
                       ),
                     ),
@@ -172,43 +218,28 @@ class _GraduationCelebrationScreenState extends State<GraduationCelebrationScree
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+
                     const Spacer(),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(28),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.45),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.kidoPink.withOpacity(0.25),
-                              blurRadius: 24,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Image.asset(
-                            'assets/gif/garduation.png',
-                            height: gifHeight,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
+
                     CustomGradientButton(
                       title: "YAY! LET'S GO!",
                       onPressed: () {
-                        Navigator.pop(context, 3);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder:
+                                (context) => GraduationCertificateScreen(
+                                  childName: widget.childName,
+                                  score: widget.score,
+                                  total: widget.total,
+                                ),
+                          ),
+                        );
                       },
                       width: double.infinity,
                       borderRadius: 30,
                       fontSize: (media.size.width * 0.05).clamp(18.0, 24.0),
-                      colors: const [
-                        AppColors.kidoPink,
-                        AppColors.kidoOrange,
-                      ],
+                      colors: const [AppColors.kidoPink, AppColors.kidoOrange],
                     ),
                     const SizedBox(height: 12),
                   ],
