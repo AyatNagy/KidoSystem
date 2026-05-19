@@ -79,6 +79,7 @@ flutter:
     - assets/images/senses/
     - assets/images/clean/
     - assets/images/shapes/
+    - assets/images/colors/
     - assets/images/clean/Trash/
     - assets/images/puzzle/
     - assets/images/matching/
@@ -87,6 +88,7 @@ flutter:
     - assets/audio/level1/
     - assets/audio/shapes/
     - assets/audio/exams/
+    - assets/audio/colors/
 
   fonts:
     - family: tinyKids
