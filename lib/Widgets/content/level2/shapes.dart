@@ -6,6 +6,7 @@ import 'package:kido/Widgets/responsive_provider.dart';
 import 'package:kido/Models/level3/letter_step.dart';
 import 'package:kido/Widgets/Buttons/next_button.dart';
 import 'package:kido/services/audio_service.dart';
+import 'package:kido/utils/lesson_completion.dart';
 import '../../Animation/animated_hand_widget.dart';
 import '../../../Widgets/content/level2/drawing_shapes.dart';
 
@@ -15,6 +16,8 @@ class BaseDrawingPage extends StatefulWidget {
   final VoidCallback onNext;
   final int requiredPoints;
   final String shapeName;
+  final int childId;
+  final int? lessonId;
 
   const BaseDrawingPage({
     super.key,
@@ -23,6 +26,8 @@ class BaseDrawingPage extends StatefulWidget {
     required this.onNext,
     required this.shapeName,
     this.requiredPoints = 0,
+    this.childId = 0,
+    this.lessonId,
   });
 
   @override
@@ -161,8 +166,14 @@ class _BaseDrawingPageState extends State<BaseDrawingPage> {
               child: NextButton(
                 color: AppColors.kidoGreen,
                 shadowColor: AppColors.kidoColors[4],
-                onPressed: () {
+                onPressed: () async {
                   _cleanup();
+                  if (widget.lessonId != null && widget.childId > 0) {
+                    await completeLessonForChild(
+                      childId: widget.childId,
+                      lessonId: widget.lessonId!,
+                    );
+                  }
                   widget.onNext();
                 },
               ),

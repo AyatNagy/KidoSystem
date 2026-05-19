@@ -40,7 +40,6 @@ class FamilyMemberBody extends StatelessWidget {
               imageSize: imageSize,
             ),
           ),
-          // ── الأب ──
           Positioned(
             top: screenHeight * 0.37,
             left: screenWidth * 0.02,
@@ -51,7 +50,6 @@ class FamilyMemberBody extends StatelessWidget {
               imageSize: imageSize,
             ),
           ),
-          // ── الأم ──
           Positioned(
             top: screenHeight * 0.37,
             right: screenWidth * 0.05,
@@ -62,7 +60,6 @@ class FamilyMemberBody extends StatelessWidget {
               imageSize: imageSize,
             ),
           ),
-          // ── الأخ ──
           Positioned(
             top: screenHeight * 0.62,
             left: screenWidth * 0.04,
@@ -74,7 +71,6 @@ class FamilyMemberBody extends StatelessWidget {
               imageSize: imageSize,
             ),
           ),
-          // ── الأخت ──
           Positioned(
             top: screenHeight * 0.62,
             right: screenWidth * 0.08,
@@ -85,7 +81,6 @@ class FamilyMemberBody extends StatelessWidget {
               imageSize: imageSize,
             ),
           ),
-
           Positioned(
             bottom: screenHeight * 0.03,
             right: screenWidth * 0.05,

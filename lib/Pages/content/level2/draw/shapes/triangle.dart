@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kido/Pages/content/level2/level2home.dart';
-import '../../../../Widgets/content/level2/shapes.dart';
-import '../../../../data/content/level2/shapes.dart';
+import '../../../../../Widgets/content/level2/shapes.dart';
+import '../../../../../data/content/level2/shapes.dart';
 
 class TriangleDrawingPage extends StatelessWidget {
   final String childName;
@@ -18,6 +18,8 @@ class TriangleDrawingPage extends StatelessWidget {
     return BaseDrawingPage(
       shapeData: ShapeData.triangle,
       successGif: 'assets/images/drawing/triangle.gif',
+      childId: childId,
+      lessonId: 26,
       onNext: () {
         Navigator.push(
           context,

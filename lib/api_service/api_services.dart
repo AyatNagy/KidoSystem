@@ -55,8 +55,10 @@ class ApiService {
       if (response.statusCode == 200) {
         final data = response.data;
         print("Login Successful: ${data['user']}");
-        if (data['token'] != null)
+        if (data['token'] != null) {
           await LocalStorage.setParentToken(data['token']);
+          await LocalStorage.setLoggedIn(true);
+        }
         if (data['user'] != null && data['user']['id'] != null) {
           await LocalStorage.setUserId(data['user']['id']);
         }
@@ -382,6 +384,42 @@ class ApiService {
         'success': false,
         'message': 'Unexpected status ${response.statusCode}',
       };
+    } on DioException catch (e) {
+      return _asJsonMap(e.response?.data) ??
+          {'success': false, 'message': e.message ?? 'Network error'};
+    } catch (e) {
+      return {'success': false, 'message': e.toString()};
+    }
+  }
+
+  /// Parent token + [childId] in body (if your backend supports it).
+  static Future<Map<String, dynamic>?> completeLessonAsParent({
+    required int childId,
+    required int lessonId,
+  }) async {
+    final token = await LocalStorage.getParentToken();
+    if (token == null) {
+      return {'success': false, 'message': 'Parent token missing'};
+    }
+    final dio = Dio();
+    final url = '$baseUrl/progress/complete';
+    try {
+      final response = await dio.post(
+        url,
+        data: {'lessonId': lessonId, 'childId': childId},
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          validateStatus: (status) => status != null && status < 500,
+        ),
+      );
+      final map = _asJsonMap(response.data);
+      if (response.statusCode == 200 && map != null && map['success'] == true) {
+        return map;
+      }
+      return map ?? {'success': false, 'message': 'completeLessonAsParent failed'};
     } on DioException catch (e) {
       return _asJsonMap(e.response?.data) ??
           {'success': false, 'message': e.message ?? 'Network error'};

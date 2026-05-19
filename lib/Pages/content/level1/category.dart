@@ -52,22 +52,22 @@ class Category extends StatelessWidget {
               MaterialPageRoute(
                 builder:
                     (context) => MonkeyCountingPage(
-                      onNext: () => Navigator.pop(context),
-                    ),
+                  onNext: () => Navigator.pop(context),
+                ),
               ),
             );
             await navigator.push(
               MaterialPageRoute(
                 builder:
                     (context) =>
-                        BeeCountingPage(onNext: () => Navigator.pop(context)),
+                    BeeCountingPage(onNext: () => Navigator.pop(context)),
               ),
             );
             await navigator.push(
               MaterialPageRoute(
                 builder:
                     (context) =>
-                        ToyRewardPage(onNext: () => Navigator.pop(context)),
+                    ToyRewardPage(onNext: () => Navigator.pop(context)),
               ),
             );
           },
@@ -88,20 +88,20 @@ class Category extends StatelessWidget {
               MaterialPageRoute(
                 builder:
                     (context) => CubesLesson(
-                      onNext: () => Navigator.pop(context),
-                      childName: childName,
-                      childId: childId,
-                    ),
+                  onNext: () => Navigator.pop(context),
+                  childName: childName,
+                  childId: childId,
+                ),
               ),
             );
             await navigator.push(
               MaterialPageRoute(
                 builder:
                     (context) => MovingCarPage(
-                      onNext: () => Navigator.pop(context),
-                      childName: childName, // ← ضيف
-                      childId: childId, // ← ضيف
-                    ),
+                  onNext: () => Navigator.pop(context),
+                  childName: childName,
+                  childId: childId,
+                ),
               ),
             );
           },
@@ -122,14 +122,14 @@ class Category extends StatelessWidget {
               MaterialPageRoute(
                 builder:
                     (context) =>
-                        BunnyFeedingGame(onNext: () => Navigator.pop(context)),
+                    BunnyFeedingGame(onNext: () => Navigator.pop(context)),
               ),
             );
             await navigator.push(
               MaterialPageRoute(
                 builder:
                     (context) =>
-                        StakesDrag(onNext: () => Navigator.pop(context)),
+                    StakesDrag(onNext: () => Navigator.pop(context)),
               ),
             );
           },
@@ -141,9 +141,9 @@ class Category extends StatelessWidget {
           graphic: const Center(child: FiveSensesLogo()),
           onTap:
               () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SensesMapPage()),
-              ),
+            context,
+            MaterialPageRoute(builder: (context) => SensesMapPage()),
+          ),
         ),
 
         // MATCHING
@@ -152,11 +152,11 @@ class Category extends StatelessWidget {
           graphic: Center(child: Image.asset('assets/gif/match.gif')),
           onTap:
               () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MatchingPracticePage(),
-                ),
-              ),
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MatchingPracticePage(),
+            ),
+          ),
         ),
 
         // DRAWING
@@ -165,9 +165,9 @@ class Category extends StatelessWidget {
           graphic: Center(child: Image.asset('assets/images/drawing/draw.gif')),
           onTap:
               () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Draw()),
-              ),
+            context,
+            MaterialPageRoute(builder: (context) => const Draw()),
+          ),
         ),
 
         // SELF-CARE
@@ -176,9 +176,9 @@ class Category extends StatelessWidget {
           graphic: Center(child: Image.asset('assets/gif/self-care.gif')),
           onTap:
               () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const CleaningMap()),
-              ),
+            context,
+            MaterialPageRoute(builder: (context) => const CleaningMap()),
+          ),
         ),
 
         // FEELINGS
@@ -187,11 +187,11 @@ class Category extends StatelessWidget {
           graphic: Center(child: Image.asset('assets/gif/feelings.gif')),
           onTap:
               () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const TreehouseLevels(),
-                ),
-              ),
+            context,
+            MaterialPageRoute(
+              builder: (context) => const TreehouseLevels(),
+            ),
+          ),
         ),
       ],
     );

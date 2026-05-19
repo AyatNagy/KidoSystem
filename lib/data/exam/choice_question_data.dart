@@ -31,7 +31,7 @@ final List<ChoiceQuestion> allChoiceQuestions = [
   ),
 
   ChoiceQuestion(
-    examId: ['exam1'],
+    examId: ['exam1', 'post_level1'],
     questionAudio: "exams/who_sad.mp3",
     choices: ["assets/images/sad.png", "assets/images/happy.png"],
     correctIndex: 0,
@@ -51,6 +51,20 @@ final List<ChoiceQuestion> allChoiceQuestions = [
     choices: ["assets/images/elephant2.png", "assets/images/dog2.png"],
     correctIndex: 1,
     sound: "assets/audio/dog.mp3",
+  ),
+
+  ChoiceQuestion(
+    examId: ["post_level1"],
+    questionAudio: "senses/where_is_mouth.mp3",
+    choices: ["assets/images/senses/nose.png", "assets/images/senses/mouth.png"],
+    correctIndex: 1,
+  ),
+
+  ChoiceQuestion(
+    examId: ["post_level1"],
+    questionAudio: "senses/where_is_nose.mp3",
+    choices: ["assets/images/senses/nose.png", "assets/images/senses/ears.png"],
+    correctIndex: 0,
   ),
 
   ChoiceQuestion(

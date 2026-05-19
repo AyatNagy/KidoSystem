@@ -70,5 +70,9 @@ class LocalStorage {
     await prefs.remove(_childTokenKey);
     await prefs.remove(_userIdKey);
     await prefs.remove(_childIdKey);
+    await prefs.remove('parent_name');
+    await prefs.remove('parent_image_path');
+    await prefs.remove('username');
+    await prefs.remove('email');
   }
 }

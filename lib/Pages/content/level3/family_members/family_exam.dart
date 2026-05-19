@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
 import 'dart:async';
 import 'package:flutter/material.dart';
-//import 'package:flutter_tts/flutter_tts.dart';
 import 'package:lottie/lottie.dart';
+import '../../../../data/content/level3/family/family_exam.dart';
 
 class FamilyMember {
   final String name;
@@ -24,72 +24,6 @@ class FamilyQuestion {
   FamilyQuestion({required this.answers});
 }
 
-final List<FamilyMember> familyMembers = [
-  FamilyMember(
-    name: 'Father',
-    nameAr: 'الأب',
-    image: 'assets/images/family_members/father-removebg-preview.png',
-    sound: 'assets/audio/family/father.mp3',
-  ),
-  FamilyMember(
-    name: 'Mother',
-    nameAr: 'الأم',
-    image: 'assets/images/family_members/mother-removebg-preview.png',
-    sound: 'assets/audio/family/mother.mp3',
-  ),
-  FamilyMember(
-    name: 'Brother',
-    nameAr: 'الأخ',
-    image: 'assets/images/family_members/brother-removebg-preview.png',
-    sound: 'assets/audio/family/brother_1.mp3',
-  ),
-  FamilyMember(
-    name: 'Sister',
-    nameAr: 'الأخت',
-    image: 'assets/images/family_members/sister-removebg-preview.png',
-    sound: 'assets/audio/family/sister_1.mp3',
-  ),
-  FamilyMember(
-    name: 'GrandFather',
-    nameAr: 'الجد',
-    image: 'assets/images/family_members/grandfather-removebg-preview.png',
-    sound: 'assets/audio/family/grandfather_1.mp3',
-  ),
-  FamilyMember(
-    name: 'GrandMother',
-    nameAr: 'الجدة',
-    image: 'assets/images/family_members/grandmother-removebg-preview.png',
-    sound: 'assets/audio/family/grandmother_1.mp3',
-  ),
-];
-final List<FamilyQuestion> familyQuestions = [
-  FamilyQuestion(
-    answers: {
-      'assets/images/family_members/father-removebg-preview.png': true,
-      'assets/images/family_members/mother-removebg-preview.png': false,
-    },
-  ),
-  FamilyQuestion(
-    answers: {
-      'assets/images/family_members/mother-removebg-preview.png': true,
-      'assets/images/family_members/father-removebg-preview.png': false,
-    },
-  ),
-  FamilyQuestion(
-    answers: {
-      'assets/images/family_members/brother-removebg-preview.png': true,
-      'assets/images/family_members/sister-removebg-preview.png': false,
-    },
-  ),
-
-  FamilyQuestion(
-    answers: {
-      'assets/images/family_members/sister-removebg-preview.png': true,
-      'assets/images/family_members/brother-removebg-preview.png': false,
-    },
-  ),
-];
-
 class FamilyExam extends StatefulWidget {
   const FamilyExam({super.key});
 
@@ -97,9 +31,7 @@ class FamilyExam extends StatefulWidget {
   State<FamilyExam> createState() => _FamilyExamState();
 }
 
-class _FamilyExamState extends State<FamilyExam>
-    with SingleTickerProviderStateMixin {
-  //final FlutterTts flutterTts = FlutterTts();
+class _FamilyExamState extends State<FamilyExam> with SingleTickerProviderStateMixin {
   final PageController _pageCtrl = PageController();
 
   int _page = 0;
@@ -130,16 +62,9 @@ class _FamilyExamState extends State<FamilyExam>
   void dispose() {
     _hintTimer?.cancel();
     _glowCtrl.dispose();
-    //flutterTts.stop();
     _pageCtrl.dispose();
     super.dispose();
   }
-
-  /*Future<void> _speak(String text) async {
-    await flutterTts.setLanguage('en-US');
-    await flutterTts.setPitch(1.1);
-    await flutterTts.speak(text);
-  }*/
 
   void _startPage(int page) {
     _hintTimer?.cancel();
@@ -149,13 +74,15 @@ class _FamilyExamState extends State<FamilyExam>
     wrongSelections = [];
 
     Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) //_speak(familyMembers[page].name);
+      if (mounted) {
         return;
+      }
     });
 
     _hintTimer = Timer.periodic(const Duration(seconds: 7), (_) {
-      if (!isPressed && mounted) //_speak(familyMembers[page].name);
+      if (!isPressed && mounted) {
         return;
+      }
     });
 
     Future.delayed(const Duration(seconds: 5), () {
@@ -179,7 +106,6 @@ class _FamilyExamState extends State<FamilyExam>
       _glowCtrl.reset();
       await Future.delayed(const Duration(milliseconds: 300));
       if (mounted) setState(() => showSuccess = true);
-      //await _speak(familyMembers[_page].name);
     } else {
       await Future.delayed(const Duration(milliseconds: 400));
       if (mounted) {
@@ -281,7 +207,6 @@ class _FamilyExamState extends State<FamilyExam>
                 ),
                 _CircleBtn(
                   icon: Icons.volume_up_rounded,
-                  //onTap: () => _speak(member.name),
                   bg: const Color(0xFF4CAF50),
                   iconColor: Colors.white,
                 ),

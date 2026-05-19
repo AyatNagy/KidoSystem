@@ -10,21 +10,39 @@ import '../../constants.dart';
 import '../../data/dashboard.dart';
 
 class Dashboard extends StatelessWidget {
-  final Child child;
-  final int level;
-  final double score;
+  final Map<String, dynamic> childData;
+  final VoidCallback? onSwitchChild;
 
   const Dashboard({
     super.key,
-    required this.child,
-    required this.level,
-    required this.score,
+    required this.childData,
+    this.onSwitchChild,
   });
+
+  Child get _childModel => Child(
+        id: (childData['id'] as num?)?.toInt(),
+        username: childData['username'] as String? ?? '',
+        password: '',
+        name: childData['name'] as String? ?? 'Kid',
+      );
+
+  int get _childId => (childData['id'] as num?)?.toInt() ?? 0;
+
+  int get _allowedLevel =>
+      (childData['allowedLevel'] as int?) ??
+      (childData['level'] as int?) ??
+      1;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => DashboardBloc()..loadDashboardData(child, level, score),
+      create: (context) => DashboardBloc()
+        ..loadDashboardData(
+          child: _childModel,
+          childId: _childId,
+          allowedLevel: _allowedLevel,
+          childMeta: childData,
+        ),
       child: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
           return Scaffold(
@@ -39,8 +57,15 @@ class Dashboard extends StatelessWidget {
               children: [
                 _buildKidoGradientHeader(),
                 SafeArea(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
+                  child: RefreshIndicator(
+                    color: AppColors.kidoPink,
+                    onRefresh: () => context.read<DashboardBloc>().refresh(
+                          childMeta: childData,
+                        ),
+                    child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
+                    ),
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,6 +96,7 @@ class Dashboard extends StatelessWidget {
                         const SizedBox(height: 100),
                       ],
                     ),
+                  ),
                   ),
                 ),
                 Positioned(
@@ -252,11 +278,40 @@ class Dashboard extends StatelessWidget {
     } else {
       taskItems = level1Data(state.progress);
     }
+    // Only categories for this child's allowed level; hide empty catalog slots.
+    taskItems = taskItems.where((item) {
+      final title = item['title'] as String? ?? '';
+      final progressKey = _progressKeyForTitle(title, state.level);
+      return state.progress.containsKey(progressKey);
+    }).toList();
+
     return Column(
       children: taskItems
           .map((item) => _buildModernTaskCard(item, state.previousProgress))
           .toList(),
     );
+  }
+
+  String _progressKeyForTitle(String title, int level) {
+    if (level == 3) {
+      switch (title.toLowerCase()) {
+        case 'veggie':
+          return 'Vegetables';
+        default:
+          return title;
+      }
+    }
+    if (level == 1) {
+      switch (title.toLowerCase()) {
+        case 'feelings':
+          return 'Emotions';
+        case 'pegboard':
+          return 'PegBoard';
+        default:
+          return title;
+      }
+    }
+    return title;
   }
 
   Widget _buildModernTaskCard(
@@ -384,7 +439,7 @@ class Dashboard extends StatelessWidget {
 
   Widget _buildSwitchButton(BuildContext context) {
     return PulseButton(
-      onPressed: () => context.read<DashboardBloc>().toggleChild(),
+      onPressed: onSwitchChild ?? () => Navigator.of(context).maybePop(),
       child: Container(
         height: 70,
         width: 70,

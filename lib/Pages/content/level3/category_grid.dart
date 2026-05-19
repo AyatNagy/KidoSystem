@@ -6,7 +6,7 @@ import 'package:kido/Pages/content/level3/numbers/numbers_map.dart';
 import 'package:kido/Pages/content/level3/vegetables/vegetables_map.dart';
 import 'package:kido/Widgets/content/category_card.dart';
 import 'package:kido/constants.dart';
-import 'family_members/BackgroundPage.dart';
+import 'family_members/background_page.dart';
 import 'fruits/fruits_map.dart';
 
 
@@ -28,7 +28,7 @@ class CategoryGrid extends StatelessWidget {
         CategoryCard(
           gradient: AppColors.alphabetGrad,
           graphic: Image.asset(
-            'assets/images/arabicLetters/lettersa_c.png',
+            'assets/images/arabic_letters/lettersa_c.png',
             fit: BoxFit.cover,
           ),
           onTap: () {

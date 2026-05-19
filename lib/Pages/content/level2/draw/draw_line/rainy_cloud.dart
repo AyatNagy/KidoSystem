@@ -9,10 +9,19 @@ import 'package:kido/constants.dart';
 import 'package:kido/Widgets/responsive_provider.dart';
 import '../../../../../Widgets/Animation/animated_hand_widget.dart';
 import '../../../../../Widgets/content/drawing_page.dart';
+import 'package:kido/utils/lesson_completion.dart';
 
 class RainyCloud extends StatefulWidget {
   final VoidCallback? onNext;
-  const RainyCloud({super.key, this.onNext});
+  final int childId;
+  final int lessonId;
+
+  const RainyCloud({
+    super.key,
+    this.onNext,
+    this.childId = 0,
+    this.lessonId = 17,
+  });
 
   @override
   State<RainyCloud> createState() => _RainyCloudState();
@@ -144,7 +153,15 @@ class _RainyCloudState extends State<RainyCloud> with TickerProviderStateMixin {
               child: NextButton(
                 color: AppColors.kidoBlue,
                 shadowColor: AppColors.kidoColors[1],
-                onPressed: widget.onNext!,
+                onPressed: () async {
+                  if (widget.childId > 0) {
+                    await completeLessonForChild(
+                      childId: widget.childId,
+                      lessonId: widget.lessonId,
+                    );
+                  }
+                  widget.onNext?.call();
+                },
               ),
             ),
           ],

@@ -98,6 +98,8 @@ class ParentChildrenCubit extends Cubit<ParentChildrenState> {
         'score': score01,
         'completedLessons': completedCount,
         'expectedLessons': expectedLessons,
+        if (assessment is Map) 'latestAssessment': assessment,
+        if (m['progress'] is Map) 'progress': m['progress'],
       };
     }).toList();
   }
