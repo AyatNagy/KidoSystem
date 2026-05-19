@@ -190,7 +190,7 @@ class _SizePracticePageState extends State<SizePracticePage>
   Widget build(BuildContext context) {
     final config = ResponsiveProvider.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFDF6F0),
       appBar:
           showSuccess
               ? null
