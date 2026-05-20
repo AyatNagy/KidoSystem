@@ -11,7 +11,6 @@ import 'package:kido/bloc/parent_children/parent_children_cubit.dart';
 import 'package:kido/config/app_locale_scope.dart';
 import 'package:kido/constants.dart';
 import 'package:kido/l10n/app_localizations.dart';
-import 'package:kido/services/daily_notification_service.dart';
 import '../../Widgets/responsive_provider.dart';
 import 'parent_dashboard_flow.dart';
 
@@ -200,9 +199,6 @@ class _ParentHomeViewState extends State<_ParentHomeView>
       ProfilePage(
         onLanguageChanged: (Locale newLocale) {
           AppLocaleScope.of(context).setLocale(newLocale);
-          DailyNotificationService.scheduleDaily(
-            isArabic: newLocale.languageCode == 'ar',
-          );
         },
       ),
     ];
@@ -382,21 +378,6 @@ class _ParentHomeViewState extends State<_ParentHomeView>
     }
   }
 
-  Future<void> _onBellTap(BuildContext context) async {
-    final l10n = AppLocalizations.of(context)!;
-    final isArabic = AppLocaleScope.of(context).isArabic;
-    await DailyNotificationService.showNow(isArabic: isArabic);
-    await DailyNotificationService.scheduleDaily(isArabic: isArabic);
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l10n.dailyReminderSent),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.green.shade600,
-      ),
-    );
-  }
-
   Widget _buildHeader(BuildContext context, dynamic config) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -404,23 +385,6 @@ class _ParentHomeViewState extends State<_ParentHomeView>
         Text(
           AppLocalizations.of(context)!.welcomeBack,
           style: TextStyle(fontSize: config.body, color: Colors.grey),
-        ),
-        Material(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-          elevation: 2,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(15),
-            onTap: () => _onBellTap(context),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Icon(
-                CupertinoIcons.bell_fill,
-                color: Colors.blueAccent,
-                size: config.headline,
-              ),
-            ),
-          ),
         ),
       ],
     );
@@ -620,9 +584,8 @@ class _ParentHomeViewState extends State<_ParentHomeView>
                 Text(
                   l10n.askAiProgress,
                   style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: config.body * 0.8,
-                  ),
+                      color: Colors.white70,
+                      fontSize: config.body * 0.8),
                 ),
               ],
             ),
